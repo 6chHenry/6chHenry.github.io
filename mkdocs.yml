@@ -1,3 +1,20 @@
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+  
 site_name: 6chHenry's Personal Website
 site_url: https://6chHenry.github.io
 theme: material  
+nav: 
+  - 主页: index.md
+  - 笔记:
+    - EECS 498(Deep Learning for Computer Vision): 
+      - 第一节: notes/EECS498/Linear Classifiers.md
+      - 第二节: notes/EECS498/Optimization.md
+      - 第一次作业: notes/EECS498/A1.md
+  - 关于我: about.md
+

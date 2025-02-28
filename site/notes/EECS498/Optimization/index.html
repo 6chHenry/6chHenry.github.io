@@ -8,23 +8,25 @@
       
       
       
-        <link rel="canonical" href="https://6chHenry.github.io/">
+        <link rel="canonical" href="https://6chHenry.github.io/notes/EECS498/Optimization/">
       
       
+        <link rel="prev" href="../Linear%20Classifiers/">
       
-        <link rel="next" href="notes/EECS498/Linear%20Classifiers/">
+      
+        <link rel="next" href="../A1/">
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
     
     
       
-        <title>6chHenry's Personal Website</title>
+        <title>第二节 - 6chHenry's Personal Website</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.8608ea7d.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.8608ea7d.min.css">
       
       
 
@@ -43,7 +45,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -61,11 +63,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#_1" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -78,7 +75,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="6chHenry&#39;s Personal Website" class="md-header__button md-logo" aria-label="6chHenry's Personal Website" data-md-component="logo">
+    <a href="../../.." title="6chHenry&#39;s Personal Website" class="md-header__button md-logo" aria-label="6chHenry's Personal Website" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -98,7 +95,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              主页
+              第二节
             
           </span>
         </div>
@@ -173,7 +170,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="6chHenry&#39;s Personal Website" class="md-nav__button md-logo" aria-label="6chHenry's Personal Website" data-md-component="logo">
+    <a href="../../.." title="6chHenry&#39;s Personal Website" class="md-nav__button md-logo" aria-label="6chHenry's Personal Website" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -188,19 +185,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -210,7 +198,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -219,17 +206,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -244,7 +233,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             笔记
@@ -255,17 +244,19 @@
                 
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
         
           
           <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
@@ -280,7 +271,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_1">
             <span class="md-nav__icon md-icon"></span>
             EECS 498(Deep Learning for Computer Vision)
@@ -294,7 +285,7 @@
   
   
     <li class="md-nav__item">
-      <a href="notes/EECS498/Linear%20Classifiers/" class="md-nav__link">
+      <a href="../Linear%20Classifiers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -313,10 +304,17 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="notes/EECS498/Optimization/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -326,6 +324,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -338,7 +337,7 @@
   
   
     <li class="md-nav__item">
-      <a href="notes/EECS498/A1/" class="md-nav__link">
+      <a href="../A1/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -375,7 +374,7 @@
   
   
     <li class="md-nav__item">
-      <a href="about/" class="md-nav__link">
+      <a href="../../../about/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -406,8 +405,6 @@
   
   
   
-    
-  
   
 </nav>
                   </div>
@@ -423,9 +420,70 @@
 
 
 
-<h1 id="_1">你好！</h1>
-<p>欢迎来到6ch.的小站！
-如果可以的话，记得点个star哦！</p>
+  <h1>第二节</h1>
+
+<p><span class="arithmatex">\(w^* = \arg \min_wL(w)\)</span></p>
+<p>Idea #1 :Random Search(Bad Idea!)</p>
+<pre><code class="language-python">bestloss = float('inf')
+for num in xrange(1000):
+    W = np.random.randn(10,3073) * 0.001
+    loss = L(X_train,Y_train,W) #L is the loss function
+    if loss &lt; bestloss:
+        bestloss = loss
+        bestW = W
+    print(f'in attempt {num} the loss was {loss},best {bestloss}')
+</code></pre>
+<p>Batch Gradient Descent</p>
+<p><span class="arithmatex">\(L(W) = \frac{1}{N}\sum_{i=1}^NL_i(x_i,y_i,W)+\lambda R(W)\)</span></p>
+<p><span class="arithmatex">\(\nabla_WL(W)=\frac{1}{N}\sum_{i=1}^N\nabla_WL_i(x_i,y_i,W)+\lambda\nabla_WR(W)\)</span></p>
+<p>Idea #2 : Stochastic Gradient Descent</p>
+<pre><code class="language-python">w = initialize_weights()
+for t in range(num_steps):
+    minibatch = sample_data(data,batch_size)
+    dw = compute_gradient(loss_fn,minibatch,w)
+    w- = learning_rate * dw
+</code></pre>
+<p>SGD: <span class="arithmatex">\(x_{t+1}=x_t - \alpha \nabla f(x_t)\)</span></p>
+<p>Problems:1.overshoot and never get back</p>
+<p>​       2.settle in local minimum and saddle point</p>
+<p>SGD+Momentum: <span class="arithmatex">\(v_{t+1}=\rho v_t -\alpha \nabla f (x_t)\)</span></p>
+<p>​               <span class="arithmatex">\(x_{t+1}=x_t+v_{t+1}\)</span> </p>
+<p>Nesterov Momentum:<span class="arithmatex">\(v_{t+1}=\rho v_t-\alpha \nabla f(x_t+\rho v_t)\)</span></p>
+<p>​               <span class="arithmatex">\(x_{t+1}=x_t+v_{t+1}\)</span>   Not that good :Not intuitively clear,because it uses the data of future status</p>
+<p>​       or            $\tilde{x_t} =x_t + \rho v_t $</p>
+<p>​               <span class="arithmatex">\(v_{t+1}=\rho v_t -\alpha \nabla f (\tilde{x_t})\)</span></p>
+<p>​               <span class="arithmatex">\(\widetilde{x_{t+1}}=\tilde{x_t}-\rho v_t + (1 + \rho) v_{t+1}\)</span></p>
+<p>​                   <span class="arithmatex">\(=\tilde{x_t}+v_{t+1}+\rho (v_{t+1}-v_t)\)</span></p>
+<p>AdaGrad: Progress along “steep” directions is damped;</p>
+<p>​       progress along “flat” directions is accelerated.</p>
+<pre><code class="language-python">grad_squared = 0
+for t in range(num_steps):
+    dw = compute_gradient(w)
+    grad_squared += dw*dw
+    w -= learning_rate * dw / (grad_squared.sqrt() + 1e-7)
+</code></pre>
+<p>Problem: grad_squared is accumulative so that it will stop before getting to the bottom.(it can get very big)</p>
+<p>RMSProp: a leaky version of Adaguard</p>
+<pre><code class="language-python">grad_square = 0
+for t in range(num_steps):
+    dw = compute_gradient(w)
+    grad_squared = decay_rate * grad_squared + (1 - decay_rate) * dw * dw
+    w -= learning_rate * dw / (grad_squared.sqrt() + 1e-7)
+</code></pre>
+<p>Adam: RMSProp + Momentum</p>
+<pre><code class="language-python">moment1 = 0
+moment2 = 0
+for t in range(num_steps):
+    dw = compute_gradient(w)
+    moment1 = beta1 * moment1 + (1-beta1) * dw #Momentum
+    moment2 = beta2 * moment2 + (1-beta2) * dw * dw #RMSProp
+    #moment1_unbias = moment1 / (1 - beta1 ** t)
+    #moment2_unbias = moment2 / (1 - beta2 ** t)
+    w -= learning_rate * moment1 / (moment2.sqrt() + 1e-7)
+    # Problem: when beta2 is approximately 1,momenent.sqrt() in the first several steps can be very small,thus leading to the */moment2.sqrt() very big.
+    #We need to correct the bias.  
+</code></pre>
+<p>Adam with beta1 = 0.9,beta2 = 0.999,and learning_rate = 1e-3,5e-4,1e-4 is a great starting point for many models.</p>
 
 
 
@@ -472,12 +530,12 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
       
-        <script src="javascripts/mathjax.js"></script>
+        <script src="../../../javascripts/mathjax.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       
