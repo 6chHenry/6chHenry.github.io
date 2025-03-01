@@ -36,3 +36,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site  # MkDocs 生成的静态网站目录
+          publish_branch: gh-pages  # 将静态网站部署到 gh-pages 分支
