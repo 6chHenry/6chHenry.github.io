@@ -5,6 +5,7 @@ markdown_extensions:
 extra_javascript:
   - javascripts/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
   
 site_name: 6chHenry's Personal Website
 site_url: https://6chHenry.github.io
@@ -13,8 +14,9 @@ nav:
   - 主页: index.md
   - 笔记:
     - EECS 498(Deep Learning for Computer Vision): 
-      - 第一节: notes/EECS498/Linear Classifiers.md
-      - 第二节: notes/EECS498/Optimization.md
-      - 第一次作业: notes/EECS498/A1.md
+      - 第一节(Linear Classifiers): notes/EECS498/Linear Classifiers.md
+      - 第二节(Optimization): notes/EECS498/Optimization.md
+      - 第一次作业(pytorch & KNN): notes/EECS498/A1.md
+      - 第三节(Neural Network): notes/EECS498/Neural Network.md
   - 关于我: about.md
 
