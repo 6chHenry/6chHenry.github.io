@@ -1,0 +1,38 @@
+name: Deploy MkDocs to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # 监听 main 分支的推送事件
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出仓库代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'  # 指定 Python 版本，可修改
+
+      - name: 安装 MkDocs 和依赖
+        run: |
+          pip install -r requirements.txt
+
+      - name: 构建 MkDocs 网站
+        run: |
+          mkdocs build --clean
+
+      - name: 部署到 GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site  # MkDocs 生成的静态网站目录
