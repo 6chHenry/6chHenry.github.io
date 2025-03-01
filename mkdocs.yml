@@ -1,4 +1,4 @@
-site_name: 6chHenry's Personal Website
+site_name: 6ch's Website
 site_author: 6ch.
 site_url: https://6chHenry.github.io
 site_description: 6ch. 的个人网站
@@ -93,8 +93,8 @@ plugins:
   #     enabled: !ENV [CI, false]
   #     use_material_social_cards: false
   - search
-  # - statistics:
-  #     words_per_minute: 200
+  - statistics:
+      words_per_minute: 200
 markdown_extensions:
   - abbr
   - admonition
@@ -149,9 +149,9 @@ markdown_extensions:
 extra_javascript:
   - javascripts/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
-# - https://polyfill.io/v3/polyfill.min.js?features=es6
-# - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-# - https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js
 # - https://busuanzi.icodeq.com/busuanzi.pure.mini.js
 # - js/toc.js
 extra_css:
@@ -197,9 +197,18 @@ nav:
       - 第四节(Back Propagation): notes/EECS498/Back Propagation.md
   - 日记:
     - index: diaries/index.md
+    - 2024年:
+      - 12月: 
+        - "20241226": diaries/2024/20241226.md
+        - "20241231": diaries/2024/20241231.md
     - 2025年:
-      - 2月: diaries/20250228.md
+      - 1月: diaries/2025/20250101.md
+      - 2月: diaries/2025/20250228.md
   - 总结:
     - index: summary/index.md
+    - "大一上":
+      - "复盘": summary/我的大一上学期.md
+    - "大一下":
+      - "规划": summary/具体计划.md
   - 关于我: about/index.md
 

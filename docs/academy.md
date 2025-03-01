@@ -22,7 +22,7 @@ nostatistics: true
 
 ## Bio
 
-I am a first-year undergraduate student majoring in Mechanics at the [ME(https://me.sjtu.edu.cn/) of [Shanghai Jiao Tong University (SJTU)](https://en.sjtu.edu.cn/). Currently, I am an active participant in [Zhiyuan Honors Program](https://en.zhiyuan.sjtu.edu.cn/), which fosters academic excellence and innovation.
+I am a first-year undergraduate student majoring in Mechanics at the [ME](https://me.sjtu.edu.cn/) of [Shanghai Jiao Tong University (SJTU)](https://en.sjtu.edu.cn/). Currently, I am an active participant in [Zhiyuan Honors Program](https://en.zhiyuan.sjtu.edu.cn/), which fosters academic excellence and innovation.
 
 > [!INFO] I am actively seeking internships in the field of machine learning systems and optimization. Please feel free to reach out to me if you have any opportunities available! 🥰🥰🥰
 
