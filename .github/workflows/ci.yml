@@ -6,9 +6,9 @@ on:
       - main  # 监听 main 分支的推送事件
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write  # 允许写入内容
+  pages: write     # 允许写入 GitHub Pages
+  id-token: write  # 允许使用 GitHub OIDC 令牌
 
 jobs:
   deploy:
@@ -26,11 +26,9 @@ jobs:
       - name: 安装 MkDocs 和依赖
         run: |
           pip install -r requirements.txt
-
       - name: 构建 MkDocs 网站
         run: |
           mkdocs build --clean
-
       - name: 部署到 GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:

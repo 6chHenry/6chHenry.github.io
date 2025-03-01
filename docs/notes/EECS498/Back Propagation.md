@@ -8,9 +8,9 @@ $q=x+y$  $f=qz$
 
 2.Backward Pass: Compute derivatives 
 
-Want: $\frac{\part f}{\part x},\frac{\part f}{\part y},\frac{\part f}{\part z}$
+Want: $\frac{\partial f}{\partial x},\frac{\partial f}{\partial y},\frac{\partial f}{\partial z}$
 
-Order: $\frac{\part f}{\part f}\rightarrow \frac{\part f}{\part z}\rightarrow \frac{\part f}{\part q}\rightarrow \frac{\part f}{\part y}=\frac{\part f}{\part q}\frac{\part q}{\part y}\rightarrow \frac{\part f}{\part x}=\frac{\part f}{\part q}\frac{\part q}{\part x}$
+Order: $\frac{\partial f}{\partial f}\rightarrow \frac{\partial f}{\partial z}\rightarrow \frac{\partial f}{\partial q}\rightarrow \frac{\partial f}{\partial y}=\frac{\partial f}{\partial q}\frac{\partial q}{\partial y}\rightarrow \frac{\partial f}{\partial x}=\frac{\partial f}{\partial q}\frac{\partial q}{\partial x}$
 
 [Downstream] = [Local]*[Upstream]
 
@@ -79,7 +79,7 @@ Compute Higher-Order Derivatives(Cool!):
 
 $x_0 --f1-->x1--f2-->L--f_2'-->\frac{dL}{dx_1}--f_1'-->\frac{dL}{dx_0}--\cdot v-->\frac{dL}{dx_0}\cdot v$
 
-we want to calculate $\frac{\part^2L}{\part x_0^2}$  then we can calculate$\frac{\part^2L}{\part x_0^2}\cdot v$ ,  and surprisingly,$\frac{\part^2L}{\part x_0^2}\cdot v=\frac{\part}{\part x_0}[\frac{\part L}{\part x_0}\cdot v]$
+we want to calculate $\frac{\partial^2L}{\partial x_0^2}$  then we can calculate$\frac{\partial^2L}{\partial x_0^2}\cdot v$ ,  and surprisingly,$\frac{\partial^2L}{\partial x_0^2}\cdot v=\frac{\partial}{\partial x_0}[\frac{\partial L}{\partial x_0}\cdot v]$
 
 ($v$ is independent from $x_0$) 
 
