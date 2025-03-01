@@ -20,11 +20,11 @@ icon: /fontawesome/solid/face-smile-wink
     
     ---
     
-    我平时喜欢听音乐、看动漫以及阅读，也会在博客中记录一些相关内容，分享个人感受✍。
+    我平时喜欢听音乐(Eason!)、阅读、打羽毛球，也会在日记中记录一些相关内容，分享个人感受✍。
     
     ---
     
-    至于我的名字“6ch.”，代表6g stomach,说明我的胃重6g。
+    至于我的名字“6ch.”嘛，解释起来太困难了，就当是我随便取的好啦！
 
 === "English"
 
@@ -38,14 +38,13 @@ icon: /fontawesome/solid/face-smile-wink
     If you have any questions or would like to communicate with me, please feel free to [email](mailto:2313287840@qq.com) or just leave a message below and I will reply as soon as possible 😎.
     If you are also in Shanghai, feel free to contact me. We can chat, learn, or exchange common interests together 👻.
     
-    ~~GitHub Point a follow thank you meow 😺, GitHub Point a follow thank you meow 😺~~~
+    ~~Follow my github thank you meow 😺, follow my Github thank you meow 😺~~~
     
     ---
     
-    I usually like listening to music, watching anime as well as reading, and I also blog about it and share my personal feelings ✍.
+    I usually like listening to music(Eason!), reading and playing badminton, and I also write diaries about it and share my personal feelings ✍.
     
     ---
     
-    As for my name “6ch.”, six grams of stomach in English is 6g stomach, I simply use 6ch. instead of myself.
-        
+    As for my name “6ch.”, it's a long long story.
 

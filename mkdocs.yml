@@ -168,10 +168,10 @@ extra:
       link: https://github.com/6chHenry/
       name: GitHub
     - icon: /fontawesome/brands/qq
-      link: /img/qq.jpg
+      link: /img/qq.png
       name: 加加我的QQ
     - icon: /fontawesome/brands/weixin
-      link: /img/wechat.jpg
+      link: /img/wechat.png
       name: 加加我的微信
     # - icon: /fontawesome/brands/zhihu
     #   link: https://www.zhihu.com/people/Kinnariya
@@ -194,6 +194,7 @@ nav:
       - 第二节(Optimization): notes/EECS498/Optimization.md
       - 第一次作业(pytorch & KNN): notes/EECS498/A1.md
       - 第三节(Neural Network): notes/EECS498/Neural Network.md
+      - 第四节(Back Propagation): notes/EECS498/Back Propagation.md
   - 日记:
     - index: diaries/index.md
     - 2025年:
