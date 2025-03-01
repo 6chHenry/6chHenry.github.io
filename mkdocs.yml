@@ -1,22 +1,204 @@
-markdown_extensions:
-  - pymdownx.arithmatex:
-      generic: true
+site_name: 6chHenry's Personal Website
+site_author: 6ch.
+site_url: https://6chHenry.github.io
+site_description: 6ch. 的个人网站
+repo_url: https://github.com/6chHenry/6chHenry.github.io
+repo_name: 6ch.'s Site
+copyright: Copyright &copy; 2024 - Present <a href="https://github.com/6chHenry" target="_blank" rel="noopener">6ch.</a>
 
+
+
+
+  
+theme:
+  name: material
+  language: en
+  custom_dir: overrides
+  features:
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.footnote.tooltips
+    - content.tabs.link
+    - header.autohide
+    # - navigation.instant.progress
+    # - navigation.instant.prefetch
+    # - navigation.instant.preview
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.top
+    - navigation.path
+    # - navigation.prune
+    - navigation.indexes
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default # 日间模式
+      primary: white # 上方的
+      accent: indigo # 链接等可交互元件的高亮色
+      toggle:
+        icon: material/brightness-7 # 图标
+        name: light mode # 鼠标悬浮提示
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate # 夜间模式
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: dark mode
+  font:
+    text: JetBrains Mono
+  favicon: img/avatar1.jpg
+  icon:
+    logo: material/coffee
+    repo: fontawesome/brands/git-alt
+    edit: material/pencil
+
+  static_templates:
+    - 404.html
+
+plugins:
+  - blogging:
+      locale: en
+      dirs:
+        - notes
+      show_total: true
+      features:
+        tags:
+          index_page: tags/
+          insert: top
+  - callouts
+  - glightbox:
+      width: 80%
+  - git-revision-date-localized:
+      type: datetime
+      timezone: Asia/Shanghai
+      enable_creation_date: true
+      exclude:
+        - index.md
+        - about/index.md
+        - summary/index.md
+        - notes/index.md
+        - diaries/index.md
+  - minify:
+      minify_html: true
+  - mkdocs-video:
+      video_muted: True
+      video_controls: True
+      mark: "video"
+  # - rss:
+  #     enabled: !ENV [CI, false]
+  #     use_material_social_cards: false
+  - search
+  # - statistics:
+  #     words_per_minute: 200
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - footnotes
+  - meta
+  - md_in_html
+  - nl2br
+  - pymdownx.arithmatex: # latex支持
+      generic: true
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - overrides/.icons
+  - pymdownx.highlight: # 代码块高亮
+      anchor_linenums: true
+      auto_title: true # 显示编程语言名称
+      linenums: true # 显示行号
+      linenums_style: pymdownx-inline
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.magiclink
+  - pymdownx.saneheaders
+  - pymdownx.snippets
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tilde
+  - sane_lists
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 4
 extra_javascript:
   - javascripts/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
-
-  
-site_name: 6chHenry's Personal Website
-site_url: https://6chHenry.github.io
-theme: material  
+# - https://polyfill.io/v3/polyfill.min.js?features=es6
+# - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+# - https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js
+# - https://busuanzi.icodeq.com/busuanzi.pure.mini.js
+# - js/toc.js
+extra_css:
+  - css/custom.css
+  - https://gcore.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css
+  - https://gcore.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css
+  # - css/fold_toc.css
+  - css/card.css
+  - css/flink.css
+  - css/tasklist.css
+extra:
+  social:
+    - icon: /fontawesome/brands/github
+      link: https://github.com/6chHenry/
+      name: GitHub
+    - icon: /fontawesome/brands/qq
+      link: /img/qq.jpg
+      name: 加加我的QQ
+    - icon: /fontawesome/brands/weixin
+      link: /img/wechat.jpg
+      name: 加加我的微信
+    # - icon: /fontawesome/brands/zhihu
+    #   link: https://www.zhihu.com/people/Kinnariya
+      name: Zhihu
+    - icon: fontawesome/solid/paper-plane
+      link: mailto:2313287840@qq.com
+      name: send email to me!
+    # - icon: fontawesome/solid/rss
+    #   link: /feed_rss_created.xml
+    #   name: RSS created
+    # - icon: fontawesome/solid/rss
+    #   link: /feed_rss_updated.xml
+    #   name: RSS updatedfeed_rss_created.xml
 nav: 
   - 主页: index.md
   - 笔记:
+    - index: notes/index.md
     - EECS 498(Deep Learning for Computer Vision): 
       - 第一节(Linear Classifiers): notes/EECS498/Linear Classifiers.md
       - 第二节(Optimization): notes/EECS498/Optimization.md
       - 第一次作业(pytorch & KNN): notes/EECS498/A1.md
       - 第三节(Neural Network): notes/EECS498/Neural Network.md
-  - 关于我: about.md
+  - 日记:
+    - index: diaries/index.md
+    - 2025年:
+      - 2月: diaries/20250228.md
+  - 总结:
+    - index: summary/index.md
+  - 关于我: about/index.md
 
