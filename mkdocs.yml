@@ -204,6 +204,9 @@ nav:
     - 2025年:
       - 1月: diaries/2025/20250101.md
       - 2月: diaries/2025/20250228.md
+      - 3月: 
+        - "3.1": diaries/2025/20250301.md
+        - "3.2": diaries/2025/20250302.md
   - 总结:
     - index: summary/index.md
     - "大一上":

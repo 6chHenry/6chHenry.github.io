@@ -57,7 +57,7 @@ $y \in \mathbb{R}^N,x \in \mathbb{R}^M,\frac{dy}{dx}\in \mathbb{R}^{M\times N}$ 
 
 4D $\frac{dL}{dy}$:[4,-1,5,9] $\rightarrow $ $\frac{dy}{dx}\frac{dL}{dy}$
 
-$\frac{dy}{dx}$=$$\begin{bmatrix}1&0&0&0 \\0&0&0&0 \\0&0&1&0\\0&0&0&0  \end{bmatrix}$$positive: 1 negative: 0
+$\frac{dy}{dx}$=$\begin{bmatrix}1&0&0&0 \\0&0&0&0 \\0&0&1&0\\0&0&0&0  \end{bmatrix}$positive: 1 negative: 0
 
 Jacobian is sparse!: off-diagonal entries all zero! When doing a big Jacobian Matrix Multiply,it’ll cause large resources waste because almost every element is zero!Never explicitly form Jacobian,instead use implicit multiplication.
 
