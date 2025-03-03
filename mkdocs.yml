@@ -195,6 +195,8 @@ nav:
       - 第一次作业(pytorch & KNN): notes/EECS498/A1.md
       - 第三节(Neural Network): notes/EECS498/Neural Network.md
       - 第四节(Back Propagation): notes/EECS498/Back Propagation.md
+      - 矩阵求导: notes/EECS498/Derivative of Matrix.md
+      - 第二次作业(Linear Classifiers): notes/EECS498/A2.md
   - 日记:
     - index: diaries/index.md
     - 2024年:
@@ -207,6 +209,7 @@ nav:
       - 3月: 
         - "3.1": diaries/2025/20250301.md
         - "3.2": diaries/2025/20250302.md
+        - "3.3": diaries/2025/20250303.md
   - 总结:
     - index: summary/index.md
     - "大一上":
