@@ -197,6 +197,10 @@ nav:
       - 第四节(Back Propagation): notes/EECS498/Back Propagation.md
       - 矩阵求导: notes/EECS498/Derivative of Matrix.md
       - 第二次作业(Linear Classifiers): notes/EECS498/A2.md
+      - 第二次作业(Two Layer Net): notes/EECS498/2-layer-network.md
+    - 概率统计(MATH1207H):
+      - 第二次讨论: notes/Probability/讨论2.md
+      - 第三次讨论: notes/Probability/讨论2.md
   - 日记:
     - index: diaries/index.md
     - 2024年:
