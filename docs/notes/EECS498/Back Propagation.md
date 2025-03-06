@@ -85,7 +85,7 @@ we want to calculate $\frac{\partial^2L}{\partial x_0^2}$  then we can calculate
 
 use backprop we will get the answer(remember: backprop gets the derivatives of output with regard to the input)
 
+再分析：倒着写一遍
 
-
-
+参考链接：https://zhuanlan.zhihu.com/p/21407711
 
