@@ -203,9 +203,14 @@ nav:
       - 第三次讨论: notes/Probability/讨论3.md
     - 数据结构（荣誉）(CS0501H):
       - 线性表: notes/CS0501H/链表.md
+    - 从零构建GPT(Karpathy):
+      - 自动微分: notes/GPT/micrograd.md
+      - 生成名字: notes/GPT/makemore.md
   - 日记:
     - index: diaries/index.md
     - 2024年:
+      - 10月:
+        - "18岁生日快乐!": summary/写给18岁的信.md
       - 12月: 
         - "20241226": diaries/2024/20241226.md
         - "20241231": diaries/2024/20241231.md
@@ -218,9 +223,12 @@ nav:
         - "3.3": diaries/2025/20250303.md
         - "3.4": diaries/2025/20250304.md
         - "3.5": diaries/2025/20250305.md
+        - "3.12": diaries/2025/20250312.md
   - 总结:
     - index: summary/index.md
     - "大一上":
+      - "下半期计划": summary/下半期计划.md
+      - "期末复习计划": summary/Review Plan.md
       - "复盘": summary/我的大一上学期.md
     - "大一下":
       - "规划": summary/具体计划.md
