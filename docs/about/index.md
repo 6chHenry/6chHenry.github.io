@@ -28,7 +28,7 @@ icon: /fontawesome/solid/face-smile-wink
 
 === "English"
 
-    Hello. I'm 6ch! I'm 6ch. and I'm an undergraduate student majoring in Mechanics in the 24th grade at Shanghai Jiaotong University. I'm glad to meet you on the internet 🥰.
+    Hello. I'm 6ch!I'm an undergraduate student majoring in Mechanics in the 24th grade at Shanghai Jiaotong University. I'm glad to meet you on the internet 🥰.
     
     I am passionate about the fields of deep learning, big models and machine learning systems, and I like to share my learning experience and thinking 🤓.
     

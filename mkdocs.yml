@@ -201,11 +201,13 @@ nav:
     - 概率统计（荣誉）(MATH1207H):
       - 第二次讨论: notes/Probability/讨论2.md
       - 第三次讨论: notes/Probability/讨论3.md
+      - 第四次讨论: notes/Probability/讨论4.md
     - 数据结构（荣誉）(CS0501H):
       - 线性表: notes/CS0501H/链表.md
     - 从零构建GPT(Karpathy):
       - 自动微分: notes/GPT/micrograd.md
-      - 生成名字: notes/GPT/makemore.md
+      - Makemore(First Status): notes/GPT/makemore.md
+      - Makemore(Become a Backprop Ninja): notes/GPT/makemoreNinja.md
   - 日记:
     - index: diaries/index.md
     - 2024年:
@@ -224,8 +226,11 @@ nav:
         - "3.4": diaries/2025/20250304.md
         - "3.5": diaries/2025/20250305.md
         - "3.12": diaries/2025/20250312.md
+        - "3.15": diaries/2025/20250315.md
+        - "3.16": diaries/2025/20250316.md
   - 总结:
     - index: summary/index.md
+    - "我的高中": summary/高中回忆录.md
     - "大一上":
       - "下半期计划": summary/下半期计划.md
       - "期末复习计划": summary/Review Plan.md
