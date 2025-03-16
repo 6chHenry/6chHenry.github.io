@@ -40,7 +40,9 @@ I am a first-year undergraduate student majoring in Mechanics at the [ME](https:
 
 === "2025"
 
-    [02/2025] :party_popper:I became a member of Zhiyuan Honor Program,SJTU.
+    [03/2025] :party_popper: I became a member of A+ Club of SJTU ME.
+    
+    [02/2025] :party_popper: I became a member of Zhiyuan Honor Program,SJTU.
 
 === "2024"
 
@@ -49,6 +51,12 @@ I am a first-year undergraduate student majoring in Mechanics at the [ME](https:
 ---
 
 ## Education
+
+### A+ Club of SJTU ME,Shanghai Jiao Tong University![A+](./academy.assets/aplus.jpg){ align=right style="height:6em; border-radius: 0.5em;"}
+
+Mar. 2025 -- Present
+
+<br>
 
 ### Zhiyuan Honor Program, Shanghai Jiao Tong University![Image title](./academy.assets/sjtu.png){ align=right style="height:6em; border-radius: 0.5em;"}
 
@@ -80,11 +88,11 @@ The page is powered by [Material for MkDocs](https://squidfunk.github.io/mkdocs-
 
 ## Media Exposures
 
-
+> Coming soon...
 
 ## Honors
 
-
+> Coming soon...
 
 ---
 
