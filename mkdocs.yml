@@ -205,8 +205,10 @@ nav:
     - 数据结构（荣誉）(CS0501H):
       - 线性表: notes/CS0501H/链表.md
     - 从零构建GPT(Karpathy):
-      - 自动微分: notes/GPT/micrograd.md
+      - Micrograd: notes/GPT/micrograd.md
       - Makemore(First Status): notes/GPT/makemore.md
+      - Makemore(MLP): notes/GPT/makemoreMLP.md
+      - Makemore(Activation): notes/GPT/makemoreActivation.md
       - Makemore(Become a Backprop Ninja): notes/GPT/makemoreNinja.md
   - 日记:
     - index: diaries/index.md
@@ -237,5 +239,6 @@ nav:
       - "复盘": summary/我的大一上学期.md
     - "大一下":
       - "规划": summary/具体计划.md
+    - "睡眠": summary/睡眠的重要性.md
   - 关于我: about/index.md
 
