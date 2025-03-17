@@ -1,6 +1,6 @@
 为什么在计算方差的时候，我们要使用/(n-1)而不是/n？
 
-拓展阅读:  [Bessel’s Correction]([Bessel's Correction (emory.edu)](https://math.oxford.emory.edu/site/math117/besselCorrection/))
+拓展阅读:  [Bessel's Correction (emory.edu)](https://math.oxford.emory.edu/site/math117/besselCorrection/)
 
 附批量归一化手动反向传播推导 by 6ch.：
 
