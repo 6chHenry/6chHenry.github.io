@@ -211,6 +211,7 @@ nav:
       - Makemore(Activation): notes/GPT/makemoreActivation.md
       - Makemore(Become a Backprop Ninja): notes/GPT/makemoreNinja.md
       - Makemore(Convolution Layer): notes/GPT/makemoreComnet.md
+      - ShakespeareGPT: notes/GPT/ShakespeareGPT.md
   - 日记:
     - index: diaries/index.md
     - 2024年:
@@ -232,8 +233,13 @@ nav:
         - "3.15": diaries/2025/20250315.md
         - "3.16": diaries/2025/20250316.md
         - "3.17": diaries/2025/20250317.md
+        - "3.18": diaries/2025/20250318.md
   - 总结:
     - index: summary/index.md
+    - "影评":
+      - "3 Idiots": summary/Movies/3 Idiots.md
+    - "音乐":
+      - "孤儿仔 --Eason Chan": summary/Music/孤儿仔.md
     - "我的高中": summary/高中回忆录.md
     - "大一上":
       - "下半期计划": summary/下半期计划.md
