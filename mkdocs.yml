@@ -212,6 +212,7 @@ nav:
       - Makemore(Become a Backprop Ninja): notes/GPT/makemoreNinja.md
       - Makemore(Convolution Layer): notes/GPT/makemoreComnet.md
       - ShakespeareGPT: notes/GPT/ShakespeareGPT.md
+      - Attention is All You Need: notes/GPT/Attention is All You Need.md
   - 日记:
     - index: diaries/index.md
     - 2024年:
