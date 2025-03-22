@@ -213,6 +213,7 @@ nav:
       - Makemore(Convolution Layer): notes/GPT/makemoreComnet.md
       - ShakespeareGPT: notes/GPT/ShakespeareGPT.md
       - Attention is All You Need: notes/GPT/Attention is All You Need.md
+      - Dive into GPT: notes/GPT/diveintogpt.md
   - 日记:
     - index: diaries/index.md
     - 2024年:
@@ -236,6 +237,7 @@ nav:
         - "3.17": diaries/2025/20250317.md
         - "3.18": diaries/2025/20250318.md
         - "3.21": diaries/2025/20250321.md
+        - "3.22": diaries/2025/20250322.md
   - 总结:
     - index: summary/index.md
     - "影评":
@@ -251,6 +253,7 @@ nav:
       - "规划": summary/具体计划.md
     - "睡眠": summary/睡眠的重要性.md
   - 网站:
+    - index: websites/index.md
     - LLM: websites/LLM.md
   - 关于我: about/index.md
 
