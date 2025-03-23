@@ -238,6 +238,7 @@ nav:
         - "3.18": diaries/2025/20250318.md
         - "3.21": diaries/2025/20250321.md
         - "3.22": diaries/2025/20250322.md
+        - "3.23": diaries/2025/20250323.md
   - 总结:
     - index: summary/index.md
     - "影评":
@@ -251,6 +252,7 @@ nav:
       - "复盘": summary/我的大一上学期.md
     - "大一下":
       - "规划": summary/具体计划.md
+      - "第11周周结": summary/2025/Week11(3.17-3.23).md
     - "睡眠": summary/睡眠的重要性.md
   - 网站:
     - index: websites/index.md
