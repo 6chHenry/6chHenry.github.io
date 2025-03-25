@@ -240,10 +240,12 @@ nav:
         - "3.22": diaries/2025/20250322.md
         - "3.23": diaries/2025/20250323.md
         - "3.24": diaries/2025/20250324.md
+        - "3.25": diaries/2025/20250325.md
   - 总结:
     - index: summary/index.md
     - "影评":
       - "3 Idiots": summary/Movies/3 Idiots.md
+      - “Hachi”: suaumry/Movies/Hachi.md
     - "音乐":
       - "孤儿仔 --Eason Chan": summary/Music/孤儿仔.md
     - "我的高中": summary/高中回忆录.md
