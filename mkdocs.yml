@@ -4,7 +4,7 @@ site_url: https://6chHenry.github.io
 site_description: 6ch. 的个人网站
 repo_url: https://github.com/6chHenry/6chHenry.github.io
 repo_name: 6ch.'s Site
-copyright: Copyright &copy; 2024 - Present <a href="https://github.com/6chHenry" target="_blank" rel="noopener">6ch.</a>
+copyright: Copyright &copy; 2024-2025 - Present <a href="https://github.com/6chHenry" target="_blank" rel="noopener">6ch.</a>
 
 
 
@@ -241,11 +241,13 @@ nav:
         - "3.23": diaries/2025/20250323.md
         - "3.24": diaries/2025/20250324.md
         - "3.25": diaries/2025/20250325.md
+        - "3.26": diaries/2025/20250326.md
+        - "3.27": diaries/2025/20250327.md
   - 总结:
     - index: summary/index.md
     - "影评":
       - "3 Idiots": summary/Movies/3 Idiots.md
-      - “Hachi”: suaumry/Movies/Hachi.md
+      - "Hachi": summary/Movies/Hachi.md
     - "音乐":
       - "孤儿仔 --Eason Chan": summary/Music/孤儿仔.md
     - "我的高中": summary/高中回忆录.md

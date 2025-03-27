@@ -6,9 +6,9 @@ icon: /fontawesome/solid/face-smile-wink
 
 === "中文"
 
-    你好！我是 6ch.，上海交通大学 24 级机械类专业的本科生。很高兴能在互联网上与你相遇🥰。
+    你好！我是 6ch.，上海交通大学 24 级机械动力类专业的本科生。很高兴能在互联网上与你相遇🥰。
     
-    我对深度学习、大模型和机器学习系统等领域很有热情，也喜欢分享自己的学习经验和思考🤓。
+    我对计算机视觉、具身智能等领域很有热情，也喜欢分享自己的学习经验和思考🤓。
     
     想了解我的学术经历？可以查看我的[学术主页🎓](../academy.md)。
     
@@ -30,7 +30,7 @@ icon: /fontawesome/solid/face-smile-wink
 
     Hello. I'm 6ch!I'm an undergraduate student majoring in Mechanics in the 24th grade at Shanghai Jiaotong University. I'm glad to meet you on the internet 🥰.
     
-    I am passionate about the fields of deep learning, big models and machine learning systems, and I like to share my learning experience and thinking 🤓.
+    I am passionate about the fields of deep learning for computer vision, embodied AI, and I like to share my learning experience and thinking 🤓.
     
     Want to know more about my academic experience? Check out my [academic homepage 🎓] (.. /academy.md).
     
