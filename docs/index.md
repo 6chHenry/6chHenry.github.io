@@ -13,10 +13,34 @@ icon: material/home
 
 <h1 style="text-align: center;">
 <span style="font-size:50px;">
-Welcome to 6ch.'s Site! 🎉
+Welcome to 6ch.'s Blog! 🎉
 </span>
 </h1>
+<style>
+  /* 打字动画 */
+  @keyframes typing {
+    0% { 
+      clip-path: inset(0 100% 0 0); /* 从左往右逐步显示 */
+    }
+    100% { 
+      clip-path: inset(0 0 0 0);
+    }
+  }
 
+  h1 {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 3s steps(30) 1s  1 normal both;
+    margin: 0;          /* 移除默认外边距 */
+    display: inline-block; /* 自然宽度 */
+  }
+
+  /* 父容器（如 body）简单居中 */
+  body {
+    text-align: center; /* 水平居中 */
+    margin: 20px 0;     /* 添加基础边距 */
+  }
+</style>
 <span style="display: block; text-align: center; font-size: 18px;">
 [:octicons-info-16: About Me](./about/index.md) / [:academicons-google-scholar: Academic Page](./academy.md) / [:material-chart-line: Statistics](javascript:toggle_statistics();)
 </span>
