@@ -243,6 +243,10 @@ nav:
         - "3.25": diaries/2025/20250325.md
         - "3.26": diaries/2025/20250326.md
         - "3.27": diaries/2025/20250327.md
+        - "3.28": diaries/2025/20250328.md
+        - "3.31": diaries/2025/20250331.md
+        - "4.1": diaries/2025/20250401.md
+        - "4.2": diaries/2025/20250402.md
   - 总结:
     - index: summary/index.md
     - "影评":
@@ -258,9 +262,12 @@ nav:
     - "大一下":
       - "规划": summary/具体计划.md
       - "第11周周结": summary/2025/Week11(3.17-3.23).md
+      - "第12周周结": summary/2025/Week12(3.24-3.30).md
     - "睡眠": summary/睡眠的重要性.md
   - 网站:
     - index: websites/index.md
     - LLM: websites/LLM.md
+  - 项目:
+    - index: projects/index.md
   - 关于我: about/index.md
 
