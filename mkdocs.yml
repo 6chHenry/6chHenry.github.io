@@ -190,14 +190,17 @@ nav:
   - 笔记:
     - index: notes/index.md
     - EECS 498(Deep Learning for Computer Vision): 
-      - 第一节(Linear Classifiers): notes/EECS498/Linear Classifiers.md
-      - 第二节(Optimization): notes/EECS498/Optimization.md
+      - Linear Classifiers: notes/EECS498/Linear Classifiers.md
+      - Optimization: notes/EECS498/Optimization.md
       - 第一次作业(pytorch & KNN): notes/EECS498/A1.md
-      - 第三节(Neural Network): notes/EECS498/Neural Network.md
-      - 第四节(Back Propagation): notes/EECS498/Back Propagation.md
+      - Neural Network: notes/EECS498/Neural Network.md
+      - Back Propagation: notes/EECS498/Back Propagation.md
       - 矩阵求导: notes/EECS498/Derivative of Matrix.md
       - 第二次作业(Linear Classifiers): notes/EECS498/A2.md
       - 第二次作业(Two Layer Net): notes/EECS498/2-layer-network.md
+      - CNN: notes/EECS498/CNN.md
+      - CNNArchitecture: notes/EECS498/CNNArchiture.md
+      - TrainingNN: notes/EECS498/TrainingNN.md
     - 概率统计（荣誉）(MATH1207H):
       - 第二次讨论: notes/Probability/讨论2.md
       - 第三次讨论: notes/Probability/讨论3.md
@@ -223,30 +226,31 @@ nav:
         - "20241226": diaries/2024/20241226.md
         - "20241231": diaries/2024/20241231.md
     - 2025年:
-      - 1月: diaries/2025/20250101.md
-      - 2月: diaries/2025/20250228.md
+      - 1月: diaries/2025/1月/20250101.md
+      - 2月: diaries/2025/2月/20250228.md
       - 3月: 
-        - "3.1": diaries/2025/20250301.md
-        - "3.2": diaries/2025/20250302.md
-        - "3.3": diaries/2025/20250303.md
-        - "3.4": diaries/2025/20250304.md
-        - "3.5": diaries/2025/20250305.md
-        - "3.12": diaries/2025/20250312.md
-        - "3.15": diaries/2025/20250315.md
-        - "3.16": diaries/2025/20250316.md
-        - "3.17": diaries/2025/20250317.md
-        - "3.18": diaries/2025/20250318.md
-        - "3.21": diaries/2025/20250321.md
-        - "3.22": diaries/2025/20250322.md
-        - "3.23": diaries/2025/20250323.md
-        - "3.24": diaries/2025/20250324.md
-        - "3.25": diaries/2025/20250325.md
-        - "3.26": diaries/2025/20250326.md
-        - "3.27": diaries/2025/20250327.md
-        - "3.28": diaries/2025/20250328.md
-        - "3.31": diaries/2025/20250331.md
-        - "4.1": diaries/2025/20250401.md
-        - "4.2": diaries/2025/20250402.md
+        - "3.1": diaries/2025/3月/20250301.md
+        - "3.2": diaries/2025/3月/20250302.md
+        - "3.3": diaries/2025/3月/20250303.md
+        - "3.4": diaries/2025/3月/20250304.md
+        - "3.5": diaries/2025/3月/20250305.md
+        - "3.12": diaries/2025/3月/20250312.md
+        - "3.15": diaries/2025/3月/20250315.md
+        - "3.16": diaries/2025/3月/20250316.md
+        - "3.17": diaries/2025/3月/20250317.md
+        - "3.18": diaries/2025/3月/20250318.md
+        - "3.21": diaries/2025/3月/20250321.md
+        - "3.22": diaries/2025/3月/20250322.md
+        - "3.23": diaries/2025/3月/20250323.md
+        - "3.24": diaries/2025/3月/20250324.md
+        - "3.25": diaries/2025/3月/20250325.md
+        - "3.26": diaries/2025/3月/20250326.md
+        - "3.27": diaries/2025/3月/20250327.md
+        - "3.28": diaries/2025/3月/20250328.md
+        - "3.31": diaries/2025/3月/20250331.md
+      - 4月:
+        - "4.1": diaries/2025/4月/20250401.md
+        - "4.2": diaries/2025/4月/20250402.md
   - 总结:
     - index: summary/index.md
     - "影评":
@@ -269,5 +273,8 @@ nav:
     - LLM: websites/LLM.md
   - 项目:
     - index: projects/index.md
+    - CarLaneDetection: 
+      - CannyEdgeDetection: projects/CarLaneDetection/Canny.md
+      - HoughTransform: projects/CarLaneDetection/HoughTransform.md
   - 关于我: about/index.md
 
