@@ -217,6 +217,7 @@ nav:
       - ShakespeareGPT: notes/GPT/ShakespeareGPT.md
       - Attention is All You Need: notes/GPT/Attention is All You Need.md
       - Dive into GPT: notes/GPT/diveintogpt.md
+    - 一些问题: notes/SeveralQ.md
   - 日记:
     - index: diaries/index.md
     - 2024年:
@@ -251,6 +252,10 @@ nav:
       - 4月:
         - "4.1": diaries/2025/4月/20250401.md
         - "4.2": diaries/2025/4月/20250402.md
+        - "4.4": diaries/2025/4月/20250404.md
+        - "4.6": diaries/2025/4月/20250406.md
+        - "4.7": diaries/2025/4月/20250407.md
+        - "4.11": diaries/2025/4月/20250411.md
   - 总结:
     - index: summary/index.md
     - "影评":

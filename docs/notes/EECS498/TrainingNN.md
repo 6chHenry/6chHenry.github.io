@@ -78,19 +78,74 @@ Cutout and mixup for small classification datasets.
 
 
 
+## Learning Rate
 
+ Set a high learning rate at the beginning end with a low lr.
 
+Step Decay: 0.10 --> 0.01 --> 0.001 ...
 
+Cosine Decay: $\alpha_{t} = \frac{1}{2}\alpha_0(1+\cos(t\pi/T))$    No hyperparameters!   Usually for CV fields
 
+Linear Decay : $\alpha_t=\alpha_0(1-t/T)$	Usu. for NLP
 
+Inverse Sqrt Decay : $\alpha_t=\alpha_0/\sqrt{t}$
 
+Constant: $\alpha_t=\alpha_0$
 
+Grid Search: [, , ,] * [, , ,]
 
+## Choosing Hyperparameters
 
+Step 1 : Check initial loss
 
+Turn off weight decay , we have some expectation on our loss
 
+  For example : lnC for softmax with C classes
 
+Step 2 : Overfit a small sample
 
+Try to train to 100% training accuracy on a small sample of training data（~5-10 minibatches）；fiddle with architecture,learning rate, weight initialization .Turn off regularization.
+Loss not going down？LR too low,bad initialization 
 
+Loss explodes to Inf or NaN？LR too high,bad initialization
 
+Step 3 : Find LR that makes loss go down.
+
+Use the architecture from the previous step,use all training data, turn on small weight decay,find a learning rate that makes the loss drop significantly within ~100 iterations Good learning rates to try：1e-1,1e-2,1e-3,1e-4
+
+Step 4：Coarse grid,train for ~1-5 epochs 
+
+Choose a few values of learning rate and weight decay around wha worked from Step 3，train a few models for ~1-5 epochs.
+Good weight decay to try：1e-4,1e-5,0
+
+Observe the graph:
+
+If train acc and val acc are nearly the same : underfitting train longer, use a bigger model
+
+If train acc goes up and val acc goes down : overfitting
+
+If there is smoe gap but they are all going up : good network!
+
+## Model ensembles
+
+Train multiple independent models --> at the test time average their results.
+
+## Transfer Learning
+
+pretrained models
+
+1. Train on ImageNet
+2. Use CNN as a feature extractor
+3. Fine-tuning 
+
+Some tricks：
+
+- Train with feature extraction first before fine-tuning
+
+- Lower the learning rate：
+   use ~1/10 of LR used in original training
+
+- Sometimes freeze lower layers to save computation
+
+Paralleled: LR Warm-up
 

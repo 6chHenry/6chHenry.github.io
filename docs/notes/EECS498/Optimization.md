@@ -88,12 +88,16 @@ for t in range(num_steps):
     dw = compute_gradient(w)
     moment1 = beta1 * moment1 + (1-beta1) * dw #Momentum
     moment2 = beta2 * moment2 + (1-beta2) * dw * dw #RMSProp
-    #moment1_unbias = moment1 / (1 - beta1 ** t)
-    #moment2_unbias = moment2 / (1 - beta2 ** t)
-    w -= learning_rate * moment1 / (moment2.sqrt() + 1e-7)
+    moment1_unbias = moment1 / (1 - beta1 ** t)
+    moment2_unbias = moment2 / (1 - beta2 ** t)
+    w -= learning_rate * moment1_unbias / (moment2_unbias.sqrt() + 1e-7)
     # Problem: when beta2 is approximately 1,momenent.sqrt() in the first several steps can be very small,thus leading to the */moment2.sqrt() very big.
     #We need to correct the bias.  
 ```
 
 Adam with beta1 = 0.9,beta2 = 0.999,and learning_rate = 1e-3,5e-4,1e-4 is a great starting point for many models.
+
+AdamW:(W stands for weight decay)
+Only differs from Adam in the last step,
+$w_{t+1}=w_t-r\frac{V_w^{correct}}{\sqrt{S_w^{correct}}+\epsilon}-r\lambda w_t$
 
