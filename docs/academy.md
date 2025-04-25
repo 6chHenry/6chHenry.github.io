@@ -58,7 +58,9 @@ Currently, I am an active participant in [Zhiyuan Honors Program](https://en.zhi
 
 ## Education
 
-### School of Artificial Intelligence,Shanghai Jiaotong University![A+](./academy.assets/flogo.png){ align=right style="height:6em; border-radius: 0.5em;"}
+### School of Artificial Intelligence,Shanghai Jiaotong University
+
+![SAI](./academy.assets/image-20250425174246126.png){ align=right style="height:6em; border-radius: 0.5em;"}
 
 
 
