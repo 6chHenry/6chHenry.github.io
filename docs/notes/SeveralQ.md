@@ -16,7 +16,7 @@ LN 常用于NLP(Transformer),因为我们希望学习一个词是通过这一句
 
 BN示意图：
 
-![BN1示意图](https://i-blog.csdnimg.cn/blog_migrate/d5e54b2f27d60e4cd852cc35e22f4a09.jpeg#pic_center)
+![BN1示意图](https://i-blog.csdnimg.cn/blog_migrate/d5e54b2f27d60e4cd852cc35e22f4a09.jpeg)
 
 ---
 
@@ -24,7 +24,7 @@ BN示意图：
 
 LN示意图：
 
-![LN示意图](https://i-blog.csdnimg.cn/blog_migrate/166896d1305f8859e931206ff127a383.jpeg#pic_center)
+![LN示意图](https://i-blog.csdnimg.cn/blog_migrate/166896d1305f8859e931206ff127a383.jpeg)
 
 # 我们为什么需要激活函数(比如ReLU)?
 

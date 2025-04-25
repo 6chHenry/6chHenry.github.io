@@ -94,6 +94,10 @@ Constant: $\alpha_t=\alpha_0$
 
 Grid Search: [, , ,] * [, , ,]
 
+What DeepSeek does: AdamW optimizer $\beta_1=0.9,\beta_2=0.95,Weight Decay = 0.1$
+
+​				Warm-up & step decrease : At the beginning 2000 steps, learning rate increases to the maximum linearly. Then,after training about 80% tokens,learning rate times 0.316,90% tokens times 0.316,maximum is set to $4.2\times 10^{-4}$,gradient cut norm is set to 1.0
+
 ## Choosing Hyperparameters
 
 Step 1 : Check initial loss

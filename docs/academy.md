@@ -12,7 +12,7 @@ nostatistics: true
 
 :fontawesome-solid-inbox: Work Email: [HenryLiu](mailto:HenryLiu13550060700@sjtu.edu.cn)
 
-:fontawesome-solid-inbox: Personal Email: [2313287840 [at] qq [dot] com](mailto:2313287840@qq.com)
+:fontawesome-solid-inbox: Personal Email: [HenryLiu13550060700[at]sjtu[dot]edu[dot]cn](mailto:2313287840@qq.com)
 
 :material-file: CV: Empty
 
@@ -22,7 +22,11 @@ nostatistics: true
 
 ## Bio
 
-I am a first-year undergraduate student majoring in Mechanics at the [ME](https://me.sjtu.edu.cn/) of [Shanghai Jiao Tong University (SJTU)](https://en.sjtu.edu.cn/). Currently, I am an active participant in [Zhiyuan Honors Program](https://en.zhiyuan.sjtu.edu.cn/), which fosters academic excellence and innovation.
+I am a first-year undergraduate student majoring in Mechanics at the [ME](https://me.sjtu.edu.cn/) of [Shanghai Jiao Tong University (SJTU)](https://en.sjtu.edu.cn/). 
+
+Hopefully,I will continue my career in  [SAI](https://soai.sjtu.edu.cn/) of [Shanghai Jiao Tong University (SJTU)](https://en.sjtu.edu.cn/). 
+
+Currently, I am an active participant in [Zhiyuan Honors Program](https://en.zhiyuan.sjtu.edu.cn/), which fosters academic excellence and innovation.
 
 > [!INFO] I am enthusiastic about Deep Learning in Computer Vision! Please feel free to reach out to me if you want to share experiences with me! 🥰🥰🥰
 
@@ -31,7 +35,7 @@ I am a first-year undergraduate student majoring in Mechanics at the [ME](https:
 
 ## Research Interest
 
-- **Deep Learning For Computer Vision**: I love the charm of computer vision which is amazing,because it makes computer able to *see* the images and videos!
+- **Computer Vision**: I love the charm of computer vision which is amazing,because it makes computer able to *see* the images and videos!
 - **Embodied AI**: Building the *brain* for the robots is also interesting for me!
 
 ---
@@ -40,6 +44,8 @@ I am a first-year undergraduate student majoring in Mechanics at the [ME](https:
 
 === "2025"
 
+    [04/2025] :party_popper: I was admitted to SAI !
+    
     [03/2025] :party_popper: I became a member of A+ Club of SJTU ME.
     
     [02/2025] :party_popper: I became a member of Zhiyuan Honor Program,SJTU.
@@ -51,6 +57,10 @@ I am a first-year undergraduate student majoring in Mechanics at the [ME](https:
 ---
 
 ## Education
+
+### School of Artificial Intelligence,Shanghai Jiaotong University![A+](./academy.assets/flogo.png){ align=right style="height:6em; border-radius: 0.5em;"}
+
+
 
 ### A+ Club of SJTU ME,Shanghai Jiao Tong University![A+](./academy.assets/aplus.jpg){ align=right style="height:6em; border-radius: 0.5em;"}
 
