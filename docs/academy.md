@@ -22,9 +22,7 @@ nostatistics: true
 
 ## Bio
 
-I am a first-year undergraduate student majoring in Mechanics at the [ME](https://me.sjtu.edu.cn/) of [Shanghai Jiao Tong University (SJTU)](https://en.sjtu.edu.cn/). 
-
-Hopefully,I will continue my career in  [SAI](https://soai.sjtu.edu.cn/) of [Shanghai Jiao Tong University (SJTU)](https://en.sjtu.edu.cn/). 
+I am a first-year undergraduate student majoring in AI at [SAI](https://soai.sjtu.edu.cn/) of [Shanghai Jiao Tong University (SJTU)](https://en.sjtu.edu.cn/). 
 
 Currently, I am an active participant in [Zhiyuan Honors Program](https://en.zhiyuan.sjtu.edu.cn/), which fosters academic excellence and innovation.
 

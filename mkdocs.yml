@@ -218,6 +218,7 @@ nav:
       - Attention is All You Need: notes/GPT/Attention is All You Need.md
       - Dive into GPT: notes/GPT/diveintogpt.md
     - 一些问题: notes/SeveralQ.md
+    - Latex基本教程: notes/Latex.md
   - 日记:
     - index: diaries/index.md
     - 2024年:
@@ -260,6 +261,14 @@ nav:
         - "4.16": diaries/2025/4月/20250416.md
         - "4.18": diaries/2025/4月/20250418.md
         - "4.25": diaries/2025/4月/20250425.md
+      - 5月:
+        - "5.14": diaries/2025/5月/20250514.md
+      - 6月:
+        - "6.1": diaries/2025/6月/20250601.md
+        - "6.12": diaries/2025/6月/20250612.md
+      - 7月:
+        - "7.3": diaries/2025/7月/20250703.md
+        - "7.15": diaries/2025/7月/20250715.md
   - 总结:
     - index: summary/index.md
     - "影评":
@@ -276,6 +285,7 @@ nav:
       - "规划": summary/具体计划.md
       - "第11周周结": summary/2025/Week11(3.17-3.23).md
       - "第12周周结": summary/2025/Week12(3.24-3.30).md
+    - "大一年度总结": summary/大一年度总结.md
     - "睡眠": summary/睡眠的重要性.md
   - 网站:
     - index: websites/index.md
