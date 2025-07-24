@@ -217,58 +217,61 @@ nav:
       - ShakespeareGPT: notes/GPT/ShakespeareGPT.md
       - Attention is All You Need: notes/GPT/Attention is All You Need.md
       - Dive into GPT: notes/GPT/diveintogpt.md
+    - 科研笔记：
+      - Pickle: notes/Research/WhatIsPickle.md
+      - Regex: notes/Research/Regex.md
     - 一些问题: notes/SeveralQ.md
     - Latex基本教程: notes/Latex.md
-  - 日记:
-    - index: diaries/index.md
-    - 2024年:
-      - 10月:
-        - "18岁生日快乐!": summary/写给18岁的信.md
-      - 12月: 
-        - "20241226": diaries/2024/20241226.md
-        - "20241231": diaries/2024/20241231.md
-    - 2025年:
-      - 1月: diaries/2025/1月/20250101.md
-      - 2月: diaries/2025/2月/20250228.md
-      - 3月: 
-        - "3.1": diaries/2025/3月/20250301.md
-        - "3.2": diaries/2025/3月/20250302.md
-        - "3.3": diaries/2025/3月/20250303.md
-        - "3.4": diaries/2025/3月/20250304.md
-        - "3.5": diaries/2025/3月/20250305.md
-        - "3.12": diaries/2025/3月/20250312.md
-        - "3.15": diaries/2025/3月/20250315.md
-        - "3.16": diaries/2025/3月/20250316.md
-        - "3.17": diaries/2025/3月/20250317.md
-        - "3.18": diaries/2025/3月/20250318.md
-        - "3.21": diaries/2025/3月/20250321.md
-        - "3.22": diaries/2025/3月/20250322.md
-        - "3.23": diaries/2025/3月/20250323.md
-        - "3.24": diaries/2025/3月/20250324.md
-        - "3.25": diaries/2025/3月/20250325.md
-        - "3.26": diaries/2025/3月/20250326.md
-        - "3.27": diaries/2025/3月/20250327.md
-        - "3.28": diaries/2025/3月/20250328.md
-        - "3.31": diaries/2025/3月/20250331.md
-      - 4月:
-        - "4.1": diaries/2025/4月/20250401.md
-        - "4.2": diaries/2025/4月/20250402.md
-        - "4.4": diaries/2025/4月/20250404.md
-        - "4.6": diaries/2025/4月/20250406.md
-        - "4.7": diaries/2025/4月/20250407.md
-        - "4.11": diaries/2025/4月/20250411.md
-        - "4.12": diaries/2025/4月/20250412.md
-        - "4.16": diaries/2025/4月/20250416.md
-        - "4.18": diaries/2025/4月/20250418.md
-        - "4.25": diaries/2025/4月/20250425.md
-      - 5月:
-        - "5.14": diaries/2025/5月/20250514.md
-      - 6月:
-        - "6.1": diaries/2025/6月/20250601.md
-        - "6.12": diaries/2025/6月/20250612.md
-      - 7月:
-        - "7.3": diaries/2025/7月/20250703.md
-        - "7.15": diaries/2025/7月/20250715.md
+  # - 日记:
+  #   - index: diaries/index.md
+  #   - 2024年:
+  #     - 10月:
+  #       - "18岁生日快乐!": summary/写给18岁的信.md
+  #     - 12月: 
+  #       - "20241226": diaries/2024/20241226.md
+  #       - "20241231": diaries/2024/20241231.md
+  #   - 2025年:
+  #     - 1月: diaries/2025/1月/20250101.md
+  #     - 2月: diaries/2025/2月/20250228.md
+  #     - 3月: 
+  #       - "3.1": diaries/2025/3月/20250301.md
+  #       - "3.2": diaries/2025/3月/20250302.md
+  #       - "3.3": diaries/2025/3月/20250303.md
+  #       - "3.4": diaries/2025/3月/20250304.md
+  #       - "3.5": diaries/2025/3月/20250305.md
+  #       - "3.12": diaries/2025/3月/20250312.md
+  #       - "3.15": diaries/2025/3月/20250315.md
+  #       - "3.16": diaries/2025/3月/20250316.md
+  #       - "3.17": diaries/2025/3月/20250317.md
+  #       - "3.18": diaries/2025/3月/20250318.md
+  #       - "3.21": diaries/2025/3月/20250321.md
+  #       - "3.22": diaries/2025/3月/20250322.md
+  #       - "3.23": diaries/2025/3月/20250323.md
+  #       - "3.24": diaries/2025/3月/20250324.md
+  #       - "3.25": diaries/2025/3月/20250325.md
+  #       - "3.26": diaries/2025/3月/20250326.md
+  #       - "3.27": diaries/2025/3月/20250327.md
+  #       - "3.28": diaries/2025/3月/20250328.md
+  #       - "3.31": diaries/2025/3月/20250331.md
+  #     - 4月:
+  #       - "4.1": diaries/2025/4月/20250401.md
+  #       - "4.2": diaries/2025/4月/20250402.md
+  #       - "4.4": diaries/2025/4月/20250404.md
+  #       - "4.6": diaries/2025/4月/20250406.md
+  #       - "4.7": diaries/2025/4月/20250407.md
+  #       - "4.11": diaries/2025/4月/20250411.md
+  #       - "4.12": diaries/2025/4月/20250412.md
+  #       - "4.16": diaries/2025/4月/20250416.md
+  #       - "4.18": diaries/2025/4月/20250418.md
+  #       - "4.25": diaries/2025/4月/20250425.md
+  #     - 5月:
+  #       - "5.14": diaries/2025/5月/20250514.md
+  #     - 6月:
+  #       - "6.1": diaries/2025/6月/20250601.md
+  #       - "6.12": diaries/2025/6月/20250612.md
+  #     - 7月:
+  #       - "7.3": diaries/2025/7月/20250703.md
+  #       - "7.15": diaries/2025/7月/20250715.md
   - 总结:
     - index: summary/index.md
     - "影评":
@@ -277,15 +280,15 @@ nav:
     - "音乐":
       - "孤儿仔 --Eason Chan": summary/Music/孤儿仔.md
     - "我的高中": summary/高中回忆录.md
-    - "大一上":
-      - "下半期计划": summary/下半期计划.md
-      - "期末复习计划": summary/Review Plan.md
-      - "复盘": summary/我的大一上学期.md
-    - "大一下":
-      - "规划": summary/具体计划.md
-      - "第11周周结": summary/2025/Week11(3.17-3.23).md
-      - "第12周周结": summary/2025/Week12(3.24-3.30).md
-    - "大一年度总结": summary/大一年度总结.md
+    # - "大一上":
+    #   - "下半期计划": summary/下半期计划.md
+    #   - "期末复习计划": summary/Review Plan.md
+    #   - "复盘": summary/我的大一上学期.md
+    # - "大一下":
+    #   - "规划": summary/具体计划.md
+    #   - "第11周周结": summary/2025/Week11(3.17-3.23).md
+    #   - "第12周周结": summary/2025/Week12(3.24-3.30).md
+    # - "大一年度总结": summary/大一年度总结.md
     - "睡眠": summary/睡眠的重要性.md
   - 网站:
     - index: websites/index.md
