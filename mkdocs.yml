@@ -217,7 +217,7 @@ nav:
       - ShakespeareGPT: notes/GPT/ShakespeareGPT.md
       - Attention is All You Need: notes/GPT/Attention is All You Need.md
       - Dive into GPT: notes/GPT/diveintogpt.md
-    - 科研笔记：
+    - 科研笔记:
       - Pickle: notes/Research/WhatIsPickle.md
       - Regex: notes/Research/LearnRegex.md
     - 一些问题: notes/SeveralQ.md
