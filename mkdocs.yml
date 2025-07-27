@@ -51,11 +51,29 @@ theme:
         name: dark mode
   font:
     text: JetBrains Mono
+    code: Roboto Mono
   favicon: img/avatar1.jpg
   icon:
     logo: material/coffee
     repo: fontawesome/brands/git-alt
     edit: material/pencil
+    repo: fontawesome/brands/github
+    previous: fontawesome/solid/angle-left
+    next: fontawesome/solid/angle-right
+    annotation: material/arrow-right-circle
+    admonition:
+      note: fontawesome/solid/note-sticky
+      abstract: fontawesome/solid/book
+      info: fontawesome/solid/circle-info
+      tip: fontawesome/solid/bullhorn
+      success: fontawesome/solid/check
+      question: fontawesome/solid/circle-question
+      warning: fontawesome/solid/triangle-exclamation
+      failure: fontawesome/solid/bomb
+      danger: fontawesome/solid/skull
+      bug: fontawesome/solid/robot
+      example: fontawesome/solid/flask
+      quote: fontawesome/solid/quote-left
 
   static_templates:
     - 404.html
@@ -217,6 +235,9 @@ nav:
       - ShakespeareGPT: notes/GPT/ShakespeareGPT.md
       - Attention is All You Need: notes/GPT/Attention is All You Need.md
       - Dive into GPT: notes/GPT/diveintogpt.md
+    - Python进阶教程:
+      - 减少For-Loop: notes/Python-Tutorial/For-Loop.md
+      - Matplotlib: notes/Python-Tutorial/Pyplot.md
     - 科研笔记:
       - Pickle: notes/Research/WhatIsPickle.md
       - Regex: notes/Research/LearnRegex.md
