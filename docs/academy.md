@@ -2,8 +2,8 @@
 hide:
   - navigation
   - toc
-  - feedback
 nostatistics: true
+comments: true
 ---
 
 # KeWei Liu(刘可唯) ![](./academy.assets/avatar1.jpg){ align=right style="width:7.5em; margin-left: 7.5em; margin-top: 0.5em; border-radius: 1em;"}
@@ -60,7 +60,9 @@ Currently, I am an active participant in [Zhiyuan Honors Program](https://en.zhi
 
 ![SAI](./academy.assets/image-20250425174246126.png){ align=right style="height:6em; border-radius: 0.5em;"}
 
+Apr. 2025 -- Present
 
+<br>
 
 ### A+ Club of SJTU ME,Shanghai Jiao Tong University![A+](./academy.assets/aplus.jpg){ align=right style="height:6em; border-radius: 0.5em;"}
 
@@ -76,7 +78,7 @@ Feb. 2025 -- Present
 
 ### School of Mechanical Engineering, Shanghai Jiao Tong University![Image title](./academy.assets/sjtu-1740821286474-3.png){ align=right style="height:6em; border-radius: 0.5em;"}
 
-Sept. 2024 -- Present
+Sept. 2024 -- Apr. 2025
 
 ---
 
@@ -92,7 +94,7 @@ Sept. 2024 -- Present
 
 ## Projects
 
-The page is powered by [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) and supports collaboration through Pull Requests and GitHub Actions.
+2025暑假：自动驾驶行为仿真
 
 ---
 

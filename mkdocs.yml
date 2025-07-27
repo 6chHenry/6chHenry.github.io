@@ -238,6 +238,7 @@ nav:
     - Python进阶教程:
       - 减少For-Loop: notes/Python-Tutorial/For-Loop.md
       - Matplotlib: notes/Python-Tutorial/Pyplot.md
+      - Pandas: notes/Python-Tutorial/pandas.md
     - 科研笔记:
       - Pickle: notes/Research/WhatIsPickle.md
       - Regex: notes/Research/LearnRegex.md
