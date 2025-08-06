@@ -239,20 +239,23 @@ nav:
       - 减少For-Loop: notes/Python-Tutorial/For-Loop.md
       - Matplotlib: notes/Python-Tutorial/Pyplot.md
       - Pandas: notes/Python-Tutorial/pandas.md
+      - Tensorboard: notes/Python-Tutorial/Tensorboard.md
+      - Logging: notes/Python-Tutorial/Logging.md
+      - Pickle: notes/Python-Tutorial/WhatIsPickle.md
+      - Regex: notes/Python-Tutorial/LearnRegex.md
     - 科研笔记:
-      - Pickle: notes/Research/WhatIsPickle.md
-      - Regex: notes/Research/LearnRegex.md
+      - OCL: notes/Research/OCL.md
     - 一些问题: notes/SeveralQ.md
     - Latex基本教程: notes/Latex.md
-  # - 日记:
-  #   - index: diaries/index.md
+  - 日记:
+    - index: diaries/index.md
   #   - 2024年:
   #     - 10月:
   #       - "18岁生日快乐!": summary/写给18岁的信.md
   #     - 12月: 
   #       - "20241226": diaries/2024/20241226.md
   #       - "20241231": diaries/2024/20241231.md
-  #   - 2025年:
+    - 2025年: 
   #     - 1月: diaries/2025/1月/20250101.md
   #     - 2月: diaries/2025/2月/20250228.md
   #     - 3月: 
@@ -294,6 +297,7 @@ nav:
   #     - 7月:
   #       - "7.3": diaries/2025/7月/20250703.md
   #       - "7.15": diaries/2025/7月/20250715.md
+      - 8月: diaries/2025/Aug.md
   - 总结:
     - index: summary/index.md
     - "影评":
