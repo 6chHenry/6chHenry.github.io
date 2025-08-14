@@ -244,7 +244,10 @@ nav:
       - Pickle: notes/Python-Tutorial/WhatIsPickle.md
       - Regex: notes/Python-Tutorial/LearnRegex.md
     - 科研笔记:
-      - OCL: notes/Research/OCL.md
+      - OCL: 
+        - 余弦相似度: notes/Research/OCL/CosineSimilarity.md
+        - mAP: notes/Research/OCL/mAP.md
+        - tSNE: notes/Research/OCL/tSNE.md
       - Causal Structure Distributions: notes/Research/CausalDiscovery/Causal_Structure_Distributions.md
     - 一些问题: notes/SeveralQ.md
     - Latex基本教程: notes/Latex.md
