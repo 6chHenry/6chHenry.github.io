@@ -245,6 +245,7 @@ nav:
       - Regex: notes/Python-Tutorial/LearnRegex.md
     - 科研笔记:
       - OCL: notes/Research/OCL.md
+      - Causal Structure Distributions: notes/Research/Causal_Structure_Distributions.md
     - 一些问题: notes/SeveralQ.md
     - Latex基本教程: notes/Latex.md
   - 日记:
