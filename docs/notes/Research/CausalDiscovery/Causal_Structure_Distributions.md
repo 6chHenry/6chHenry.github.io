@@ -6,9 +6,9 @@ Core Idea: Learning a distribution of causal structure rather than a single caus
 
 ## Model Architecture
 
-![architecture](./Causal_Structure_Distrbutions.assets/architecture.png)
+![architecture](./Causal_Structure_Distributions.assets/architecture.png)
 
-![image-20250814200039811](./Causal_Structure_Distrbutions.assets/image-20250814200039811.png)
+![image-20250814200039811](./Causal_Structure_Distributions.assets/image-20250814200039811.png)
 
 ## Supplementary Knowledge
 
@@ -24,7 +24,7 @@ IG produces an attribution vector a ∈ $R^D$, defined as IG(x, x′; M) = a whe
 
 ### Modeling the SCM Distribution
 
-![image-20250814201423304](./Causal_Structure_Distrbutions.assets/image-20250814201423304.png)
+![image-20250814201423304](./Causal_Structure_Distributions.assets/image-20250814201423304.png)
 
 We take the Markov Chain as DAG. Specifically,we have state variables and action variables of the current time state t,and we have the state variables of the next timestep. The arrows can only flow from exogenous variables(that is state and action) to endogenous variables(state).
 
