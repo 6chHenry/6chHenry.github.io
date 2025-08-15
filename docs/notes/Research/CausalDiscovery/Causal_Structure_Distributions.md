@@ -1,4 +1,13 @@
-# Leaning Causal Structure Distributions for Robust Planning
+# Leaning Causal Structure Distributions for RobustUsing IG, we construct the $(n+p)\tim**Training & Inference**
+
+During learning we instantiate two models: one for causally-informed dynamics prediction, denoted as $f^D$, and another, the contribution model $f^C$, which will be used to estimate the distribution $\mathcal{P}(\textbf{p}^D)$, from which $f^D$ samples causal masks. By connecting every input feature $x_i$ to every hidden neuron (and ultimately every output $x_{t+1}^j$), $f^C$ ensures that no potential causal link is precluded by architectural sparsity. This "fully wired" design is essential: if we omitted any connection in $f^C$, we could not attribute an input–output pair, biasing the learned causal structure distribution. Specifically, for $f^C$, we constrain all elements of the parameter vector $\textbf{p}^C$ to one, i.e.: $p_{ij}^C = 1$, ∀i, j.n$ matrix $\textbf{p}$. We estimate each element as:
+
+$$
+p_{ij} := \text{IG}_{ij}(\mathbf{x}, \mathbf{x}'; \mathcal{M}) 
+= (x_i - x'_i) \cdot \int_{\alpha=0}^{1} \frac{\partial}{\partial x_i} \mathcal{M}(\mathbf{x}' + \alpha \times (\mathbf{x} - \mathbf{x}'))_j \, d\alpha
+$$
+
+where we set the null input $x' = 0$.ng
 
 ## Abstract
 
@@ -39,11 +48,11 @@ E_{i,j} = \left\{
 $$
 Each $E_{i,j}$ follows a Bernoulli distribution with parameter $p_{i,j}$. Thus , the probability mass function(PMF) can be given by:
 
-$Pr(E_{i,j}=e_{i,j}) = p_{ij}^{e_{ij}}(1-p_{ij})^{1-e_{ij}},\text{for } e_{i,j} \in \set{0,1}$
+$Pr(E_{i,j}=e_{i,j}) = p_{ij}^{e_{ij}}(1-p_{ij})^{1-e_{ij}}, \text{ for } e_{i,j} \in \{0,1\}$
 
 Since the existence of an edge from one node to another is independent from other non-related variables, the joint PMF:
 
-$Pr(\set{E_{i,j}=e_{i,j}},\textbf{p}) = \prod_{i,j}p_{ij}^{e_{i,j}}(1-p_{ij})^{1-e_{ij}}$ where $\textbf{p}=(p_{ij})$ is the matrix of Bernoulli parameters.
+$Pr(\{E_{i,j}=e_{i,j}\},\textbf{p}) = \prod_{i,j}p_{ij}^{e_{i,j}}(1-p_{ij})^{1-e_{ij}}$ where $\textbf{p}=(p_{ij})$ is the matrix of Bernoulli parameters.
 
 ### Estimating the SCM Distribution Parameters p
 
@@ -57,24 +66,27 @@ p_{ij} := \text{IG}_{ij}(\mathbf{x}, \mathbf{x}'; \mathcal{M})
 = (x_i - x'_i) \cdot \int_{\alpha=0}^{1} \frac{\partial}{\partial x_i} \mathcal{M}(\mathbf{x}' + \alpha \times (\mathbf{x} - \mathbf{x}'))_j \, d\alpha,
 $ where we set the null input x’ = 0
 
-We then interpret each pij as a score proportional to the (unnormalized) probability that feature $x_t^i \or a_t^i$ is as a cause  of the output $x_{t+1}^j$.Concretely, we normalize across all candidate parents to obtain the Bernoulli parameters $\textbf{p} = (p_{ij})$ for the distribution $\mathcal{P}$:
+We then interpret each $p_{ij}$ as a score proportional to the (unnormalized) probability that feature $x_t^i$ or $a_t^i$ is a cause of the output $x_{t+1}^j$. Concretely, we normalize across all candidate parents to obtain the Bernoulli parameters $\textbf{p} = (p_{ij})$ for the distribution $\mathcal{P}$:
 
-$
-p_{ij} = \max \left( \rho_{min}, \min \left( \frac{\mathbf{s}(|p_{i,j}|)}{\max_j \mathbf{s}(|p_{:,j}|)}, 1 - \rho_{min} \right) \right)
-$  
+$$
+p_{ij} = \max \left( \rho_{\min}, \min \left( \frac{\mathbf{s}(|p_{i,j}|)}{\max_j \mathbf{s}(|p_{:,j}|)}, 1 - \rho_{\min} \right) \right)
+$$  
 
-$s(·)$ is an smoothing function to avoid one contribution from significantly out-weighting the others and 0 < $ρ_{min}$ < 0.5 clips the minimum and maximum probability.
+$s(\cdot)$ is a smoothing function to avoid one contribution from significantly out-weighting the others and $0 < \rho_{\min} < 0.5$ clips the minimum and maximum probability.
 
 ### Probabilistic Neural Network
 
 $$ f^D := f(\mathbf{x}) = f_{\text{dec}}(f_{\text{enc}}(\mathbf{x}) \odot \mathbf{M}), \quad \mathbf{M} \sim \mathcal{P}(\mathbf{p}) $$
 
 which encompasses:
-- **Encoder:** Let \( $\mathbf{s} \in \mathbb{R}^n$ \) be the vector of state variables and \( $\mathbf{a} \in \mathbb{R}^p$ \) be the vector of action variables. Define the concatenated input vector: \( $$\mathbf{x} = [\mathbf{s}; \mathbf{a}] \in \mathbb{R}^{n+p}$$ \). The encoder \( $f_{\text{enc}}: \mathbb{R}^{n+p} \rightarrow \mathbb{R}^{n+p}$ \) maps this input into a latent space of the same dimension: \( $\mathbf{z} = f_{\text{enc}}(\mathbf{x}) \in \mathbb{R}^{n+p} $ ).
-- **Latent Vector Masking:** Let \( $\mathbf{M} \in \{0,1\}^{(n+p) \times n} $\) be the mask matrix sampled from the learned distribution \( $\mathcal{P}$ \). Each element \( $M_{ij}$ \) indicates the presence or absence of an edge from the \( i \)-th latent feature to the \( j \)-th next state variable. Define the masking process as:
-  $\mathbf{z}_j = \mathbf{z} \odot \mathbf{m}_{:,j} \quad \text{for } j = 1, 2, \ldots, n,$
-  where \( $\mathbf{m}_{:,j}$ \) is the \( j \)-th column of \( $\mathbf{M}$ \) and \( $\odot$ \) denotes element-wise multiplication. By masking we select the latent features to use for predicting each next state variable. Note that \( $\mathbf{M} \sim \mathcal{P}(\mathbf{p})$ \) is sampled every time \( $f(\cdot)$ \) is called.
-- **Decoder:** Each masked vector \( $\mathbf{z}_j$ \) is fed to the corresponding decoder \( $f_{\text{dec}}^j: \mathbb{R}^{n+p} \rightarrow \mathbb{R}^2$ \), which outputs the parameters of a Gaussian distribution for the next state variable: \( $(\mu_j, \sigma_j^2) = f_{\text{dec}}^j(\mathbf{z}_j)$ \). The next state variable \( $s'_j $\) is then: \( $s'_j \sim \mathcal{N}(\mu_j, \sigma_j^2)$ \). This way we account for the aleatoric uncertainty due to unexpected and un-modeled disturbances into the prediction.
+
+- **Encoder:** Let $\mathbf{s} \in \mathbb{R}^n$ be the vector of state variables and $\mathbf{a} \in \mathbb{R}^p$ be the vector of action variables. Define the concatenated input vector: $\mathbf{x} = [\mathbf{s}; \mathbf{a}] \in \mathbb{R}^{n+p}$. The encoder $f_{\text{enc}}: \mathbb{R}^{n+p} \rightarrow \mathbb{R}^{n+p}$ maps this input into a latent space of the same dimension: $\mathbf{z} = f_{\text{enc}}(\mathbf{x}) \in \mathbb{R}^{n+p}$.
+
+- **Latent Vector Masking:** Let $\mathbf{M} \in \{0,1\}^{(n+p) \times n}$ be the mask matrix sampled from the learned distribution $\mathcal{P}$. Each element $M_{ij}$ indicates the presence or absence of an edge from the $i$-th latent feature to the $j$-th next state variable. Define the masking process as:
+  $$\mathbf{z}_j = \mathbf{z} \odot \mathbf{m}_{:,j} \quad \text{for } j = 1, 2, \ldots, n$$
+  where $\mathbf{m}_{:,j}$ is the $j$-th column of $\mathbf{M}$ and $\odot$ denotes element-wise multiplication. By masking we select the latent features to use for predicting each next state variable. Note that $\mathbf{M} \sim \mathcal{P}(\mathbf{p})$ is sampled every time $f(\cdot)$ is called.
+
+- **Decoder:** Each masked vector $\mathbf{z}_j$ is fed to the corresponding decoder $f_{\text{dec}}^j: \mathbb{R}^{n+p} \rightarrow \mathbb{R}^2$, which outputs the parameters of a Gaussian distribution for the next state variable: $(\mu_j, \sigma_j^2) = f_{\text{dec}}^j(\mathbf{z}_j)$. The next state variable $s'_j$ is then: $s'_j \sim \mathcal{N}(\mu_j, \sigma_j^2)$. This way we account for the aleatoric uncertainty due to unexpected and un-modeled disturbances into the prediction.
 
 **Training & Inference. **
 
@@ -82,9 +94,9 @@ During learning we instantiate two models : one for causally-informed dynamics p
 
 This configuration ensures that all input variables to $f^C$ remain active during latent vector masking, thereby simulating a scenario in which all inputs are treated as causes of all output variables.
 
-The training procedure follows a sequential approach. First, we train $f^C$ using the available dataset D. Once trained, we employ $f^C$ as the model IG will use to compute an estimate of $p^D$  and subsequently transforming each element $pij ∈ p^D$ . The resulting parameter vector $p^D$ then defines the distribution from which the causal masks M are sampled during the training of $f^D$ with the data in D.
+The training procedure follows a sequential approach. First, we train $f^C$ using the available dataset D. Once trained, we employ $f^C$ as the model IG will use to compute an estimate of $p^D$ and subsequently transforming each element $p_{ij} \in p^D$. The resulting parameter vector $p^D$ then defines the distribution from which the causal masks M are sampled during the training of $f^D$ with the data in D.
 
-At inference time, $f^C$ is discarded, and the final learned value of $p^D$ is employed to parameterize the causal mask distribution P($p^D$), ensuring that the causal relationships inferred during training are preserved in deployment. 
+At inference time, $f^C$ is discarded, and the final learned value of $p^D$ is employed to parameterize the causal mask distribution P($p^D$), ensuring that the causal relationships inferred during training are preserved in deployment.
 
 ### Symbol Analysis
 
