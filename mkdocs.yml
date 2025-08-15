@@ -245,6 +245,7 @@ nav:
       - Regex: notes/Python-Tutorial/LearnRegex.md
     - 科研笔记:
       - OCL: 
+        - OCL: notes/Research/OCL/OCL.md
         - 余弦相似度: notes/Research/OCL/CosineSimilarity.md
         - mAP: notes/Research/OCL/mAP.md
         - tSNE: notes/Research/OCL/tSNE.md
