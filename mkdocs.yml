@@ -250,6 +250,8 @@ nav:
         - mAP: notes/Research/OCL/mAP.md
         - tSNE: notes/Research/OCL/tSNE.md
       - Causal Structure Distributions: notes/Research/CausalDiscovery/Causal_Structure_Distributions.md
+      - Llava: notes/Research/Llava.md
+      - CELLO: notes/Research/CELLO.md
     - 一些问题: notes/SeveralQ.md
     - Latex基本教程: notes/Latex.md
   - 日记:

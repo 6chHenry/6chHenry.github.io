@@ -1,4 +1,5 @@
-# Leaning Causal Structure Distributions for RobustUsing IG, we construct the $(n+p)\tim**Training & Inference**
+# Leaning Causal Structure Distributions for Robust Learning
+
 
 During learning we instantiate two models: one for causally-informed dynamics prediction, denoted as $f^D$, and another, the contribution model $f^C$, which will be used to estimate the distribution $\mathcal{P}(\textbf{p}^D)$, from which $f^D$ samples causal masks. By connecting every input feature $x_i$ to every hidden neuron (and ultimately every output $x_{t+1}^j$), $f^C$ ensures that no potential causal link is precluded by architectural sparsity. This "fully wired" design is essential: if we omitted any connection in $f^C$, we could not attribute an input–output pair, biasing the learned causal structure distribution. Specifically, for $f^C$, we constrain all elements of the parameter vector $\textbf{p}^C$ to one, i.e.: $p_{ij}^C = 1$, ∀i, j.n$ matrix $\textbf{p}$. We estimate each element as:
 
