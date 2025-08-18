@@ -254,6 +254,9 @@ nav:
       - CELLO: notes/Research/CELLO.md
     - 一些问题: notes/SeveralQ.md
     - Latex基本教程: notes/Latex.md
+    - Pytorch进阶教程:
+      - Loss Function: notes/Pytorch-Tutorial/LossFunction.md
+      - Einsum: notes/Pytorch-Tutorial/Einsum.md
   - 日记:
     - index: diaries/index.md
   #   - 2024年:
