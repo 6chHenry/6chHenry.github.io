@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__lark-mcp__docx_builtin_import"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -49,9 +49,12 @@ theme:
       toggle:
         icon: material/brightness-4
         name: dark mode
+  # font:
+  #   text: JetBrains Mono
+  #   code: Roboto Mono
   font:
-    text: JetBrains Mono
-    code: Roboto Mono
+    text: "LXGW WenKai Screen"
+    code: "Fira Code"
   favicon: img/avatar1.jpg
   icon:
     logo: material/coffee
@@ -235,6 +238,9 @@ nav:
       - ShakespeareGPT: notes/GPT/ShakespeareGPT.md
       - Attention is All You Need: notes/GPT/Attention is All You Need.md
       - Dive into GPT: notes/GPT/diveintogpt.md
+    - 6.S091(Representation Learning):
+      - Representation Learning: notes/6.S091/Representation.md
+      - Structural Causal Model: notes/6.S091/Structural Causal Model.md
     - Python进阶教程:
       - 减少For-Loop: notes/Python-Tutorial/For-Loop.md
       - Matplotlib: notes/Python-Tutorial/Pyplot.md
@@ -249,23 +255,37 @@ nav:
         - 余弦相似度: notes/Research/OCL/CosineSimilarity.md
         - mAP: notes/Research/OCL/mAP.md
         - tSNE: notes/Research/OCL/tSNE.md
-      - Causal Structure Distributions: notes/Research/CausalDiscovery/Causal_Structure_Distributions.md
-      - Llava: notes/Research/Llava.md
-      - CELLO: notes/Research/CELLO.md
+      - Causal Discovery:
+        - Papers:
+          - Causal Structure Distributions: notes/Research/CausalDiscovery/Papers/Causal_Structure_Distributions.md
+          - Llava: notes/Research/CausalDiscovery/Papers/Llava.md
+          - CELLO: notes/Research/CausalDiscovery/Papers/CELLO.md
+          - ALCM: notes/Research/CausalDiscovery/Papers/ALCM.md
+          - Causal Representation learning:
+            - Causal Representation Learning: notes/Research/CausalDiscovery/Papers/Towards Causal Representation Learning.md
+        - Algorithms:
+          - PC Algorithm: notes/Research/CausalDiscovery/Algorithms/PCAlgorithm.md
+          - NOTEARS: notes/Research/CausalDiscovery/Algorithms/NOTEARS.md
+          - MissNODAG: notes/Research/CausalDiscovery/Algorithms/MissNODAG.md
+          - DAG-GNN: notes/Research/CausalDiscovery/Algorithms/DAG-GNN.md
     - 一些问题: notes/SeveralQ.md
     - Latex基本教程: notes/Latex.md
     - Pytorch进阶教程:
-      - Loss Function: notes/Pytorch-Tutorial/LossFunction.md
+      - Loss Function:
+        - 概述: notes/Pytorch-Tutorial/LossFunction/LossFunction.md   
+        - Triplet Loss: notes/Pytorch-Tutorial/LossFunction/TripletLoss.md
       - Einsum: notes/Pytorch-Tutorial/Einsum.md
-  - 日记:
-    - index: diaries/index.md
+      - addmm: notes/Pytorch-Tutorial/addmm.md
+      - where: notes/Pytorch-Tutorial/where.md
+  # - 日记:
+  #   - index: diaries/index.md
   #   - 2024年:
   #     - 10月:
   #       - "18岁生日快乐!": summary/写给18岁的信.md
   #     - 12月: 
   #       - "20241226": diaries/2024/20241226.md
   #       - "20241231": diaries/2024/20241231.md
-    - 2025年: 
+    # - 2025年: 
   #     - 1月: diaries/2025/1月/20250101.md
   #     - 2月: diaries/2025/2月/20250228.md
   #     - 3月: 
@@ -307,7 +327,7 @@ nav:
   #     - 7月:
   #       - "7.3": diaries/2025/7月/20250703.md
   #       - "7.15": diaries/2025/7月/20250715.md
-      - 8月: diaries/2025/Aug.md
+      # - 8月: diaries/2025/Aug.md
   - 总结:
     - index: summary/index.md
     - "影评":

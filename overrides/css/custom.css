@@ -1,7 +1,11 @@
-:root {
+/* :root {
   --md-text-font: "JetBrains Mono", "LXGW WenKai Screen"; 
   --md-code-font: "JetBrains Mono";
   --base-border-radius: 0.5rem;
+} */
+:root {
+  --md-text-font: "LXGW WenKai Screen", "Microsoft YaHei", sans-serif; 
+  --md-code-font: "Fira Code", "JetBrains Mono", monospace;
 }
 
 .md-typeset h1, .md-typeset h2 {

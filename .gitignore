@@ -1,7 +1,7 @@
 # Ignore Python Tutorial data and runs directories
 docs/notes/Python-Tutorial/data/
 docs/notes/Python-Tutorial/runs/
-
+docs/diaries/
 # Python
 __pycache__/
 *.py[cod]
