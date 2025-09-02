@@ -241,6 +241,15 @@ nav:
     - 6.S091(Representation Learning):
       - Representation Learning: notes/6.S091/Representation.md
       - Structural Causal Model: notes/6.S091/Structural Causal Model.md
+    - Reinforcement Learning:
+      - 大模型强化学习PPO: notes/RL/大模型强化学习PPO.md
+      - PPO算法原理: notes/RL/PPO算法原理.md
+      - 强化学习的数学原理:
+        - Overall Map: notes/RL/Overall Map.md
+        - Chapter1: notes/RL/Chapter1.md
+        - Chapter2 StateValue: notes/RL/Chapter2StateValue.md
+        - Chapter2 Bellman Equation: notes/RL/Chap2BellmanEquation.md
+        - Chapter3 Bellman Optimality: notes/RL/Chap3BellmanOptimalEquation.md
     - Python进阶教程:
       - 减少For-Loop: notes/Python-Tutorial/For-Loop.md
       - Matplotlib: notes/Python-Tutorial/Pyplot.md
