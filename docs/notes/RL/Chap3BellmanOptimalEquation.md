@@ -216,6 +216,86 @@ where the optimality is achieved when   $\pi(a|s) = \begin{cases}  1 & a = a^* \
 ### （一）关键前提：证明$f(v)$是收缩映射
 贝尔曼最优公式中的$f(v)$满足收缩映射定义，核心依据是**折扣因子$γ < 1$**（强化学习中$γ$用于衡量未来奖励的权重，通常取$0 < γ < 1$），由此可推导出$||f(v_1) - f(v_2)|| ≤ γ·||v_1 - v_2||$，故$f(v)$是收缩映射。
 
+> [!info]  Proof of Theorem 3.2
+>
+> Consider any two vectors  $v_1, v_2 \in \mathbb{R}^{|\mathcal{S}|} $, and suppose that $ \pi_1^* \doteq \arg\max_\pi (r_\pi + \gamma P_\pi v_1)  $and$  \pi_2^* \doteq \arg\max_\pi (r_\pi + \gamma P_\pi v_2) $. Then,
+>
+> $$
+> f(v_1) = \max_\pi (r_\pi + \gamma P_\pi v_1) = r_{\pi_1^*} + \gamma P_{\pi_1^*} v_1 \geq r_{\pi_2^*} + \gamma P_{\pi_2^*} v_1,
+> $$
+>
+> $$
+> f(v_2) = \max_\pi (r_\pi + \gamma P_\pi v_2) = r_{\pi_2^*} + \gamma P_{\pi_2^*} v_2 \geq r_{\pi_1^*} + \gamma P_{\pi_1^*} v_2,
+> $$
+>
+> where \( \geq \) is an elementwise comparison. As a result,
+>
+> $$
+> \begin{align*}
+> f(v_1) - f(v_2) &= r_{\pi_1^*} + \gamma P_{\pi_1^*} v_1 - \left( r_{\pi_2^*} + \gamma P_{\pi_2^*} v_2 \right) \\
+> &\leq r_{\pi_1^*} + \gamma P_{\pi_1^*} v_1 - \left( r_{\pi_1^*} + \gamma P_{\pi_1^*} v_2 \right) \\
+> &= \gamma P_{\pi_1^*} (v_1 - v_2).
+> \end{align*}
+> $$
+>
+> Similarly, it can be shown that $ f(v_2) - f(v_1) \leq \gamma P_{\pi_2^*} (v_2 - v_1) $. Therefore,
+>
+> $$
+> \gamma P_{\pi_2^*} (v_1 - v_2) \leq f(v_1) - f(v_2) \leq \gamma P_{\pi_1^*} (v_1 - v_2).
+> $$
+>
+> Define
+>
+> $$
+> z \doteq \max \left\{ |\gamma P_{\pi_2^*} (v_1 - v_2)|, |\gamma P_{\pi_1^*} (v_1 - v_2)| \right\} \in \mathbb{R}^{|\mathcal{S}|},
+> $$
+>
+> where $ \max(\cdot) ,  |\cdot| , and  \geq $ are all elementwise operators. By definition, $ z \geq 0 $. On the one hand, it is easy to see that
+>
+> $$
+> -z \leq \gamma P_{\pi_2^*} (v_1 - v_2) \leq f(v_1) - f(v_2) \leq \gamma P_{\pi_1^*} (v_1 - v_2) \leq z,
+> $$
+>
+> which implies
+>
+> $$
+> |f(v_1) - f(v_2)| \leq z.
+> $$
+>
+> It then follows that
+>
+> $$
+> \| f(v_1) - f(v_2) \|_\infty \leq \| z \|_\infty, \tag{3.5}
+> $$
+>
+> where $ \| \cdot \|_\infty $ is the maximum norm.
+>
+> On the other hand, suppose that $ z_i $ is the $ i $-th entry of $ z $, and $ p_i^T $ and $ q_i^T $ are the $ i $-th row of $ P_{\pi_1^*} $ and $ P_{\pi_2^*} $, respectively. Then,
+>
+> $$
+> z_i = \max \left\{ |\gamma p_i^T (v_1 - v_2)|, |\gamma q_i^T (v_1 - v_2)| \right\}.
+> $$
+>
+> Since $p_i$ is a vector with all nonnegative elements and the sum of the elements is equal to one, it follows that
+>
+> $$
+> |p_i^T (v_1 - v_2)| \leq p_i^T |v_1 - v_2| \leq \| v_1 - v_2 \|_\infty.
+> $$
+>
+> Similarly, we have $ |q_i^T (v_1 - v_2)| \leq \| v_1 - v_2 \|_\infty $. Therefore, $ z_i \leq \gamma \| v_1 - v_2 \|_\infty $ and hence
+>
+> $$
+> \| z \|_\infty = \max_i |z_i| \leq \gamma \| v_1 - v_2 \|_\infty.
+> $$
+>
+> Substituting this inequality gives
+>
+> $$
+> \| f(v_1) - f(v_2) \|_\infty \leq \gamma \| v_1 - v_2 \|_\infty,
+> $$
+>
+> which concludes the proof of the contraction property of  $f(v)$.
+
 
 ### （二）求解结论（对应收缩映射定理的3个性质）
 1. **解的存在性**：贝尔曼最优公式$v = f(v)$必然存在解，记为最优状态值函数$v*$。  
@@ -236,8 +316,36 @@ $v*$是**所有可能策略对应的状态值函数中的最大值**：
 - 对任意非最优策略$π$，其状态值函数$v_π$满足$v_π ≤ v^*$（即$v*$优于所有非最优策略的价值）；  
 - 因此，$π^*$是最优策略（其对应的$v_{π^*} = v^*$为最大价值）。
 
+> [!info]  Proof of Theorem 3.4
+>
+> For any policy $ \pi $, it holds that
+>
+> $$
+> v_\pi = r_\pi + \gamma P_\pi v_\pi.
+> $$
+>
+> Since
+>
+> $$
+> v^* = \max_\pi (r_\pi + \gamma P_\pi v^*) = r_{\pi^*} + \gamma P_{\pi^*} v^* \geq r_\pi + \gamma P_\pi v^*,
+> $$
+>
+> we have
+>
+> $$
+> v^* - v_\pi \geq (r_\pi + \gamma P_\pi v^*) - (r_\pi + \gamma P_\pi v_\pi) = \gamma P_\pi (v^* - v_\pi).
+> $$
+>
+> Repeatedly applying the above inequality gives $ v^* - v_\pi \geq \gamma P_\pi (v^* - v_\pi) \geq \gamma^2 P_\pi^2 (v^* - v_\pi) \geq \cdots \geq \gamma^n P_\pi^n (v^* - v_\pi) $. It follows that
+>
+> $$
+> v^* - v_\pi \geq \lim_{n \to \infty} \gamma^n P_\pi^n (v^* - v_\pi) = 0,
+> $$
+>
+> where the last equality is true because $\gamma < 1 $ and $ P_\pi^n $ is a nonnegative matrix with all its elements less than or equal to 1 (because $ P_\pi^n \mathbf{1} = \mathbf{1} $) Therefore, $ v^* \geq v_\pi $ for any $ \pi $.
 
 ### （三）最优策略$π*$的形式
+
 $π*$是**确定性（Deterministic）贪心策略（Greedy Policy）**：  
 - 对每个状态$s$，$π^*$会选择使“动作值函数（Action Value）$q^*(s,a)$”最大的动作$a^*$；  
 - 选择概率：$π^*(a^*|s) = 1$（必然选择最优动作），$π^*(a|s) = 0$（不选择其他动作）。
@@ -276,7 +384,43 @@ $π*$是**确定性（Deterministic）贪心策略（Greedy Policy）**：
 
 ## 三、最优策略的不变性：奖励线性变换不改变策略
 ### 1. 核心结论
-若对所有奖励进行**线性变换**（即$$r' = a \cdot r + b$$，其中a>0为正的缩放因子，b为偏置量），则**最优策略（π*）保持不变**，仅最优状态价值（v*）会同步发生线性变换（变换公式为$$v' = a \cdot v^* + \frac{b}{1-\gamma}$$）。
+若对所有奖励进行**线性变换**（即$$r' = \alpha \cdot r + \beta$$，其中$\alpha > 0$为正的缩放因子，$\beta$为偏置量），则**最优策略（π*）保持不变**，仅最优状态价值（v\*）会同步发生线性变换。
+
+变换公式为$v' = \alpha \cdot v^* + \frac{\beta}{1-\gamma}\mathbb{1}$,其中$\gamma$为discounted rate，$\mathbb{1} =[1,1,...,1]^T$
+
+> [!info]### Box 3.5: Proof of Theorem 3.6
+>
+> For any policy $ \pi $, define $ r_\pi = [\ldots, r_\pi(s), \ldots]^T $ where
+>
+> $$
+> r_\pi(s) = \sum_{a \in \mathcal{A}} \pi(a|s) \sum_{r \in \mathcal{R}} p(r|s,a) r, \quad s \in \mathcal{S}.
+> $$
+>
+> If $ r \to \alpha r + \beta $, then $ r_\pi(s) \to \alpha r_\pi(s) + \beta $ and hence $ r_\pi \to \alpha r_\pi + \beta \mathbf{1} $, where $ \mathbf{1} = [1, \ldots, 1]^T $. In this case, the BOE becomes
+>
+> $$
+> v' = \max_{\pi \in \Pi} (\alpha r_\pi + \beta \mathbf{1} + \gamma P_\pi v'). \tag{3.9}
+> $$
+>
+> We next solve the new BOE in (3.9) by showing that $ v' = \alpha v^* + c \mathbf{1} $ with $ c = \beta/(1-\gamma) $ is a solution of (3.9). In particular, substituting $ v' = \alpha v^* + c \mathbf{1} $ into (3.9) gives
+>
+> $$
+> \alpha v^* + c \mathbf{1} = \max_{\pi \in \Pi} (\alpha r_\pi + \beta \mathbf{1} + \gamma P_\pi (\alpha v^* + c \mathbf{1})) = \max_{\pi \in \Pi} (\alpha r_\pi + \beta \mathbf{1} + \alpha \gamma P_\pi v^* + c \gamma \mathbf{1}),
+> $$
+>
+> where the last equality is due to the fact that $ P_\pi \mathbf{1} = \mathbf{1} $. The above equation can be reorganized as
+>
+> $$
+> \alpha v^* = \max_{\pi \in \Pi} (\alpha r_\pi + \alpha \gamma P_\pi v^*) + \beta \mathbf{1} + c \gamma \mathbf{1} - c \mathbf{1},
+> $$
+>
+> which is equivalent to
+>
+> $$
+> \beta \mathbf{1} + c \gamma \mathbf{1} - c \mathbf{1} = 0.
+> $$
+>
+> Since $ c = \beta/(1-\gamma) $, the above equation is valid and hence $ v' = \alpha v^* + c \mathbf{1} $ is the solution of (3.9). Since (3.9) is the BOE, $ v' $ is also the unique solution. Finally, since $ v' $ is an affine transformation of $ v^*$, the relative relationships between the action values remain the same. Hence, the greedy optimal policy derived from  $ v' $is the same as that from $ v^* $: $ \arg\max_{\pi \in \Pi} (r_\pi + \gamma P_\pi v') $ is the same as $ \arg\max_\pi (r_\pi + \gamma P_\pi v^*) $.
 
 ### 2. 原理分析
 

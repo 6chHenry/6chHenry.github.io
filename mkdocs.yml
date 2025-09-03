@@ -251,6 +251,8 @@ nav:
         - Chapter2 StateValue: notes/RL/Chapter2StateValue.md
         - Chapter2 Bellman Equation: notes/RL/Chap2BellmanEquation.md
         - Chapter3 Bellman Optimality: notes/RL/Chap3BellmanOptimalEquation.md
+        - Chapter4 Value & Policy & Truncated Iteration: notes/RL/Chap4ValuePolicyTruncatedIteration.md
+        - Chapter4 Pseudocode : notes/RL/Pseudocode.md
     - Python进阶教程:
       - 减少For-Loop: notes/Python-Tutorial/For-Loop.md
       - Matplotlib: notes/Python-Tutorial/Pyplot.md

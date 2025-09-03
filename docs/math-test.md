@@ -25,6 +25,8 @@ $$
 
 ### 带有对齐环境的公式
 
+#### 使用 \begin{aligned} 环境
+
 $$
 \begin{aligned}
 \nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} &= \frac{4\pi}{c}\vec{\mathbf{j}} \\
@@ -32,6 +34,18 @@ $$
 \nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} &= \vec{\mathbf{0}} \\
 \nabla \cdot \vec{\mathbf{B}} &= 0
 \end{aligned}
+$$
+
+#### 使用 \begin{align} 环境
+
+$$
+\begin{align}
+\mathbb{E}[G_{t+1}|S_t = s] &= \sum_{s'} \mathbb{E}[G_{t+1}|S_t = s, S_{t+1} = s']p(s'|s) \\
+&= \sum_{s'} \mathbb{E}[G_{t+1}|S_{t+1} = s']p(s'|s) \\
+&= \sum_{s'} v_\pi(s')p(s'|s) \\
+&= \sum_{s'} v_\pi(s') \sum_{a} p(s'|s,a)\pi(a|s) \\
+&=\sum_a\pi(a|s)\sum_{s'}p(s'|s,a)v_\pi(s')
+\end{align}
 $$
 
 ### 带有矩阵的公式
