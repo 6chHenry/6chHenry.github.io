@@ -1,5 +1,7 @@
 # t-SNE
 
+参考文献：[《t-SNE 入门：非线性降维与数据可视化 | DataCamp》 --- Introduction to t-SNE: Nonlinear Dimensionality Reduction and Data Visualization | DataCamp](https://www.datacamp.com/tutorial/introduction-t-sne)
+
 ```python
 
 from sklearn.manifold import TSNE

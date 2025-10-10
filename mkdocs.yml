@@ -211,6 +211,8 @@ nav:
   - 主页: index.md
   - 笔记:
     - index: notes/index.md
+    - ML:
+      - KMeans: notes/ML/KMeans.md
     - EECS 498(Deep Learning for Computer Vision): 
       - Linear Classifiers: notes/EECS498/Linear Classifiers.md
       - Optimization: notes/EECS498/Optimization.md
@@ -254,6 +256,9 @@ nav:
         - Chapter4 Value & Policy & Truncated Iteration: notes/RL/Chap4ValuePolicyTruncatedIteration.md
         - Chapter4 Pseudocode : notes/RL/Pseudocode.md
     - Python进阶教程:
+      - 冷知识: notes/Python-Tutorial/ColdKnowledge.md
+      - Docstring: notes/Python-Tutorial/Docstring.md
+      - Python Basics: notes/Python-Tutorial/Python-Basics.md
       - 减少For-Loop: notes/Python-Tutorial/For-Loop.md
       - Matplotlib: notes/Python-Tutorial/Pyplot.md
       - Pandas: notes/Python-Tutorial/pandas.md
@@ -347,7 +352,6 @@ nav:
       - "Hachi": summary/Movies/Hachi.md
     - "音乐":
       - "孤儿仔 --Eason Chan": summary/Music/孤儿仔.md
-    - "我的高中": summary/高中回忆录.md
     # - "大一上":
     #   - "下半期计划": summary/下半期计划.md
     #   - "期末复习计划": summary/Review Plan.md
@@ -357,7 +361,6 @@ nav:
     #   - "第11周周结": summary/2025/Week11(3.17-3.23).md
     #   - "第12周周结": summary/2025/Week12(3.24-3.30).md
     # - "大一年度总结": summary/大一年度总结.md
-    - "睡眠": summary/睡眠的重要性.md
   - 网站:
     - index: websites/index.md
     - LLM: websites/LLM.md
@@ -366,5 +369,9 @@ nav:
     - CarLaneDetection: 
       - CannyEdgeDetection: projects/CarLaneDetection/Canny.md
       - HoughTransform: projects/CarLaneDetection/HoughTransform.md
+  - 杂谈:
+    - index: essay/index.md
+    - "我的高中": essay/高中回忆录.md
+    - "睡眠": essay/睡眠的重要性.md
   - 关于我: about/index.md
 
