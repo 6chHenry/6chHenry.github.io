@@ -22,11 +22,11 @@ comments: true
 
 ## Bio
 
-I am a first-year undergraduate student majoring in AI at [SAI](https://soai.sjtu.edu.cn/) of [Shanghai Jiao Tong University (SJTU)](https://en.sjtu.edu.cn/). 
+I am a second-year undergraduate student majoring in AI at [SAI](https://soai.sjtu.edu.cn/) of [Shanghai Jiao Tong University (SJTU)](https://en.sjtu.edu.cn/). 
 
 Currently, I am an active participant in [Zhiyuan Honors Program](https://en.zhiyuan.sjtu.edu.cn/), which fosters academic excellence and innovation.
 
-> [!INFO] I am enthusiastic about Deep Learning in Computer Vision! Please feel free to reach out to me if you want to share experiences with me! 🥰🥰🥰
+> [!INFO] I am enthusiastic about Causal Discovery in Robotics! Please feel free to reach out to me if you want to share experiences with me! 🥰🥰🥰
 
 
 ---
@@ -104,7 +104,7 @@ Sept. 2024 -- Apr. 2025
 
 ## Honors
 
-> Coming soon...
+2025年全国大学生数学建模竞赛全国二等奖
 
 ---
 

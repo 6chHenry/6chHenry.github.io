@@ -7,7 +7,7 @@ nostatistics: true
 
 !!! note ""
     <div align="center" style="font-size:32px;font-weight:bold">
-        『ལིའུ་ཁུ་ཝེ། 』
+        收录我的影评、书评、学期总结...
     </div>
     <br><br>
 
