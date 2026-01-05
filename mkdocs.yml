@@ -212,6 +212,9 @@ nav:
   - 笔记:
     - index: notes/index.md
     - 分治法: notes/Merge.md
+    - DP: notes/DP算法.md
+    - 排序: notes/排序算法.md
+    - 图算法: notes/图算法.md
     - ML:
       - KMeans: notes/ML/KMeans.md
     - EECS 498(Deep Learning for Computer Vision): 
