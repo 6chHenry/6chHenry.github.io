@@ -349,14 +349,16 @@ nav:
   #       - "7.3": diaries/2025/7月/20250703.md
   #       - "7.15": diaries/2025/7月/20250715.md
       # - 8月: diaries/2025/Aug.md
-  - 总结:
-    - index: summary/index.md
+  - 杂谈:
+    - index: essay/index.md
     - "影评":
-      - "3 Idiots": summary/Movies/3 Idiots.md
-      - "Hachi": summary/Movies/Hachi.md
-      - "蓝色大门": summary/Movies/绿色大门.md
+      - "3 Idiots": essay/Movies/3 Idiots.md
+      - "Hachi": essay/Movies/Hachi.md
+      - "蓝色大门": essay/Movies/绿色大门.md
     - "音乐":
-      - "孤儿仔 --Eason Chan": summary/Music/孤儿仔.md
+      - "孤儿仔 --Eason Chan": essay/Music/孤儿仔.md
+    - "我的高中": essay/高中回忆录.md
+    - "睡眠": essay/睡眠的重要性.md
     # - "大一上":
     #   - "下半期计划": summary/下半期计划.md
     #   - "期末复习计划": summary/Review Plan.md
@@ -374,9 +376,6 @@ nav:
     - CarLaneDetection: 
       - CannyEdgeDetection: projects/CarLaneDetection/Canny.md
       - HoughTransform: projects/CarLaneDetection/HoughTransform.md
-  - 杂谈:
-    - index: essay/index.md
-    - "我的高中": essay/高中回忆录.md
-    - "睡眠": essay/睡眠的重要性.md
+    
   - 关于我: about/index.md
 
