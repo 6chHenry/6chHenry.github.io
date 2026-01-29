@@ -58,4 +58,11 @@ site/
 *.tmp
 *.temp
 *.log
-docs/summary/2025.md
+docs/summary/
+!docs/summary/冬至.md
+!docs/summary/书评.md
+!docs/summary/index.md
+!docs/summary/Movies/3 Idiots.md
+!docs/summary/Movies/绿色大门.md
+!docs/summary/Movies/Hachi.md
+!docs/summary/Music/孤儿仔.md
