@@ -1,6 +1,6 @@
 收录我目前完成的项目：
 
-# Data Recipe
+# Data Recipe for Causal Discovery
 
 目前还未开源，再等等吧~
 
