@@ -9,45 +9,48 @@ comments: false
 icon: material/home
 ---
 
-# Welcome to 6ch.'s Website ✨
+<br><br><br><br><br><br>
 
-<div class="home-hero" markdown="1">
+<h1 style="text-align: center;">
+<span style="font-size:50px;">
+Welcome to 6ch.'s Blog! 🎉
+</span>
+</h1>
+<style>
+  /* 打字动画 */
+  @keyframes typing {
+    0% { 
+      clip-path: inset(0 100% 0 0); /* 从左往右逐步显示 */
+    }
+    100% { 
+      clip-path: inset(0 0 0 0);
+    }
+  }
 
-你好，我是 **6ch.**，在这里记录学习、思考和生活。
+  h1 {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 3s steps(30) 1s  1 normal both;
+    margin: 0;          /* 移除默认外边距 */
+    display: inline-block; /* 自然宽度 */
+  }
 
-<div class="home-hero-actions" markdown="1">
+  /* 父容器（如 body）简单居中 */
+  body {
+    text-align: center; /* 水平居中 */
+    margin: 20px 0;     /* 添加基础边距 */
+  }
+</style>
+<span style="display: block; text-align: center; font-size: 18px;">
+[:octicons-info-16: About Me](./about/index.md) / [:academicons-google-scholar: Academic Page](./academy.md) / [:material-chart-line: Statistics](javascript:toggle_statistics();)
+</span>
 
-[了解我 :octicons-info-16:](./about/index.md){ .md-button .md-button--primary }
-[学术主页 :academicons-google-scholar:](./academy.md){ .md-button }
-[查看统计 :material-chart-line:](javascript:toggle_statistics();){ .md-button }
-
+<div id="statistics" markdown="1" class="card" style="width: 27em; border-color: transparent; opacity: 0; margin-left: auto; margin-right: 0; font-size: 110%">
+<div style="padding-left: 1em;" markdown="1">
+<li>Website Operating Time: <span id="web-time"></span></li>
+<li>Total Visitors: <span id="busuanzi_value_site_uv"></span> people</li>
+<li>Total Visits: <span id="busuanzi_value_site_pv"></span> times</li>
 </div>
-
-</div>
-
-<div id="statistics" class="home-stat card" markdown="1">
-
-- Website Operating Time: <span id="web-time"></span>
-- Total Visitors: <span id="busuanzi_value_site_uv"></span> people
-- Total Visits: <span id="busuanzi_value_site_pv"></span> times
-
-</div>
-
-## 快速开始
-
-<div class="home-grid">
-  <a class="home-grid-card" href="./notes/index.md">
-    <h3>🧠 学习笔记</h3>
-    <p>算法、机器学习与课程笔记，持续更新。</p>
-  </a>
-  <a class="home-grid-card" href="./projects/index.md">
-    <h3>🚀 项目记录</h3>
-    <p>正在做什么、怎么做的、踩过哪些坑。</p>
-  </a>
-  <a class="home-grid-card" href="./diaries/index.md">
-    <h3>🌿 日记与随笔</h3>
-    <p>日常观察、旅行想法与阶段性复盘。</p>
-  </a>
 </div>
 
 <script>
@@ -73,10 +76,10 @@ function updateTime() {
 updateTime();
 function toggle_statistics() {
     var statistics = document.getElementById("statistics");
-  if (!statistics.classList.contains("is-visible")) {
-    statistics.classList.add("is-visible");
+    if (statistics.style.opacity == 0) {
+        statistics.style.opacity = 1;
     } else {
-    statistics.classList.remove("is-visible");
+        statistics.style.opacity = 0;
     }
 }
 </script>
