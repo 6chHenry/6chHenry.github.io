@@ -352,7 +352,15 @@ nav:
       # - 8月: diaries/2025/Aug.md
   - 杂谈:
     - index: essay/index.md
-    - "一些碎碎念": summary/杂谈.md
+    - "思考":
+      - "大伟哥分享": summary/大伟哥分享-整理版.md
+      - "归属": summary/杂谈.md
+      - "二倍速": essay/二倍速.md
+      - "香港红绿灯": essay/香港红绿灯.md
+      - "J人": essay/J人.md
+      - "冬至": essay/冬至.md
+      - "AI与人": essay/AI与人.md
+      - "懒惰的大脑": essay/懒惰的大脑.md
     - "影评":
       - "3 Idiots": summary/Movies/3 Idiots.md
       - "Hachi": summary/Movies/Hachi.md
@@ -362,13 +370,11 @@ nav:
       - "孤儿仔 --Eason Chan": essay/Music/孤儿仔.md
     - "我的高中": essay/高中回忆录.md
     - "睡眠": essay/睡眠的重要性.md
-    - "二倍速": essay/二倍速.md
     - "书评": essay/书评.md
-    - "旅游流水账": essay/旅游流水账.md
-    - "冬至": essay/冬至.md
-    - "J人": essay/J人.md
-    - "港澳手记": essay/港澳手记.md
-    - "香港红绿灯": essay/香港红绿灯.md
+    - "旅行":
+      - "旅游流水账": essay/旅游流水账.md
+      - "港澳手记": essay/港澳手记.md
+
     # - "大一上":
     #   - "下半期计划": summary/下半期计划.md
     #   - "期末复习计划": summary/Review Plan.md
@@ -383,6 +389,7 @@ nav:
     - LLM: websites/LLM.md
   - 项目:
     - index: projects/index.md
+    - "DreamCatch掬梦": projects/dreamcatch_proposal.md
     - CarLaneDetection: 
       - CannyEdgeDetection: projects/CarLaneDetection/Canny.md
       - HoughTransform: projects/CarLaneDetection/HoughTransform.md
