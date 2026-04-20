@@ -8,6 +8,10 @@
   --md-code-font: "Fira Code", "JetBrains Mono", monospace;
 }
 
+html {
+  font-size: 125%;
+}
+
 .md-typeset h1, .md-typeset h2 {
   font-weight: 600;
 }
@@ -215,19 +219,19 @@ img:hover {
     zoom: 1.1;
   } */
   html {
-    font-size: 137.5%;
+    font-size: 125%;
   }
 }
 
 @media screen and (min-width: 100em) {
   html {
-    font-size: 137.5%;
+    font-size: 125%;
   }
 }
 
 @media screen and (min-width: 125em) {
   html {
-    font-size: 137.5%;
+    font-size: 125%;
   }
 }
 
