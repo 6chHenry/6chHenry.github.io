@@ -12,7 +12,7 @@ copyright: Copyright &copy; 2024-2026 - Present <a href="https://github.com/6chH
   
 theme:
   name: material
-  language: en
+  language: zh
   custom_dir: overrides
   features:
     - content.code.annotate
@@ -59,7 +59,6 @@ theme:
   favicon: img/avatar1.jpg
   icon:
     logo: material/coffee
-    repo: fontawesome/brands/git-alt
     edit: material/pencil
     repo: fontawesome/brands/github
     previous: fontawesome/solid/angle-left
@@ -198,7 +197,7 @@ extra:
       name: 加加我的微信
     # - icon: /fontawesome/brands/zhihu
     #   link: https://www.zhihu.com/people/Kinnariya
-      name: Zhihu
+    #   name: Zhihu
     - icon: fontawesome/solid/paper-plane
       link: mailto:2313287840@qq.com
       name: send email to me!
