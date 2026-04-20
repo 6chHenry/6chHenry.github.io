@@ -6,6 +6,7 @@
 :root {
   --md-text-font: "LXGW WenKai Screen", "Microsoft YaHei", sans-serif; 
   --md-code-font: "Fira Code", "JetBrains Mono", monospace;
+  --base-border-radius: 0.7rem;
 }
 
 .md-typeset h1, .md-typeset h2 {
@@ -215,19 +216,108 @@ img:hover {
     zoom: 1.1;
   } */
   html {
-    font-size: 137.5%;
+    font-size: 118%;
   }
 }
 
 @media screen and (min-width: 100em) {
   html {
-    font-size: 137.5%;
+    font-size: 122%;
   }
 }
 
 @media screen and (min-width: 125em) {
   html {
-    font-size: 137.5%;
+    font-size: 126%;
+  }
+}
+
+/* Home page */
+.home-hero {
+  text-align: center;
+  margin: 1.5rem auto 1.25rem;
+}
+
+.home-hero > h1 {
+  margin-bottom: 0.5rem;
+}
+
+.home-hero > p {
+  max-width: 42rem;
+  margin: 0 auto;
+  color: var(--md-default-fg-color--light);
+}
+
+.home-hero-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.home-stat {
+  max-width: 34rem;
+  margin: 1rem auto 1.5rem;
+  padding: 0.65rem 1rem;
+  border-color: transparent;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+
+.home-stat.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.home-grid {
+  margin-top: 0.8rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.home-grid-card {
+  display: block;
+  border: 1px solid color-mix(in srgb, var(--md-default-fg-color--lightest) 40%, transparent);
+  border-radius: var(--base-border-radius);
+  padding: 1rem 1rem 0.8rem;
+  background: color-mix(in srgb, var(--md-default-bg-color) 92%, var(--md-default-fg-color) 8%);
+  text-decoration: none !important;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.home-grid-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.3rem;
+}
+
+.home-grid-card p {
+  margin: 0;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.9rem;
+}
+
+.home-grid-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+[data-md-color-scheme="slate"] .home-grid-card {
+  border-color: color-mix(in srgb, #ffffff 12%, transparent);
+  background: color-mix(in srgb, #202020 88%, #ffffff 12%);
+}
+
+[data-md-color-scheme="slate"] .home-grid-card:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+@media screen and (max-width: 960px) {
+  .home-grid {
+    grid-template-columns: 1fr;
   }
 }
 
