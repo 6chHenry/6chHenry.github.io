@@ -212,6 +212,8 @@ nav:
   - 主页: index.md
   - 笔记:
     - index: notes/index.md
+    - Robotics:
+      - PI 0.7: notes/Robotics/pi07.md
     - 分治法: notes/Merge.md
     - DP: notes/DP算法.md
     - 排序: notes/排序算法.md
@@ -272,8 +274,6 @@ nav:
       - Pickle: notes/Python-Tutorial/WhatIsPickle.md
       - Regex: notes/Python-Tutorial/LearnRegex.md
     - 科研笔记:
-      - Robotics:
-        - PI 0.7: notes/Research/Robotics/pi07.md
       - OCL: 
         - OCL: notes/Research/OCL/OCL.md
         - 余弦相似度: notes/Research/OCL/CosineSimilarity.md
