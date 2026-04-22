@@ -272,6 +272,8 @@ nav:
       - Pickle: notes/Python-Tutorial/WhatIsPickle.md
       - Regex: notes/Python-Tutorial/LearnRegex.md
     - 科研笔记:
+      - Robotics:
+        - PI 0.7: notes/Research/Robotics/pi07.md
       - OCL: 
         - OCL: notes/Research/OCL/OCL.md
         - 余弦相似度: notes/Research/OCL/CosineSimilarity.md
@@ -389,7 +391,9 @@ nav:
     - LLM: websites/LLM.md
   - 项目:
     - index: projects/index.md
-    - "DreamCatch掬梦": projects/dreamcatch_proposal.md
+    - "DreamCup掬梦": 
+      - "Product Proposal": projects/DreamCup/dreamcatch_proposal.md
+      - "Stage1": projects/DreamCup/dreamcup_stage1.md
     - CarLaneDetection: 
       - CannyEdgeDetection: projects/CarLaneDetection/Canny.md
       - HoughTransform: projects/CarLaneDetection/HoughTransform.md
