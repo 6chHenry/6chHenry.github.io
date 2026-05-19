@@ -175,6 +175,7 @@ extra_javascript:
   - https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js
   - https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js
   - js/home.js
+  - js/audio-player.js
 extra_css:
   - css/custom.css
   - https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap
@@ -186,6 +187,7 @@ extra_css:
   - css/home.css
   - css/flink.css
   - css/tasklist.css
+  - css/audio-player.css
 # - https://busuanzi.icodeq.com/busuanzi.pure.mini.js
 # - js/toc.js
 extra:
@@ -379,6 +381,7 @@ nav:
     - "旅行":
       - "旅游流水账": essay/旅游流水账.md
       - "港澳手记": essay/港澳手记.md
+      - "日本游记": essay/日本游记.md
 
     # - "大一上":
     #   - "下半期计划": summary/下半期计划.md
