@@ -4,8 +4,15 @@
   --base-border-radius: 0.5rem;
 } */
 :root {
-  --md-text-font: "LXGW WenKai Screen", "Microsoft YaHei", sans-serif; 
+  --md-text-font: "LXGW WenKai Screen", "Microsoft YaHei", sans-serif;
   --md-code-font: "Fira Code", "JetBrains Mono", monospace;
+  --ch-accent: #22d3ee;
+  --ch-accent-secondary: #6366f1;
+  --ch-accent-dim: rgba(34, 211, 238, 0.15);
+  --ch-glow: 0 0 24px rgba(34, 211, 238, 0.35);
+  --ch-radius: 12px;
+  --base-border-radius: var(--ch-radius);
+  --ch-display-font: "IBM Plex Mono", "Fira Code", monospace;
 }
 
 html {
@@ -33,34 +40,34 @@ html {
 }
 
 [data-md-color-scheme="default"] {
-  /*--md-primary-fg-color: #efefef;*/
-  --md-primary-bg-color: #000000; /*--md-typeset-a-color: #555555;*/
+  --md-primary-bg-color: #000000;
   --md-footer-fg-color: #000000;
   --md-footer-bg-color: #efefef;
   --md-footer-bg-color--dark: #efefef;
   --md-footer-fg-color--light: #000000;
   --md-footer-fg-color--lighter: #000000;
-  --md-code-bg-color: #fafafa;
+  --md-code-bg-color: #f4f8fb;
   --md-code-fg-color: var(--md-typeset-color);
+  --md-typeset-a-color: #0e7490;
 }
 
 [data-md-color-scheme="slate"] {
-  --md-default-bg-color: #161616;
-  --md-default-bg-color--light: #161616;
-  --md-default-bg-color--lighter: #161616;
-  --md-default-bg-color--lightest: #161616;
-  --md-default-fg-color: rgba(255,255,255,0.9);
-  --md-default-fg-color--light: rgba(255,255,255,0.85);
-  --md-default-fg-color--lighter: rgba(255,255,255,0.8);
-  --md-default-fg-color--lightest: rgba(255,255,255,0.6);
-  --md-primary-fg-color: #0d0d0d;
-  --md-typeset-a-color: #d3d3d3;
-  --md-footer-fg-color: #fff;
-  --md-footer-bg-color: #0d0d0d;
-  --md-footer-bg-color--dark: #0d0d0d;
-  --md-footer-fg-color--light: #fff;
-  --md-footer-fg-color--lighter: #fff;
-  --md-code-bg-color: #1d1d1d;
+  --md-default-bg-color: #0a0e14;
+  --md-default-bg-color--light: #0f141c;
+  --md-default-bg-color--lighter: #121820;
+  --md-default-bg-color--lightest: #161d28;
+  --md-default-fg-color: rgba(255, 255, 255, 0.92);
+  --md-default-fg-color--light: rgba(255, 255, 255, 0.85);
+  --md-default-fg-color--lighter: rgba(255, 255, 255, 0.78);
+  --md-default-fg-color--lightest: rgba(255, 255, 255, 0.58);
+  --md-primary-fg-color: #0d1117;
+  --md-typeset-a-color: #67e8f9;
+  --md-footer-fg-color: #e2e8f0;
+  --md-footer-bg-color: #0d1117;
+  --md-footer-bg-color--dark: #0d1117;
+  --md-footer-fg-color--light: #e2e8f0;
+  --md-footer-fg-color--lighter: #94a3b8;
+  --md-code-bg-color: #111827;
 }
 
 [data-md-color-scheme="slate"] input.md-search__input {
@@ -165,11 +172,57 @@ body[data-md-prefers-color-scheme=true] .md-icon .unknown-mode {
     border: none;
 }
 
+.md-header {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+[data-md-color-scheme="slate"] .md-header {
+  background-color: rgba(10, 14, 20, 0.82);
+}
+
+[data-md-color-scheme="default"] .md-header {
+  background-color: rgba(255, 255, 255, 0.88);
+}
+
+.md-tabs {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+[data-md-color-scheme="slate"] .md-tabs {
+  background-color: rgba(10, 14, 20, 0.75);
+}
+
 .md-tabs__item:hover {
-  background-color: rgba(68, 138, 255, 0.1);
-  /* transform: scale(1.1) !important; */
-  /* border-radius: 10px; */
-  transition: all 0.1s ease-in-out;
+  background-color: var(--ch-accent-dim);
+  border-radius: 8px;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.md-tabs__link--active,
+.md-tabs__item--active .md-tabs__link {
+  color: var(--ch-accent);
+}
+
+.md-typeset a:not(.md-button):hover {
+  text-decoration-color: var(--ch-accent);
+}
+
+.md-typeset a:not(.md-button):focus-visible {
+  outline: 2px solid var(--ch-accent);
+  outline-offset: 2px;
+}
+
+[data-md-color-scheme="default"] .md-typeset .admonition,
+.md-typeset details {
+  border-radius: var(--ch-radius);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition,
+[data-md-color-scheme="slate"] .md-typeset details {
+  border-radius: var(--ch-radius);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
 }
 
 img {

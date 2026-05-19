@@ -39,14 +39,14 @@ theme:
     - media: "(prefers-color-scheme: light)"
       scheme: default # 日间模式
       primary: white # 上方的
-      accent: indigo # 链接等可交互元件的高亮色
+      accent: cyan # 链接等可交互元件的高亮色
       toggle:
         icon: material/brightness-7 # 图标
         name: light mode # 鼠标悬浮提示
     - media: "(prefers-color-scheme: dark)"
       scheme: slate # 夜间模式
       primary: black
-      accent: indigo
+      accent: cyan
       toggle:
         icon: material/brightness-4
         name: dark mode
@@ -174,13 +174,16 @@ extra_javascript:
   - https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js
   - https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js
   - https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js
+  - js/home.js
 extra_css:
   - css/custom.css
+  - https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap
   - https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css
   - https://gcore.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css
   - https://gcore.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css
   # - css/fold_toc.css
   - css/card.css
+  - css/home.css
   - css/flink.css
   - css/tasklist.css
 # - https://busuanzi.icodeq.com/busuanzi.pure.mini.js
@@ -213,7 +216,7 @@ nav:
   - 笔记:
     - index: notes/index.md
     - Robotics:
-      - PI 0.7: notes/Robotics/pi07.md
+      - π0.7: notes/Robotics/pi07.md
     - 分治法: notes/Merge.md
     - DP: notes/DP算法.md
     - 排序: notes/排序算法.md

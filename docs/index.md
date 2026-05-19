@@ -3,83 +3,42 @@ hide:
   - date
   - navigation
   - toc
+glightbox: false
 home: true
 nostatistics: true
 comments: false
 icon: material/home
 ---
 
-<br><br><br><br><br><br>
-
-<h1 style="text-align: center;">
-<span style="font-size:50px;">
-Welcome to 6ch.'s Blog! 🎉
-</span>
-</h1>
-<style>
-  /* 打字动画 */
-  @keyframes typing {
-    0% { 
-      clip-path: inset(0 100% 0 0); /* 从左往右逐步显示 */
-    }
-    100% { 
-      clip-path: inset(0 0 0 0);
-    }
-  }
-
-  h1 {
-    overflow: hidden;
-    white-space: nowrap;
-    animation: typing 3s steps(30) 1s  1 normal both;
-    margin: 0;          /* 移除默认外边距 */
-    display: inline-block; /* 自然宽度 */
-  }
-
-  /* 父容器（如 body）简单居中 */
-  body {
-    text-align: center; /* 水平居中 */
-    margin: 20px 0;     /* 添加基础边距 */
-  }
-</style>
-<span style="display: block; text-align: center; font-size: 18px;">
-[:octicons-info-16: About Me](./about/index.md) / [:academicons-google-scholar: Academic Page](./academy.md) / [:material-chart-line: Statistics](javascript:toggle_statistics();)
-</span>
-
-<div id="statistics" markdown="1" class="card" style="width: 27em; border-color: transparent; opacity: 0; margin-left: auto; margin-right: 0; font-size: 110%">
-<div style="padding-left: 1em;" markdown="1">
-<li>Website Operating Time: <span id="web-time"></span></li>
-<li>Total Visitors: <span id="busuanzi_value_site_uv"></span> people</li>
-<li>Total Visits: <span id="busuanzi_value_site_pv"></span> times</li>
-</div>
+<div class="home-hero" markdown="0">
+  <div class="home-grid" aria-hidden="true"></div>
+  <div class="home-glow" aria-hidden="true"></div>
+  <div class="home-noise" aria-hidden="true"></div>
+  <div class="home-inner">
+    <img class="home-avatar" src="img/avatar1.jpg" alt="6ch." width="120" height="120" />
+    <p class="home-eyebrow">Personal Site</p>
+    <h1 class="home-title home-title--typing">Welcome to 6ch.'s Blog</h1>
+    <p class="home-tagline">AI · Computer Vision · Embodied Intelligence</p>
+    <p class="home-subtitle">上海交通大学 · 人工智能学院 · 分享学习与思考</p>
+  </div>
 </div>
 
-<script>
-function updateTime() {
-    var date = new Date();
-    var now = date.getTime();
-    var startDate = new Date("2025/02/28 22:00:00");
-    var start = startDate.getTime();
-    var diff = now - start;
-    var y, d, h, m;
-    y = Math.floor(diff / (365 * 24 * 3600 * 1000));
-    diff -= y * 365 * 24 * 3600 * 1000;
-    d = Math.floor(diff / (24 * 3600 * 1000));
-    h = Math.floor(diff / (3600 * 1000) % 24);
-    m = Math.floor(diff / (60 * 1000) % 60);
-    if (y == 0) {
-        document.getElementById("web-time").innerHTML = d + "<span> </span>d<span> </span>" + h + "<span> </span>h<span> </span>" + m + "<span> </span>m";
-    } else {
-        document.getElementById("web-time").innerHTML = y + "<span> </span>y<span> </span>" + d + "<span> </span>d<span> </span>" + h + "<span> </span>h<span> </span>" + m + "<span> </span>m";
-    }
-    setTimeout(updateTime, 1000 * 60);
-}
-updateTime();
-function toggle_statistics() {
-    var statistics = document.getElementById("statistics");
-    if (statistics.style.opacity == 0) {
-        statistics.style.opacity = 1;
-    } else {
-        statistics.style.opacity = 0;
-    }
-}
-</script>
+<nav class="home-actions" aria-label="Quick links" markdown="block">
+
+[:octicons-info-16: About Me](about/index.md){ .home-pill }
+[:academicons-google-scholar: Academic](academy.md){ .home-pill }
+
+<button type="button" class="home-pill home-pill--ghost" id="home-stats-toggle" aria-expanded="false" aria-controls="statistics" markdown="span">:material-chart-line: Statistics</button>
+
+</nav>
+
+<div class="home-hero-footer" markdown="0">
+  <div id="statistics" class="home-stats card" role="region" aria-label="Site statistics">
+    <ul>
+      <li>Website Operating Time: <span id="web-time"></span></li>
+      <li>Total Visitors: <span id="busuanzi_value_site_uv"></span> people</li>
+      <li>Total Visits: <span id="busuanzi_value_site_pv"></span> times</li>
+    </ul>
+  </div>
+</div>
+
