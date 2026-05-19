@@ -177,7 +177,7 @@ extra_javascript:
   - js/home.js
 extra_css:
   - css/custom.css
-  - https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap
+  - https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap
   - https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css
   - https://gcore.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css
   - https://gcore.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css

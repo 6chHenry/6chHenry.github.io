@@ -18,7 +18,7 @@
   --ch-glow: 0 0 24px rgba(34, 211, 238, 0.35);
   --ch-radius: 12px;
   --base-border-radius: var(--ch-radius);
-  --ch-display-font: "Orbitron", "JetBrains Mono", monospace;
+  --ch-display-font: "IBM Plex Mono", "Fira Code", monospace;
   --ch-mono-font: "JetBrains Mono", "Fira Code", monospace;
 }
 

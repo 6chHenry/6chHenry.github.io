@@ -102,10 +102,10 @@ body.page-home .md-content {
   margin: 0;
   font-family: var(--ch-display-font);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--ch-accent-tertiary);
+  color: var(--ch-accent);
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.5s ease 0.08s, transform 0.5s ease 0.08s;
@@ -115,7 +115,7 @@ body.page-home .md-content {
   margin: 0;
   font-family: var(--ch-display-font);
   font-size: clamp(1.75rem, 5vw, 2.75rem);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.02em;
   background: linear-gradient(120deg, var(--md-default-fg-color) 0%, var(--ch-accent) 55%, var(--ch-accent-secondary) 100%);
