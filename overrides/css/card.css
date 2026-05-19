@@ -6,7 +6,7 @@
     word-wrap: break-word;
     background-color: rgba(255, 255, 255, 0.72);
     background-clip: border-box;
-    border: 1px solid rgba(34, 211, 238, 0.18);
+    border: 1px solid var(--ch-border);
     box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     border-radius: var(--ch-radius, 12px);
@@ -16,8 +16,8 @@
 }
 
 [data-md-color-scheme="slate"] .card {
-    background-color: rgba(18, 24, 32, 0.72);
-    border: 1px solid rgba(34, 211, 238, 0.22);
+    background-color: color-mix(in srgb, var(--ch-surface) 72%, transparent);
+    border: 1px solid var(--ch-border);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 

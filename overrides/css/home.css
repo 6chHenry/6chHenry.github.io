@@ -53,7 +53,7 @@ body.page-home .md-content {
 .home-glow {
   background:
     radial-gradient(ellipse 55% 45% at 50% 35%, rgba(34, 211, 238, 0.18), transparent 65%),
-    radial-gradient(ellipse 40% 30% at 80% 70%, rgba(99, 102, 241, 0.12), transparent 60%);
+    radial-gradient(ellipse 40% 30% at 80% 70%, rgba(124, 140, 255, 0.14), transparent 60%);
 }
 
 .home-noise {
@@ -71,7 +71,7 @@ body.page-home .md-content {
 [data-md-color-scheme="default"] .home-glow {
   background:
     radial-gradient(ellipse 55% 45% at 50% 35%, rgba(14, 116, 144, 0.12), transparent 65%),
-    radial-gradient(ellipse 40% 30% at 20% 75%, rgba(99, 102, 241, 0.08), transparent 60%);
+    radial-gradient(ellipse 40% 30% at 20% 75%, rgba(79, 70, 229, 0.08), transparent 60%);
 }
 
 .home-inner {
@@ -91,7 +91,7 @@ body.page-home .md-content {
   height: 7.5rem;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(34, 211, 238, 0.45);
+  border: 2px solid color-mix(in srgb, var(--ch-accent) 45%, transparent);
   box-shadow: var(--ch-glow);
   opacity: 0;
   transform: translateY(12px);
@@ -102,10 +102,10 @@ body.page-home .md-content {
   margin: 0;
   font-family: var(--ch-display-font);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--ch-accent);
+  color: var(--ch-accent-tertiary);
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.5s ease 0.08s, transform 0.5s ease 0.08s;
@@ -115,7 +115,7 @@ body.page-home .md-content {
   margin: 0;
   font-family: var(--ch-display-font);
   font-size: clamp(1.75rem, 5vw, 2.75rem);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.02em;
   background: linear-gradient(120deg, var(--md-default-fg-color) 0%, var(--ch-accent) 55%, var(--ch-accent-secondary) 100%);
@@ -146,7 +146,9 @@ body.page-home .md-content {
 
 .home-tagline {
   margin: 0;
-  font-size: 1.05rem;
+  font-family: var(--ch-mono-font);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
   color: var(--md-default-fg-color--light);
   opacity: 0;
   transform: translateY(10px);
@@ -155,8 +157,9 @@ body.page-home .md-content {
 
 .home-subtitle {
   margin: -0.5rem 0 0;
+  font-family: var(--md-text-font);
   font-size: 0.95rem;
-  color: var(--md-default-fg-color--lighter);
+  color: var(--ch-fg-muted);
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.5s ease 0.26s, transform 0.5s ease 0.26s;
@@ -200,8 +203,8 @@ body.page-home .md-content {
   font-weight: 500;
   text-decoration: none !important;
   color: var(--md-default-fg-color) !important;
-  background: rgba(34, 211, 238, 0.08);
-  border: 1px solid rgba(34, 211, 238, 0.28);
+  background: var(--ch-accent-dim);
+  border: 1px solid var(--ch-border);
   border-radius: 999px;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -210,8 +213,8 @@ body.page-home .md-content {
 
 .home-actions a.home-pill:hover,
 .home-pill:hover {
-  background: rgba(34, 211, 238, 0.16);
-  border-color: rgba(34, 211, 238, 0.55);
+  background: color-mix(in srgb, var(--ch-accent) 18%, transparent);
+  border-color: color-mix(in srgb, var(--ch-accent) 50%, transparent);
   box-shadow: var(--ch-glow);
   transform: translateY(-1px);
 }
@@ -237,7 +240,7 @@ body.page-home .md-content {
   visibility: hidden;
   transform: translateY(8px);
   transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
-  border-color: rgba(34, 211, 238, 0.25) !important;
+  border-color: var(--ch-border) !important;
 }
 
 .home-stats.is-visible {
@@ -250,7 +253,7 @@ body.page-home .md-content {
   margin: 0;
   padding: 0.75rem 1.25rem 1rem 2rem;
   list-style: none;
-  font-family: var(--ch-display-font);
+  font-family: var(--ch-mono-font);
   font-size: 0.88rem;
   line-height: 1.85;
 }
