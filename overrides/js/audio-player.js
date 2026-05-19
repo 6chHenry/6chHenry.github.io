@@ -38,14 +38,12 @@
       '    <div class="ch-audio__scan"></div>' +
       "  </div>" +
       '  <div class="ch-audio__top">' +
-      '    <header class="ch-audio__head">' +
-      '      <span class="ch-audio__badge">' +
+      '    <span class="ch-audio__badge">' +
       label +
       "</span>" +
-      '      <h3 class="ch-audio__title">' +
+      '    <h3 class="ch-audio__title">' +
       title +
       "</h3>" +
-      "    </header>" +
       '    <div class="ch-audio__viz" aria-hidden="true"></div>' +
       "  </div>" +
       '  <div class="ch-audio__controls">' +
@@ -76,19 +74,15 @@
     var skipBtns = root.querySelectorAll("[data-skip]");
 
     var bars = [];
-    var barCount = reduced ? 0 : 20;
+    var barCount = reduced ? 0 : 28;
     var rafId = null;
-    var ctx = null;
-    var analyser = null;
-    var dataArray = null;
+    var ticker = 0;
     var seeking = false;
-    var vizReady = false;
 
     if (barCount > 0) {
       for (var i = 0; i < barCount; i++) {
         var bar = document.createElement("span");
         bar.className = "ch-audio__bar";
-        bar.style.setProperty("--i", String(i));
         viz.appendChild(bar);
         bars.push(bar);
       }
@@ -121,11 +115,7 @@
       }
       var clamped = Math.max(0, Math.min(1, ratio));
       var target = clamped * dur;
-      if (typeof audio.fastSeek === "function") {
-        audio.fastSeek(target);
-      } else {
-        audio.currentTime = target;
-      }
+      audio.currentTime = target;
       setProgressFromTime(target);
     }
 
@@ -141,46 +131,25 @@
         rafId = null;
       }
       bars.forEach(function (bar) {
-        bar.style.setProperty("--h", "0.12");
+        bar.style.setProperty("--h", "0.15");
       });
     }
 
     function tickVisualizer() {
-      if (!analyser || !dataArray || audio.paused) {
+      if (audio.paused || audio.ended) {
         stopVisualizer();
         return;
       }
-      analyser.getByteFrequencyData(dataArray);
-      var step = Math.floor(dataArray.length / barCount) || 1;
-      for (var j = 0; j < barCount; j++) {
-        var v = dataArray[j * step] / 255;
-        var h = 0.12 + v * 0.88;
-        bars[j].style.setProperty("--h", h.toFixed(3));
+      ticker += 1;
+      var phase = audio.currentTime * 7 + ticker * 0.09;
+      for (var i = 0; i < barCount; i++) {
+        var sinA = Math.sin(phase + i * 0.42);
+        var sinB = Math.sin(phase * 0.63 + i * 0.78);
+        var v = (sinA * 0.55 + sinB * 0.45 + 1) / 2;
+        var h = 0.18 + v * 0.82;
+        bars[i].style.setProperty("--h", h.toFixed(3));
       }
       rafId = requestAnimationFrame(tickVisualizer);
-    }
-
-    function ensureVisualizer() {
-      if (reduced || vizReady || barCount === 0) {
-        return;
-      }
-      try {
-        ctx = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = ctx.createAnalyser();
-        analyser.fftSize = 128;
-        dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-        if (typeof audio.captureStream === "function") {
-          var stream = audio.captureStream();
-          var streamSource = ctx.createMediaStreamSource(stream);
-          streamSource.connect(analyser);
-          vizReady = true;
-        }
-      } catch (e) {
-        ctx = null;
-        analyser = null;
-        vizReady = false;
-      }
     }
 
     function pauseOthers() {
@@ -204,10 +173,6 @@
     playBtn.addEventListener("click", function () {
       if (audio.paused) {
         pauseOthers();
-        ensureVisualizer();
-        if (ctx && ctx.state === "suspended") {
-          ctx.resume();
-        }
         audio.play().catch(function () {
           shell.classList.add("ch-audio__shell--error");
         });
@@ -226,11 +191,7 @@
         } else {
           next = Math.max(0, next);
         }
-        if (typeof audio.fastSeek === "function") {
-          audio.fastSeek(next);
-        } else {
-          audio.currentTime = next;
-        }
+        audio.currentTime = next;
         setProgressFromTime(next);
       });
     });
@@ -247,12 +208,8 @@
         return;
       }
       var target = pct * dur;
+      audio.currentTime = target;
       curEl.textContent = formatTime(target);
-      if (typeof audio.fastSeek === "function") {
-        audio.fastSeek(target);
-      } else {
-        audio.currentTime = target;
-      }
     });
 
     seek.addEventListener("change", function () {
@@ -269,11 +226,7 @@
     });
     audio.addEventListener("play", function () {
       setPlayingUI(true);
-      ensureVisualizer();
-      if (ctx && ctx.state === "suspended") {
-        ctx.resume();
-      }
-      if (!reduced && analyser) {
+      if (!reduced && barCount > 0) {
         tickVisualizer();
       }
     });
