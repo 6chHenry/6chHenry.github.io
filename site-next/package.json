@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "prebuild": "node scripts/migrate-content.mjs && node scripts/copy-public.mjs",
-    "build": "astro build && npx pagefind --site dist",
+    "build": "astro build && npx pagefind --site dist && node scripts/sync-pagefind.mjs",
     "preview": "astro preview",
     "migrate": "node scripts/migrate-content.mjs",
     "copy-public": "node scripts/copy-public.mjs"

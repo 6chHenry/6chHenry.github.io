@@ -13,12 +13,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div id="pagefind-search-page"></div>
     </div>
   </section>
-</BaseLayout>
 
-<script>
-  import { mountSearch } from '../scripts/search.ts';
-  mountSearch('#pagefind-search-page');
-</script>
+  <script>
+    import { mountSearch } from '../scripts/search';
+    mountSearch('#pagefind-search-page');
+  </script>
+</BaseLayout>
 
 <style>
   .search-panel {

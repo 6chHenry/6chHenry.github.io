@@ -1,44 +1,85 @@
-let pagefindLoaded = false;
+let pagefindUiLoaded = false;
 
 const base = import.meta.env.BASE_URL;
+const bundlePath = `${base}pagefind/`;
+
+declare global {
+  interface Window {
+    PagefindUI?: new (options: Record<string, unknown>) => {
+      triggerSearch?: (term: string) => void;
+      destroy?: () => void;
+    };
+  }
+}
 
 async function assetExists(url: string): Promise<boolean> {
   try {
-    const response = await fetch(url, { method: 'HEAD' });
+    const response = await fetch(url, { method: 'GET', cache: 'no-store' });
     return response.ok;
   } catch {
     return false;
   }
 }
 
-async function ensurePagefindStyles(): Promise<boolean> {
-  const href = `${base}pagefind/pagefind-ui.css`;
-  if (document.querySelector('link[data-pagefind-ui]')) return true;
-  if (!(await assetExists(href))) return false;
+function loadStylesheet(href: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`link[data-pagefind-ui][href="${href}"]`)) {
+      resolve();
+      return;
+    }
 
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = href;
-  link.dataset.pagefindUi = 'true';
-  document.head.appendChild(link);
-  return true;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    link.dataset.pagefindUi = 'true';
+    link.onload = () => resolve();
+    link.onerror = () => reject(new Error(`Failed to load stylesheet: ${href}`));
+    document.head.appendChild(link);
+  });
 }
 
-async function ensurePagefind(): Promise<boolean> {
-  if (pagefindLoaded) return true;
+function loadPagefindUiScript(src: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (window.PagefindUI) {
+      resolve();
+      return;
+    }
 
-  const jsUrl = `${base}pagefind/pagefind.js`;
-  if (!(await assetExists(jsUrl))) return false;
+    const existing = document.querySelector<HTMLScriptElement>(`script[data-pagefind-ui-script="${src}"]`);
+    if (existing) {
+      existing.addEventListener('load', () => resolve(), { once: true });
+      existing.addEventListener('error', () => reject(new Error(`Failed to load script: ${src}`)), { once: true });
+      return;
+    }
 
-  // @ts-expect-error pagefind is injected at build time
-  window.pagefind = await import(/* @vite-ignore */ jsUrl);
-  pagefindLoaded = true;
-  return true;
+    const script = document.createElement('script');
+    script.src = src;
+    script.dataset.pagefindUiScript = src;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+    document.head.appendChild(script);
+  });
+}
+
+async function ensurePagefindUi(): Promise<boolean> {
+  if (pagefindUiLoaded && window.PagefindUI) return true;
+
+  const cssUrl = `${bundlePath}pagefind-ui.css`;
+  const jsUrl = `${bundlePath}pagefind-ui.js`;
+
+  const [cssReady, jsReady] = await Promise.all([assetExists(cssUrl), assetExists(jsUrl)]);
+  if (!cssReady || !jsReady) return false;
+
+  await loadStylesheet(cssUrl);
+  await loadPagefindUiScript(jsUrl);
+
+  pagefindUiLoaded = Boolean(window.PagefindUI);
+  return pagefindUiLoaded;
 }
 
 function showSearchUnavailable(container: HTMLElement) {
   container.innerHTML =
-    '<p class="search-unavailable">搜索索引尚未生成。本地开发请先运行 <code>npm run build</code>，或使用 <code>npm run preview</code> 预览。</p>';
+    '<p class="search-unavailable">搜索索引尚未就绪。请先运行 <code>npm run build</code>（会自动同步索引到本地 dev），或使用 <code>npm run preview</code> 预览生产站点。</p>';
   container.dataset.mounted = 'true';
 }
 
@@ -46,17 +87,15 @@ async function mountSearch(containerSelector: string) {
   const container = document.querySelector<HTMLElement>(containerSelector);
   if (!container || container.dataset.mounted === 'true') return;
 
-  const stylesReady = await ensurePagefindStyles();
-  const pagefindReady = await ensurePagefind();
-  if (!stylesReady || !pagefindReady) {
+  const ready = await ensurePagefindUi();
+  if (!ready || !window.PagefindUI) {
     showSearchUnavailable(container);
     return;
   }
 
-  // @ts-expect-error pagefind UI loaded dynamically
-  const { PagefindUI } = await import(/* @vite-ignore */ `${base}pagefind/pagefind-ui.js`);
-  new PagefindUI({
+  new window.PagefindUI({
     element: containerSelector,
+    bundlePath,
     showImages: false,
     resetStyles: false,
   });
