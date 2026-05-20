@@ -262,14 +262,99 @@ pre {
   color: var(--ch-accent-secondary) !important;
 }
 
+.search-modal .pagefind-ui,
+.search-panel .pagefind-ui {
+  width: 100%;
+  --pagefind-ui-scale: 0.72;
+  --pagefind-ui-primary: var(--ch-accent);
+  --pagefind-ui-text: var(--ch-fg);
+  --pagefind-ui-background: var(--ch-surface-solid);
+  --pagefind-ui-border: var(--ch-border);
+  --pagefind-ui-tag: var(--ch-accent-dim);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: var(--ch-radius-sm);
+  --pagefind-ui-font: var(--ch-text-font);
+}
+
+.pagefind-ui__form {
+  position: relative;
+}
+
+.pagefind-ui__form::before {
+  opacity: 0.45 !important;
+  background-color: var(--ch-accent-tertiary) !important;
+}
+
 .pagefind-ui__search-input {
   width: 100%;
-  border-color: var(--ch-border) !important;
-  background: var(--ch-surface-solid) !important;
+  height: auto !important;
+  min-height: 2.85rem;
+  border: 1px solid var(--ch-glass-border) !important;
+  background: var(--ch-glass-bg) !important;
   color: var(--ch-fg) !important;
-  border-radius: var(--ch-radius-sm);
-  padding: 0.75rem 0.9rem;
-  font-family: var(--ch-text-font);
+  border-radius: var(--ch-radius-sm) !important;
+  padding: 0.72rem 4.6rem 0.72rem 2.65rem !important;
+  font-family: var(--ch-text-font) !important;
+  font-size: 0.98rem !important;
+  font-weight: 500 !important;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ch-surface-solid) 55%, transparent);
+  backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.08);
+  -webkit-backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.08);
+  transition:
+    border-color var(--ch-transition-fast),
+    background var(--ch-transition-fast),
+    box-shadow var(--ch-transition-fast);
+}
+
+.pagefind-ui__search-input::placeholder {
+  color: var(--ch-fg-muted) !important;
+  opacity: 0.72 !important;
+}
+
+.pagefind-ui__search-input:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--ch-accent-secondary) 42%, var(--ch-glass-border)) !important;
+  background: color-mix(in srgb, var(--ch-surface-solid) 72%, var(--ch-accent-dim)) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ch-accent-secondary) 14%, transparent);
+}
+
+.pagefind-ui__search-clear {
+  top: 50% !important;
+  right: 0.42rem !important;
+  height: auto !important;
+  transform: translateY(-50%);
+  margin: 0;
+  padding: 0.3rem 0.62rem !important;
+  font-family: var(--ch-mono-font) !important;
+  font-size: 0.66rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  color: var(--ch-accent-tertiary) !important;
+  background: color-mix(in srgb, var(--ch-surface-solid) 58%, transparent) !important;
+  border: 1px solid var(--ch-glass-border) !important;
+  border-radius: 999px !important;
+  backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.12);
+  -webkit-backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.12);
+  box-shadow: none;
+  transition:
+    color var(--ch-transition-fast),
+    background var(--ch-transition-fast),
+    border-color var(--ch-transition-fast),
+    transform var(--ch-transition-fast);
+}
+
+.pagefind-ui__search-clear:hover,
+.pagefind-ui__search-clear:focus-visible {
+  color: var(--ch-accent-secondary) !important;
+  background: var(--ch-glass-bg-hover) !important;
+  border-color: color-mix(in srgb, var(--ch-accent-secondary) 38%, var(--ch-glass-border)) !important;
+  transform: translateY(calc(-50% - 1px));
+}
+
+.pagefind-ui__search-clear:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--ch-accent-tertiary) 55%, transparent);
+  outline-offset: 2px;
 }
 
 .pagefind-ui__form input {
@@ -289,9 +374,30 @@ pre {
   color: var(--ch-fg-muted);
 }
 
-.search-modal .pagefind-ui,
-.search-panel .pagefind-ui {
-  width: 100%;
+.pagefind-ui__message {
+  color: var(--ch-fg-muted) !important;
+  font-family: var(--ch-text-font) !important;
+  font-weight: 500 !important;
+}
+
+.pagefind-ui__button {
+  border: 1px solid var(--ch-glass-border) !important;
+  border-radius: 999px !important;
+  background: var(--ch-glass-bg) !important;
+  color: var(--ch-accent-secondary) !important;
+  font-family: var(--ch-mono-font) !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.08em;
+  transition:
+    border-color var(--ch-transition-fast),
+    background var(--ch-transition-fast),
+    color var(--ch-transition-fast);
+}
+
+.pagefind-ui__button:hover {
+  border-color: color-mix(in srgb, var(--ch-accent-secondary) 38%, var(--ch-glass-border)) !important;
+  background: var(--ch-glass-bg-hover) !important;
+  color: var(--ch-accent) !important;
 }
 
 .search-unavailable {
