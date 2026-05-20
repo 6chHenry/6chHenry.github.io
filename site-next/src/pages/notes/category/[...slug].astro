@@ -1,0 +1,28 @@
+---
+import { collectCategoryNodes } from '../../../utils/notes-nav';
+
+export function getStaticPaths() {
+  return collectCategoryNodes().map((node) => ({
+    params: { slug: node.slugPath.join('/') },
+    props: { hash: `folder-${node.slugPath.join('--')}` },
+  }));
+}
+
+const { hash } = Astro.props;
+const notesUrl = `${import.meta.env.BASE_URL}notes/`;
+const targetUrl = `${notesUrl}#${hash}`;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>跳转中…</title>
+    <script is:inline define:vars={{ targetUrl }}>
+      location.replace(targetUrl);
+    </script>
+  </head>
+  <body>
+    <p><a href={targetUrl}>跳转到笔记目录</a></p>
+  </body>
+</html>

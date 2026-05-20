@@ -1,0 +1,200 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ForestIcon from '../components/ForestIcon.astro';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="关于我 | 6ch. · 林间笔记" description="关于 6ch. — 上海交通大学人工智能学院本科生">
+  <section class="container page-shell about-page">
+    <header class="page-header">
+      <p class="section-kicker">About</p>
+      <h1>关于我</h1>
+    </header>
+
+    <div class="about-layout">
+      <article class="about-panel card card--elevated">
+        <div class="about-panel__toolbar">
+          <button
+            type="button"
+            class="pill pill--glass about-lang-toggle"
+            id="about-lang-toggle"
+            aria-expanded="false"
+            aria-controls="about-en"
+          >
+            <ForestIcon name="leaf" />
+            <span class="about-lang-toggle__label">English</span>
+          </button>
+        </div>
+
+        <div class="about-panel__content prose" id="about-zh">
+          <p>
+            你好！我是 6ch.，上海交通大学 24 级人工智能学院人工智能（拔尖英才试点班）的本科生。很高兴能在互联网上与你相遇。
+          </p>
+          <p>
+            我对计算机视觉、具身智能等领域很有热情，也喜欢分享自己的学习经验和思考。
+          </p>
+          <p>
+            想了解我的学术经历？可以查看我的
+            <a href="https://6chHenry.github.io/academy/" target="_blank" rel="noopener">学术主页</a>。
+          </p>
+          <p>
+            如果有任何问题，或者想和我交流，欢迎
+            <a href="mailto:2313287840@qq.com">发邮件</a>
+            或者直接在下方留言，我会尽快回复。如果你也在上海，欢迎联系我 — 我们可以一起聊天、学习，或者交流共同的兴趣爱好。
+          </p>
+          <p>我平时喜欢听音乐 (Eason!)、阅读、打羽毛球，也会在日记中记录一些相关内容，分享个人感受。</p>
+          <p>至于我的名字「6ch.」嘛，解释起来太困难了，就当是我随便取的好啦！</p>
+        </div>
+
+        <div class="about-panel__content prose about-panel__content--en" id="about-en" hidden>
+          <p>
+            Hello. I'm 6ch! I'm an undergraduate student majoring in AI in the 24th grade at AI Honored Class,
+            Shanghai Jiao Tong University. I'm glad to meet you on the internet.
+          </p>
+          <p>
+            I am passionate about the fields of deep learning for computer vision and embodied AI, and I like to
+            share my learning experience and thinking.
+          </p>
+          <p>
+            Want to know more about my academic experience? Check out my
+            <a href="https://6chHenry.github.io/academy/" target="_blank" rel="noopener">academic homepage</a>.
+          </p>
+          <p>
+            If you have any questions or would like to communicate with me, please feel free to
+            <a href="mailto:2313287840@qq.com">email me</a> and I will reply as soon as possible. If you are also in
+            Shanghai, feel free to contact me — we can chat, learn, or exchange common interests together.
+          </p>
+          <p>
+            I usually like listening to music (Eason!), reading and playing badminton, and I also write diaries about
+            it and share my personal feelings.
+          </p>
+          <p>As for my name "6ch.", it's a long long story.</p>
+        </div>
+      </article>
+
+      <aside class="about-aside">
+        <div class="about-card card">
+          <ForestIcon name="tree" class="about-card__icon" />
+          <h3>林径</h3>
+          <div class="about-links">
+            <a class="pill" href={`${base}notes/`}><ForestIcon name="book" /> 笔记</a>
+            <a class="pill" href={`${base}essay/`}><ForestIcon name="pen" /> 杂谈</a>
+            <a class="pill" href="https://github.com/6chHenry" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const toggle = document.getElementById('about-lang-toggle');
+  const label = toggle?.querySelector('.about-lang-toggle__label');
+  const zh = document.getElementById('about-zh');
+  const en = document.getElementById('about-en');
+
+  if (toggle && label && zh && en) {
+    toggle.addEventListener('click', () => {
+      const showEnglish = en.hidden;
+      en.hidden = !showEnglish;
+      zh.hidden = showEnglish;
+      label.textContent = showEnglish ? '中文' : 'English';
+      toggle.setAttribute('aria-expanded', String(showEnglish));
+    });
+  }
+</script>
+
+<style>
+  .about-page {
+    max-width: 72rem;
+  }
+
+  .about-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 14rem;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .about-panel {
+    padding: 2rem 2.35rem;
+    min-height: 22rem;
+  }
+
+  .about-panel__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.25rem;
+  }
+
+  .about-lang-toggle :global(.forest-icon) {
+    width: 0.95rem;
+    height: 0.95rem;
+    color: var(--ch-accent-tertiary);
+  }
+
+  .about-panel__content {
+    font-size: 1.05rem;
+    line-height: 1.85;
+  }
+
+  .about-panel__content p {
+    margin-bottom: 1.1rem;
+  }
+
+  .about-aside {
+    position: sticky;
+    top: calc(var(--ch-header-height) + 1.5rem);
+  }
+
+  .about-card {
+    padding: 1.35rem;
+    text-align: center;
+  }
+
+  .about-card__icon {
+    width: 2rem;
+    height: 2rem;
+    color: var(--ch-accent-secondary);
+    margin-bottom: 0.65rem;
+  }
+
+  .about-card h3 {
+    margin: 0 0 1rem;
+    font-family: var(--ch-display-font);
+    font-size: 1.15rem;
+    letter-spacing: 0.06em;
+    color: var(--ch-accent);
+  }
+
+  .about-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .about-links .pill {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .about-links :global(.forest-icon) {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  @media (max-width: 900px) {
+    .about-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .about-aside {
+      position: static;
+    }
+
+    .about-panel {
+      padding: 1.65rem 1.5rem;
+    }
+  }
+</style>

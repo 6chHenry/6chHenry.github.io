@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="搜索 | 6ch. · 林间笔记" description="站内全文搜索">
+  <section class="container container--narrow page-shell">
+    <header class="page-header">
+      <p class="section-kicker">Search</p>
+      <h1>搜索</h1>
+      <p class="section-lead">在林间寻找你要的路径。快捷键 <kbd>Ctrl</kbd> + <kbd>K</kbd></p>
+    </header>
+    <div class="search-panel card card--elevated">
+      <div id="pagefind-search-page"></div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { mountSearch } from '../scripts/search.ts';
+  mountSearch('#pagefind-search-page');
+</script>
+
+<style>
+  .search-panel {
+    padding: 1.25rem 1.35rem 1.5rem;
+  }
+
+  kbd {
+    padding: 0.12rem 0.4rem;
+    border-radius: 0.35rem;
+    border: 1px solid var(--ch-border-soft);
+    background: var(--ch-accent-dim);
+    font-family: var(--ch-mono-font);
+    font-size: 0.82em;
+    color: var(--ch-accent-secondary);
+  }
+</style>

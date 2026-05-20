@@ -1,0 +1,50 @@
+---
+import ContentCard from './ContentCard.astro';
+import type { NavTreeItem } from '../utils/notes-nav';
+import { buildNavPanelId } from '../utils/notes-nav';
+import NotesNavItem from './NotesNavItem.astro';
+
+interface Props {
+  item: NavTreeItem;
+  depth?: number;
+}
+
+const { item, depth = 0 } = Astro.props;
+const panelId = buildNavPanelId(item.slugPath);
+---
+
+{
+  item.kind === 'folder' ? (
+    <li class="notes-nav-item" data-depth={depth}>
+      <button
+        type="button"
+        class="content-row content-row--category notes-nav-item__toggle"
+        aria-expanded="false"
+        aria-controls={panelId}
+        data-panel-id={panelId}
+      >
+        <span class="content-row__marker" aria-hidden="true"></span>
+        <div class="content-row__body">
+          <h2 class="content-row__title">{item.title}</h2>
+        </div>
+        <div class="content-row__aside">
+          {item.count !== undefined && <span class="content-row__badge">{item.count} 篇</span>}
+          <span class="content-row__chevron" aria-hidden="true">›</span>
+        </div>
+      </button>
+      <ul id={panelId} class="notes-nav-panel content-list">
+        {item.children?.map((child) => <NotesNavItem item={child} depth={depth + 1} />)}
+      </ul>
+    </li>
+  ) : item.note ? (
+    <li class="notes-nav-item notes-nav-item--leaf" data-depth={depth}>
+      <ContentCard
+        href={item.note.href}
+        title={item.note.title}
+        description={item.note.description ?? ''}
+        date={item.note.date}
+        collection="notes"
+      />
+    </li>
+  ) : null
+}

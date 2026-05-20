@@ -1,0 +1,151 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ForestIcon from '../components/ForestIcon.astro';
+import ForestMap from '../components/ForestMap.astro';
+import { buildContentUrl, formatRecencyDate, sortByRecency } from '../utils/content';
+import { buildForestMapStops } from '../utils/forest-map';
+
+const base = import.meta.env.BASE_URL;
+
+const [notes, essays, projects] = await Promise.all([
+  getCollection('notes', ({ data }) => !data.draft),
+  getCollection('essay', ({ data }) => !data.draft),
+  getCollection('projects', ({ data }) => !data.draft),
+]);
+
+const allContent = [...notes, ...essays, ...projects];
+const forestStops = buildForestMapStops(allContent, base);
+
+const recent = sortByRecency(allContent)
+  .filter((entry) => entry.data.updatedAt || entry.data.date)
+  .slice(0, 8)
+  .map((entry) => ({
+    href: buildContentUrl(entry.collection, entry.id, base),
+    title: entry.data.title,
+    date: formatRecencyDate(entry),
+    collection: entry.collection,
+  }));
+
+const features = [
+  { href: `${base}notes/`, icon: 'book' as const, title: '笔记', desc: '成体系的学习记录', count: notes.length },
+  { href: `${base}essay/`, icon: 'pen' as const, title: '杂谈', desc: '随笔、旅行与思考', count: essays.length },
+  { href: `${base}projects/`, icon: 'code' as const, title: '项目', desc: '实验与工程实践', count: projects.length },
+  { href: `${base}search/`, icon: 'search' as const, title: '搜索', desc: '全文检索所有内容', count: null },
+];
+---
+
+<BaseLayout title="6ch. · 林间笔记" description="在森林般的宽阔里，记录 AI、视觉与思考的片段" bodyClass="page-home">
+  <section class="home-hero">
+    <div class="home-sky" aria-hidden="true"></div>
+    <div class="home-hills" aria-hidden="true"></div>
+    <div class="home-treeline" aria-hidden="true"></div>
+    <div class="home-mist" aria-hidden="true"></div>
+    <div class="home-light" aria-hidden="true"></div>
+    <div class="home-grain" aria-hidden="true"></div>
+
+    <div class="home-inner">
+      <div class="home-avatar-wrap">
+        <img class="home-avatar" src={`${base}img/avatar1.jpg`} alt="6ch." width="124" height="124" />
+      </div>
+      <p class="home-eyebrow">Forest Journal · Personal Site</p>
+      <h1 class="home-title">Welcome to <em>6ch.</em>'s Grove</h1>
+      <p class="home-tagline">AI · Computer Vision · Embodied Intelligence</p>
+      <p class="home-subtitle">
+        上海交通大学 · 人工智能学院<br />
+        在林间的宽阔里，分享学习、旅行与思考
+      </p>
+    </div>
+  </section>
+
+  <nav class="home-actions" aria-label="快捷入口">
+    <a class="pill" href={`${base}about/`}>
+      <ForestIcon name="leaf" /> 关于我
+    </a>
+    <a class="pill" href={`${base}notes/`}>
+      <ForestIcon name="book" /> 笔记
+    </a>
+    <a class="pill" href={`${base}essay/`}>
+      <ForestIcon name="pen" /> 杂谈
+    </a>
+    <button type="button" class="pill pill--ghost pill--warm" id="home-stats-toggle" aria-expanded="false" aria-controls="statistics">
+      <ForestIcon name="tree" /> 站点统计
+    </button>
+  </nav>
+
+  <div class="home-hero-footer">
+    <div id="statistics" class="home-stats card card--elevated" role="region" aria-label="站点统计">
+      <ul>
+        <li>运行时间 <span id="web-time"></span></li>
+        <li>访客 <span id="busuanzi_value_site_uv">—</span></li>
+        <li>访问 <span id="busuanzi_value_site_pv">—</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="container home-section">
+    <p class="section-kicker">Explore</p>
+    <h2 class="section-title">走进这片林</h2>
+    <p class="section-lead">笔记、杂谈与项目，像不同的林径，各自通向不同的风景。</p>
+
+    <div class="feature-grid">
+      {
+        features.map((item) => (
+          <a class="feature-card card" href={item.href}>
+            <span class="feature-card__icon">
+              <ForestIcon name={item.icon} />
+            </span>
+            <h2>{item.title}</h2>
+            <p>{item.desc}</p>
+            {item.count !== null && <span class="feature-card__count">{item.count} 篇</span>}
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    recent.length > 0 && (
+      <section class="container recent-section">
+        <p class="section-kicker">Recent</p>
+        <h2 class="section-title">最近更新</h2>
+        <ul class="content-list">
+          {
+            recent.map((item) => (
+              <li>
+                <a class="content-row" href={item.href}>
+                  <span class="content-row__marker" aria-hidden="true"></span>
+                  <div class="content-row__body">
+                    <h2 class="content-row__title">{item.title}</h2>
+                  </div>
+                  <div class="content-row__aside">
+                    {item.date && <time class="content-row__date">{item.date}</time>}
+                    <span class="content-row__arrow" aria-hidden="true">→</span>
+                  </div>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    forestStops.length > 0 && <ForestMap stops={forestStops} />
+  }
+</BaseLayout>
+
+<script>
+  import { initHomeStats } from '../scripts/home';
+  initHomeStats();
+</script>
+
+<script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script>
+
+<style>
+  .pill :global(.forest-icon) {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+</style>

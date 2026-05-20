@@ -1,0 +1,120 @@
+---
+import ForestIcon from './ForestIcon.astro';
+
+const base = import.meta.env.BASE_URL;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__brand">
+      <ForestIcon name="leaf" class="site-footer__leaf" />
+      <div>
+        <p class="site-footer__name">6ch. · 林间笔记</p>
+        <p class="site-footer__copy">Copyright © 2024–{year}</p>
+      </div>
+    </div>
+
+    <nav class="site-footer__links" aria-label="页脚链接">
+      <a href={`${base}about/`}>关于</a>
+      <a href={`${base}search/`}>搜索</a>
+      <a href="mailto:2313287840@qq.com">邮件</a>
+      <a href="https://github.com/6chHenry" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+
+    <p class="site-footer__stat" id="busuanzi_container_site_uv">
+      访客 <span id="busuanzi_value_site_uv">—</span>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    border-top: 1px solid var(--ch-border-soft);
+    padding: 2.25rem 0;
+    background: color-mix(in srgb, var(--ch-surface-solid) 70%, transparent);
+    backdrop-filter: blur(10px);
+  }
+
+  .site-footer__inner {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 1.5rem 2rem;
+    align-items: center;
+  }
+
+  .site-footer__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .site-footer__leaf {
+    color: var(--ch-accent-secondary);
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  .site-footer__name {
+    margin: 0;
+    font-family: var(--ch-display-font);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ch-fg);
+  }
+
+  .site-footer__copy {
+    margin: 0.15rem 0 0;
+    font-size: 0.82rem;
+    color: var(--ch-fg-muted);
+  }
+
+  .site-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.15rem;
+  }
+
+  .site-footer__links a {
+    font-family: var(--ch-display-font);
+    font-size: 0.92rem;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    color: var(--ch-fg-muted);
+    transition: color var(--ch-transition-fast);
+  }
+
+  .site-footer__links a:hover {
+    color: var(--ch-accent-secondary);
+  }
+
+  .site-footer__stat {
+    margin: 0;
+    font-family: var(--ch-mono-font);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--ch-accent-tertiary);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 720px) {
+    .site-footer__inner {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .site-footer__brand {
+      justify-content: center;
+    }
+
+    .site-footer__links {
+      justify-content: center;
+    }
+  }
+</style>
+
+<script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script>

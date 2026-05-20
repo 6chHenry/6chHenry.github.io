@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NotesNavItem from '../../components/NotesNavItem.astro';
+import { buildContentUrl, formatRecencyDate } from '../../utils/content';
+import { notesNav, buildNavTree, buildNoteEntryMap } from '../../utils/notes-nav';
+
+const base = import.meta.env.BASE_URL;
+const entries = await getCollection('notes', ({ data }) => !data.draft);
+const entryById = buildNoteEntryMap(entries);
+const navTree = buildNavTree(notesNav, entryById, (entry) => ({
+  href: buildContentUrl('notes', entry.id, base),
+  title: entry.data.title,
+  description: entry.data.description ?? '',
+  date: formatRecencyDate(entry),
+}));
+---
+
+<BaseLayout title="笔记 | 6ch. · 林间笔记" description="6ch. 的学习笔记">
+  <section class="container page-shell">
+    <header class="page-header">
+      <p class="section-kicker">Notes</p>
+      <h1>笔记</h1>
+      <p class="section-lead">点击文件夹展开或收起，再点笔记进入阅读。</p>
+    </header>
+
+    <ul class="content-list notes-nav-tree">
+      {navTree.map((item) => (
+        <NotesNavItem item={item} />
+      ))}
+    </ul>
+
+    <script is:inline>
+      (function () {
+        function setExpanded(toggle, open) {
+          var panelId = toggle.getAttribute('aria-controls');
+          var panel = panelId ? document.getElementById(panelId) : null;
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          toggle.classList.toggle('is-open', open);
+          if (panel) panel.classList.toggle('is-open', open);
+        }
+
+        function openPanelsFromHash(root) {
+          var hash = window.location.hash.slice(1);
+          if (hash.indexOf('folder-') !== 0) return;
+          var slugParts = hash.slice(7).split('--').filter(Boolean);
+          for (var i = 1; i <= slugParts.length; i += 1) {
+            var panelId = 'notes-panel-' + slugParts.slice(0, i).join('--');
+            var toggle = root.querySelector('[data-panel-id="' + panelId + '"]');
+            if (toggle) setExpanded(toggle, true);
+          }
+        }
+
+        function initNotesTree() {
+          document.querySelectorAll('.notes-nav-tree').forEach(function (tree) {
+            if (tree.dataset.treeBound === 'true') return;
+            tree.dataset.treeBound = 'true';
+
+            tree.addEventListener('click', function (event) {
+              var toggle = event.target.closest('.notes-nav-item__toggle');
+              if (!toggle || !tree.contains(toggle)) return;
+              event.preventDefault();
+              setExpanded(toggle, toggle.getAttribute('aria-expanded') !== 'true');
+            });
+
+            openPanelsFromHash(tree);
+          });
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initNotesTree);
+        } else {
+          initNotesTree();
+        }
+
+        window.addEventListener('hashchange', initNotesTree);
+      })();
+    </script>
+  </section>
+</BaseLayout>

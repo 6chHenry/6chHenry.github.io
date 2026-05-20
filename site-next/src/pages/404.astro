@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="页面未找到" description="请求的页面不存在">
+  <section class="container page-shell not-found">
+    <h1>404</h1>
+    <p>这片林里没有你要找的路。</p>
+    <a class="pill" href={base}>返回主页</a>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    const path = window.location.pathname;
+    if (path === '/next' || path.startsWith('/next/')) {
+      const target = path.replace(/^\/next(?=\/|$)/, '') || '/';
+      window.location.replace(target + window.location.search + window.location.hash);
+    }
+  })();
+</script>
+
+<style>
+  .not-found {
+    text-align: center;
+    padding: 4rem 1.5rem 6rem;
+  }
+
+  .not-found h1 {
+    font-family: var(--ch-display-font);
+    font-size: clamp(3rem, 8vw, 4.5rem);
+    margin: 0 0 0.75rem;
+    color: var(--ch-accent-secondary);
+  }
+
+  .not-found p {
+    color: var(--ch-fg-muted);
+    margin: 0 0 1.5rem;
+  }
+</style>

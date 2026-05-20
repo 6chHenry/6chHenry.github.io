@@ -54,6 +54,11 @@ Desktop.ini
 # MkDocs
 site/
 
+# Astro (site-next)
+site-next/node_modules/
+site-next/dist/
+site-next/.astro/
+
 # Temporary files
 *.tmp
 *.temp

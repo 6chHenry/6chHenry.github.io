@@ -1,0 +1,15 @@
+---
+interface Props {
+  svg: string;
+  label?: string;
+}
+
+const { svg, label = '本篇的汉字树' } = Astro.props;
+---
+
+<div class="character-tree" aria-hidden="true" title={label}>
+  <p class="character-tree__title">汉字树</p>
+  <div class="character-tree__canvas">
+    <Fragment set:html={svg} />
+  </div>
+</div>

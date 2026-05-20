@@ -1,0 +1,24 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  description?: string;
+  date?: string;
+  collection?: string;
+}
+
+const { href, title, description, date, collection } = Astro.props;
+---
+
+<a href={href} class="content-row">
+  <span class="content-row__marker" aria-hidden="true"></span>
+  <div class="content-row__body">
+    <h2 class="content-row__title">{title}</h2>
+    {description && <p class="content-row__desc">{description}</p>}
+  </div>
+  <div class="content-row__aside">
+    {collection && <span class="content-row__badge">{collection}</span>}
+    {date && <time class="content-row__date" datetime={date}>{date}</time>}
+    <span class="content-row__arrow" aria-hidden="true">→</span>
+  </div>
+</a>

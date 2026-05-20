@@ -1,0 +1,102 @@
+name: Deploy Site
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: 'Deployment target'
+        required: true
+        default: astro-only
+        type: choice
+        options:
+          - astro-only
+          - hybrid
+          - mkdocs-only
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve deploy target
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "target=${{ github.event.inputs.deploy_target }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "target=astro-only" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Python
+        if: steps.mode.outputs.target != 'astro-only'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup Node.js
+        if: steps.mode.outputs.target != 'mkdocs-only'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: site-next/package-lock.json
+
+      - name: Install MkDocs dependencies
+        if: steps.mode.outputs.target != 'astro-only'
+        run: pip install -r requirements.txt
+
+      - name: Build MkDocs site
+        if: steps.mode.outputs.target != 'astro-only'
+        run: mkdocs build --clean
+
+      - name: Install Astro dependencies
+        if: steps.mode.outputs.target != 'mkdocs-only'
+        working-directory: site-next
+        run: npm install
+
+      - name: Migrate content and build Astro site
+        if: steps.mode.outputs.target != 'mkdocs-only'
+        working-directory: site-next
+        env:
+          SITE_BASE: ${{ steps.mode.outputs.target == 'hybrid' && '/next' || '/' }}
+        run: npm run build
+
+      - name: Combine hybrid deployment output
+        if: steps.mode.outputs.target == 'hybrid'
+        run: |
+          mkdir -p deploy
+          cp -r site/* deploy/
+          mkdir -p deploy/next
+          cp -r site-next/dist/* deploy/next/
+
+      - name: Prepare Astro-only deployment
+        if: steps.mode.outputs.target == 'astro-only'
+        run: |
+          mkdir -p deploy
+          cp -r site-next/dist/* deploy/
+
+      - name: Prepare MkDocs-only deployment
+        if: steps.mode.outputs.target == 'mkdocs-only'
+        run: |
+          mkdir -p deploy
+          cp -r site/* deploy/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./deploy
+          publish_branch: gh-pages

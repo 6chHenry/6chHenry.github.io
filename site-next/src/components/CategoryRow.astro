@@ -1,0 +1,22 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  count?: number;
+  description?: string;
+}
+
+const { href, title, count, description } = Astro.props;
+---
+
+<a href={href} class="content-row content-row--category">
+  <span class="content-row__marker" aria-hidden="true"></span>
+  <div class="content-row__body">
+    <h2 class="content-row__title">{title}</h2>
+    {description && <p class="content-row__desc">{description}</p>}
+  </div>
+  <div class="content-row__aside">
+    {count !== undefined && <span class="content-row__badge">{count} 篇</span>}
+    <span class="content-row__arrow" aria-hidden="true">→</span>
+  </div>
+</a>

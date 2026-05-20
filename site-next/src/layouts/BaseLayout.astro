@@ -1,0 +1,82 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SearchModal from '../components/SearchModal.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  bodyClass?: string;
+}
+
+const { title, description, bodyClass = '' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body class={bodyClass}>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
+    <div class="site-backdrop" aria-hidden="true">
+      <div class="site-backdrop__sky"></div>
+      <div class="site-backdrop__mist"></div>
+    </div>
+    <Header />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer />
+    <SearchModal />
+  </body>
+</html>
+
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    position: relative;
+  }
+
+  main {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .site-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .site-backdrop__sky {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, color-mix(in srgb, var(--ch-bg-sky) 60%, transparent), transparent 70%),
+      linear-gradient(180deg, color-mix(in srgb, var(--ch-bg-sky) 25%, var(--ch-bg-void)) 0%, var(--ch-bg-void) 45%);
+  }
+
+  .site-backdrop__mist {
+    position: absolute;
+    inset: auto 0 0;
+    height: 40%;
+    background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--ch-bg-void) 50%, transparent));
+  }
+
+  :global(.page-home) .site-backdrop {
+    display: none;
+  }
+</style>
+
+<script>
+  import { initAudioPlayers } from '../scripts/audio-player';
+  initAudioPlayers();
+</script>
