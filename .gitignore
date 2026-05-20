@@ -43,6 +43,11 @@ venv.bak/
 # VS Code
 .vscode/
 
+# AI / editor local config
+.claude/
+.kilocode/
+.cursor/
+
 # MacOS
 .DS_Store
 
