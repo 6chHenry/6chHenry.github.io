@@ -1,3 +1,7 @@
+---
+import ForestIcon from './ForestIcon.astro';
+---
+
 <div id="search-modal" class="search-modal" hidden>
   <div class="search-modal__backdrop" data-search-close></div>
   <div class="search-modal__panel card card--elevated" role="dialog" aria-modal="true" aria-label="站内搜索">
@@ -6,8 +10,8 @@
         <p class="search-modal__kicker">Search the grove</p>
         <h2>站内搜索</h2>
       </div>
-      <button type="button" class="icon-btn" data-search-close aria-label="关闭搜索">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 6.4L12 11.99l5.6-5.59 1.41 1.41L13.41 13.4l5.6 5.59-1.41 1.41L12 14.82l-5.59 5.58-1.41-1.41 5.58-5.59-5.58-5.6 1.41-1.41z"/></svg>
+      <button type="button" class="search-modal__close" data-search-close aria-label="关闭搜索">
+        <ForestIcon name="close" />
       </button>
     </div>
     <div id="pagefind-search"></div>
@@ -79,10 +83,41 @@
     color: var(--ch-accent);
   }
 
-  .search-modal__header .icon-btn svg {
-    width: 1rem;
-    height: 1rem;
-    fill: currentColor;
+  .search-modal__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--ch-border-soft);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--ch-surface) 80%, transparent);
+    color: var(--ch-accent-secondary);
+    cursor: pointer;
+    transition:
+      color var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      background var(--ch-transition-fast),
+      transform var(--ch-transition-fast);
+  }
+
+  .search-modal__close:hover,
+  .search-modal__close:focus-visible {
+    color: var(--ch-accent);
+    border-color: color-mix(in srgb, var(--ch-accent-secondary) 45%, var(--ch-border));
+    background: var(--ch-accent-dim);
+    transform: translateY(-1px);
+  }
+
+  .search-modal__close:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--ch-accent-tertiary) 55%, transparent);
+    outline-offset: 2px;
+  }
+
+  .search-modal__close :global(.forest-icon) {
+    width: 1.05rem;
+    height: 1.05rem;
   }
 </style>
 

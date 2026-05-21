@@ -1,0 +1,32 @@
+---
+/** Reading progress bar and back-to-top control for long-form content pages. */
+---
+
+<div
+  class="reading-progress"
+  role="progressbar"
+  aria-valuemin={0}
+  aria-valuemax={100}
+  aria-valuenow={0}
+  aria-label="阅读进度"
+  data-reading-progress-root
+  hidden
+>
+  <span class="reading-progress__bar" data-reading-progress></span>
+  <span class="reading-progress__label" data-reading-progress-label>0%</span>
+</div>
+
+<button class="back-to-top" type="button" data-back-to-top aria-label="返回顶部" hidden>
+  <svg class="back-to-top__ring" viewBox="0 0 44 44" aria-hidden="true">
+    <circle class="back-to-top__track" cx="22" cy="22" r="18" />
+    <circle class="back-to-top__fill" cx="22" cy="22" r="18" data-back-to-top-ring />
+  </svg>
+  <span class="back-to-top__icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="18" height="18">
+      <path
+        fill="currentColor"
+        d="M12 8.35l-5.88 5.9 1.41 1.42L12 11.2l4.47 4.47 1.41-1.42L12 8.35zm0-5.35L4 12l1.41 1.41L12 6.83l6.59 6.58L20 12 12 3z"
+      ></path>
+    </svg>
+  </span>
+</button>

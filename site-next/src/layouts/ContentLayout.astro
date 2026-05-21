@@ -1,7 +1,14 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import ArticleChrome from '../components/ArticleChrome.astro';
 import CharacterTree from '../components/CharacterTree.astro';
 import { formatDate } from '../utils/content';
+
+interface ArticleNavLink {
+  title: string;
+  href: string;
+  description?: string;
+}
 
 interface Props {
   title: string;
@@ -10,29 +17,27 @@ interface Props {
   tags?: string[];
   headings?: Array<{ depth: number; slug: string; text: string }>;
   characterTreeSvg?: string;
+  previous?: ArticleNavLink;
+  next?: ArticleNavLink;
 }
 
-const { title, description, date, tags = [], headings = [], characterTreeSvg } = Astro.props;
+const { title, description, date, tags = [], headings = [], characterTreeSvg, previous, next } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const showAside = headings.length > 0 || characterTreeSvg;
 ---
 
 <BaseLayout title={title} description={description}>
+  <ArticleChrome />
+
   <article class="container content-layout page-shell">
     <div class="content-main card card--elevated content-article">
       <header class="page-header">
         <h1>{title}</h1>
-        {
-          description && <p>{description}</p>
-        }
+        {description && <p>{description}</p>}
       </header>
 
       <div class="content-meta">
-        {
-          date && (
-            <time datetime={date.toISOString()}>{formatDate(date)}</time>
-          )
-        }
+        {date && <time datetime={date.toISOString()}>{formatDate(date)}</time>}
         {
           tags.length > 0 && (
             <ul class="tag-list">
@@ -51,6 +56,35 @@ const showAside = headings.length > 0 || characterTreeSvg;
       <div class="prose" data-pagefind-body>
         <slot />
       </div>
+
+      {
+        (previous || next) && (
+          <nav class="article-nav" aria-label="文章导航">
+            {
+              previous ? (
+                <a class="article-nav__link article-nav__link--prev" href={previous.href}>
+                  <span class="article-nav__eyebrow">上一篇</span>
+                  <strong>{previous.title}</strong>
+                  {previous.description && <span>{previous.description}</span>}
+                </a>
+              ) : (
+                <span class="article-nav__spacer" aria-hidden="true"></span>
+              )
+            }
+            {
+              next ? (
+                <a class="article-nav__link article-nav__link--next" href={next.href}>
+                  <span class="article-nav__eyebrow">下一篇</span>
+                  <strong>{next.title}</strong>
+                  {next.description && <span>{next.description}</span>}
+                </a>
+              ) : (
+                <span class="article-nav__spacer" aria-hidden="true"></span>
+              )
+            }
+          </nav>
+        )
+      }
     </div>
 
     {

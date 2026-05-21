@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ContentLayout from '../../layouts/ContentLayout.astro';
-import { normalizeSlug } from '../../utils/content';
+import { buildContentUrl, normalizeSlug, sortByRecency } from '../../utils/content';
 import { buildEntryCharacterTree } from '../../utils/character-tree';
 import type { GetStaticPaths } from 'astro';
 
@@ -20,6 +20,10 @@ const characterTreeSvg = buildEntryCharacterTree(
   entry,
   filteredHeadings.map((h) => h.text),
 );
+const entries = sortByRecency(await getCollection('essay', ({ data }) => !data.draft));
+const currentIndex = entries.findIndex((item) => item.id === entry.id);
+const previousEntry = currentIndex >= 0 ? entries[currentIndex + 1] : undefined;
+const nextEntry = currentIndex > 0 ? entries[currentIndex - 1] : undefined;
 ---
 
 <ContentLayout
@@ -29,6 +33,16 @@ const characterTreeSvg = buildEntryCharacterTree(
   tags={entry.data.tags}
   headings={filteredHeadings.map((h) => ({ depth: h.depth, slug: h.slug, text: h.text }))}
   characterTreeSvg={characterTreeSvg}
+  previous={previousEntry && {
+    title: previousEntry.data.title,
+    description: previousEntry.data.description,
+    href: buildContentUrl('essay', previousEntry.id),
+  }}
+  next={nextEntry && {
+    title: nextEntry.data.title,
+    description: nextEntry.data.description,
+    href: buildContentUrl('essay', nextEntry.id),
+  }}
 >
   <Content />
 </ContentLayout>

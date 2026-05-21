@@ -78,8 +78,18 @@ const { title, description, bodyClass = '' } = Astro.props;
 
 <script>
   import { initAudioPlayers } from '../scripts/audio-player';
+  import { initArticleUx } from '../scripts/article-ux';
   import { initTravelMaps } from '../scripts/travel-map';
 
-  initAudioPlayers();
-  initTravelMaps();
+  const initPageEnhancements = () => {
+    initArticleUx();
+    initAudioPlayers();
+    initTravelMaps();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPageEnhancements, { once: true });
+  } else {
+    initPageEnhancements();
+  }
 </script>
