@@ -67,6 +67,7 @@ function copyAssetDirs() {
 function main() {
   copyDir(path.join(ROOT, 'overrides/img'), path.join(PUBLIC, 'img'));
   copyDir(path.join(ROOT, 'docs/audio'), path.join(PUBLIC, 'audio'));
+  copyDir(path.join(ROOT, 'docs/academy.assets'), path.join(PUBLIC, 'academy.assets'));
   copyDir(path.join(ROOT, 'assets'), path.join(PUBLIC, 'assets'));
   copyAssetDirs();
   copyFile(path.join(ROOT, 'docs/academy.md'), path.join(PUBLIC, 'academy-legacy.md'));

@@ -2,6 +2,8 @@
 @import './home.css';
 @import './content.css';
 @import './audio-player.css';
+@import 'leaflet/dist/leaflet.css';
+@import './travel-map.css';
 @import 'katex/dist/katex.min.css';
 
 *,

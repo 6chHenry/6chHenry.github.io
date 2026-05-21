@@ -353,6 +353,8 @@
   position: relative;
   z-index: 2;
   padding: 0 0 5.5rem;
+  content-visibility: auto;
+  contain-intrinsic-size: 760px;
 }
 
 .forest-map__intro {
@@ -360,7 +362,7 @@
 }
 
 .forest-map__lead {
-  max-width: 40rem;
+  max-width: 44rem;
 }
 
 .forest-map__scroll {
@@ -372,10 +374,11 @@
 
 .forest-map__stage {
   position: relative;
-  width: min(100%, 86rem);
-  min-width: min(100%, 52rem);
+  width: min(100%, 80rem);
+  min-width: min(100%, 58rem);
   margin: 0 auto;
   aspect-ratio: var(--map-width) / var(--map-height);
+  isolation: isolate;
 }
 
 .forest-map__terrain {
@@ -383,94 +386,275 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  border-radius: var(--ch-radius-lg);
+  border-radius: 28px;
   border: 1px solid var(--ch-glass-border);
-  box-shadow: var(--ch-shadow);
+  box-shadow:
+    0 24px 80px color-mix(in srgb, black 20%, transparent),
+    inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
 }
 
-.forest-map__trail {
-  filter: url(#forest-map-glow);
-}
-
-.forest-map__edge-label {
-  font-family: var(--ch-display-font);
-  font-size: 22px;
+.forest-map__grove-label {
+  font-family: var(--ch-mono-font);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   fill: var(--ch-accent-tertiary);
-  opacity: 0.55;
-  letter-spacing: 0.2em;
+  opacity: 0.62;
 }
 
-.forest-map__stops {
+.forest-map__recent-path {
+  pointer-events: none;
+}
+
+.forest-map__canopy,
+.forest-map__recent-labels {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-.forest-map__stop {
+.forest-map__tree {
   position: absolute;
-  display: flex;
-  align-items: flex-end;
-  gap: 0.35rem;
-  transform: translate(-50%, calc(-1 * var(--stop-lift, 72%)));
+  z-index: 4;
+  width: calc(3.05rem * var(--tree-scale));
+  color: inherit;
+  filter: drop-shadow(0 14px 16px color-mix(in srgb, var(--ch-accent) 20%, transparent));
   pointer-events: auto;
   text-decoration: none;
-  color: inherit;
-  z-index: 1;
+  transform: translate3d(-50%, -88%, 0) scale(1);
+  transform-origin: 50% 92%;
+  transition:
+    filter 520ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.forest-map__stop--edge {
-  z-index: 2;
+.forest-map__tree::after {
+  position: absolute;
+  left: 50%;
+  bottom: 2%;
+  z-index: -1;
+  width: 40%;
+  height: 7%;
+  border-radius: 999px;
+  background: color-mix(in srgb, black 26%, transparent);
+  content: "";
+  filter: blur(5px);
+  transform: translateX(-50%);
 }
 
-.forest-map__tree {
-  width: clamp(2.6rem, 4.2vw, 4.1rem);
-  flex-shrink: 0;
-  filter: drop-shadow(0 8px 14px color-mix(in srgb, var(--ch-accent) 24%, transparent));
-  transition: transform var(--ch-transition);
-}
-
-.forest-map__tree :global(svg) {
+.forest-map__tree-art,
+.forest-map__tree-art svg {
+  display: block;
   width: 100%;
   height: auto;
-  display: block;
 }
 
-.forest-map__date {
-  font-family: var(--ch-mono-font);
-  font-size: clamp(0.62rem, 0.95vw, 0.74rem);
-  letter-spacing: 0.02em;
-  color: var(--ch-accent-warm);
-  white-space: nowrap;
-  padding-bottom: 0.35rem;
-  text-shadow: 0 1px 0 var(--ch-bg-void);
+.forest-map__tree-art {
+  transform-origin: 50% 95%;
 }
 
-.forest-map__date--left {
-  order: -1;
+.forest-map__tree-art svg {
+  overflow: visible;
+  transform: scale(0.98);
+  transform-origin: 50% 95%;
+  transition:
+    opacity 420ms ease,
+    transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.forest-map__stop-title,
-.forest-map__stop-kind {
+.forest-map__tree-art text {
+  transition:
+    opacity 420ms ease,
+    transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.forest-map__tree--essay {
+  filter: drop-shadow(0 14px 16px color-mix(in srgb, var(--ch-accent-warm) 20%, transparent));
+}
+
+.forest-map__tree--projects {
+  filter: drop-shadow(0 14px 16px color-mix(in srgb, var(--ch-accent-secondary) 22%, transparent));
+}
+
+.forest-map__tree.is-recent {
+  z-index: 12;
+}
+
+.forest-map__tree:hover,
+.forest-map__tree:focus-visible {
+  z-index: 24;
+  color: inherit;
+  filter: drop-shadow(0 20px 26px color-mix(in srgb, var(--ch-accent-secondary) 34%, transparent));
+  outline: none;
+  transform: translate3d(-50%, -94%, 0) scale(1.2);
+}
+
+.forest-map__tree:hover .forest-map__tree-art svg,
+.forest-map__tree:focus-visible .forest-map__tree-art svg {
+  transform: scale(1.08);
+}
+
+.forest-map__tree:hover .forest-map__tree-art text,
+.forest-map__tree:focus-visible .forest-map__tree-art text {
+  animation: forest-glyph-bloom 720ms both;
+}
+
+.forest-map__preview {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+  left: 50%;
+  bottom: 82%;
+  z-index: 32;
+  display: grid;
+  width: 17rem;
+  gap: 0.28rem;
+  padding: 0.7rem 0.78rem 0.78rem;
+  border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 30%, var(--ch-glass-border));
+  border-radius: 10px;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--ch-surface-solid) 92%, transparent),
+      color-mix(in srgb, var(--ch-accent-dim) 56%, var(--ch-surface-solid))
+    );
+  box-shadow: 0 18px 40px color-mix(in srgb, black 18%, transparent);
+  color: var(--ch-fg);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(-50%, 0.75rem, 0) scale(0.9);
+  transform-origin: 50% 100%;
+  transition:
+    opacity 180ms ease,
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.forest-map__preview::after {
+  position: absolute;
+  left: 50%;
+  bottom: -0.46rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-right: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 30%, var(--ch-glass-border));
+  border-bottom: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 30%, var(--ch-glass-border));
+  background: color-mix(in srgb, var(--ch-surface-solid) 90%, transparent);
+  content: "";
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.forest-map__preview-kicker {
+  color: var(--ch-accent-tertiary);
+  font-family: var(--ch-mono-font);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.forest-map__preview strong {
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  color: var(--ch-fg);
+  font-family: var(--ch-display-font);
+  font-size: 0.94rem;
+  line-height: 1.22;
+  text-overflow: ellipsis;
   white-space: nowrap;
-  border: 0;
 }
 
-.forest-map__stop:hover .forest-map__tree,
-.forest-map__stop:focus-visible .forest-map__tree {
-  transform: translateY(-4px) scale(1.06);
+.forest-map__preview span:last-child {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--ch-fg-muted);
+  font-size: 0.74rem;
+  line-height: 1.48;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
-.forest-map__stop:focus-visible {
-  outline: 2px solid var(--ch-accent-tertiary);
-  outline-offset: 4px;
-  border-radius: var(--ch-radius-sm);
+.forest-map__tree:hover .forest-map__preview,
+.forest-map__tree:focus-visible .forest-map__preview {
+  opacity: 1;
+  transform: translate3d(-50%, -0.15rem, 0) scale(1);
+}
+
+.forest-map__rank {
+  position: absolute;
+  top: 14%;
+  right: -0.35rem;
+  display: grid;
+  width: 1.28rem;
+  height: 1.28rem;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, white 70%, var(--ch-accent-warm));
+  border-radius: 999px;
+  background: var(--ch-accent-warm);
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--ch-accent-warm) 28%, transparent);
+  color: #211505;
+  font-family: var(--ch-mono-font);
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.forest-map__recent-title {
+  position: absolute;
+  display: flex;
+  max-width: 12rem;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.38rem 0.52rem;
+  border-radius: 9px;
+  border: 1px solid color-mix(in srgb, var(--ch-accent-warm) 34%, var(--ch-glass-border));
+  background: color-mix(in srgb, var(--ch-surface-solid) 88%, transparent);
+  box-shadow: 0 10px 28px color-mix(in srgb, black 13%, transparent);
+  color: inherit;
+  pointer-events: auto;
+  text-decoration: none;
+  transform: translate(calc(-50% + (var(--label-shift) * 1.15rem)), -130%);
+  transition:
+    opacity var(--ch-transition-fast),
+    border-color var(--ch-transition-fast),
+    box-shadow var(--ch-transition-fast),
+    transform var(--ch-transition-fast);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.forest-map__stage:has(.forest-map__tree:hover) .forest-map__recent-title,
+.forest-map__stage:has(.forest-map__tree:focus-visible) .forest-map__recent-title {
+  opacity: 0.34;
+}
+
+.forest-map__recent-title span {
+  display: grid;
+  flex: 0 0 auto;
+  width: 1.08rem;
+  height: 1.08rem;
+  place-items: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ch-accent-warm) 84%, white);
+  color: #201405;
+  font-family: var(--ch-mono-font);
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.forest-map__recent-title strong {
+  overflow: hidden;
+  color: var(--ch-fg);
+  font-size: 0.74rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.forest-map__recent-title:hover,
+.forest-map__recent-title:focus-visible {
+  border-color: color-mix(in srgb, var(--ch-accent-warm) 58%, var(--ch-glass-border));
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--ch-accent-warm) 16%, transparent);
+  color: inherit;
+  outline: none;
+  transform: translate(calc(-50% + (var(--label-shift) * 1.15rem)), -142%);
 }
 
 @media (max-width: 960px) {
@@ -479,31 +663,51 @@
   }
 
   .forest-map__stage {
-    min-width: 44rem;
-  }
-
-  .forest-map__tree {
-    width: 3rem;
+    min-width: 52rem;
   }
 }
 
 @media (max-width: 640px) {
   .forest-map__stage {
-    min-width: 36rem;
+    min-width: 44rem;
   }
 
   .forest-map__tree {
-    width: 2.5rem;
+    width: calc(2.75rem * var(--tree-scale));
   }
 
-  .forest-map__date {
-    font-size: 0.6rem;
+  .forest-map__recent-title {
+    max-width: 9.5rem;
+  }
+
+  .forest-map__preview {
+    width: 13.5rem;
+  }
+
+  .forest-map__recent-title strong {
+    font-size: 0.68rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .forest-map__recent-title,
+  .forest-map__preview,
+  .forest-map__tree-art svg,
+  .forest-map__tree-art text,
   .forest-map__tree {
+    animation: none;
     transition: none;
+  }
+}
+
+@keyframes forest-glyph-bloom {
+  0% {
+    opacity: 0.48;
+    transform: translateY(3px) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 

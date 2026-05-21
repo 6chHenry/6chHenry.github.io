@@ -151,7 +151,7 @@ export function buildCharacterTreeSvg({
 }: CharacterTreeOptions): string {
   const compact = variant === 'compact';
   const rng = createRng(hashString(seed));
-  const pool = collectCharacterPool(title, headings, body, compact ? 90 : 180);
+  const pool = collectCharacterPool(title, headings, body, compact ? 48 : 180);
   const slots: Array<{ x: number; y: number }> = [];
 
   for (let y = 10; y <= 150; y += 9) {
@@ -171,7 +171,7 @@ export function buildCharacterTreeSvg({
     [slots[i], slots[j]] = [slots[j], slots[i]];
   }
 
-  const count = Math.min(slots.length, pool.length, compact ? 64 : 110);
+  const count = Math.min(slots.length, pool.length, compact ? 28 : 110);
   const treePath = TREE_POLYGON.map(([x, y], index) => `${index === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
 
   const labels = Array.from({ length: count }, (_, index) => {

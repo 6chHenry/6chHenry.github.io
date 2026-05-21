@@ -1,0 +1,507 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL;
+const asset = (name: string) => `${base}academy.assets/${name}`;
+
+const contacts = [
+  { label: 'Work Email', value: 'HenryLiu', href: 'mailto:HenryLiu13550060700@sjtu.edu.cn' },
+  {
+    label: 'Personal Email',
+    value: 'HenryLiu13550060700[at]sjtu[dot]edu[dot]cn',
+    href: 'mailto:2313287840@qq.com',
+  },
+  { label: 'CV', value: 'Empty', href: null },
+];
+
+const interests = [
+  {
+    title: 'Computer Vision',
+    body: 'I love the charm of computer vision, because it makes computers able to see images and videos.',
+  },
+  {
+    title: 'Embodied AI',
+    body: 'Building the brain for robots is also interesting for me.',
+  },
+];
+
+const news = [
+  { year: '2025', date: '04/2025', body: 'I was admitted to SAI.' },
+  { year: '2025', date: '03/2025', body: 'I became a member of A+ Club of SJTU ME.' },
+  { year: '2025', date: '02/2025', body: 'I became a member of Zhiyuan Honor Program, SJTU.' },
+  { year: '2024', date: '09/2024', body: 'Excited to start my ME B.Eng. at SJTU ME.' },
+];
+
+const education = [
+  {
+    title: 'School of Artificial Intelligence, Shanghai Jiao Tong University',
+    date: 'Apr. 2025 -- Present',
+    image: 'image-20250425174246126.png',
+    alt: 'SAI',
+  },
+  {
+    title: 'A+ Club of SJTU ME, Shanghai Jiao Tong University',
+    date: 'Mar. 2025 -- Present',
+    image: 'aplus.jpg',
+    alt: 'A+ Club',
+  },
+  {
+    title: 'Zhiyuan Honor Program, Shanghai Jiao Tong University',
+    date: 'Feb. 2025 -- Present',
+    image: 'sjtu.png',
+    alt: 'SJTU',
+  },
+  {
+    title: 'School of Mechanical Engineering, Shanghai Jiao Tong University',
+    date: 'Sept. 2024 -- Apr. 2025',
+    image: 'sjtu-1740821286474-3.png',
+    alt: 'SJTU ME',
+  },
+];
+---
+
+<BaseLayout title="KeWei Liu | Academic Homepage" description="Academic homepage of KeWei Liu, undergraduate student at Shanghai Jiao Tong University.">
+  <section class="container page-shell academy-page">
+    <header class="academy-hero">
+      <div class="academy-hero__content">
+        <p class="section-kicker">Academic Homepage</p>
+        <h1>KeWei Liu <span>刘可唯</span></h1>
+        <p class="academy-hero__lead">
+          Undergraduate student majoring in AI at the School of Artificial Intelligence, Shanghai Jiao Tong University.
+        </p>
+        <div class="academy-contact">
+          {
+            contacts.map((item) =>
+              item.href ? (
+                <a href={item.href}>
+                  <span>{item.label}</span>
+                  <strong>{item.value}</strong>
+                </a>
+              ) : (
+                <p>
+                  <span>{item.label}</span>
+                  <strong>{item.value}</strong>
+                </p>
+              ),
+            )
+          }
+        </div>
+        <div class="academy-actions">
+          <a class="pill pill--glass" href="https://github.com/6chHenry" target="_blank" rel="noopener">GitHub</a>
+          <a class="pill" href={`${base}about/`}>About Me</a>
+        </div>
+      </div>
+      <aside class="academy-profile card">
+        <img src={asset('avatar1.jpg')} alt="KeWei Liu" width="180" height="180" />
+        <p>SAI · SJTU</p>
+      </aside>
+    </header>
+
+    <div class="academy-grid">
+      <main class="academy-main">
+        <section class="academy-section">
+          <h2>Bio</h2>
+          <p>
+            I am a second-year undergraduate student majoring in AI at
+            <a href="https://soai.sjtu.edu.cn/" target="_blank" rel="noopener">SAI</a>
+            of
+            <a href="https://en.sjtu.edu.cn/" target="_blank" rel="noopener">Shanghai Jiao Tong University (SJTU)</a>.
+          </p>
+          <p>
+            Currently, I am an active participant in
+            <a href="https://en.zhiyuan.sjtu.edu.cn/" target="_blank" rel="noopener">Zhiyuan Honors Program</a>,
+            which fosters academic excellence and innovation.
+          </p>
+          <div class="academy-note">
+            I am enthusiastic about Causal Discovery in Robotics. Please feel free to reach out if you want to share
+            experiences with me.
+          </div>
+        </section>
+
+        <section class="academy-section">
+          <h2>Research Interest</h2>
+          <div class="interest-grid">
+            {
+              interests.map((item) => (
+                <article class="interest-card">
+                  <h3>{item.title}</h3>
+                  <p>{item.body}</p>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="academy-section">
+          <h2>Education</h2>
+          <div class="education-list">
+            {
+              education.map((item) => (
+                <article class="education-item card">
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.date}</p>
+                  </div>
+                  <img src={asset(item.image)} alt={item.alt} loading="lazy" />
+                </article>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="academy-section academy-columns">
+          <article>
+            <h2>Publications & Manuscripts</h2>
+            <p class="academy-muted">Coming soon...</p>
+          </article>
+          <article>
+            <h2>Experience</h2>
+            <p class="academy-muted">Coming soon...</p>
+          </article>
+          <article>
+            <h2>Projects</h2>
+            <p>2025暑假：自动驾驶行为仿真</p>
+          </article>
+          <article>
+            <h2>Media Exposures</h2>
+            <p class="academy-muted">Coming soon...</p>
+          </article>
+          <article>
+            <h2>Honors</h2>
+            <p>2025年全国大学生数学建模竞赛全国二等奖</p>
+          </article>
+        </section>
+      </main>
+
+      <aside class="academy-side">
+        <section class="academy-card card">
+          <h2>News</h2>
+          <ol class="news-list">
+            {
+              news.map((item) => (
+                <li>
+                  <time>{item.date}</time>
+                  <p>{item.body}</p>
+                  <span>{item.year}</span>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .academy-page {
+    max-width: 76rem;
+  }
+
+  .academy-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 16rem;
+    gap: 1.5rem;
+    align-items: stretch;
+    padding: 1rem 0 1.7rem;
+  }
+
+  .academy-hero__content,
+  .academy-profile,
+  .academy-section,
+  .academy-card {
+    border: 1px solid var(--ch-glass-border);
+    background: var(--ch-glass-bg);
+    backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.12);
+    -webkit-backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.12);
+  }
+
+  .academy-hero__content {
+    padding: 2.25rem;
+    border-radius: var(--ch-radius);
+  }
+
+  .academy-hero h1 {
+    margin: 0;
+    font-family: var(--ch-display-font);
+    font-size: clamp(2.45rem, 6vw, 4.6rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: var(--ch-fg);
+  }
+
+  .academy-hero h1 span {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: clamp(1.35rem, 3vw, 2rem);
+    color: var(--ch-accent-secondary);
+  }
+
+  .academy-hero__lead {
+    max-width: 42rem;
+    margin: 1.15rem 0 1.35rem;
+    color: var(--ch-fg-muted);
+    font-size: 1.04rem;
+  }
+
+  .academy-contact {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  .academy-contact a,
+  .academy-contact p {
+    margin: 0;
+    padding: 0.72rem 0.8rem;
+    border-radius: var(--ch-radius-sm);
+    border: 1px solid var(--ch-border-soft);
+    background: color-mix(in srgb, var(--ch-surface-solid) 58%, transparent);
+    text-decoration: none;
+    min-width: 0;
+  }
+
+  .academy-contact span {
+    display: block;
+    color: var(--ch-accent-tertiary);
+    font-family: var(--ch-mono-font);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .academy-contact strong {
+    display: block;
+    margin-top: 0.15rem;
+    overflow-wrap: anywhere;
+    color: var(--ch-fg);
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  .academy-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 1.25rem;
+  }
+
+  .academy-profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1.4rem;
+    text-align: center;
+  }
+
+  .academy-profile img {
+    width: min(100%, 11rem);
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 1rem;
+    border: 1px solid var(--ch-border-soft);
+    box-shadow: 0 18px 42px color-mix(in srgb, black 18%, transparent);
+  }
+
+  .academy-profile p {
+    margin: 0.9rem 0 0;
+    color: var(--ch-accent);
+    font-family: var(--ch-mono-font);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+  }
+
+  .academy-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 19rem;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .academy-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .academy-section,
+  .academy-card {
+    padding: 1.55rem;
+    border-radius: var(--ch-radius);
+  }
+
+  .academy-section h2,
+  .academy-card h2 {
+    margin: 0 0 1rem;
+    font-family: var(--ch-display-font);
+    color: var(--ch-accent);
+    font-size: 1.35rem;
+    letter-spacing: 0.03em;
+  }
+
+  .academy-section p {
+    color: var(--ch-fg-muted);
+  }
+
+  .academy-note {
+    margin-top: 1rem;
+    padding: 0.9rem 1rem;
+    border-left: 3px solid var(--ch-accent-secondary);
+    border-radius: 0 var(--ch-radius-sm) var(--ch-radius-sm) 0;
+    background: linear-gradient(90deg, var(--ch-accent-dim), transparent);
+    color: var(--ch-fg);
+  }
+
+  .interest-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .interest-card {
+    padding: 1rem;
+    border-radius: var(--ch-radius-sm);
+    border: 1px solid var(--ch-border-soft);
+    background: color-mix(in srgb, var(--ch-surface-solid) 48%, transparent);
+  }
+
+  .interest-card h3 {
+    margin: 0 0 0.4rem;
+    color: var(--ch-accent-secondary);
+    font-size: 1rem;
+  }
+
+  .interest-card p {
+    margin: 0;
+  }
+
+  .education-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .education-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 6rem;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    border-radius: var(--ch-radius-sm);
+  }
+
+  .education-item h3 {
+    margin: 0;
+    color: var(--ch-fg);
+    font-size: 1.02rem;
+    line-height: 1.35;
+  }
+
+  .education-item p {
+    margin: 0.35rem 0 0;
+    font-family: var(--ch-mono-font);
+    font-size: 0.78rem;
+    color: var(--ch-accent-tertiary);
+  }
+
+  .education-item img {
+    width: 6rem;
+    height: 4.4rem;
+    object-fit: contain;
+    border-radius: var(--ch-radius-sm);
+    border: 1px solid var(--ch-border-soft);
+    background: color-mix(in srgb, white 82%, transparent);
+    padding: 0.35rem;
+  }
+
+  .academy-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .academy-columns article {
+    min-height: 7rem;
+    padding: 1rem;
+    border-radius: var(--ch-radius-sm);
+    border: 1px solid var(--ch-border-soft);
+    background: color-mix(in srgb, var(--ch-surface-solid) 42%, transparent);
+  }
+
+  .academy-columns h2 {
+    font-size: 1rem;
+    color: var(--ch-accent-secondary);
+  }
+
+  .academy-muted {
+    color: var(--ch-fg-muted);
+    font-style: italic;
+  }
+
+  .academy-side {
+    position: sticky;
+    top: calc(var(--ch-header-height) + 1.5rem);
+  }
+
+  .news-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .news-list li {
+    position: relative;
+    padding-left: 1rem;
+    border-left: 1px solid var(--ch-border-soft);
+  }
+
+  .news-list time {
+    font-family: var(--ch-mono-font);
+    font-size: 0.74rem;
+    color: var(--ch-accent-tertiary);
+  }
+
+  .news-list p {
+    margin: 0.2rem 0;
+    color: var(--ch-fg);
+    line-height: 1.5;
+  }
+
+  .news-list span {
+    color: var(--ch-fg-muted);
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 980px) {
+    .academy-hero,
+    .academy-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .academy-side {
+      position: static;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .academy-hero__content,
+    .academy-section,
+    .academy-card {
+      padding: 1.25rem;
+    }
+
+    .academy-contact,
+    .interest-grid,
+    .academy-columns {
+      grid-template-columns: 1fr;
+    }
+
+    .education-item {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

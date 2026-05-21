@@ -2,37 +2,21 @@
 import {
   FOREST_MAP_HEIGHT,
   FOREST_MAP_WIDTH,
-  buildTrailPath,
-  type ForestMapStop,
+  buildCurvePath,
+  type ForestMapData,
 } from '../utils/forest-map';
 
 interface Props {
-  stops: ForestMapStop[];
+  stops: ForestMapData;
 }
 
 const { stops } = Astro.props;
+const recentPath = buildCurvePath(stops.recentTrees);
 
-const trailPoints = stops.map((stop) => ({ x: stop.x, y: stop.y }));
-const trailPath = buildTrailPath(trailPoints);
-const firstDate = stops[0]?.dateLabel;
-const lastDate = stops[stops.length - 1]?.dateLabel;
-
-const collectionLabel: Record<string, string> = {
-  notes: '笔记',
-  essay: '杂谈',
-  projects: '项目',
-};
-
-const bgTrees = [
-  { x: 80, y: 420, s: 0.55 },
-  { x: 210, y: 445, s: 0.72 },
-  { x: 360, y: 410, s: 0.48 },
-  { x: 520, y: 455, s: 0.65 },
-  { x: 680, y: 405, s: 0.58 },
-  { x: 840, y: 448, s: 0.7 },
-  { x: 990, y: 415, s: 0.52 },
-  { x: 1140, y: 440, s: 0.68 },
-  { x: 1280, y: 425, s: 0.6 },
+const groves = [
+  { title: 'Notes Grove', x: 154, y: 92 },
+  { title: 'Essay Grove', x: 780, y: 156 },
+  { title: 'Project Grove', x: 484, y: 610 },
 ];
 ---
 
@@ -41,11 +25,7 @@ const bgTrees = [
     <p class="section-kicker">Trail Map</p>
     <h2 id="forest-map-title" class="section-title">汉字森林 · 林径地图</h2>
     <p class="section-lead forest-map__lead">
-      {
-        firstDate && lastDate
-          ? `从 ${firstDate} 到 ${lastDate}，沿时间走过的 ${stops.length} 处汉字树。最早与最新的笔记都在径上，其余为途中选点。`
-          : '沿时间排列的汉字树，每一棵对应一篇笔记、杂谈或项目。'
-      }
+      每棵树都是一篇内容。树冠来自文章里的汉字，大小随内容体量与更新时间变化；金色小径标出最近更新，并直接摘出标题。
     </p>
   </div>
 
@@ -59,16 +39,16 @@ const bgTrees = [
       >
         <defs>
           <linearGradient id="forest-map-sky" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--ch-bg-sky)" stop-opacity="0.55" />
-            <stop offset="55%" stop-color="var(--ch-bg-void)" stop-opacity="0.35" />
-            <stop offset="100%" stop-color="var(--ch-bg-hill)" stop-opacity="0.45" />
+            <stop offset="0%" stop-color="var(--ch-bg-sky)" stop-opacity="0.52" />
+            <stop offset="62%" stop-color="var(--ch-surface-solid)" stop-opacity="0.78" />
+            <stop offset="100%" stop-color="var(--ch-bg-hill)" stop-opacity="0.42" />
           </linearGradient>
-          <linearGradient id="forest-map-ground" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--ch-accent-secondary)" stop-opacity="0.08" />
-            <stop offset="100%" stop-color="var(--ch-accent)" stop-opacity="0.18" />
-          </linearGradient>
-          <filter id="forest-map-glow" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
+          <radialGradient id="forest-map-glade" cx="50%" cy="48%" r="52%">
+            <stop offset="0%" stop-color="var(--ch-accent-light)" stop-opacity="0.18" />
+            <stop offset="100%" stop-color="var(--ch-accent)" stop-opacity="0" />
+          </radialGradient>
+          <filter id="forest-map-path-glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -76,93 +56,92 @@ const bgTrees = [
           </filter>
         </defs>
 
-        <rect width={FOREST_MAP_WIDTH} height={FOREST_MAP_HEIGHT} fill="url(#forest-map-sky)" />
+        <rect width={FOREST_MAP_WIDTH} height={FOREST_MAP_HEIGHT} rx="28" fill="url(#forest-map-sky)" />
+        <rect width={FOREST_MAP_WIDTH} height={FOREST_MAP_HEIGHT} rx="28" fill="url(#forest-map-glade)" />
         <path
-          d={`M 0 ${FOREST_MAP_HEIGHT * 0.72} Q ${FOREST_MAP_WIDTH * 0.25} ${FOREST_MAP_HEIGHT * 0.58} ${FOREST_MAP_WIDTH * 0.5} ${FOREST_MAP_HEIGHT * 0.68} T ${FOREST_MAP_WIDTH} ${FOREST_MAP_HEIGHT * 0.74} L ${FOREST_MAP_WIDTH} ${FOREST_MAP_HEIGHT} L 0 ${FOREST_MAP_HEIGHT} Z`}
-          fill="url(#forest-map-ground)"
+          d="M0 548 C170 476 302 594 468 520 C636 445 748 560 920 488 C1060 430 1164 478 1280 430 L1280 720 L0 720 Z"
+          fill="var(--ch-accent)"
+          opacity="0.08"
+        />
+        <path
+          d="M0 612 C190 560 320 646 520 588 C710 532 876 640 1080 566 C1168 534 1224 526 1280 530 L1280 720 L0 720 Z"
+          fill="var(--ch-accent-secondary)"
+          opacity="0.08"
         />
 
         {
-          bgTrees.map((tree) => (
-            <g transform={`translate(${tree.x} ${tree.y}) scale(${tree.s})`} opacity="0.22">
-              <path
-                d="M0 0 L12 -48 L24 0 L18 0 L30 -36 L42 0 L36 0 L48 28 L28 28 L28 72 L20 72 L20 28 L0 28 Z"
-                fill="var(--ch-accent)"
-              />
-            </g>
+          groves.map((grove) => (
+            <text x={grove.x} y={grove.y} class="forest-map__grove-label">
+              {grove.title}
+            </text>
           ))
         }
 
         {
-          trailPath && (
+          recentPath && (
             <>
               <path
-                class="forest-map__trail forest-map__trail--shadow"
-                d={trailPath}
+                d={recentPath}
+                class="forest-map__recent-path forest-map__recent-path--halo"
                 fill="none"
-                stroke="var(--ch-accent)"
-                stroke-width="10"
+                stroke="var(--ch-accent-warm)"
+                stroke-width="12"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                opacity="0.12"
+                opacity="0.13"
               />
               <path
-                class="forest-map__trail"
-                d={trailPath}
+                d={recentPath}
+                class="forest-map__recent-path"
                 fill="none"
                 stroke="var(--ch-accent-warm)"
                 stroke-width="3"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                stroke-dasharray="10 14"
-                opacity="0.72"
+                stroke-dasharray="8 12"
+                filter="url(#forest-map-path-glow)"
+                opacity="0.84"
               />
             </>
           )
         }
-
-        {
-          trailPoints.map((point, index) => (
-            <circle
-              class="forest-map__node-dot"
-              cx={point.x}
-              cy={point.y}
-              r={index === 0 || index === trailPoints.length - 1 ? 5.5 : 4}
-              fill="var(--ch-accent-warm)"
-              opacity="0.85"
-            />
-          ))
-        }
-
-        <text x="72" y={FOREST_MAP_HEIGHT - 28} class="forest-map__edge-label">始</text>
-        <text x={FOREST_MAP_WIDTH - 96} y={FOREST_MAP_HEIGHT - 28} class="forest-map__edge-label">今</text>
       </svg>
 
-      <div class="forest-map__stops">
+      <div class="forest-map__canopy" aria-label="内容树林">
         {
-          stops.map((stop, index) => {
-            const left = (stop.x / FOREST_MAP_WIDTH) * 100;
-            const top = (stop.y / FOREST_MAP_HEIGHT) * 100;
-            const isEdge = index === 0 || index === stops.length - 1;
-            const yearSide = stop.x > FOREST_MAP_WIDTH * 0.72 ? 'left' : 'right';
-            const lift = index % 2 === 0 ? 72 : 64;
+          stops.trees.map((tree) => (
+            <a
+              class:list={['forest-map__tree', `forest-map__tree--${tree.collection}`, tree.recentRank && 'is-recent']}
+              href={tree.href}
+              aria-label={`${tree.title}${tree.dateLabel ? `，${tree.dateLabel}` : ''}`}
+              style={`left: ${(tree.x / FOREST_MAP_WIDTH) * 100}%; top: ${(tree.y / FOREST_MAP_HEIGHT) * 100}%; --tree-scale: ${tree.size.toFixed(3)};`}
+            >
+              <span class="forest-map__tree-art" set:html={tree.treeSvg}></span>
+              {tree.recentRank && <span class="forest-map__rank">{tree.recentRank}</span>}
+              <span class="forest-map__preview">
+                <span class="forest-map__preview-kicker">
+                  {tree.dateLabel ?? (tree.collection === 'notes' ? 'Notes' : tree.collection === 'essay' ? 'Essay' : 'Project')}
+                </span>
+                <strong>{tree.title}</strong>
+                <span>{tree.summary}</span>
+              </span>
+            </a>
+          ))
+        }
+      </div>
 
-            return (
-              <a
-                class:list={['forest-map__stop', isEdge && 'forest-map__stop--edge']}
-                style={`left: ${left}%; top: ${top}%; --stop-lift: ${lift}%;`}
-                href={stop.href}
-                title={`${stop.dateLabel} · ${stop.title}`}
-              >
-                <div class="forest-map__tree" aria-hidden="true">
-                  <Fragment set:html={stop.treeSvg} />
-                </div>
-                <span class:list={['forest-map__date', `forest-map__date--${yearSide}`]}>{stop.dateLabel}</span>
-                <span class="forest-map__stop-title">{stop.title}</span>
-                <span class="forest-map__stop-kind">{collectionLabel[stop.collection] ?? stop.collection}</span>
-              </a>
-            );
-          })
+      <div class="forest-map__recent-labels" aria-label="最近更新路径">
+        {
+          stops.recentTrees.map((tree, index) => (
+            <a
+              class="forest-map__recent-title"
+              href={tree.href}
+              style={`left: ${(tree.x / FOREST_MAP_WIDTH) * 100}%; top: ${(tree.y / FOREST_MAP_HEIGHT) * 100}%; --label-shift: ${index % 2 === 0 ? '-1' : '1'};`}
+            >
+              <span>{tree.recentRank}</span>
+              <strong>{tree.title}</strong>
+            </a>
+          ))
         }
       </div>
     </div>
