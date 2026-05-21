@@ -71,9 +71,11 @@ html {
   --md-footer-bg-color--dark: #f6f8fc;
   --md-footer-fg-color--light: #0c1222;
   --md-footer-fg-color--lighter: #64748b;
-  --md-code-bg-color: #eef2f7;
+  --md-code-bg-color: #edf7f2;
   --md-code-fg-color: var(--md-typeset-color);
   --md-typeset-a-color: #0e7490;
+  --ch-code-surface: #edf7f2;
+  --ch-code-border: rgba(22, 163, 74, 0.22);
 }
 
 [data-md-color-scheme="slate"] {
@@ -102,7 +104,22 @@ html {
   --md-footer-bg-color--dark: #0a0f1a;
   --md-footer-fg-color--light: #e8ecf4;
   --md-footer-fg-color--lighter: #94a3b8;
-  --md-code-bg-color: #12182a;
+  --md-code-bg-color: #12221d;
+  --ch-code-surface: #12221d;
+  --ch-code-border: rgba(45, 212, 191, 0.22);
+}
+
+.md-typeset :not(pre) > code {
+  background-color: color-mix(in srgb, var(--ch-code-surface) 78%, transparent);
+  border: 1px solid var(--ch-code-border);
+  border-radius: 6px;
+}
+
+.md-typeset .highlight pre,
+.md-typeset pre > code {
+  background-color: var(--ch-code-surface) !important;
+  border: 1px solid var(--ch-code-border);
+  border-radius: 10px;
 }
 
 [data-md-color-scheme="slate"] input.md-search__input {

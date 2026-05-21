@@ -106,17 +106,55 @@
 .prose :where(pre) {
   padding: 1.1rem 1.2rem;
   border-radius: var(--ch-radius-sm);
-  border: 1px solid var(--ch-border-soft);
-  background: color-mix(in srgb, var(--ch-surface-elevated) 96%, var(--ch-accent-dim));
+  border: 1px solid var(--ch-code-border);
+  background: var(--ch-code-surface);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 14%, transparent);
   overflow-x: auto;
   font-size: 0.86rem;
   line-height: 1.6;
 }
 
+/* Shiki dual themes embed light colors inline + --shiki-dark per token.
+   Site theme uses data-theme, not prefers-color-scheme alone. */
+.prose :where(pre.astro-code) {
+  border: 1px solid var(--ch-code-border) !important;
+}
+
+[data-theme='light'] .prose :where(pre.astro-code) {
+  background-color: var(--ch-code-surface) !important;
+}
+
+[data-theme='dark'] .prose :where(pre.astro-code) {
+  background-color: var(--ch-code-surface) !important;
+  color: var(--shiki-dark, #adbac7) !important;
+}
+
+[data-theme='dark'] .prose :where(pre.astro-code span) {
+  color: var(--shiki-dark) !important;
+  background-color: transparent !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .prose :where(pre.astro-code) {
+    background-color: var(--ch-code-surface) !important;
+    color: var(--shiki-dark, #adbac7) !important;
+  }
+
+  :root:not([data-theme='light']) .prose :where(pre.astro-code span) {
+    color: var(--shiki-dark) !important;
+    background-color: transparent !important;
+  }
+}
+
+.prose :where(pre code) {
+  background: transparent !important;
+}
+
 .prose :where(code:not(pre code)) {
   padding: 0.14rem 0.4rem;
   border-radius: 0.35rem;
-  background: var(--ch-accent-dim);
+  border: 1px solid var(--ch-code-border);
+  background: var(--ch-code-inline-bg);
   font-size: 0.88em;
   color: var(--ch-accent);
 }
