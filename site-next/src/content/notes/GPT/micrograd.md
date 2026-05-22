@@ -1,6 +1,6 @@
 ---
 title: "micrograd"
-updatedAt: "2025-03-12T21:41:03+08:00"
+updatedAt: "2025-03-12T13:33:06.657Z"
 tags:
   - "GPT"
 draft: false

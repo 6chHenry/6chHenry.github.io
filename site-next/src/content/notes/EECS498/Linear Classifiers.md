@@ -1,6 +1,6 @@
 ---
 title: "Multiclass SVM Loss:"
-updatedAt: "2025-02-28T23:31:53+08:00"
+updatedAt: "2025-02-28T12:50:03.716Z"
 tags:
   - "EECS498"
 draft: false

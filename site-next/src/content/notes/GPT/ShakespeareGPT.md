@@ -1,6 +1,6 @@
 ---
 title: "hyperparameters"
-updatedAt: "2025-03-19T12:43:20+08:00"
+updatedAt: "2025-03-18T12:43:07.389Z"
 tags:
   - "GPT"
 draft: false

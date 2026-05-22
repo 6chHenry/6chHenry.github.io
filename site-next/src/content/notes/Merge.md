@@ -1,6 +1,6 @@
 ---
 title: "翻转对 (Reverse Pairs)"
-updatedAt: "2026-01-03T14:00:52+08:00"
+updatedAt: "2026-01-03T05:57:02.786Z"
 draft: false
 legacyPath: "/notes/Merge/"
 ---

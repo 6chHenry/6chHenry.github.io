@@ -1,6 +1,6 @@
 ---
 title: "Write A Professional Docstring"
-updatedAt: "2025-10-10T21:40:24+08:00"
+updatedAt: "2025-10-10T12:39:24.772Z"
 tags:
   - "Python-Tutorial"
 draft: false

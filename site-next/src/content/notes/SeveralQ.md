@@ -1,6 +1,6 @@
 ---
 title: "我们到底应该如何理解BatchNorm和LayerNorm?"
-updatedAt: "2025-04-25T17:33:47+08:00"
+updatedAt: "2025-04-13T07:56:59.694Z"
 draft: false
 legacyPath: "/notes/SeveralQ/"
 ---

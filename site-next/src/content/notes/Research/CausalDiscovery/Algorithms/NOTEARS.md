@@ -1,6 +1,6 @@
 ---
 title: "NOTEARS: Nonlinear Structural Equations with Alternative Regularization and Sparsity"
-updatedAt: "2025-08-24T12:33:19+08:00"
+updatedAt: "2025-08-22T07:32:46.166Z"
 tags:
   - "Research"
 draft: false

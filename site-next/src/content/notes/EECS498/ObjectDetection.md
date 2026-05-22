@@ -1,6 +1,6 @@
 ---
 title: "Detect Multiple Objects"
-updatedAt: "2025-07-15T22:13:48+08:00"
+updatedAt: "2025-04-26T09:49:16.959Z"
 tags:
   - "EECS498"
 draft: false

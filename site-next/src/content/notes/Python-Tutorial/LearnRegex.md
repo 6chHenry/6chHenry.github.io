@@ -1,6 +1,6 @@
 ---
 title: "Regex"
-updatedAt: "2025-08-06T08:05:49+08:00"
+updatedAt: "2025-07-24T04:15:48.978Z"
 tags:
   - "Python-Tutorial"
 draft: false

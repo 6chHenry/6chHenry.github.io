@@ -1,6 +1,6 @@
 ---
 title: "Pythonic"
-updatedAt: "2025-07-27T13:12:27+08:00"
+updatedAt: "2025-07-27T02:16:42.898Z"
 tags:
   - "Python-Tutorial"
 draft: false

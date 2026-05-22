@@ -1,6 +1,6 @@
 ---
 title: "Latex学习"
-updatedAt: "2025-07-15T22:13:48+08:00"
+updatedAt: "2025-07-10T09:15:18.709Z"
 draft: false
 legacyPath: "/notes/Latex/"
 ---

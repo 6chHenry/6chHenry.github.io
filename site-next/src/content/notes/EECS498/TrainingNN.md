@@ -1,6 +1,6 @@
 ---
 title: "One time setup"
-updatedAt: "2025-04-25T17:33:47+08:00"
+updatedAt: "2025-04-14T07:58:44.735Z"
 tags:
   - "EECS498"
 draft: false

@@ -1,6 +1,6 @@
 ---
 title: "Python Basic Knowledge"
-updatedAt: "2025-10-10T21:40:24+08:00"
+updatedAt: "2025-09-24T01:06:43.191Z"
 tags:
   - "Python-Tutorial"
 draft: false

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -34,17 +33,8 @@ function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
-function getSourceUpdatedAt(absPath) {
-  try {
-    const iso = execSync(`git log -1 --format=%cI -- "${absPath}"`, {
-      cwd: ROOT,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-    }).trim();
-    if (iso) return iso;
-  } catch {
-    // fall through to file mtime
-  }
+function getSourceUpdatedAt(absPath, previousUpdatedAt) {
+  if (process.env.GITHUB_ACTIONS && previousUpdatedAt) return previousUpdatedAt;
   return new Date(fs.statSync(absPath).mtime).toISOString();
 }
 
@@ -176,7 +166,7 @@ function toContentPath(sourceFile, sourceRoot) {
   return rel.replace(/\\/g, '/').replace(/\.md$/, '');
 }
 
-function migrateFile(sourceFile, sourceRoot, sourceDirName, collection) {
+function migrateFile(sourceFile, sourceRoot, sourceDirName, collection, previousUpdatedAtByPath) {
   const rel = path.relative(sourceRoot, sourceFile);
   if (SKIP_FILES.has(path.basename(sourceFile))) return null;
 
@@ -189,7 +179,9 @@ function migrateFile(sourceFile, sourceRoot, sourceDirName, collection) {
 
   const title = oldData.title || extractTitle(body, path.basename(sourceFile, '.md'));
   const legacyPath = `/${collection}/${relPath}/`.replace(/\/+/g, '/');
-  const updatedAt = getSourceUpdatedAt(sourceFile);
+  const destFile = path.join(CONTENT, collection, `${relPath}.md`);
+  const destKey = path.relative(CONTENT, destFile).replace(/\\/g, '/');
+  const updatedAt = getSourceUpdatedAt(sourceFile, previousUpdatedAtByPath.get(destKey));
 
   const newData = {
     title,
@@ -209,7 +201,6 @@ function migrateFile(sourceFile, sourceRoot, sourceDirName, collection) {
   const transformed = transformBody(body, collection, relPath.replace(/\\/g, '/'));
   const destDir = path.join(CONTENT, collection, path.dirname(relPath));
   ensureDir(destDir);
-  const destFile = path.join(CONTENT, collection, `${relPath}.md`);
   if (fs.existsSync(destFile)) {
     console.warn(`Skip duplicate content path: ${destFile}`);
     return null;
@@ -233,10 +224,26 @@ function removeDiariesContent() {
   }
 }
 
+function collectPreviousUpdatedAt() {
+  const values = new Map();
+  for (const collection of Object.keys(COLLECTIONS)) {
+    const dir = path.join(CONTENT, collection);
+    for (const file of walkMarkdown(dir)) {
+      const raw = fs.readFileSync(file, 'utf8');
+      const { data } = parseFrontmatter(raw);
+      if (!data.updatedAt) continue;
+      const key = path.relative(CONTENT, file).replace(/\\/g, '/');
+      values.set(key, data.updatedAt);
+    }
+  }
+  return values;
+}
+
 import { writeNotesNavJson } from './mkdocs-nav.mjs';
 
 function main() {
   ensureDir(CONTENT);
+  const previousUpdatedAtByPath = collectPreviousUpdatedAt();
   removeDiariesContent();
 
   let count = 0;
@@ -248,7 +255,7 @@ function main() {
       const sourceRoot = path.join(DOCS, sourceDirName);
       const files = walkMarkdown(sourceRoot);
       for (const file of files) {
-        const dest = migrateFile(file, sourceRoot, sourceDirName, collection);
+        const dest = migrateFile(file, sourceRoot, sourceDirName, collection, previousUpdatedAtByPath);
         if (dest) count += 1;
         else skipped += 1;
       }

@@ -1,6 +1,6 @@
 ---
 title: "Optimization"
-updatedAt: "2025-04-11T18:59:51+08:00"
+updatedAt: "2025-04-05T07:24:42.535Z"
 tags:
   - "EECS498"
 draft: false

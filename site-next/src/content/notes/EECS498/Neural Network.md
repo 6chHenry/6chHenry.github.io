@@ -1,6 +1,6 @@
 ---
 title: "Neural Network"
-updatedAt: "2025-03-01T12:36:12+08:00"
+updatedAt: "2025-03-01T04:17:34.015Z"
 tags:
   - "EECS498"
 draft: false

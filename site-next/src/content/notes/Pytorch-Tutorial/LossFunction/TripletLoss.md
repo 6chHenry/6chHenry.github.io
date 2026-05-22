@@ -1,6 +1,6 @@
 ---
 title: "Triplet Loss"
-updatedAt: "2025-08-24T12:33:19+08:00"
+updatedAt: "2025-08-19T03:39:16.614Z"
 tags:
   - "Pytorch-Tutorial"
 draft: false

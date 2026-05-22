@@ -1,6 +1,6 @@
 ---
 title: "Loss Function"
-updatedAt: "2025-08-24T12:33:19+08:00"
+updatedAt: "2025-08-19T01:31:58.896Z"
 tags:
   - "Pytorch-Tutorial"
 draft: false

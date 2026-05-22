@@ -1,6 +1,6 @@
 ---
 title: "Some Cold Knowledge"
-updatedAt: "2025-10-10T21:40:24+08:00"
+updatedAt: "2025-09-17T11:06:30.981Z"
 tags:
   - "Python-Tutorial"
 draft: false

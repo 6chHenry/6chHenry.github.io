@@ -1,6 +1,6 @@
 ---
 title: "3 Idiots"
-updatedAt: "2026-01-29T22:08:57+08:00"
+updatedAt: "2025-03-19T04:37:19.615Z"
 tags:
   - "essay"
 draft: false

@@ -1,6 +1,6 @@
 ---
 title: "CNNArchiture"
-updatedAt: "2025-04-02T22:26:54+08:00"
+updatedAt: "2025-03-29T06:57:00.409Z"
 tags:
   - "EECS498"
 draft: false

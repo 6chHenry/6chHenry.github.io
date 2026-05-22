@@ -1,6 +1,6 @@
 ---
 title: "Peter-Clark (PC) Algorithm"
-updatedAt: "2025-08-24T12:33:19+08:00"
+updatedAt: "2025-08-22T07:16:25.701Z"
 tags:
   - "Research"
 draft: false

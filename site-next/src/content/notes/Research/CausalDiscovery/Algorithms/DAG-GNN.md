@@ -1,6 +1,6 @@
 ---
 title: "DAG-GNN: Directed Acyclic Graph - Graph Neural Network"
-updatedAt: "2025-08-24T12:33:19+08:00"
+updatedAt: "2025-08-22T07:26:23.036Z"
 tags:
   - "Research"
 draft: false

@@ -1,6 +1,6 @@
 ---
 title: "torch.where"
-updatedAt: "2025-08-24T12:33:19+08:00"
+updatedAt: "2025-08-20T02:16:45.489Z"
 tags:
   - "Pytorch-Tutorial"
 draft: false

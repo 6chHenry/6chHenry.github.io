@@ -1,6 +1,6 @@
 ---
 title: "diveintogpt"
-updatedAt: "2025-03-22T09:25:44+08:00"
+updatedAt: "2025-03-21T11:05:49.696Z"
 tags:
   - "GPT"
 draft: false

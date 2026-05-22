@@ -1,6 +1,6 @@
 ---
 title: "makemoreNinja"
-updatedAt: "2025-03-17T22:20:59+08:00"
+updatedAt: "2025-03-17T14:14:08.491Z"
 tags:
   - "GPT"
 draft: false

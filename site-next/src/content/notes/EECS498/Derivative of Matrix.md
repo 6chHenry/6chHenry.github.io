@@ -1,6 +1,6 @@
 ---
 title: "Derivative of Matrix"
-updatedAt: "2025-03-05T22:15:17+08:00"
+updatedAt: "2025-03-05T13:38:30.964Z"
 tags:
   - "EECS498"
 draft: false

@@ -1,6 +1,6 @@
 ---
 title: "Thoughts"
-updatedAt: "2025-10-10T21:40:24+08:00"
+updatedAt: "2025-09-24T00:19:46.967Z"
 tags:
   - "Research"
 draft: false

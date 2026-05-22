@@ -1,6 +1,6 @@
 ---
 title: "RNN"
-updatedAt: "2025-04-11T18:59:51+08:00"
+updatedAt: "2025-04-05T13:54:24.712Z"
 tags:
   - "EECS498"
 draft: false

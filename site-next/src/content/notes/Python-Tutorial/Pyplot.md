@@ -1,6 +1,6 @@
 ---
 title: "Pyplot"
-updatedAt: "2025-07-27T13:12:27+08:00"
+updatedAt: "2025-07-27T05:09:56.386Z"
 tags:
   - "Python-Tutorial"
 draft: false

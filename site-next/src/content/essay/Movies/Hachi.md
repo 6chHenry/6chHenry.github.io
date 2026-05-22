@@ -1,6 +1,6 @@
 ---
 title: "Hachi"
-updatedAt: "2026-01-29T22:08:57+08:00"
+updatedAt: "2025-03-28T08:10:04.070Z"
 tags:
   - "essay"
 draft: false

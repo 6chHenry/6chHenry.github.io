@@ -1,6 +1,6 @@
 ---
 title: "OCL论文精读"
-updatedAt: "2025-08-15T23:03:48+08:00"
+updatedAt: "2025-08-15T15:01:08.512Z"
 tags:
   - "Research"
 draft: false

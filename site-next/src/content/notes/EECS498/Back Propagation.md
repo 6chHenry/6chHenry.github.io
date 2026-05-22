@@ -1,6 +1,6 @@
 ---
 title: "Back Propagation"
-updatedAt: "2025-03-06T15:39:37+08:00"
+updatedAt: "2025-03-06T07:25:51.694Z"
 tags:
   - "EECS498"
 draft: false

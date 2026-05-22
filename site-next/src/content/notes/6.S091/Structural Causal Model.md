@@ -1,6 +1,6 @@
 ---
 title: "Structural Causal Model"
-updatedAt: "2025-08-24T12:33:19+08:00"
+updatedAt: "2025-08-21T09:31:38.507Z"
 tags:
   - "6.S091"
 draft: false

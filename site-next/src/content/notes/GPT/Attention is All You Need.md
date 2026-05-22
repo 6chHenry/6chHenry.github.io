@@ -1,6 +1,6 @@
 ---
 title: "Problems with RNN(among others)"
-updatedAt: "2025-03-20T17:34:02+08:00"
+updatedAt: "2025-03-20T07:40:16.963Z"
 tags:
   - "GPT"
 draft: false

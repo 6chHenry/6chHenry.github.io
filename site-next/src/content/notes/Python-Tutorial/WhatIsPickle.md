@@ -1,6 +1,6 @@
 ---
 title: "Pickle"
-updatedAt: "2025-08-06T08:05:49+08:00"
+updatedAt: "2025-07-22T13:14:54.140Z"
 tags:
   - "Python-Tutorial"
 draft: false

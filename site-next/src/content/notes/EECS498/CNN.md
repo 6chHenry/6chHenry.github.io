@@ -1,6 +1,6 @@
 ---
 title: "CNN"
-updatedAt: "2025-04-02T22:26:54+08:00"
+updatedAt: "2025-03-28T12:51:27.261Z"
 tags:
   - "EECS498"
 draft: false

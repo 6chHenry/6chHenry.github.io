@@ -1,6 +1,6 @@
 ---
 title: "torch.einsum"
-updatedAt: "2025-08-18T22:22:07+08:00"
+updatedAt: "2025-08-18T14:20:21.634Z"
 tags:
   - "Pytorch-Tutorial"
 draft: false

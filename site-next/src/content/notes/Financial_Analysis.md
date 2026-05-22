@@ -1,6 +1,6 @@
 ---
 title: "Python and Statistics for Financial Analysis"
-updatedAt: "2025-08-06T08:05:49+08:00"
+updatedAt: "2025-07-28T04:50:52.810Z"
 draft: false
 legacyPath: "/notes/Financial_Analysis/"
 ---
