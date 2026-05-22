@@ -1,0 +1,339 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v5.18.1"><meta name="theme-color" content="#1b4332"><title>Metrics</title><meta name="description" content="6ch. 的个人网站 — 在林间的思考与记录"><link rel="canonical" href="https://6chhenry.github.io/notes/Research/CausalDiscovery/Metrics/"><link rel="icon" href="/img/avatar1.jpg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet"><link href="https://gcore.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" rel="stylesheet"><script>
+  (function () {
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = stored ?? (prefersDark ? 'dark' : 'light');
+    document.documentElement.dataset.theme = theme;
+  })();
+</script><link rel="stylesheet" href="/_astro/_slug_.3a2UARil.css">
+<style>.content-article[data-astro-cid-scuu7fyy]{padding:2rem 2.15rem 2.5rem;background:var(--ch-glass-bg);border:1px solid var(--ch-glass-border);backdrop-filter:blur(var(--ch-glass-blur)) saturate(1.12);-webkit-backdrop-filter:blur(var(--ch-glass-blur)) saturate(1.12);box-shadow:none}@media(max-width:640px){.content-article[data-astro-cid-scuu7fyy]{padding:1.35rem 1.15rem 1.75rem}}
+</style></head> <body class data-astro-cid-37fxchfa> <a class="skip-link" href="#main-content" data-astro-cid-37fxchfa>跳到主要内容</a> <div class="site-backdrop" aria-hidden="true" data-astro-cid-37fxchfa> <div class="site-backdrop__sky" data-astro-cid-37fxchfa></div> <div class="site-backdrop__mist" data-astro-cid-37fxchfa></div> </div> <header class="site-header" data-astro-cid-3ef6ksr2> <div class="container site-header__inner" data-astro-cid-3ef6ksr2> <a class="site-logo" href="/" data-astro-cid-3ef6ksr2> <span class="site-logo__icon" aria-hidden="true" data-astro-cid-3ef6ksr2> <svg class="forest-icon" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M12 2c-1 3-3 4.5-3 7.5a3 3 0 0 0 6 0C15 6.5 13 5 12 2zm-2.5 9.5h5v2.5h-1.5v3H13v3h-2v-3h-1.5v-3H9.5v-2.5z" data-astro-cid-edk4eyhc></path> </svg>  </span> <span class="site-logo__text" data-astro-cid-3ef6ksr2> <span class="site-logo__name" data-astro-cid-3ef6ksr2>6ch.</span> <span class="site-logo__tag" data-astro-cid-3ef6ksr2>林间笔记</span> </span> </a> <nav class="site-nav" id="site-nav" aria-label="主导航" data-astro-cid-3ef6ksr2> <a href="/" class="site-nav__link" data-astro-cid-3ef6ksr2> 主页 </a><a href="/notes/" class="site-nav__link is-active" data-astro-cid-3ef6ksr2> 笔记 </a><a href="/essay/" class="site-nav__link" data-astro-cid-3ef6ksr2> 杂谈 </a><a href="/projects/" class="site-nav__link" data-astro-cid-3ef6ksr2> 项目 </a><a href="/academy/" class="site-nav__link" data-astro-cid-3ef6ksr2> 学术 </a><a href="/tags/" class="site-nav__link" data-astro-cid-3ef6ksr2> 标签 </a><a href="/about/" class="site-nav__link" data-astro-cid-3ef6ksr2> 关于 </a> </nav> <div class="site-header__actions" data-astro-cid-3ef6ksr2> <button type="button" class="icon-btn" id="search-open" aria-label="搜索" data-astro-cid-3ef6ksr2> <svg class="forest-icon" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C8.01 14 6 11.99 6 9.5S8.01 5 9.5 5 13 7.01 13 9.5 11.99 14 9.5 14z" data-astro-cid-edk4eyhc></path> </svg>  </button> <button type="button" class="icon-btn" id="theme-toggle" aria-label="切换主题" data-astro-cid-3ef6ksr2> <svg class="forest-icon theme-icon theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5 1.09 2.26L15.36 3l.82 2.18L18.36 6l-2.18.82L15.36 9l-2.27-1.09L12 9l-1.09-2.27L8.64 6l2.18-.82L11.64 3 12 2zM4 13l2.26 1.09L7 16.36l-.82-2.18L4 13.36l2.18-.82L7 10.64 6.26 12 4 13zm16 0-2.26-1.09L17 10.64l.82 2.18L20 13.36l-2.18.82L17 16.36l1.09-2.26L20 13zM7 20.64l-.82-2.18L4 17.64l2.18-.82L7 14.64l1.09 2.26L10.36 18l-2.18.82L7 20.64zm10 0-1.09-2.26L13.64 18l2.18-.82L17 14.64l1.09 2.26L20.36 18l-2.18.82L17 20.64z" data-astro-cid-edk4eyhc></path> </svg>  <svg class="forest-icon theme-icon theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M12.1 22a9.8 9.8 0 0 1-6.71-2.67A9.87 9.87 0 0 1 2.67 12.6 9.9 9.9 0 0 1 12.1 2a1 1 0 0 1 .87.5 1 1 0 0 1 .08.95A7.04 7.04 0 0 0 12 9a7 7 0 0 0 7 7 7.04 7.04 0 0 0 5.55-2.05 1 1 0 0 1 1.03-.17 1 1 0 0 1 .59.92 9.86 9.86 0 0 1-2.67 6.71A9.8 9.8 0 0 1 12.1 22z" data-astro-cid-edk4eyhc></path> </svg>  </button> <a class="icon-btn" href="https://github.com/6chHenry" target="_blank" rel="noopener" aria-label="GitHub" data-astro-cid-3ef6ksr2> <svg viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-3ef6ksr2><path d="M12 .5a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.04-3.3.72-4-1.6-4-1.6-.54-1.38-1.33-1.75-1.33-1.75-1.09-.75.08-.73.08-.73 1.2.08 1.83 1.24 1.83 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.61-2.8 5.63-5.48 5.93.43.37.81 1.1.81 2.22 0 1.6-.01 2.89-.01 3.28 0 .32.21.7.82.58A12 12 0 0 0 12 .5z" data-astro-cid-3ef6ksr2></path></svg> </a> <button type="button" class="icon-btn icon-btn--menu" id="nav-toggle" aria-label="打开菜单" aria-expanded="false" aria-controls="site-nav" data-astro-cid-3ef6ksr2> <svg class="forest-icon nav-icon nav-icon--open" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M4 7h16v2H4V7zm0 5h16v2H4v-2zm0 5h16v2H4v-2z" data-astro-cid-edk4eyhc></path> </svg>  <svg class="forest-icon nav-icon nav-icon--close" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M6.4 6.4L12 11.99l5.6-5.59 1.41 1.41L13.41 13.4l5.6 5.59-1.41 1.41L12 14.82l-5.59 5.58-1.41-1.41 5.58-5.59-5.58-5.6 1.41-1.41z" data-astro-cid-edk4eyhc></path> </svg>  </button> </div> </div> </header>  <script type="module">function a(){const e=document.getElementById("theme-toggle");e&&e.addEventListener("click",()=>{const n=(document.documentElement.dataset.theme==="dark"?"dark":"light")==="dark"?"light":"dark";document.documentElement.dataset.theme=n,localStorage.setItem("theme",n)})}a();const t=document.getElementById("nav-toggle"),o=document.getElementById("site-nav");t?.addEventListener("click",()=>{const e=document.body.classList.toggle("nav-open");t.setAttribute("aria-expanded",e?"true":"false"),t.setAttribute("aria-label",e?"关闭菜单":"打开菜单")});o?.querySelectorAll("a").forEach(e=>{e.addEventListener("click",()=>{document.body.classList.remove("nav-open"),t?.setAttribute("aria-expanded","false")})});</script> <main id="main-content" data-astro-cid-37fxchfa>  <div class="reading-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="阅读进度" data-reading-progress-root hidden> <span class="reading-progress__bar" data-reading-progress></span> <span class="reading-progress__label" data-reading-progress-label>0%</span> </div> <button class="back-to-top" type="button" data-back-to-top aria-label="返回顶部" hidden> <svg class="back-to-top__ring" viewBox="0 0 44 44" aria-hidden="true"> <circle class="back-to-top__track" cx="22" cy="22" r="18"></circle> <circle class="back-to-top__fill" cx="22" cy="22" r="18" data-back-to-top-ring></circle> </svg> <span class="back-to-top__icon" aria-hidden="true"> <svg viewBox="0 0 24 24" width="18" height="18"> <path fill="currentColor" d="M12 8.35l-5.88 5.9 1.41 1.42L12 11.2l4.47 4.47 1.41-1.42L12 8.35zm0-5.35L4 12l1.41 1.41L12 6.83l6.59 6.58L20 12 12 3z"></path> </svg> </span> </button> <article class="container content-layout page-shell" data-astro-cid-scuu7fyy> <div class="content-main card card--elevated content-article" data-astro-cid-scuu7fyy> <header class="page-header" data-astro-cid-scuu7fyy> <h1 data-astro-cid-scuu7fyy>Metrics</h1>  </header> <div class="content-meta" data-astro-cid-scuu7fyy>  <ul class="tag-list" data-astro-cid-scuu7fyy> <li data-astro-cid-scuu7fyy> <a href="/tags/Research/" data-astro-cid-scuu7fyy>#Research</a> </li> </ul> </div> <div class="prose" data-pagefind-body data-astro-cid-scuu7fyy>  <h1 id="metrics">Metrics</h1>
+<h3 id="核心基础混淆矩阵">核心基础：混淆矩阵</h3>
+<p>要理解这四个指标，首先必须了解<strong>混淆矩阵</strong>。它是一切计算的基础。</p>
+<p>假设我们预测一个病人是否患病（正例=患病，负例=健康）。混淆矩阵如下：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left"></th><th align="left"><strong>实际为正例</strong></th><th align="left"><strong>实际为负例</strong></th></tr></thead><tbody><tr><td align="left"><strong>预测为正例</strong></td><td align="left">True Positive (TP)</td><td align="left">False Positive (FP)</td></tr><tr><td align="left"><strong>预测为负例</strong></td><td align="left">False Negative (FN)</td><td align="left">True Negative (TN)</td></tr></tbody></table>
+<ul>
+<li><strong>TP（真阳性）</strong>：预测正确。病人确实患病，我们预测他也患病。</li>
+<li><strong>FP（假阳性）</strong>：预测错误。病人实际健康，我们误预测他患病。（<strong>Type I Error</strong>）</li>
+<li><strong>FN（假阴性）</strong>：预测错误。病人实际患病，我们误预测他健康。（<strong>Type II Error</strong>）</li>
+<li><strong>TN（真阴性）</strong>：预测正确。病人确实健康，我们预测他也健康。</li>
+</ul>
+<hr>
+<h3 id="四个指标的定义与区别">四个指标的定义与区别</h3>
+<p>现在我们基于混淆矩阵来定义这四个指标。</p>
+<h4 id="1-accuracy准确率">1. Accuracy（准确率）</h4>
+<ul>
+<li><strong>定义</strong>：<strong>所有预测中，预测正确的比例</strong>。是最直观的指标。</li>
+<li><strong>公式</strong>：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>c</mi><mi>c</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>y</mi><mo>=</mo><mfrac><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>T</mi><mi>N</mi></mrow><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>T</mi><mi>N</mi><mo>+</mo><mi>F</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>N</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">Accuracy = \frac{TP + TN}{TP + TN + FP + FN}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">A</span><span class="mord mathnormal">cc</span><span class="mord mathnormal">u</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.0359em;">cy</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2757em;vertical-align:-0.4033em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8723em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.109em;">N</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">F</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">F</span><span class="mord mathnormal mtight" style="margin-right:0.109em;">N</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.109em;">N</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4033em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></li>
+<li><strong>理解</strong>：“蒙对的”概率有多大？它衡量了模型的整体正确性。</li>
+<li><strong>优点与局限</strong>：
+<ul>
+<li>在数据类别均衡（正负样本数量差不多）时，Accuracy是一个很好的指标。</li>
+<li><strong>但在数据极度不平衡时，Accuracy会失效</strong>。</li>
+<li><strong>例子</strong>：在一个有99个健康人、1个病人的数据集中，即使模型把所有人都预测为健康，它的Accuracy也能高达99%。但这个模型毫无用处，因为它漏掉了所有病人。</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-precision精确率查准率">2. Precision（精确率/查准率）</h4>
+<ul>
+<li><strong>定义</strong>：<strong>在所有被预测为正例的样本中，真正是正例的比例</strong>。它关注的是<strong>预测结果的精准度</strong>。</li>
+<li><strong>公式</strong>：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>r</mi><mi>e</mi><mi>c</mi><mi>i</mi><mi>s</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>=</mo><mfrac><mrow><mi>T</mi><mi>P</mi></mrow><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>P</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">Precision = \frac{TP}{TP + FP}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">ec</span><span class="mord mathnormal">i</span><span class="mord mathnormal">s</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2757em;vertical-align:-0.4033em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8723em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">F</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4033em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></li>
+<li><strong>理解</strong>：“我说他对，他有多大概率真的对？” 衡量的是模型<strong>避免误报（False Alarm）</strong> 的能力。</li>
+<li><strong>应用场景</strong>：<strong>非常注重减少FP（假阳性）的场景</strong>。
+<ul>
+<li><strong>垃圾邮件检测</strong>：把正常邮件预测为垃圾邮件（FP）的后果很严重（用户可能错过重要邮件），所以需要极高的Precision。宁可放过一些垃圾邮件（FN），也不能错杀正常邮件。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-recall召回率查全率">3. Recall（召回率/查全率）</h4>
+<ul>
+<li><strong>定义</strong>：<strong>在所有实际为正例的样本中，被成功预测为正例的比例</strong>。它关注的是<strong>找出正例的能力</strong>。</li>
+<li><strong>公式</strong>：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>e</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>l</mi><mo>=</mo><mfrac><mrow><mi>T</mi><mi>P</mi></mrow><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>N</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">Recall = \frac{TP}{TP + FN}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="mord mathnormal">ec</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2757em;vertical-align:-0.4033em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8723em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">F</span><span class="mord mathnormal mtight" style="margin-right:0.109em;">N</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4033em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></li>
+<li><strong>理解</strong>：“真正对的，我找出了多少？” 衡量的是模型<strong>避免漏检（Missing Detection）</strong> 的能力。</li>
+<li><strong>应用场景</strong>：<strong>非常注重减少FN（假阴性）的场景</strong>。
+<ul>
+<li><strong>疾病诊断</strong>：把一个病人预测为健康（FN）的后果是灾难性的（延误治疗），所以需要极高的Recall。宁可误判一些健康人（FP）去做进一步检查，也不能漏掉一个病人。</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-f1-scoref1分数">4. F1 Score（F1分数）</h4>
+<ul>
+<li><strong>定义</strong>：<strong>Precision和Recall的调和平均数</strong>。是综合衡量模型稳健性的指标。</li>
+<li><strong>公式</strong>：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mn>1</mn><mo>=</mo><mn>2</mn><mo>×</mo><mfrac><mrow><mi>P</mi><mi>r</mi><mi>e</mi><mi>c</mi><mi>i</mi><mi>s</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>×</mo><mi>R</mi><mi>e</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow><mrow><mi>P</mi><mi>r</mi><mi>e</mi><mi>c</mi><mi>i</mi><mi>s</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>+</mo><mi>R</mi><mi>e</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.2834em;vertical-align:-0.4033em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span><span class="mord mathnormal mtight">ec</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">n</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.0077em;">R</span><span class="mord mathnormal mtight">ec</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span><span class="mord mathnormal mtight">ec</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">n</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.0077em;">R</span><span class="mord mathnormal mtight">ec</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4033em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></li>
+<li><strong>理解</strong>：Precision和Recall通常是一对矛盾的指标（提高一个往往会降低另一个）。F1 Score试图找到一个平衡点。
+<ul>
+<li><strong>为什么用调和平均而不是算术平均？</strong> 调和平均更注重较小值的表现。只有当P和R都比较高时，F1才会高。如果其中一个很低，会立刻拉低F1。</li>
+</ul>
+</li>
+<li><strong>应用场景</strong>：
+<ul>
+<li>当你需要在Precision和Recall之间寻求一个平衡时。</li>
+<li>当数据类别分布不平衡时，F1是比Accuracy更好的指标。</li>
+<li>当你没有明确的偏好是更需要Precision还是Recall时。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="总结与对比">总结与对比</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">指标</th><th align="left">关注点</th><th align="left">公式</th><th align="left">核心问题</th><th align="left">应用场景举例</th></tr></thead><tbody><tr><td align="left"><strong>Accuracy</strong></td><td align="left"><strong>整体正确性</strong></td><td align="left">(TP+TN) / All</td><td align="left">所有预测中，猜对的占多大比例？</td><td align="left">均衡数据集，整体评估</td></tr><tr><td align="left"><strong>Precision</strong></td><td align="left"><strong>预测正例的准确性</strong>（减少误报FP）</td><td align="left">TP / (TP+FP)</td><td align="left"><strong>我说他对，他有多大概率真的对？</strong></td><td align="left">垃圾邮件检测、推荐系统</td></tr><tr><td align="left"><strong>Recall</strong></td><td align="left"><strong>找出所有正例的能力</strong>（减少漏检FN）</td><td align="left">TP / (TP+FN)</td><td align="left"><strong>真正对的，我找出了多少？</strong></td><td align="left">疾病诊断、欺诈检测、逃犯识别</td></tr><tr><td align="left"><strong>F1 Score</strong></td><td align="left"><strong>Precision和Recall的平衡</strong></td><td align="left">2 * (P*R) / (P+R)</td><td align="left">模型在避免误报和漏检上的<strong>综合表现</strong>如何？</td><td align="left">不平衡数据集，没有特殊偏好时</td></tr></tbody></table>
+<h3 id="一个生动的比喻">一个生动的比喻</h3>
+<p>假设你在果园里用机器挑果子（好果子=正例，坏果子=负例）：</p>
+<ul>
+<li><strong>Accuracy</strong>：所有被挑出来的果子中，好果子和被留下的坏果子占总数的比例。（整体挑得有多准）</li>
+<li><strong>Precision</strong>：被机器<strong>放进好果子筐</strong>里的果子，<strong>真正是好果子的比例</strong>。（好果子筐的纯净度）
+<ul>
+<li>Precision低：好果子筐里混了很多坏果子。</li>
+</ul>
+</li>
+<li><strong>Recall</strong>：<strong>果园里所有好果子</strong>，<strong>被机器成功挑进好果子筐的比例</strong>。（好果子的回收率）
+<ul>
+<li>Recall低：很多好果子被遗漏，丢进了坏果子筐。</li>
+</ul>
+</li>
+<li><strong>F1 Score</strong>：综合衡量了“筐有多干净”和“果子回收得多全面”。</li>
+</ul>
+<p>希望这个解释能帮助你清晰地区分这四个重要指标！</p>
+<p>您提供的这段描述非常精准，它定义了在图结构（尤其是因果图）比较中使用的<strong>归一化汉明距离 (NHD)</strong>。这个定义与比较简单字符串的NHD在精神上一致，但在计算细节上有一个关键区别：</p>
+<p><strong>核心区别：分母不同</strong></p>
+<ul>
+<li><strong>字符串NHD</strong>：分母是<strong>序列的实际长度</strong>。</li>
+<li><strong>图NHD</strong>：分母是<strong>图中所有可能边的总数</strong>（对于一个有 <code>m</code> 个节点的有向图，这个值是 <code>m*(m-1)</code>，因为不允许有自环）。</li>
+</ul>
+<p>您提供的定义是图比较领域的标准用法。下面我将根据您的描述，通过一个详细的例子来说明这个计算过程。</p>
+<hr>
+<h3 id="图nhd计算步骤">图NHD计算步骤</h3>
+<ol>
+<li><strong>确定图的表示</strong>：通常使用<strong>邻接矩阵</strong>。矩阵中元素 <code>(i, j)</code> 为 <code>1</code> 表示存在从节点 <code>i</code> 到节点 <code>j</code> 的边，为 <code>0</code> 则表示不存在。</li>
+<li><strong>计算差异</strong>：对两个图的邻接矩阵进行<strong>异或（XOR）</strong> 操作。结果为 <code>1</code> 的位置就是两个图不一致的边（即一个图中有，另一个图中没有）。</li>
+<li><strong>统计差异数量</strong>：统计异或矩阵中 <code>1</code> 的数量。这就是汉明距离。</li>
+<li><strong>归一化</strong>：将汉明距离除以所有可能边的总数 <code>m*(m-1)</code>，得到NHD。</li>
+</ol>
+<p><strong>公式（Equation 6）</strong>：
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>H</mi><mi>D</mi><mo stretchy="false">(</mo><mi>G</mi><mo separator="true">,</mo><msub><mi>G</mi><mi>p</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>m</mi></msubsup><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mi>j</mi><mo mathvariant="normal">≠</mo><mi>i</mi></mrow><mi>m</mi></msubsup><mn mathvariant="double-struck">1</mn><mo stretchy="false">[</mo><mi>G</mi><mo stretchy="false">(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo stretchy="false">)</mo><mo mathvariant="normal">≠</mo><msub><mi>G</mi><mi>p</mi></msub><mo stretchy="false">(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow><mrow><mi>m</mi><mo stretchy="false">(</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">NHD(G, G_p) = \frac{\sum_{i=1}^{m} \sum_{j=1, j \neq i}^{m} \mathbb{1}[G(i, j) \neq G_p(i, j)]}{m(m-1)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="mopen">(</span><span class="mord mathnormal">G</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.6772em;vertical-align:-0.52em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1572em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">m</span><span class="mbin mtight">−</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.6322em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mop op-symbol small-op mtight" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7385em;"><span style="top:-2.1786em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3214em;"><span></span></span></span></span></span></span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mop mtight"><span class="mop op-symbol small-op mtight" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7385em;"><span style="top:-2.1786em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">1</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mrel mtight"><span class="mrel mtight"><span class="mord vbox mtight"><span class="thinbox mtight"><span class="rlap mtight"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord mtight"><span class="mrel mtight"></span></span></span><span class="fix"></span></span></span></span></span><span class="mspace nobreak mtight"></span><span class="mrel mtight">=</span></span><span class="mord mathnormal mtight">i</span></span></span></span><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4603em;"><span></span></span></span></span></span></span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mord mtight">1</span><span class="mopen mtight">[</span><span class="mord mathnormal mtight">G</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mclose mtight">)</span><span class="mrel mtight"><span class="mrel mtight"><span class="mord vbox mtight"><span class="thinbox mtight"><span class="rlap mtight"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord mtight"><span class="mrel mtight"></span></span></span><span class="fix"></span></span></span></span></span><span class="mspace nobreak mtight"></span><span class="mrel mtight">=</span></span><span class="mord mtight"><span class="mord mathnormal mtight">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2819em;"><span></span></span></span></span></span></span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mclose mtight">)]</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.52em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>
+其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn mathvariant="double-struck">1</mn></mrow><annotation encoding="application/x-tex">\mathbb{1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> 是指示函数，内部条件为真时返回1，否则返回0。</p>
+<hr>
+<h3 id="举例说明">举例说明</h3>
+<p>假设我们有一个包含 <strong>3个节点</strong> (X, Y, Z) 的因果图。所有可能的有向边数量为 <code>3 * (3-1) = 6</code> 条，即：X→Y, X→Z, Y→X, Y→Z, Z→X, Z→Y。</p>
+<ul>
+<li><strong>真实图 G</strong> 的结构为：<code>X -> Y -> Z</code>（一条链）。</li>
+<li><strong>预测图 G_p</strong> 的结构为：<code>X -> Y &#x3C;- Z</code>（一个V型结构）。</li>
+</ul>
+<p>让我们为这两个图构建邻接矩阵。</p>
+<p><strong>第1步：创建邻接矩阵</strong></p>
+<ul>
+<li>
+<p><strong>真实图 G 的邻接矩阵</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>X</th><th>Y</th><th>Z</th></tr></thead><tbody><tr><td><strong>X</strong></td><td>0</td><td>1</td><td>0</td></tr><tr><td><strong>Y</strong></td><td>0</td><td>0</td><td>1</td></tr><tr><td><strong>Z</strong></td><td>0</td><td>0</td><td>0</td></tr></tbody></table>
+</li>
+<li>
+<p><strong>预测图 G_p 的邻接矩阵</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>X</th><th>Y</th><th>Z</th></tr></thead><tbody><tr><td><strong>X</strong></td><td>0</td><td>1</td><td>0</td></tr><tr><td><strong>Y</strong></td><td>0</td><td>0</td><td>0</td></tr><tr><td><strong>Z</strong></td><td>0</td><td>1</td><td>0</td></tr></tbody></table>
+</li>
+</ul>
+<p><strong>第2步：计算异或矩阵 (XOR)</strong>
+我们将两个矩阵逐位比较，如果值不同则标记为1，相同则标记为0。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>X</th><th>Y</th><th>Z</th></tr></thead><tbody><tr><td><strong>X</strong></td><td>0⊕0=0</td><td>1⊕1=0</td><td>0⊕0=0</td></tr><tr><td><strong>Y</strong></td><td>0⊕0=0</td><td>0⊕0=0</td><td><strong>1⊕0=1</strong></td></tr><tr><td><strong>Z</strong></td><td>0⊕0=0</td><td><strong>0⊕1=1</strong></td><td>0⊕0=0</td></tr></tbody></table>
+<p><strong>异或矩阵结果</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>X</th><th>Y</th><th>Z</th></tr></thead><tbody><tr><td><strong>X</strong></td><td>0</td><td>0</td><td>0</td></tr><tr><td><strong>Y</strong></td><td>0</td><td>0</td><td><strong>1</strong></td></tr><tr><td><strong>Z</strong></td><td>0</td><td><strong>1</strong></td><td>0</td></tr></tbody></table>
+<p><strong>第3步：统计差异数量（汉明距离）</strong>
+异或矩阵中一共有 <strong>2</strong> 个 <code>1</code>。</p>
+<ul>
+<li>一个是 <code>(Y, Z)</code>，对应真实图中 <code>Y->Z</code> 被漏掉了（False Negative）。</li>
+<li>一个是 <code>(Z, Y)</code>，对应预测图中多了一个 <code>Z->Y</code>（False Positive）。</li>
+</ul>
+<p><strong>因此，汉明距离 = 2</strong>。</p>
+<p><strong>第4步：归一化 (NHD)</strong>
+所有可能边的总数是 <code>m(m-1) = 3*2 = 6</code>。</p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>H</mi><mi>D</mi><mo>=</mo><mfrac><mrow><mi>H</mi><mi>a</mi><mi>m</mi><mi>m</mi><mi>i</mi><mi>n</mi><mi>g</mi><mtext> </mtext><mi>D</mi><mi>i</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>n</mi><mi>c</mi><mi>e</mi></mrow><mrow><mi>T</mi><mi>o</mi><mi>t</mi><mi>a</mi><mi>l</mi><mtext> </mtext><mi>P</mi><mi>o</mi><mi>s</mi><mi>s</mi><mi>i</mi><mi>b</mi><mi>l</mi><mi>e</mi><mtext> </mtext><mi>E</mi><mi>d</mi><mi>g</mi><mi>e</mi><mi>s</mi></mrow></mfrac><mo>=</mo><mfrac><mn>2</mn><mn>6</mn></mfrac><mo>≈</mo><mn>0.333</mn></mrow><annotation encoding="application/x-tex">NHD = \frac{Hamming\,Distance}{Total\,Possible\,Edges} = \frac{2}{6} \approx 0.333</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.4055em;vertical-align:-0.4811em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9244em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mord mathnormal mtight">oss</span><span class="mord mathnormal mtight">ib</span><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span><span class="mord mathnormal mtight">e</span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mord mathnormal mtight" style="margin-right:0.0576em;">E</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">g</span><span class="mord mathnormal mtight">es</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.4461em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span><span class="mord mathnormal mtight">ammin</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">g</span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mord mathnormal mtight" style="margin-right:0.0278em;">D</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">an</span><span class="mord mathnormal mtight">ce</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4811em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">6</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.333</span></span></span></span></p>
+<h3 id="结果解释">结果解释</h3>
+<p><strong>NHD ≈ 0.333</strong> 意味着预测图 <code>G_p</code> 与真实图 <code>G</code> 之间有 <strong>33.3%</strong> 的边不一致。</p>
+<p>这个值量化了您描述中的“nuanced differences”：</p>
+<ol>
+<li>它捕捉到了<strong>漏掉的边</strong>（FN：Y->Z）。</li>
+<li>它也捕捉到了<strong>多余的边</strong>（FP：Z->Y）。</li>
+<li>它同时 reward 了<strong>正确预测的边</strong>（TP：X->Y）和<strong>正确预测的不存在的边</strong>（TN：例如X->Z, Y->X等），因为这些在异或矩阵中都是 <code>0</code>。</li>
+</ol>
+<h3 id="总结">总结</h3>
+<p>在图结构的上下文中，NHD是一个极其有价值的指标，因为它：</p>
+<ul>
+<li><strong>归一化</strong>：允许比较不同节点数量的图。</li>
+<li><strong>全面</strong>：同时惩罚了<strong>假阳性</strong>（多编的边）和<strong>假阴性</strong>（丢失的边）。</li>
+<li><strong>直观</strong>：结果可以解释为“错误边的比例”。NHD为0表示图完全匹配，为1表示图完全相反。</li>
+</ul>  </div> <nav class="article-nav" aria-label="文章导航" data-astro-cid-scuu7fyy> <a class="article-nav__link article-nav__link--prev" href="/notes/Research/CausalDiscovery/Algorithms/DAG-GNN/" data-astro-cid-scuu7fyy> <span class="article-nav__eyebrow" data-astro-cid-scuu7fyy>上一篇</span> <strong data-astro-cid-scuu7fyy>DAG-GNN: Directed Acyclic Graph - Graph Neural Network</strong>  </a> <a class="article-nav__link article-nav__link--next" href="/notes/RL/大模型强化学习PPO/" data-astro-cid-scuu7fyy> <span class="article-nav__eyebrow" data-astro-cid-scuu7fyy>下一篇</span> <strong data-astro-cid-scuu7fyy>大模型强化学习（PPO）代码实现</strong>  </a> </nav> </div> <aside class="content-aside" data-astro-cid-scuu7fyy> <div class="content-toc" data-astro-cid-scuu7fyy> <p class="content-toc__title" data-astro-cid-scuu7fyy>目录</p> <nav aria-label="Table of contents" data-astro-cid-scuu7fyy> <ul data-astro-cid-scuu7fyy> <li style="margin-left: 0rem" data-astro-cid-scuu7fyy> <a href="#metrics" data-astro-cid-scuu7fyy>Metrics</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#核心基础混淆矩阵" data-astro-cid-scuu7fyy>核心基础：混淆矩阵</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#四个指标的定义与区别" data-astro-cid-scuu7fyy>四个指标的定义与区别</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#总结与对比" data-astro-cid-scuu7fyy>总结与对比</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#一个生动的比喻" data-astro-cid-scuu7fyy>一个生动的比喻</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#图nhd计算步骤" data-astro-cid-scuu7fyy>图NHD计算步骤</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#举例说明" data-astro-cid-scuu7fyy>举例说明</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#结果解释" data-astro-cid-scuu7fyy>结果解释</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#总结" data-astro-cid-scuu7fyy>总结</a> </li> </ul> </nav> </div> <div class="character-tree" aria-hidden="true" title="Metrics · 汉字树"> <p class="character-tree__title">汉字树</p> <div class="character-tree__canvas"> <svg class="character-tree__svg" viewBox="0 0 120 160" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="tree-Research-CausalDiscovery-Metrics-md"><path d="M60.0 6.0 L72.0 34.0 L66.0 34.0 L80.0 58.0 L73.0 58.0 L86.0 82.0 L78.0 82.0 L90.0 106.0 L68.0 106.0 L68.0 154.0 L52.0 154.0 L52.0 106.0 L30.0 106.0 L42.0 82.0 L34.0 82.0 L47.0 58.0 L40.0 58.0 L54.0 34.0 L48.0 34.0 Z" /></clipPath></defs><g clip-path="url(#tree-Research-CausalDiscovery-Metrics-md)"><text x="72.6" y="98.7" fill="var(--ch-accent)" font-size="11.0" opacity="0.61" transform="rotate(-4.7 72.6 98.7)" font-family="var(--ch-text-font)">定</text><text x="70.6" y="71.2" fill="var(--ch-accent-tertiary)" font-size="14.7" opacity="0.74" transform="rotate(3.2 70.6 71.2)" font-family="var(--ch-text-font)">所</text><text x="46.7" y="65.0" fill="var(--ch-accent-secondary)" font-size="12.3" opacity="0.74" transform="rotate(4.0 46.7 65.0)" font-family="var(--ch-text-font)">式</text><text x="54.9" y="56.9" fill="var(--ch-accent-tertiary)" font-size="11.9" opacity="0.78" transform="rotate(-2.9 54.9 56.9)" font-family="var(--ch-text-font)">距</text><text x="54.9" y="27.6" fill="var(--ch-accent)" font-size="14.2" opacity="0.65" transform="rotate(-4.6 54.9 27.6)" font-family="var(--ch-text-font)">个</text><text x="79.5" y="73.9" fill="var(--ch-accent-secondary)" font-size="15.2" opacity="0.82" transform="rotate(-0.1 79.5 73.9)" font-family="var(--ch-text-font)">这</text><text x="43.4" y="54.5" fill="var(--ch-accent-tertiary)" font-size="15.0" opacity="0.55" transform="rotate(1.0 43.4 54.5)" font-family="var(--ch-text-font)">干</text><text x="45.1" y="99.0" fill="var(--ch-accent)" font-size="11.8" opacity="0.65" transform="rotate(2.5 45.1 99.0)" font-family="var(--ch-text-font)">疗</text><text x="45.0" y="82.1" fill="var(--ch-accent-tertiary)" font-size="11.4" opacity="0.80" transform="rotate(3.0 45.0 82.1)" font-family="var(--ch-text-font)">不</text><text x="54.2" y="91.8" fill="var(--ch-accent)" font-size="11.7" opacity="0.63" transform="rotate(3.5 54.2 91.8)" font-family="var(--ch-text-font)">失</text><text x="61.2" y="136.9" fill="var(--ch-accent-secondary)" font-size="15.3" opacity="0.75" transform="rotate(-0.7 61.2 136.9)" font-family="var(--ch-text-font)">包</text><text x="62.1" y="92.2" fill="var(--ch-accent-tertiary)" font-size="12.9" opacity="0.73" transform="rotate(-2.3 62.1 92.2)" font-family="var(--ch-text-font)">是</text><text x="37.3" y="100.7" fill="var(--ch-accent-tertiary)" font-size="15.5" opacity="0.87" transform="rotate(-0.9 37.3 100.7)" font-family="var(--ch-text-font)">术</text><text x="61.6" y="83.1" fill="var(--ch-accent-secondary)" font-size="14.3" opacity="0.63" transform="rotate(2.4 61.6 83.1)" font-family="var(--ch-text-font)">回</text><text x="53.9" y="128.0" fill="var(--ch-accent)" font-size="12.7" opacity="0.77" transform="rotate(-1.0 53.9 128.0)" font-family="var(--ch-text-font)">以</text><text x="82.2" y="100.2" fill="var(--ch-accent)" font-size="12.8" opacity="0.84" transform="rotate(2.2 82.2 100.2)" font-family="var(--ch-text-font)">表</text><text x="63.0" y="55.7" fill="var(--ch-accent)" font-size="11.7" opacity="0.72" transform="rotate(2.1 63.0 55.7)" font-family="var(--ch-text-font)">真</text><text x="62.3" y="117.7" fill="var(--ch-accent-tertiary)" font-size="12.9" opacity="0.75" transform="rotate(-4.3 62.3 117.7)" font-family="var(--ch-text-font)">立</text><text x="63.1" y="145.4" fill="var(--ch-accent-tertiary)" font-size="15.9" opacity="0.74" transform="rotate(2.9 63.1 145.4)" font-family="var(--ch-text-font)">衡</text><text x="63.5" y="126.7" fill="var(--ch-accent)" font-size="15.0" opacity="0.70" transform="rotate(-2.3 63.5 126.7)" font-family="var(--ch-text-font)">元</text><text x="80.7" y="90.4" fill="var(--ch-accent-secondary)" font-size="15.2" opacity="0.78" transform="rotate(-3.6 80.7 90.4)" font-family="var(--ch-text-font)">神</text><text x="52.0" y="119.8" fill="var(--ch-accent-secondary)" font-size="13.1" opacity="0.53" transform="rotate(2.5 52.0 119.8)" font-family="var(--ch-text-font)">重</text><text x="63.5" y="64.9" fill="var(--ch-accent-secondary)" font-size="14.2" opacity="0.87" transform="rotate(2.5 63.5 64.9)" font-family="var(--ch-text-font)">式</text><text x="64.8" y="18.7" fill="var(--ch-accent-secondary)" font-size="15.9" opacity="0.75" transform="rotate(2.6 64.8 18.7)" font-family="var(--ch-text-font)">量</text><text x="52.2" y="72.8" fill="var(--ch-accent-secondary)" font-size="15.9" opacity="0.53" transform="rotate(0.3 52.2 72.8)" font-family="var(--ch-text-font)">个</text><text x="43.9" y="92.1" fill="var(--ch-accent-secondary)" font-size="12.2" opacity="0.87" transform="rotate(-0.7 43.9 92.1)" font-family="var(--ch-text-font)">释</text><text x="52.9" y="134.7" fill="var(--ch-accent-secondary)" font-size="15.4" opacity="0.90" transform="rotate(-2.3 52.9 134.7)" font-family="var(--ch-text-font)">图</text><text x="61.5" y="74.6" fill="var(--ch-accent-tertiary)" font-size="14.9" opacity="0.67" transform="rotate(-2.6 61.5 74.6)" font-family="var(--ch-text-font)">晰</text><text x="73.6" y="66.0" fill="var(--ch-accent-tertiary)" font-size="15.7" opacity="0.91" transform="rotate(-2.4 73.6 66.0)" font-family="var(--ch-text-font)">高</text><text x="61.2" y="28.2" fill="var(--ch-accent-tertiary)" font-size="15.1" opacity="0.75" transform="rotate(-0.6 61.2 28.2)" font-family="var(--ch-text-font)">边</text><text x="72.2" y="89.4" fill="var(--ch-accent)" font-size="11.8" opacity="0.58" transform="rotate(-4.0 72.2 89.4)" font-family="var(--ch-text-font)">包</text><text x="55.0" y="44.0" fill="var(--ch-accent-tertiary)" font-size="13.4" opacity="0.89" transform="rotate(-4.8 55.0 44.0)" font-family="var(--ch-text-font)">例</text><text x="62.5" y="46.2" fill="var(--ch-accent-secondary)" font-size="11.3" opacity="0.73" transform="rotate(4.1 62.5 46.2)" font-family="var(--ch-text-font)">值</text><text x="54.8" y="146.4" fill="var(--ch-accent)" font-size="14.1" opacity="0.82" transform="rotate(1.4 54.8 146.4)" font-family="var(--ch-text-font)">段</text><text x="56.0" y="62.2" fill="var(--ch-accent-secondary)" font-size="15.8" opacity="0.74" transform="rotate(-1.1 56.0 62.2)" font-family="var(--ch-text-font)">编</text><text x="52.6" y="83.6" fill="var(--ch-accent-tertiary)" font-size="14.9" opacity="0.70" transform="rotate(4.0 52.6 83.6)" font-family="var(--ch-text-font)">关</text><text x="44.9" y="74.1" fill="var(--ch-accent)" font-size="14.7" opacity="0.81" transform="rotate(-2.4 44.9 74.1)" font-family="var(--ch-text-font)">价</text><text x="53.8" y="108.1" fill="var(--ch-accent-tertiary)" font-size="12.5" opacity="0.58" transform="rotate(-4.3 53.8 108.1)" font-family="var(--ch-text-font)">间</text><text x="53.3" y="99.3" fill="var(--ch-accent)" font-size="15.0" opacity="0.53" transform="rotate(1.3 53.3 99.3)" font-family="var(--ch-text-font)">汉</text><text x="70.6" y="56.7" fill="var(--ch-accent-secondary)" font-size="12.1" opacity="0.76" transform="rotate(1.7 70.6 56.7)" font-family="var(--ch-text-font)">高</text><text x="54.7" y="38.0" fill="var(--ch-accent-tertiary)" font-size="13.4" opacity="0.70" transform="rotate(0.5 54.7 38.0)" font-family="var(--ch-text-font)">上</text><text x="61.5" y="109.9" fill="var(--ch-accent)" font-size="15.6" opacity="0.58" transform="rotate(3.2 61.5 109.9)" font-family="var(--ch-text-font)">寻</text><text x="72.0" y="81.9" fill="var(--ch-accent-secondary)" font-size="11.5" opacity="0.54" transform="rotate(-0.4 72.0 81.9)" font-family="var(--ch-text-font)">差</text><text x="62.3" y="101.2" fill="var(--ch-accent)" font-size="14.5" opacity="0.67" transform="rotate(4.2 62.3 101.2)" font-family="var(--ch-text-font)">特</text><text x="64.9" y="36.9" fill="var(--ch-accent-tertiary)" font-size="15.5" opacity="0.86" transform="rotate(0.1 64.9 36.9)" font-family="var(--ch-text-font)">是</text></g></svg> </div> </div> </aside> </article>  </main> <footer class="site-footer" data-astro-cid-sz7xmlte> <div class="container site-footer__inner" data-astro-cid-sz7xmlte> <div class="site-footer__brand" data-astro-cid-sz7xmlte> <svg class="forest-icon site-footer__leaf" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M17 3C10 3 6 8 6 13c0 3.3 2.7 6 6 6 5 0 9-4 9-9 0-3.8-2.5-7-4-7zm-1.2 2.2c.8 1.5 1.2 3.2 1.2 4.8 0 4.4-3.6 8-8 8-1.6 0-3.1-.5-4.3-1.3 2.2-.8 4.5-2.6 6.1-4.9 1.4-2 1.8-4.2 2-6.6h3z" data-astro-cid-edk4eyhc></path> </svg>  <div data-astro-cid-sz7xmlte> <p class="site-footer__name" data-astro-cid-sz7xmlte>6ch. · 林间笔记</p> <p class="site-footer__copy" data-astro-cid-sz7xmlte>Copyright © 2024–2026</p> </div> </div> <nav class="site-footer__links" aria-label="页脚链接" data-astro-cid-sz7xmlte> <a href="/about/" data-astro-cid-sz7xmlte>关于</a> <a href="/search/" data-astro-cid-sz7xmlte>搜索</a> <a href="mailto:2313287840@qq.com" data-astro-cid-sz7xmlte>邮件</a> <a href="https://github.com/6chHenry" target="_blank" rel="noopener" data-astro-cid-sz7xmlte>GitHub</a> </nav> <p class="site-footer__stat" id="busuanzi_container_site_uv" data-astro-cid-sz7xmlte>
+访客 <span id="busuanzi_value_site_uv" data-astro-cid-sz7xmlte>—</span> </p> </div> </footer>  <script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script> <div id="search-modal" class="search-modal" hidden data-astro-cid-qk3db3zz> <div class="search-modal__backdrop" data-search-close data-astro-cid-qk3db3zz></div> <div class="search-modal__panel card card--elevated" role="dialog" aria-modal="true" aria-label="站内搜索" data-astro-cid-qk3db3zz> <div class="search-modal__header" data-astro-cid-qk3db3zz> <div data-astro-cid-qk3db3zz> <p class="search-modal__kicker" data-astro-cid-qk3db3zz>Search the grove</p> <h2 data-astro-cid-qk3db3zz>站内搜索</h2> </div> <button type="button" class="search-modal__close" data-search-close aria-label="关闭搜索" data-astro-cid-qk3db3zz> <svg class="forest-icon" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M6.4 6.4L12 11.99l5.6-5.59 1.41 1.41L13.41 13.4l5.6 5.59-1.41 1.41L12 14.82l-5.59 5.58-1.41-1.41 5.58-5.59-5.58-5.6 1.41-1.41z" data-astro-cid-edk4eyhc></path> </svg>  </button> </div> <div id="pagefind-search" data-astro-cid-qk3db3zz></div> </div> </div>  <script type="module" src="/_astro/SearchModal.astro_astro_type_script_index_0_lang.DYGaEzWO.js"></script>  <script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.Cgz5KPuw.js"></script></body></html> 
