@@ -6,43 +6,93 @@ import { buildEntryCharacterTree } from '../../utils/character-tree';
 import type { GetStaticPaths } from 'astro';
 
 export const getStaticPaths = (async () => {
+  const essayRedirects: Record<string, string> = {
+    '19岁后记': 'Life/19岁后记',
+    '19生日': 'Life/19生日',
+    '写给18岁的信': 'Life/写给18岁的信',
+    '冬至': 'Life/冬至',
+    '复合之后': 'Life/复合之后',
+    '情感': 'Life/情感',
+    '我的大一上学期': 'Life/我的大一上学期',
+    '高中回忆录': 'Life/高中回忆录',
+    '旅游流水账': 'Travel/2026寒假三城游',
+    '日本游记': 'Travel/日本游记',
+    '港澳手记': 'Travel/港澳手记',
+    '香港红绿灯': 'Travel/香港红绿灯',
+    '书评': 'Reading/书评',
+    'AI与人': 'Thoughts/AI与人',
+    'J人': 'Thoughts/J人',
+    '二倍速': 'Thoughts/二倍速',
+    '懒惰的大脑': 'Thoughts/懒惰的大脑',
+    '睡眠的重要性': 'Thoughts/睡眠的重要性',
+    test: 'Misc/test',
+  };
   const entries = await getCollection('essay', ({ data }) => !data.draft);
-  return entries.map((entry) => ({
-    params: { slug: normalizeSlug(entry.id) },
-    props: { entry },
-  }));
+  const entryIds = new Set(entries.map((entry) => entry.id));
+  return [
+    ...entries.map((entry) => ({
+      params: { slug: normalizeSlug(entry.id) },
+      props: { entry },
+    })),
+    ...Object.entries(essayRedirects)
+      .filter(([, to]) => entryIds.has(to))
+      .map(([from, to]) => ({
+        params: { slug: from },
+        props: { redirectTo: buildContentUrl('essay', to) },
+      })),
+  ];
 }) satisfies GetStaticPaths;
 
-const { entry } = Astro.props;
-const { Content, headings } = await render(entry);
-const filteredHeadings = headings.filter((h) => h.depth <= 3);
-const characterTreeSvg = buildEntryCharacterTree(
-  entry,
-  filteredHeadings.map((h) => h.text),
-);
+const { entry, redirectTo } = Astro.props;
+const isRedirect = typeof redirectTo === 'string';
+const rendered = entry ? await render(entry) : undefined;
+const Content = rendered?.Content;
+const filteredHeadings = rendered?.headings.filter((h) => h.depth <= 3) ?? [];
+const characterTreeSvg = entry
+  ? buildEntryCharacterTree(
+      entry,
+      filteredHeadings.map((h) => h.text),
+    )
+  : '';
 const entries = sortByRecency(await getCollection('essay', ({ data }) => !data.draft));
-const currentIndex = entries.findIndex((item) => item.id === entry.id);
+const currentIndex = entry ? entries.findIndex((item) => item.id === entry.id) : -1;
 const previousEntry = currentIndex >= 0 ? entries[currentIndex + 1] : undefined;
 const nextEntry = currentIndex > 0 ? entries[currentIndex - 1] : undefined;
 ---
 
-<ContentLayout
-  title={entry.data.title}
-  description={entry.data.description}
-  date={entry.data.date}
-  tags={entry.data.tags}
-  headings={filteredHeadings.map((h) => ({ depth: h.depth, slug: h.slug, text: h.text }))}
-  characterTreeSvg={characterTreeSvg}
-  previous={previousEntry && {
-    title: previousEntry.data.title,
-    description: previousEntry.data.description,
-    href: buildContentUrl('essay', previousEntry.id),
-  }}
-  next={nextEntry && {
-    title: nextEntry.data.title,
-    description: nextEntry.data.description,
-    href: buildContentUrl('essay', nextEntry.id),
-  }}
->
-  <Content />
-</ContentLayout>
+{
+  isRedirect ? (
+    <html lang="zh-CN">
+      <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="refresh" content={`0; url=${redirectTo}`} />
+        <link rel="canonical" href={redirectTo} />
+        <title>Redirecting...</title>
+      </head>
+      <body>
+        <p><a href={redirectTo}>Redirect to the new essay category page</a></p>
+      </body>
+    </html>
+  ) : (
+    <ContentLayout
+      title={entry.data.title}
+      description={entry.data.description}
+      date={entry.data.date}
+      tags={entry.data.tags}
+      headings={filteredHeadings.map((h) => ({ depth: h.depth, slug: h.slug, text: h.text }))}
+      characterTreeSvg={characterTreeSvg}
+      previous={previousEntry && {
+        title: previousEntry.data.title,
+        description: previousEntry.data.description,
+        href: buildContentUrl('essay', previousEntry.id),
+      }}
+      next={nextEntry && {
+        title: nextEntry.data.title,
+        description: nextEntry.data.description,
+        href: buildContentUrl('essay', nextEntry.id),
+      }}
+    >
+      {Content && <Content />}
+    </ContentLayout>
+  )
+}

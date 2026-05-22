@@ -1,64 +1,325 @@
 [
   {
-    "title": "Robotics",
+    "title": "6.S091",
     "children": [
       {
-        "title": "π0.7",
-        "docsPath": "notes/Robotics/pi07.md",
+        "title": "Representation",
+        "docsPath": "notes/6.S091/Representation.md",
         "children": [],
-        "slug": "0-7",
+        "slug": "representation",
         "slugPath": [
-          "robotics",
-          "0-7"
+          "6-s091",
+          "representation"
+        ]
+      },
+      {
+        "title": "Structural Causal Model",
+        "docsPath": "notes/6.S091/Structural Causal Model.md",
+        "children": [],
+        "slug": "structural-causal-model",
+        "slugPath": [
+          "6-s091",
+          "structural-causal-model"
         ]
       }
     ],
-    "slug": "robotics",
+    "slug": "6-s091",
     "slugPath": [
-      "robotics"
+      "6-s091"
     ]
   },
   {
-    "title": "分治法",
-    "docsPath": "notes/Merge.md",
-    "children": [],
-    "slug": "分治法",
+    "title": "CS0501H",
+    "children": [
+      {
+        "title": "链表",
+        "docsPath": "notes/CS0501H/链表.md",
+        "children": [],
+        "slug": "链表",
+        "slugPath": [
+          "cs0501h",
+          "链表"
+        ]
+      },
+      {
+        "title": "法一",
+        "docsPath": "notes/CS0501H/最近公共祖先.md",
+        "children": [],
+        "slug": "最近公共祖先",
+        "slugPath": [
+          "cs0501h",
+          "最近公共祖先"
+        ]
+      }
+    ],
+    "slug": "cs0501h",
     "slugPath": [
-      "分治法"
+      "cs0501h"
     ]
   },
   {
-    "title": "DP",
-    "docsPath": "notes/DP算法.md",
-    "children": [],
-    "slug": "dp",
+    "title": "EECS498",
+    "children": [
+      {
+        "title": "2-layer-network",
+        "docsPath": "notes/EECS498/2-layer-network.md",
+        "children": [],
+        "slug": "2-layer-network",
+        "slugPath": [
+          "eecs498",
+          "2-layer-network"
+        ]
+      },
+      {
+        "title": "A1",
+        "docsPath": "notes/EECS498/A1.md",
+        "children": [],
+        "slug": "a1",
+        "slugPath": [
+          "eecs498",
+          "a1"
+        ]
+      },
+      {
+        "title": "SVM:",
+        "docsPath": "notes/EECS498/A2.md",
+        "children": [],
+        "slug": "a2",
+        "slugPath": [
+          "eecs498",
+          "a2"
+        ]
+      },
+      {
+        "title": "Attn 模块",
+        "docsPath": "notes/EECS498/AttnLSTM.md",
+        "children": [],
+        "slug": "attnlstm",
+        "slugPath": [
+          "eecs498",
+          "attnlstm"
+        ]
+      },
+      {
+        "title": "Back Propagation",
+        "docsPath": "notes/EECS498/Back Propagation.md",
+        "children": [],
+        "slug": "back-propagation",
+        "slugPath": [
+          "eecs498",
+          "back-propagation"
+        ]
+      },
+      {
+        "title": "CNN",
+        "docsPath": "notes/EECS498/CNN.md",
+        "children": [],
+        "slug": "cnn",
+        "slugPath": [
+          "eecs498",
+          "cnn"
+        ]
+      },
+      {
+        "title": "CNNArchiture",
+        "docsPath": "notes/EECS498/CNNArchiture.md",
+        "children": [],
+        "slug": "cnnarchiture",
+        "slugPath": [
+          "eecs498",
+          "cnnarchiture"
+        ]
+      },
+      {
+        "title": "Derivative of Matrix",
+        "docsPath": "notes/EECS498/Derivative of Matrix.md",
+        "children": [],
+        "slug": "derivative-of-matrix",
+        "slugPath": [
+          "eecs498",
+          "derivative-of-matrix"
+        ]
+      },
+      {
+        "title": "Multiclass SVM Loss:",
+        "docsPath": "notes/EECS498/Linear Classifiers.md",
+        "children": [],
+        "slug": "linear-classifiers",
+        "slugPath": [
+          "eecs498",
+          "linear-classifiers"
+        ]
+      },
+      {
+        "title": "Neural Network",
+        "docsPath": "notes/EECS498/Neural Network.md",
+        "children": [],
+        "slug": "neural-network",
+        "slugPath": [
+          "eecs498",
+          "neural-network"
+        ]
+      },
+      {
+        "title": "Detect Multiple Objects",
+        "docsPath": "notes/EECS498/ObjectDetection.md",
+        "children": [],
+        "slug": "objectdetection",
+        "slugPath": [
+          "eecs498",
+          "objectdetection"
+        ]
+      },
+      {
+        "title": "Optimization",
+        "docsPath": "notes/EECS498/Optimization.md",
+        "children": [],
+        "slug": "optimization",
+        "slugPath": [
+          "eecs498",
+          "optimization"
+        ]
+      },
+      {
+        "title": "RNN",
+        "docsPath": "notes/EECS498/RNN.md",
+        "children": [],
+        "slug": "rnn",
+        "slugPath": [
+          "eecs498",
+          "rnn"
+        ]
+      },
+      {
+        "title": "One time setup",
+        "docsPath": "notes/EECS498/TrainingNN.md",
+        "children": [],
+        "slug": "trainingnn",
+        "slugPath": [
+          "eecs498",
+          "trainingnn"
+        ]
+      }
+    ],
+    "slug": "eecs498",
     "slugPath": [
-      "dp"
+      "eecs498"
     ]
   },
   {
-    "title": "排序",
-    "docsPath": "notes/排序算法.md",
-    "children": [],
-    "slug": "排序",
+    "title": "GPT",
+    "children": [
+      {
+        "title": "Problems with RNN(among others)",
+        "docsPath": "notes/GPT/Attention is All You Need.md",
+        "children": [],
+        "slug": "attention-is-all-you-need",
+        "slugPath": [
+          "gpt",
+          "attention-is-all-you-need"
+        ]
+      },
+      {
+        "title": "diveintogpt",
+        "docsPath": "notes/GPT/diveintogpt.md",
+        "children": [],
+        "slug": "diveintogpt",
+        "slugPath": [
+          "gpt",
+          "diveintogpt"
+        ]
+      },
+      {
+        "title": "makemore",
+        "docsPath": "notes/GPT/makemore.md",
+        "children": [],
+        "slug": "makemore",
+        "slugPath": [
+          "gpt",
+          "makemore"
+        ]
+      },
+      {
+        "title": "makemoreActivation",
+        "docsPath": "notes/GPT/makemoreActivation.md",
+        "children": [],
+        "slug": "makemoreactivation",
+        "slugPath": [
+          "gpt",
+          "makemoreactivation"
+        ]
+      },
+      {
+        "title": "makemoreComnet",
+        "docsPath": "notes/GPT/makemoreComnet.md",
+        "children": [],
+        "slug": "makemorecomnet",
+        "slugPath": [
+          "gpt",
+          "makemorecomnet"
+        ]
+      },
+      {
+        "title": "makemoreMLP",
+        "docsPath": "notes/GPT/makemoreMLP.md",
+        "children": [],
+        "slug": "makemoremlp",
+        "slugPath": [
+          "gpt",
+          "makemoremlp"
+        ]
+      },
+      {
+        "title": "makemoreNinja",
+        "docsPath": "notes/GPT/makemoreNinja.md",
+        "children": [],
+        "slug": "makemoreninja",
+        "slugPath": [
+          "gpt",
+          "makemoreninja"
+        ]
+      },
+      {
+        "title": "micrograd",
+        "docsPath": "notes/GPT/micrograd.md",
+        "children": [],
+        "slug": "micrograd",
+        "slugPath": [
+          "gpt",
+          "micrograd"
+        ]
+      },
+      {
+        "title": "hyperparameters",
+        "docsPath": "notes/GPT/ShakespeareGPT.md",
+        "children": [],
+        "slug": "shakespearegpt",
+        "slugPath": [
+          "gpt",
+          "shakespearegpt"
+        ]
+      },
+      {
+        "title": "原始字符串",
+        "docsPath": "notes/GPT/Tokenization.md",
+        "children": [],
+        "slug": "tokenization",
+        "slugPath": [
+          "gpt",
+          "tokenization"
+        ]
+      }
+    ],
+    "slug": "gpt",
     "slugPath": [
-      "排序"
-    ]
-  },
-  {
-    "title": "图算法",
-    "docsPath": "notes/图算法.md",
-    "children": [],
-    "slug": "图算法",
-    "slugPath": [
-      "图算法"
+      "gpt"
     ]
   },
   {
     "title": "ML",
     "children": [
       {
-        "title": "KMeans",
+        "title": "手撕KMeans & Kmeans++",
         "docsPath": "notes/ML/KMeans.md",
         "children": [],
         "slug": "kmeans",
@@ -74,497 +335,85 @@
     ]
   },
   {
-    "title": "EECS 498(Deep Learning for Computer Vision)",
+    "title": "Probability",
     "children": [
       {
-        "title": "Linear Classifiers",
-        "docsPath": "notes/EECS498/Linear Classifiers.md",
-        "children": [],
-        "slug": "linear-classifiers",
-        "slugPath": [
-          "eecs-498-deep-learning-for-computer-vision",
-          "linear-classifiers"
-        ]
-      },
-      {
-        "title": "Optimization",
-        "docsPath": "notes/EECS498/Optimization.md",
-        "children": [],
-        "slug": "optimization",
-        "slugPath": [
-          "eecs-498-deep-learning-for-computer-vision",
-          "optimization"
-        ]
-      },
-      {
-        "title": "第一次作业(pytorch & KNN)",
-        "docsPath": "notes/EECS498/A1.md",
-        "children": [],
-        "slug": "第一次作业-pytorch-knn",
-        "slugPath": [
-          "eecs-498-deep-learning-for-computer-vision",
-          "第一次作业-pytorch-knn"
-        ]
-      },
-      {
-        "title": "Neural Network",
-        "docsPath": "notes/EECS498/Neural Network.md",
-        "children": [],
-        "slug": "neural-network",
-        "slugPath": [
-          "eecs-498-deep-learning-for-computer-vision",
-          "neural-network"
-        ]
-      },
-      {
-        "title": "Back Propagation",
-        "docsPath": "notes/EECS498/Back Propagation.md",
-        "children": [],
-        "slug": "back-propagation",
-        "slugPath": [
-          "eecs-498-deep-learning-for-computer-vision",
-          "back-propagation"
-        ]
-      },
-      {
-        "title": "矩阵求导",
-        "docsPath": "notes/EECS498/Derivative of Matrix.md",
-        "children": [],
-        "slug": "矩阵求导",
-        "slugPath": [
-          "eecs-498-deep-learning-for-computer-vision",
-          "矩阵求导"
-        ]
-      },
-      {
-        "title": "第二次作业(Linear Classifiers)",
-        "docsPath": "notes/EECS498/A2.md",
-        "children": [],
-        "slug": "第二次作业-linear-classifiers",
-        "slugPath": [
-          "eecs-498-deep-learning-for-computer-vision",
-          "第二次作业-linear-classifiers"
-        ]
-      },
-      {
-        "title": "第二次作业(Two Layer Net)",
-        "docsPath": "notes/EECS498/2-layer-network.md",
-        "children": [],
-        "slug": "第二次作业-two-layer-net",
-        "slugPath": [
-          "eecs-498-deep-learning-for-computer-vision",
-          "第二次作业-two-layer-net"
-        ]
-      },
-      {
-        "title": "CNN",
-        "docsPath": "notes/EECS498/CNN.md",
-        "children": [],
-        "slug": "cnn",
-        "slugPath": [
-          "eecs-498-deep-learning-for-computer-vision",
-          "cnn"
-        ]
-      },
-      {
-        "title": "CNNArchitecture",
-        "docsPath": "notes/EECS498/CNNArchiture.md",
-        "children": [],
-        "slug": "cnnarchitecture",
-        "slugPath": [
-          "eecs-498-deep-learning-for-computer-vision",
-          "cnnarchitecture"
-        ]
-      },
-      {
-        "title": "TrainingNN",
-        "docsPath": "notes/EECS498/TrainingNN.md",
-        "children": [],
-        "slug": "trainingnn",
-        "slugPath": [
-          "eecs-498-deep-learning-for-computer-vision",
-          "trainingnn"
-        ]
-      }
-    ],
-    "slug": "eecs-498-deep-learning-for-computer-vision",
-    "slugPath": [
-      "eecs-498-deep-learning-for-computer-vision"
-    ]
-  },
-  {
-    "title": "概率统计（荣誉）(MATH1207H)",
-    "children": [
-      {
-        "title": "第二次讨论",
+        "title": "问题概述",
         "docsPath": "notes/Probability/讨论2.md",
         "children": [],
-        "slug": "第二次讨论",
+        "slug": "讨论2",
         "slugPath": [
-          "概率统计-荣誉-math1207h",
-          "第二次讨论"
+          "probability",
+          "讨论2"
         ]
       },
       {
-        "title": "第三次讨论",
+        "title": "讨论3",
         "docsPath": "notes/Probability/讨论3.md",
         "children": [],
-        "slug": "第三次讨论",
+        "slug": "讨论3",
         "slugPath": [
-          "概率统计-荣誉-math1207h",
-          "第三次讨论"
+          "probability",
+          "讨论3"
         ]
       },
       {
-        "title": "第四次讨论",
+        "title": "讨论4",
         "docsPath": "notes/Probability/讨论4.md",
         "children": [],
-        "slug": "第四次讨论",
+        "slug": "讨论4",
         "slugPath": [
-          "概率统计-荣誉-math1207h",
-          "第四次讨论"
+          "probability",
+          "讨论4"
         ]
       }
     ],
-    "slug": "概率统计-荣誉-math1207h",
+    "slug": "probability",
     "slugPath": [
-      "概率统计-荣誉-math1207h"
+      "probability"
     ]
   },
   {
-    "title": "数据结构（荣誉）(CS0501H)",
+    "title": "Python-Tutorial",
     "children": [
       {
-        "title": "线性表",
-        "docsPath": "notes/CS0501H/链表.md",
+        "title": "Some Cold Knowledge",
+        "docsPath": "notes/Python-Tutorial/ColdKnwoledge.md",
         "children": [],
-        "slug": "线性表",
+        "slug": "coldknwoledge",
         "slugPath": [
-          "数据结构-荣誉-cs0501h",
-          "线性表"
-        ]
-      }
-    ],
-    "slug": "数据结构-荣誉-cs0501h",
-    "slugPath": [
-      "数据结构-荣誉-cs0501h"
-    ]
-  },
-  {
-    "title": "从零构建GPT(Karpathy)",
-    "children": [
-      {
-        "title": "Micrograd",
-        "docsPath": "notes/GPT/micrograd.md",
-        "children": [],
-        "slug": "micrograd",
-        "slugPath": [
-          "从零构建gpt-karpathy",
-          "micrograd"
+          "python-tutorial",
+          "coldknwoledge"
         ]
       },
       {
-        "title": "Makemore(First Status)",
-        "docsPath": "notes/GPT/makemore.md",
-        "children": [],
-        "slug": "makemore-first-status",
-        "slugPath": [
-          "从零构建gpt-karpathy",
-          "makemore-first-status"
-        ]
-      },
-      {
-        "title": "Makemore(MLP)",
-        "docsPath": "notes/GPT/makemoreMLP.md",
-        "children": [],
-        "slug": "makemore-mlp",
-        "slugPath": [
-          "从零构建gpt-karpathy",
-          "makemore-mlp"
-        ]
-      },
-      {
-        "title": "Makemore(Activation)",
-        "docsPath": "notes/GPT/makemoreActivation.md",
-        "children": [],
-        "slug": "makemore-activation",
-        "slugPath": [
-          "从零构建gpt-karpathy",
-          "makemore-activation"
-        ]
-      },
-      {
-        "title": "Makemore(Become a Backprop Ninja)",
-        "docsPath": "notes/GPT/makemoreNinja.md",
-        "children": [],
-        "slug": "makemore-become-a-backprop-ninja",
-        "slugPath": [
-          "从零构建gpt-karpathy",
-          "makemore-become-a-backprop-ninja"
-        ]
-      },
-      {
-        "title": "Makemore(Convolution Layer)",
-        "docsPath": "notes/GPT/makemoreComnet.md",
-        "children": [],
-        "slug": "makemore-convolution-layer",
-        "slugPath": [
-          "从零构建gpt-karpathy",
-          "makemore-convolution-layer"
-        ]
-      },
-      {
-        "title": "ShakespeareGPT",
-        "docsPath": "notes/GPT/ShakespeareGPT.md",
-        "children": [],
-        "slug": "shakespearegpt",
-        "slugPath": [
-          "从零构建gpt-karpathy",
-          "shakespearegpt"
-        ]
-      },
-      {
-        "title": "Attention is All You Need",
-        "docsPath": "notes/GPT/Attention is All You Need.md",
-        "children": [],
-        "slug": "attention-is-all-you-need",
-        "slugPath": [
-          "从零构建gpt-karpathy",
-          "attention-is-all-you-need"
-        ]
-      },
-      {
-        "title": "Dive into GPT",
-        "docsPath": "notes/GPT/diveintogpt.md",
-        "children": [],
-        "slug": "dive-into-gpt",
-        "slugPath": [
-          "从零构建gpt-karpathy",
-          "dive-into-gpt"
-        ]
-      }
-    ],
-    "slug": "从零构建gpt-karpathy",
-    "slugPath": [
-      "从零构建gpt-karpathy"
-    ]
-  },
-  {
-    "title": "6.S091(Representation Learning)",
-    "children": [
-      {
-        "title": "Representation Learning",
-        "docsPath": "notes/6.S091/Representation.md",
-        "children": [],
-        "slug": "representation-learning",
-        "slugPath": [
-          "6-s091-representation-learning",
-          "representation-learning"
-        ]
-      },
-      {
-        "title": "Structural Causal Model",
-        "docsPath": "notes/6.S091/Structural Causal Model.md",
-        "children": [],
-        "slug": "structural-causal-model",
-        "slugPath": [
-          "6-s091-representation-learning",
-          "structural-causal-model"
-        ]
-      }
-    ],
-    "slug": "6-s091-representation-learning",
-    "slugPath": [
-      "6-s091-representation-learning"
-    ]
-  },
-  {
-    "title": "Reinforcement Learning",
-    "children": [
-      {
-        "title": "大模型强化学习PPO",
-        "docsPath": "notes/RL/大模型强化学习PPO.md",
-        "children": [],
-        "slug": "大模型强化学习ppo",
-        "slugPath": [
-          "reinforcement-learning",
-          "大模型强化学习ppo"
-        ]
-      },
-      {
-        "title": "PPO算法原理",
-        "docsPath": "notes/RL/PPO算法原理.md",
-        "children": [],
-        "slug": "ppo算法原理",
-        "slugPath": [
-          "reinforcement-learning",
-          "ppo算法原理"
-        ]
-      },
-      {
-        "title": "强化学习的数学原理",
-        "children": [
-          {
-            "title": "Overall Map",
-            "docsPath": "notes/RL/Overall Map.md",
-            "children": [],
-            "slug": "overall-map",
-            "slugPath": [
-              "reinforcement-learning",
-              "强化学习的数学原理",
-              "overall-map"
-            ]
-          },
-          {
-            "title": "Chapter1",
-            "docsPath": "notes/RL/Chapter1.md",
-            "children": [],
-            "slug": "chapter1",
-            "slugPath": [
-              "reinforcement-learning",
-              "强化学习的数学原理",
-              "chapter1"
-            ]
-          },
-          {
-            "title": "Chapter2 StateValue",
-            "docsPath": "notes/RL/Chapter2StateValue.md",
-            "children": [],
-            "slug": "chapter2-statevalue",
-            "slugPath": [
-              "reinforcement-learning",
-              "强化学习的数学原理",
-              "chapter2-statevalue"
-            ]
-          },
-          {
-            "title": "Chapter2 Bellman Equation",
-            "docsPath": "notes/RL/Chap2BellmanEquation.md",
-            "children": [],
-            "slug": "chapter2-bellman-equation",
-            "slugPath": [
-              "reinforcement-learning",
-              "强化学习的数学原理",
-              "chapter2-bellman-equation"
-            ]
-          },
-          {
-            "title": "Chapter3 Bellman Optimality",
-            "docsPath": "notes/RL/Chap3BellmanOptimalEquation.md",
-            "children": [],
-            "slug": "chapter3-bellman-optimality",
-            "slugPath": [
-              "reinforcement-learning",
-              "强化学习的数学原理",
-              "chapter3-bellman-optimality"
-            ]
-          },
-          {
-            "title": "Chapter4 Value & Policy & Truncated Iteration",
-            "docsPath": "notes/RL/Chap4ValuePolicyTruncatedIteration.md",
-            "children": [],
-            "slug": "chapter4-value-policy-truncated-iteration",
-            "slugPath": [
-              "reinforcement-learning",
-              "强化学习的数学原理",
-              "chapter4-value-policy-truncated-iteration"
-            ]
-          },
-          {
-            "title": "Chapter4 Pseudocode",
-            "docsPath": "notes/RL/Pseudocode.md",
-            "children": [],
-            "slug": "chapter4-pseudocode",
-            "slugPath": [
-              "reinforcement-learning",
-              "强化学习的数学原理",
-              "chapter4-pseudocode"
-            ]
-          }
-        ],
-        "slug": "强化学习的数学原理",
-        "slugPath": [
-          "reinforcement-learning",
-          "强化学习的数学原理"
-        ]
-      }
-    ],
-    "slug": "reinforcement-learning",
-    "slugPath": [
-      "reinforcement-learning"
-    ]
-  },
-  {
-    "title": "Python进阶教程",
-    "children": [
-      {
-        "title": "冷知识",
-        "docsPath": "notes/Python-Tutorial/ColdKnowledge.md",
-        "children": [],
-        "slug": "冷知识",
-        "slugPath": [
-          "python进阶教程",
-          "冷知识"
-        ]
-      },
-      {
-        "title": "Docstring",
+        "title": "Write A Professional Docstring",
         "docsPath": "notes/Python-Tutorial/Docstring.md",
         "children": [],
         "slug": "docstring",
         "slugPath": [
-          "python进阶教程",
+          "python-tutorial",
           "docstring"
         ]
       },
       {
-        "title": "Python Basics",
-        "docsPath": "notes/Python-Tutorial/Python-Basics.md",
-        "children": [],
-        "slug": "python-basics",
-        "slugPath": [
-          "python进阶教程",
-          "python-basics"
-        ]
-      },
-      {
-        "title": "减少For-Loop",
+        "title": "Pythonic",
         "docsPath": "notes/Python-Tutorial/For-Loop.md",
         "children": [],
-        "slug": "减少for-loop",
+        "slug": "for-loop",
         "slugPath": [
-          "python进阶教程",
-          "减少for-loop"
+          "python-tutorial",
+          "for-loop"
         ]
       },
       {
-        "title": "Matplotlib",
-        "docsPath": "notes/Python-Tutorial/Pyplot.md",
+        "title": "Regex",
+        "docsPath": "notes/Python-Tutorial/LearnRegex.md",
         "children": [],
-        "slug": "matplotlib",
+        "slug": "learnregex",
         "slugPath": [
-          "python进阶教程",
-          "matplotlib"
-        ]
-      },
-      {
-        "title": "Pandas",
-        "docsPath": "notes/Python-Tutorial/pandas.md",
-        "children": [],
-        "slug": "pandas",
-        "slugPath": [
-          "python进阶教程",
-          "pandas"
-        ]
-      },
-      {
-        "title": "Tensorboard",
-        "docsPath": "notes/Python-Tutorial/Tensorboard.md",
-        "children": [],
-        "slug": "tensorboard",
-        "slugPath": [
-          "python进阶教程",
-          "tensorboard"
+          "python-tutorial",
+          "learnregex"
         ]
       },
       {
@@ -573,62 +422,314 @@
         "children": [],
         "slug": "logging",
         "slugPath": [
-          "python进阶教程",
+          "python-tutorial",
           "logging"
+        ]
+      },
+      {
+        "title": "Pandas库",
+        "docsPath": "notes/Python-Tutorial/pandas.md",
+        "children": [],
+        "slug": "pandas",
+        "slugPath": [
+          "python-tutorial",
+          "pandas"
+        ]
+      },
+      {
+        "title": "Pyplot",
+        "docsPath": "notes/Python-Tutorial/Pyplot.md",
+        "children": [],
+        "slug": "pyplot",
+        "slugPath": [
+          "python-tutorial",
+          "pyplot"
+        ]
+      },
+      {
+        "title": "Python Basic Knowledge",
+        "docsPath": "notes/Python-Tutorial/Python-Basics.md",
+        "children": [],
+        "slug": "python-basics",
+        "slugPath": [
+          "python-tutorial",
+          "python-basics"
+        ]
+      },
+      {
+        "title": "🧭 TensorBoard 全面学习路线",
+        "docsPath": "notes/Python-Tutorial/Tensorboard.md",
+        "children": [],
+        "slug": "tensorboard",
+        "slugPath": [
+          "python-tutorial",
+          "tensorboard"
         ]
       },
       {
         "title": "Pickle",
         "docsPath": "notes/Python-Tutorial/WhatIsPickle.md",
         "children": [],
-        "slug": "pickle",
+        "slug": "whatispickle",
         "slugPath": [
-          "python进阶教程",
-          "pickle"
-        ]
-      },
-      {
-        "title": "Regex",
-        "docsPath": "notes/Python-Tutorial/LearnRegex.md",
-        "children": [],
-        "slug": "regex",
-        "slugPath": [
-          "python进阶教程",
-          "regex"
+          "python-tutorial",
+          "whatispickle"
         ]
       }
     ],
-    "slug": "python进阶教程",
+    "slug": "python-tutorial",
     "slugPath": [
-      "python进阶教程"
+      "python-tutorial"
     ]
   },
   {
-    "title": "科研笔记",
+    "title": "Pytorch-Tutorial",
     "children": [
+      {
+        "title": "LossFunction",
+        "children": [
+          {
+            "title": "Loss Function",
+            "docsPath": "notes/Pytorch-Tutorial/LossFunction/LossFunction.md",
+            "children": [],
+            "slug": "lossfunction",
+            "slugPath": [
+              "pytorch-tutorial",
+              "lossfunction",
+              "lossfunction"
+            ]
+          },
+          {
+            "title": "Triplet Loss",
+            "docsPath": "notes/Pytorch-Tutorial/LossFunction/TripletLoss.md",
+            "children": [],
+            "slug": "tripletloss",
+            "slugPath": [
+              "pytorch-tutorial",
+              "lossfunction",
+              "tripletloss"
+            ]
+          }
+        ],
+        "slug": "lossfunction",
+        "slugPath": [
+          "pytorch-tutorial",
+          "lossfunction"
+        ]
+      },
+      {
+        "title": "torch.addmm",
+        "docsPath": "notes/Pytorch-Tutorial/addmm.md",
+        "children": [],
+        "slug": "addmm",
+        "slugPath": [
+          "pytorch-tutorial",
+          "addmm"
+        ]
+      },
+      {
+        "title": "torch.einsum",
+        "docsPath": "notes/Pytorch-Tutorial/Einsum.md",
+        "children": [],
+        "slug": "einsum",
+        "slugPath": [
+          "pytorch-tutorial",
+          "einsum"
+        ]
+      },
+      {
+        "title": "torch.where",
+        "docsPath": "notes/Pytorch-Tutorial/where.md",
+        "children": [],
+        "slug": "where",
+        "slugPath": [
+          "pytorch-tutorial",
+          "where"
+        ]
+      }
+    ],
+    "slug": "pytorch-tutorial",
+    "slugPath": [
+      "pytorch-tutorial"
+    ]
+  },
+  {
+    "title": "Research",
+    "children": [
+      {
+        "title": "CausalDiscovery",
+        "children": [
+          {
+            "title": "Algorithms",
+            "children": [
+              {
+                "title": "DAG-GNN: Directed Acyclic Graph - Graph Neural Network",
+                "docsPath": "notes/Research/CausalDiscovery/Algorithms/DAG-GNN.md",
+                "children": [],
+                "slug": "dag-gnn",
+                "slugPath": [
+                  "research",
+                  "causaldiscovery",
+                  "algorithms",
+                  "dag-gnn"
+                ]
+              },
+              {
+                "title": "MissNODAG: Missing Value Noisy DAG Discovery",
+                "docsPath": "notes/Research/CausalDiscovery/Algorithms/MissNODAG.md",
+                "children": [],
+                "slug": "missnodag",
+                "slugPath": [
+                  "research",
+                  "causaldiscovery",
+                  "algorithms",
+                  "missnodag"
+                ]
+              },
+              {
+                "title": "NOTEARS: Nonlinear Structural Equations with Alternative Regularization and Sparsity",
+                "docsPath": "notes/Research/CausalDiscovery/Algorithms/NOTEARS.md",
+                "children": [],
+                "slug": "notears",
+                "slugPath": [
+                  "research",
+                  "causaldiscovery",
+                  "algorithms",
+                  "notears"
+                ]
+              },
+              {
+                "title": "Peter-Clark (PC) Algorithm",
+                "docsPath": "notes/Research/CausalDiscovery/Algorithms/PCAlgorithm.md",
+                "children": [],
+                "slug": "pcalgorithm",
+                "slugPath": [
+                  "research",
+                  "causaldiscovery",
+                  "algorithms",
+                  "pcalgorithm"
+                ]
+              }
+            ],
+            "slug": "algorithms",
+            "slugPath": [
+              "research",
+              "causaldiscovery",
+              "algorithms"
+            ]
+          },
+          {
+            "title": "Papers",
+            "children": [
+              {
+                "title": "ALCM: Autonomous LLM-Augmented Causal Discovery Framework",
+                "docsPath": "notes/Research/CausalDiscovery/Papers/ALCM.md",
+                "children": [],
+                "slug": "alcm",
+                "slugPath": [
+                  "research",
+                  "causaldiscovery",
+                  "papers",
+                  "alcm"
+                ]
+              },
+              {
+                "title": "Leaning Causal Structure Distributions for Robust Learning",
+                "docsPath": "notes/Research/CausalDiscovery/Papers/Causal_Structure_Distributions.md",
+                "children": [],
+                "slug": "causal_structure_distributions",
+                "slugPath": [
+                  "research",
+                  "causaldiscovery",
+                  "papers",
+                  "causal_structure_distributions"
+                ]
+              },
+              {
+                "title": "CELLO: Causal Evaluation of Large Vision-Language Models",
+                "docsPath": "notes/Research/CausalDiscovery/Papers/CELLO.md",
+                "children": [],
+                "slug": "cello",
+                "slugPath": [
+                  "research",
+                  "causaldiscovery",
+                  "papers",
+                  "cello"
+                ]
+              },
+              {
+                "title": "Llava论文: Visual Instruction Tuning",
+                "docsPath": "notes/Research/CausalDiscovery/Papers/Llava.md",
+                "children": [],
+                "slug": "llava",
+                "slugPath": [
+                  "research",
+                  "causaldiscovery",
+                  "papers",
+                  "llava"
+                ]
+              },
+              {
+                "title": "Towards Causal Reprensentation Learning",
+                "docsPath": "notes/Research/CausalDiscovery/Papers/Towards Causal Representation Learning.md",
+                "children": [],
+                "slug": "towards-causal-representation-learning",
+                "slugPath": [
+                  "research",
+                  "causaldiscovery",
+                  "papers",
+                  "towards-causal-representation-learning"
+                ]
+              }
+            ],
+            "slug": "papers",
+            "slugPath": [
+              "research",
+              "causaldiscovery",
+              "papers"
+            ]
+          },
+          {
+            "title": "综述",
+            "docsPath": "notes/Research/CausalDiscovery/综述.md",
+            "children": [],
+            "slug": "综述",
+            "slugPath": [
+              "research",
+              "causaldiscovery",
+              "综述"
+            ]
+          },
+          {
+            "title": "Metrics",
+            "docsPath": "notes/Research/CausalDiscovery/Metrics.md",
+            "children": [],
+            "slug": "metrics",
+            "slugPath": [
+              "research",
+              "causaldiscovery",
+              "metrics"
+            ]
+          }
+        ],
+        "slug": "causaldiscovery",
+        "slugPath": [
+          "research",
+          "causaldiscovery"
+        ]
+      },
       {
         "title": "OCL",
         "children": [
           {
-            "title": "OCL",
-            "docsPath": "notes/Research/OCL/OCL.md",
-            "children": [],
-            "slug": "ocl",
-            "slugPath": [
-              "科研笔记",
-              "ocl",
-              "ocl"
-            ]
-          },
-          {
-            "title": "余弦相似度",
+            "title": "Cosine Similarity",
             "docsPath": "notes/Research/OCL/CosineSimilarity.md",
             "children": [],
-            "slug": "余弦相似度",
+            "slug": "cosinesimilarity",
             "slugPath": [
-              "科研笔记",
+              "research",
               "ocl",
-              "余弦相似度"
+              "cosinesimilarity"
             ]
           },
           {
@@ -637,18 +738,29 @@
             "children": [],
             "slug": "map",
             "slugPath": [
-              "科研笔记",
+              "research",
               "ocl",
               "map"
             ]
           },
           {
-            "title": "tSNE",
+            "title": "OCL论文精读",
+            "docsPath": "notes/Research/OCL/OCL.md",
+            "children": [],
+            "slug": "ocl",
+            "slugPath": [
+              "research",
+              "ocl",
+              "ocl"
+            ]
+          },
+          {
+            "title": "t-SNE",
             "docsPath": "notes/Research/OCL/tSNE.md",
             "children": [],
             "slug": "tsne",
             "slugPath": [
-              "科研笔记",
+              "research",
               "ocl",
               "tsne"
             ]
@@ -656,256 +768,225 @@
         ],
         "slug": "ocl",
         "slugPath": [
-          "科研笔记",
+          "research",
           "ocl"
         ]
       },
       {
-        "title": "Causal Discovery",
-        "children": [
-          {
-            "title": "Papers",
-            "children": [
-              {
-                "title": "Causal Structure Distributions",
-                "docsPath": "notes/Research/CausalDiscovery/Papers/Causal_Structure_Distributions.md",
-                "children": [],
-                "slug": "causal-structure-distributions",
-                "slugPath": [
-                  "科研笔记",
-                  "causal-discovery",
-                  "papers",
-                  "causal-structure-distributions"
-                ]
-              },
-              {
-                "title": "Llava",
-                "docsPath": "notes/Research/CausalDiscovery/Papers/Llava.md",
-                "children": [],
-                "slug": "llava",
-                "slugPath": [
-                  "科研笔记",
-                  "causal-discovery",
-                  "papers",
-                  "llava"
-                ]
-              },
-              {
-                "title": "CELLO",
-                "docsPath": "notes/Research/CausalDiscovery/Papers/CELLO.md",
-                "children": [],
-                "slug": "cello",
-                "slugPath": [
-                  "科研笔记",
-                  "causal-discovery",
-                  "papers",
-                  "cello"
-                ]
-              },
-              {
-                "title": "ALCM",
-                "docsPath": "notes/Research/CausalDiscovery/Papers/ALCM.md",
-                "children": [],
-                "slug": "alcm",
-                "slugPath": [
-                  "科研笔记",
-                  "causal-discovery",
-                  "papers",
-                  "alcm"
-                ]
-              },
-              {
-                "title": "Causal Representation learning",
-                "children": [
-                  {
-                    "title": "Causal Representation Learning",
-                    "docsPath": "notes/Research/CausalDiscovery/Papers/Towards Causal Representation Learning.md",
-                    "children": [],
-                    "slug": "causal-representation-learning",
-                    "slugPath": [
-                      "科研笔记",
-                      "causal-discovery",
-                      "papers",
-                      "causal-representation-learning",
-                      "causal-representation-learning"
-                    ]
-                  }
-                ],
-                "slug": "causal-representation-learning",
-                "slugPath": [
-                  "科研笔记",
-                  "causal-discovery",
-                  "papers",
-                  "causal-representation-learning"
-                ]
-              }
-            ],
-            "slug": "papers",
-            "slugPath": [
-              "科研笔记",
-              "causal-discovery",
-              "papers"
-            ]
-          },
-          {
-            "title": "Algorithms",
-            "children": [
-              {
-                "title": "PC Algorithm",
-                "docsPath": "notes/Research/CausalDiscovery/Algorithms/PCAlgorithm.md",
-                "children": [],
-                "slug": "pc-algorithm",
-                "slugPath": [
-                  "科研笔记",
-                  "causal-discovery",
-                  "algorithms",
-                  "pc-algorithm"
-                ]
-              },
-              {
-                "title": "NOTEARS",
-                "docsPath": "notes/Research/CausalDiscovery/Algorithms/NOTEARS.md",
-                "children": [],
-                "slug": "notears",
-                "slugPath": [
-                  "科研笔记",
-                  "causal-discovery",
-                  "algorithms",
-                  "notears"
-                ]
-              },
-              {
-                "title": "MissNODAG",
-                "docsPath": "notes/Research/CausalDiscovery/Algorithms/MissNODAG.md",
-                "children": [],
-                "slug": "missnodag",
-                "slugPath": [
-                  "科研笔记",
-                  "causal-discovery",
-                  "algorithms",
-                  "missnodag"
-                ]
-              },
-              {
-                "title": "DAG-GNN",
-                "docsPath": "notes/Research/CausalDiscovery/Algorithms/DAG-GNN.md",
-                "children": [],
-                "slug": "dag-gnn",
-                "slugPath": [
-                  "科研笔记",
-                  "causal-discovery",
-                  "algorithms",
-                  "dag-gnn"
-                ]
-              }
-            ],
-            "slug": "algorithms",
-            "slugPath": [
-              "科研笔记",
-              "causal-discovery",
-              "algorithms"
-            ]
-          }
-        ],
-        "slug": "causal-discovery",
+        "title": "Thoughts",
+        "docsPath": "notes/Research/Thoughts.md",
+        "children": [],
+        "slug": "thoughts",
         "slugPath": [
-          "科研笔记",
-          "causal-discovery"
+          "research",
+          "thoughts"
         ]
       }
     ],
-    "slug": "科研笔记",
+    "slug": "research",
     "slugPath": [
-      "科研笔记"
+      "research"
     ]
   },
   {
-    "title": "一些问题",
-    "docsPath": "notes/SeveralQ.md",
-    "children": [],
-    "slug": "一些问题",
-    "slugPath": [
-      "一些问题"
-    ]
-  },
-  {
-    "title": "Latex基本教程",
-    "docsPath": "notes/Latex.md",
-    "children": [],
-    "slug": "latex基本教程",
-    "slugPath": [
-      "latex基本教程"
-    ]
-  },
-  {
-    "title": "Pytorch进阶教程",
+    "title": "RL",
     "children": [
       {
-        "title": "Loss Function",
-        "children": [
-          {
-            "title": "概述",
-            "docsPath": "notes/Pytorch-Tutorial/LossFunction/LossFunction.md",
-            "children": [],
-            "slug": "概述",
-            "slugPath": [
-              "pytorch进阶教程",
-              "loss-function",
-              "概述"
-            ]
-          },
-          {
-            "title": "Triplet Loss",
-            "docsPath": "notes/Pytorch-Tutorial/LossFunction/TripletLoss.md",
-            "children": [],
-            "slug": "triplet-loss",
-            "slugPath": [
-              "pytorch进阶教程",
-              "loss-function",
-              "triplet-loss"
-            ]
-          }
-        ],
-        "slug": "loss-function",
+        "title": "大模型强化学习（PPO）代码实现",
+        "docsPath": "notes/RL/大模型强化学习PPO.md",
+        "children": [],
+        "slug": "大模型强化学习ppo",
         "slugPath": [
-          "pytorch进阶教程",
-          "loss-function"
+          "rl",
+          "大模型强化学习ppo"
         ]
       },
       {
-        "title": "Einsum",
-        "docsPath": "notes/Pytorch-Tutorial/Einsum.md",
+        "title": "贝尔曼公式（强化学习）核心知识点总结",
+        "docsPath": "notes/RL/Chap2BellmanEquation.md",
         "children": [],
-        "slug": "einsum",
+        "slug": "chap2bellmanequation",
         "slugPath": [
-          "pytorch进阶教程",
-          "einsum"
+          "rl",
+          "chap2bellmanequation"
         ]
       },
       {
-        "title": "addmm",
-        "docsPath": "notes/Pytorch-Tutorial/addmm.md",
+        "title": "第3课-贝尔曼最优公式（最优策略和公式推导）知识点整理",
+        "docsPath": "notes/RL/Chap3BellmanOptimalEquation.md",
         "children": [],
-        "slug": "addmm",
+        "slug": "chap3bellmanoptimalequation",
         "slugPath": [
-          "pytorch进阶教程",
-          "addmm"
+          "rl",
+          "chap3bellmanoptimalequation"
         ]
       },
       {
-        "title": "where",
-        "docsPath": "notes/Pytorch-Tutorial/where.md",
+        "title": "Chap4VauleIteration",
+        "docsPath": "notes/RL/Chap4VauleIteration.md",
         "children": [],
-        "slug": "where",
+        "slug": "chap4vauleiteration",
         "slugPath": [
-          "pytorch进阶教程",
-          "where"
+          "rl",
+          "chap4vauleiteration"
+        ]
+      },
+      {
+        "title": "值迭代算法核心基础",
+        "docsPath": "notes/RL/Chap4VaulePolicyTruncatedIteration.md",
+        "children": [],
+        "slug": "chap4vaulepolicytruncatediteration",
+        "slugPath": [
+          "rl",
+          "chap4vaulepolicytruncatediteration"
+        ]
+      },
+      {
+        "title": "第5课-蒙特卡洛方法（通过例子介绍蒙特卡洛）知识点整理",
+        "docsPath": "notes/RL/Chap5MC.md",
+        "children": [],
+        "slug": "chap5mc",
+        "slugPath": [
+          "rl",
+          "chap5mc"
+        ]
+      },
+      {
+        "title": "《强化学习的数学原理》第1课-基本概念知识点整理",
+        "docsPath": "notes/RL/Chapter1.md",
+        "children": [],
+        "slug": "chapter1",
+        "slugPath": [
+          "rl",
+          "chapter1"
+        ]
+      },
+      {
+        "title": "《强化学习的数学原理》第2课-贝尔曼公式（知识点整理",
+        "docsPath": "notes/RL/Chapter2StateValue.md",
+        "children": [],
+        "slug": "chapter2statevalue",
+        "slugPath": [
+          "rl",
+          "chapter2statevalue"
+        ]
+      },
+      {
+        "title": "Overall Map",
+        "docsPath": "notes/RL/Overall Map.md",
+        "children": [],
+        "slug": "overall-map",
+        "slugPath": [
+          "rl",
+          "overall-map"
+        ]
+      },
+      {
+        "title": "PPO算法原理",
+        "docsPath": "notes/RL/PPO算法原理.md",
+        "children": [],
+        "slug": "ppo算法原理",
+        "slugPath": [
+          "rl",
+          "ppo算法原理"
+        ]
+      },
+      {
+        "title": "Pseudocode",
+        "docsPath": "notes/RL/Pseudocode.md",
+        "children": [],
+        "slug": "pseudocode",
+        "slugPath": [
+          "rl",
+          "pseudocode"
         ]
       }
     ],
-    "slug": "pytorch进阶教程",
+    "slug": "rl",
     "slugPath": [
-      "pytorch进阶教程"
+      "rl"
+    ]
+  },
+  {
+    "title": "Robotics",
+    "children": [
+      {
+        "title": "π0.7 深度解读:从\"数据清洗\"走向\"上下文引导\"的范式转变",
+        "docsPath": "notes/Robotics/pi07.md",
+        "children": [],
+        "slug": "pi07",
+        "slugPath": [
+          "robotics",
+          "pi07"
+        ]
+      }
+    ],
+    "slug": "robotics",
+    "slugPath": [
+      "robotics"
+    ]
+  },
+  {
+    "title": "测试示例 1",
+    "docsPath": "notes/排序算法.md",
+    "children": [],
+    "slug": "排序算法",
+    "slugPath": [
+      "排序算法"
+    ]
+  },
+  {
+    "title": "图算法",
+    "docsPath": "notes/图算法.md",
+    "children": [],
+    "slug": "图算法",
+    "slugPath": [
+      "图算法"
+    ]
+  },
+  {
+    "title": "测试",
+    "docsPath": "notes/DP算法.md",
+    "children": [],
+    "slug": "dp算法",
+    "slugPath": [
+      "dp算法"
+    ]
+  },
+  {
+    "title": "Python and Statistics for Financial Analysis",
+    "docsPath": "notes/Financial_Analysis.md",
+    "children": [],
+    "slug": "financial_analysis",
+    "slugPath": [
+      "financial_analysis"
+    ]
+  },
+  {
+    "title": "Latex学习",
+    "docsPath": "notes/Latex.md",
+    "children": [],
+    "slug": "latex",
+    "slugPath": [
+      "latex"
+    ]
+  },
+  {
+    "title": "翻转对 (Reverse Pairs)",
+    "docsPath": "notes/Merge.md",
+    "children": [],
+    "slug": "merge",
+    "slugPath": [
+      "merge"
+    ]
+  },
+  {
+    "title": "我们到底应该如何理解BatchNorm和LayerNorm?",
+    "docsPath": "notes/SeveralQ.md",
+    "children": [],
+    "slug": "severalq",
+    "slugPath": [
+      "severalq"
     ]
   }
 ]

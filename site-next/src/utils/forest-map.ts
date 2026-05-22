@@ -7,7 +7,7 @@ export const FOREST_MAP_HEIGHT = 720;
 export interface ForestMapEntry {
   id: string;
   collection: string;
-  body: string;
+  body?: string;
   data: {
     title: string;
     date?: Date;
@@ -74,7 +74,8 @@ function getTimestamp(entry: ForestMapEntry): number {
 }
 
 function computeTreeSize(entry: ForestMapEntry, newestTs: number, oldestTs: number): number {
-  const bodyWeight = clamp(Math.log10(Math.max(80, entry.body.length)) / 4.2, 0.56, 1);
+  const bodyLength = entry.body?.length ?? 0;
+  const bodyWeight = clamp(Math.log10(Math.max(80, bodyLength)) / 4.2, 0.56, 1);
   const ts = getTimestamp(entry);
   const recency = newestTs > oldestTs && ts > 0 ? (ts - oldestTs) / (newestTs - oldestTs) : 0.5;
   return 0.72 + bodyWeight * 0.42 + recency * 0.18;
@@ -98,7 +99,7 @@ function cleanMarkdownForSummary(body: string): string {
 }
 
 function buildSummary(entry: ForestMapEntry): string {
-  const cleaned = cleanMarkdownForSummary(entry.body);
+  const cleaned = cleanMarkdownForSummary(entry.body ?? '');
   const sentences = cleaned
     .split(/(?<=[。！？!?；;])\s*/)
     .map((sentence) => sentence.trim())
@@ -144,6 +145,7 @@ export function buildForestMapStops(entries: ForestMapEntry[], base = import.met
 
   const trees = entries
     .map((entry, index) => {
+      const body = entry.body ?? '';
       const band = collectionBand(entry.collection);
       const rng = createRng(hashString(`${entry.collection}:${entry.id}`));
       const rowBias = entry.collection === 'projects' ? 0.25 : 0;
@@ -165,7 +167,7 @@ export function buildForestMapStops(entries: ForestMapEntry[], base = import.met
         treeSvg: buildCharacterTreeSvg({
           seed: `${entry.collection}:${entry.id}`,
           title: entry.data.title,
-          body: entry.body,
+          body,
           clipId,
           variant: 'compact',
         }),

@@ -114,7 +114,7 @@ export interface CharacterTreeOptions {
   seed: string;
   title: string;
   headings?: string[];
-  body: string;
+  body?: string;
   clipId?: string;
   variant?: 'default' | 'compact';
 }
@@ -128,7 +128,7 @@ function escapeSvgText(value: string): string {
 }
 
 export function buildEntryCharacterTree(
-  entry: { id: string; body: string; data: { title: string } },
+  entry: { id: string; body?: string; data: { title: string } },
   headingTexts: string[] = [],
 ): string {
   const clipId = `tree-${entry.id.replace(/[^\w\u4e00-\u9fff-]+/g, '-').slice(0, 56)}`;
@@ -136,7 +136,7 @@ export function buildEntryCharacterTree(
     seed: entry.id,
     title: entry.data.title,
     headings: headingTexts,
-    body: entry.body,
+    body: entry.body ?? '',
     clipId,
   });
 }
@@ -149,9 +149,10 @@ export function buildCharacterTreeSvg({
   clipId = 'tree-clip',
   variant = 'default',
 }: CharacterTreeOptions): string {
+  const content = body ?? '';
   const compact = variant === 'compact';
   const rng = createRng(hashString(seed));
-  const pool = collectCharacterPool(title, headings, body, compact ? 48 : 180);
+  const pool = collectCharacterPool(title, headings, content, compact ? 48 : 180);
   const slots: Array<{ x: number; y: number }> = [];
 
   for (let y = 10; y <= 150; y += 9) {

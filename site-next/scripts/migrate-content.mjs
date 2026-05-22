@@ -8,9 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
 const DOCS = path.join(ROOT, 'docs');
 const CONTENT = path.join(ROOT, 'site-next/src/content');
-const MKDOCS_YML = path.join(ROOT, 'mkdocs.yml');
 
-/** Only migrate markdown paths listed in mkdocs.yml nav (non-comment lines). */
 const COLLECTIONS = {
   notes: ['notes'],
   essay: ['essay', 'summary'],
@@ -19,46 +17,21 @@ const COLLECTIONS = {
 
 const SKIP_FILES = new Set(['index.md', 'math-test.md', 'academy.md']);
 
-const SOURCE_TO_COLLECTION = {
-  notes: 'notes',
-  essay: 'essay',
-  summary: 'essay',
-  projects: 'projects',
-};
+const HIDDEN_ESSAY_PATHS = new Set([
+  '旅游记账',
+  'Life/情感',
+  'Life/复合之后',
+  'Life/19岁后记',
+  'Life/19生日',
+  'Life/我的大一上学期',
+  'Life/写给18岁的信',
+  'Misc/test',
+]);
+
+const HIDDEN_SUMMARY_PATHS = [/^[^/]+$/, /^2025\//];
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
-}
-
-/** Parse mkdocs.yml nav and return allowed docs-relative paths like `notes/Merge.md`. */
-export function parseMkdocsNavAllowlist(mkdocsPath = MKDOCS_YML) {
-  const raw = fs.readFileSync(mkdocsPath, 'utf8');
-  const lines = raw.split('\n');
-  const navStart = lines.findIndex((line) => /^nav:\s*$/.test(line));
-  if (navStart === -1) return new Set();
-
-  const allowed = new Set();
-  for (let i = navStart + 1; i < lines.length; i += 1) {
-    const line = lines[i];
-    if (/^[a-zA-Z_][\w-]*:\s/.test(line) && !line.startsWith(' ')) break;
-
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
-
-    const content = trimmed.split('#')[0].trim();
-    if (!content) continue;
-
-    const mdMatch = content.match(/(?::\s*|index:\s*)(.+\.md)\s*$/);
-    if (!mdMatch) continue;
-
-    allowed.add(mdMatch[1].replace(/\\/g, '/'));
-  }
-  return allowed;
-}
-
-function mapToCollection(docsRelativePath) {
-  const top = docsRelativePath.split('/')[0];
-  return SOURCE_TO_COLLECTION[top] ?? null;
 }
 
 function getSourceUpdatedAt(absPath) {
@@ -90,13 +63,17 @@ function walkMarkdown(dir, files = []) {
 }
 
 function parseFrontmatter(raw) {
-  if (!raw.startsWith('---\n')) {
+  const start = raw.match(/^---\r?\n/);
+  if (!start) {
     return { data: {}, body: raw };
   }
-  const end = raw.indexOf('\n---\n', 4);
-  if (end === -1) return { data: {}, body: raw };
-  const yaml = raw.slice(4, end);
-  const body = raw.slice(end + 5);
+  const endMatch = /\r?\n---\r?\n/.exec(raw.slice(start[0].length));
+  if (!endMatch) return { data: {}, body: raw };
+
+  const end = start[0].length + endMatch.index;
+  const bodyStart = end + endMatch[0].length;
+  const yaml = raw.slice(start[0].length, end);
+  const body = raw.slice(bodyStart);
   const data = {};
   for (const line of yaml.split('\n')) {
     const match = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
@@ -105,6 +82,21 @@ function parseFrontmatter(raw) {
     data[key] = value.replace(/^['"]|['"]$/g, '');
   }
   return { data, body };
+}
+
+function isDraft(data) {
+  return String(data.draft ?? '').trim().toLowerCase() === 'true';
+}
+
+function isHiddenLocalNote(sourceDirName, relPath) {
+  const normalized = relPath.replace(/\\/g, '/');
+  if (sourceDirName === 'essay') {
+    return HIDDEN_ESSAY_PATHS.has(normalized);
+  }
+  if (sourceDirName === 'summary') {
+    return HIDDEN_SUMMARY_PATHS.some((pattern) => pattern.test(normalized));
+  }
+  return false;
 }
 
 function stringifyFrontmatter(data) {
@@ -184,16 +176,17 @@ function toContentPath(sourceFile, sourceRoot) {
   return rel.replace(/\\/g, '/').replace(/\.md$/, '');
 }
 
-function migrateFile(sourceFile, sourceRoot, collection, allowlist) {
-  const docsRelative = path.relative(DOCS, sourceFile).replace(/\\/g, '/');
-  if (!allowlist.has(docsRelative)) return null;
-
+function migrateFile(sourceFile, sourceRoot, sourceDirName, collection) {
   const rel = path.relative(sourceRoot, sourceFile);
   if (SKIP_FILES.has(path.basename(sourceFile))) return null;
 
   const raw = fs.readFileSync(sourceFile, 'utf8');
   const { data: oldData, body } = parseFrontmatter(raw);
+  if (isDraft(oldData)) return null;
+
   const relPath = toContentPath(sourceFile, sourceRoot);
+  if (isHiddenLocalNote(sourceDirName, relPath)) return null;
+
   const title = oldData.title || extractTitle(body, path.basename(sourceFile, '.md'));
   const legacyPath = `/${collection}/${relPath}/`.replace(/\/+/g, '/');
   const updatedAt = getSourceUpdatedAt(sourceFile);
@@ -243,7 +236,6 @@ function removeDiariesContent() {
 import { writeNotesNavJson } from './mkdocs-nav.mjs';
 
 function main() {
-  const allowlist = parseMkdocsNavAllowlist();
   ensureDir(CONTENT);
   removeDiariesContent();
 
@@ -256,19 +248,14 @@ function main() {
       const sourceRoot = path.join(DOCS, sourceDirName);
       const files = walkMarkdown(sourceRoot);
       for (const file of files) {
-        const docsRelative = path.relative(DOCS, file).replace(/\\/g, '/');
-        if (!allowlist.has(docsRelative)) {
-          skipped += 1;
-          continue;
-        }
-        const dest = migrateFile(file, sourceRoot, collection, allowlist);
+        const dest = migrateFile(file, sourceRoot, sourceDirName, collection);
         if (dest) count += 1;
+        else skipped += 1;
       }
     }
   }
 
-  console.log(`MkDocs nav allowlist: ${allowlist.size} paths`);
-  console.log(`Migrated ${count} published files (${skipped} private/unlisted skipped)`);
+  console.log(`Migrated ${count} published files from docs/ (${skipped} draft/index/skipped files ignored)`);
 
   const navTree = writeNotesNavJson(path.join(ROOT, 'site-next/src/data/notes-nav.json'));
   console.log(`Notes nav categories: ${navTree.length} top-level groups`);

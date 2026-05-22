@@ -96,6 +96,7 @@ async function mountSearch(containerSelector: string) {
   new window.PagefindUI({
     element: containerSelector,
     bundlePath,
+    pageSize: 10,
     showImages: false,
     resetStyles: false,
   });

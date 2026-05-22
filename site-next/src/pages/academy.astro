@@ -58,6 +58,20 @@ const education = [
     alt: 'SJTU ME',
   },
 ];
+
+const honors = [
+  '2026美赛H奖',
+  '2025年本科生国家奖学金',
+  '2025年致远荣誉奖学金',
+  '2025年本科生C等奖学金',
+  '2025年全国大学生数学建模竞赛全国二等奖',
+];
+
+const projects = [
+  { title: 'LLM Accelaration', period: '2026春' },
+  { title: '语音变声变速', period: '2025秋' },
+  { title: '自动驾驶行为仿真', period: '2025夏' },
+];
 ---
 
 <BaseLayout title="KeWei Liu | Academic Homepage" description="Academic homepage of KeWei Liu, undergraduate student at Shanghai Jiao Tong University.">
@@ -92,7 +106,7 @@ const education = [
         </div>
       </div>
       <aside class="academy-profile card">
-        <img src={asset('avatar1.jpg')} alt="KeWei Liu" width="180" height="180" />
+        <img src={asset('academy-avatar.png')} alt="KeWei Liu" width="180" height="180" />
         <p>SAI · SJTU</p>
       </aside>
     </header>
@@ -160,7 +174,16 @@ const education = [
           </article>
           <article>
             <h2>Projects</h2>
-            <p>2025暑假：自动驾驶行为仿真</p>
+            <ul class="academy-list">
+              {
+                projects.map((item) => (
+                  <li>
+                    <strong>{item.title}</strong>
+                    <span>{item.period}</span>
+                  </li>
+                ))
+              }
+            </ul>
           </article>
           <article>
             <h2>Media Exposures</h2>
@@ -168,7 +191,9 @@ const education = [
           </article>
           <article>
             <h2>Honors</h2>
-            <p>2025年全国大学生数学建模竞赛全国二等奖</p>
+            <ul class="academy-list">
+              {honors.map((item) => <li>{item}</li>)}
+            </ul>
           </article>
         </section>
       </main>
@@ -437,6 +462,34 @@ const education = [
   .academy-muted {
     color: var(--ch-fg-muted);
     font-style: italic;
+  }
+
+  .academy-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .academy-list li {
+    margin: 0;
+    color: var(--ch-fg-muted);
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+
+  .academy-list strong {
+    display: block;
+    color: var(--ch-fg);
+    font-weight: 600;
+  }
+
+  .academy-list span {
+    font-family: var(--ch-mono-font);
+    font-size: 0.74rem;
+    color: var(--ch-accent-tertiary);
   }
 
   .academy-side {

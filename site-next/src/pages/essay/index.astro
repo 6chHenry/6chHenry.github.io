@@ -6,6 +6,40 @@ import { buildContentUrl, formatRecencyDate, sortByRecency } from '../../utils/c
 
 const entries = sortByRecency(await getCollection('essay', ({ data }) => !data.draft));
 const base = import.meta.env.BASE_URL;
+
+const categoryMeta = {
+  Movies: { title: '影评', desc: '电影、剧集和观看后的记录。', order: 10 },
+  Music: { title: '歌评', desc: '专辑、单曲和阶段性的听歌整理。', order: 20 },
+  Travel: { title: '旅游', desc: '旅行路线、城市观察和路上的流水账。', order: 30 },
+  Reading: { title: '书评', desc: '读书后的想法和给作品的回信。', order: 40 },
+  Life: { title: '生活', desc: '生日、学期、关系和个人生活片段。', order: 50 },
+  Thoughts: { title: '思考', desc: '关于人、技术、效率和自我状态的短文。', order: 60 },
+  Plans: { title: '计划与总结', desc: '阶段计划、周结和年度复盘。', order: 70 },
+  Misc: { title: '杂项', desc: '暂时没有归入固定主题的文字。', order: 90 },
+} as const;
+
+type CategoryKey = keyof typeof categoryMeta;
+
+function inferCategory(id: string): CategoryKey {
+  const [top] = id.split('/');
+  if (top && top in categoryMeta) return top as CategoryKey;
+  if (/计划|总结|周结|review plan|week\d+|2025/i.test(id)) return 'Plans';
+  if (/旅|游记|港澳|香港|京都|大阪|神户|姬路/.test(id)) return 'Travel';
+  if (/书评|情书/.test(id)) return 'Reading';
+  if (/生日|后记|冬至|情感|复合|学期|高中|18岁/.test(id)) return 'Life';
+  if (/ai|j人|二倍速|懒惰|睡眠|杂谈/.test(id.toLowerCase())) return 'Thoughts';
+  return 'Misc';
+}
+
+const groupedEntries = [...entries.reduce((groups, entry) => {
+  const key = inferCategory(entry.id);
+  const current = groups.get(key) ?? [];
+  current.push(entry);
+  groups.set(key, current);
+  return groups;
+}, new Map<CategoryKey, typeof entries>()).entries()]
+  .sort(([a], [b]) => categoryMeta[a].order - categoryMeta[b].order)
+  .map(([key, items]) => ({ key, ...categoryMeta[key], entries: items }));
 ---
 
 <BaseLayout title="杂谈 | 6ch. · 林间笔记" description="6ch. 的随笔与思考">
@@ -16,20 +50,99 @@ const base = import.meta.env.BASE_URL;
       <p class="section-lead">随笔、旅行与偶发念头 — 不必成体系，但值得留下。</p>
     </header>
 
-    <ul class="content-list">
+    <div class="essay-groups">
       {
-        entries.map((entry) => (
-          <li>
-            <ContentCard
-              href={buildContentUrl('essay', entry.id, base)}
-              title={entry.data.title}
-              description={entry.data.description ?? ''}
-              date={formatRecencyDate(entry)}
-              collection="essay"
-            />
-          </li>
+        groupedEntries.map((group) => (
+          <section class="essay-group" aria-labelledby={`essay-group-${group.key}`}>
+            <header class="essay-group__header">
+              <div>
+                <p class="section-kicker">{group.key}</p>
+                <h2 id={`essay-group-${group.key}`}>{group.title}</h2>
+                <p>{group.desc}</p>
+              </div>
+              <span>{group.entries.length} 篇</span>
+            </header>
+            <ul class="content-list essay-group__list">
+              {
+                group.entries.map((entry) => (
+                  <li>
+                    <ContentCard
+                      href={buildContentUrl('essay', entry.id, base)}
+                      title={entry.data.title}
+                      description={entry.data.description ?? ''}
+                      date={formatRecencyDate(entry)}
+                      collection={group.title}
+                    />
+                  </li>
+                ))
+              }
+            </ul>
+          </section>
         ))
       }
-    </ul>
+    </div>
   </section>
 </BaseLayout>
+
+<style>
+  .essay-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+    padding-bottom: 4rem;
+  }
+
+  .essay-group {
+    display: grid;
+    grid-template-columns: minmax(11rem, 0.32fr) minmax(0, 1fr);
+    gap: 1.35rem;
+    align-items: start;
+  }
+
+  .essay-group__header {
+    position: sticky;
+    top: 5.5rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.35rem;
+    border-top: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 35%, transparent);
+  }
+
+  .essay-group__header h2 {
+    margin: 0 0 0.4rem;
+    color: var(--ch-accent);
+    font-family: var(--ch-display-font);
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  .essay-group__header p:last-child {
+    margin: 0;
+    color: var(--ch-fg-muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .essay-group__header > span {
+    flex: 0 0 auto;
+    color: var(--ch-accent-tertiary);
+    font-family: var(--ch-mono-font);
+    font-size: 0.75rem;
+  }
+
+  .essay-group__list {
+    padding-bottom: 0;
+  }
+
+  @media (max-width: 760px) {
+    .essay-group {
+      grid-template-columns: 1fr;
+      gap: 0.9rem;
+    }
+
+    .essay-group__header {
+      position: static;
+    }
+  }
+</style>

@@ -280,6 +280,7 @@ pre {
 
 .pagefind-ui__form {
   position: relative;
+  display: block;
 }
 
 .pagefind-ui__form::before {
@@ -321,8 +322,10 @@ pre {
 }
 
 .pagefind-ui__search-clear {
-  top: 50% !important;
+  position: absolute !important;
+  top: 1.425rem !important;
   right: 0.42rem !important;
+  z-index: 2;
   height: auto !important;
   transform: translateY(-50%);
   margin: 0;

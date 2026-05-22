@@ -26,6 +26,10 @@ import ForestIcon from './ForestIcon.astro';
     display: grid;
     place-items: start center;
     padding: 5rem 1.25rem 2rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--ch-accent-secondary) 46%, transparent) transparent;
   }
 
   .search-modal[hidden] {
@@ -42,8 +46,54 @@ import ForestIcon from './ForestIcon.astro';
   .search-modal__panel {
     position: relative;
     width: min(100%, 44rem);
+    max-height: calc(100dvh - 7rem);
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--ch-accent-secondary) 44%, transparent)
+      color-mix(in srgb, var(--ch-surface-solid) 32%, transparent);
     padding: 1.25rem 1.35rem 1.35rem;
     animation: modal-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .search-modal::-webkit-scrollbar,
+  .search-modal__panel::-webkit-scrollbar {
+    width: 0.72rem;
+  }
+
+  .search-modal::-webkit-scrollbar-track,
+  .search-modal__panel::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .search-modal__panel::-webkit-scrollbar-track {
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ch-surface-solid) 28%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ch-border-soft) 65%, transparent);
+  }
+
+  .search-modal::-webkit-scrollbar-thumb,
+  .search-modal__panel::-webkit-scrollbar-thumb {
+    border: 0.22rem solid transparent;
+    border-radius: 999px;
+    background:
+      linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--ch-accent-tertiary) 72%, var(--ch-surface-solid)),
+          color-mix(in srgb, var(--ch-accent-secondary) 68%, var(--ch-accent))
+        )
+        padding-box;
+  }
+
+  .search-modal::-webkit-scrollbar-thumb:hover,
+  .search-modal__panel::-webkit-scrollbar-thumb:hover {
+    background:
+      linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--ch-accent-light) 78%, var(--ch-surface-solid)),
+          color-mix(in srgb, var(--ch-accent-secondary) 82%, var(--ch-accent))
+        )
+        padding-box;
   }
 
   @keyframes modal-in {

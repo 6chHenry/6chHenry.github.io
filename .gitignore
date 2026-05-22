@@ -68,5 +68,15 @@ site-next/.astro/
 *.tmp
 *.temp
 *.log
-docs/essay
-docs/summary
+
+# Local-only private notes
+docs/essay/旅游记账.md
+docs/essay/Life/情感.md
+docs/essay/Life/复合之后.md
+docs/essay/Life/19岁后记.md
+docs/essay/Life/19生日.md
+docs/essay/Life/我的大一上学期.md
+docs/essay/Life/写给18岁的信.md
+docs/essay/Misc/test.md
+docs/summary/*.md
+docs/summary/2025/

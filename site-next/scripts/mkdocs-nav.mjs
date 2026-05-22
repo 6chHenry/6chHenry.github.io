@@ -3,7 +3,47 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-export const MKDOCS_YML = path.resolve(__dirname, '../../mkdocs.yml');
+export const DOCS_NOTES_DIR = path.resolve(__dirname, '../../docs/notes');
+
+const SKIP_FILES = new Set(['index.md', 'math-test.md', 'academy.md']);
+
+function sortEntries(entries) {
+  return entries.sort((a, b) => {
+    if (a.isDirectory() !== b.isDirectory()) return a.isDirectory() ? -1 : 1;
+    return a.name.localeCompare(b.name, 'zh-Hans-CN', { numeric: true, sensitivity: 'base' });
+  });
+}
+
+function readFrontmatterAndBody(raw) {
+  const start = raw.match(/^---\r?\n/);
+  if (!start) return { data: {}, body: raw };
+  const endMatch = /\r?\n---\r?\n/.exec(raw.slice(start[0].length));
+  if (!endMatch) return { data: {}, body: raw };
+
+  const data = {};
+  const end = start[0].length + endMatch.index;
+  for (const line of raw.slice(start[0].length, end).split(/\r?\n/)) {
+    const match = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (!match) continue;
+    data[match[1]] = match[2].replace(/^['"]|['"]$/g, '');
+  }
+
+  return { data, body: raw.slice(end + endMatch[0].length) };
+}
+
+function isDraft(data) {
+  return String(data.draft ?? '').trim().toLowerCase() === 'true';
+}
+
+function titleFromMarkdown(filePath) {
+  const raw = fs.readFileSync(filePath, 'utf8');
+  const { data, body } = readFrontmatterAndBody(raw);
+  if (isDraft(data)) return null;
+  if (data.title) return data.title;
+
+  const heading = body.match(/^#\s+(.+)$/m);
+  return heading ? heading[1].trim() : path.basename(filePath, '.md');
+}
 
 export function slugifyNavTitle(title) {
   const base = title
@@ -15,100 +55,64 @@ export function slugifyNavTitle(title) {
   return base || 'section';
 }
 
-function parseNavLine(line) {
-  const trimmed = line.trim();
-  if (!trimmed || trimmed.startsWith('#')) return null;
-
-  const match = line.match(/^(\s*)- (.+)$/);
-  if (!match) return null;
-
-  const indent = match[1].length;
-  const rest = match[2].split('#')[0].trim();
-  if (!rest || /^index:\s*.+\.md/i.test(rest)) return null;
-
-  let title = rest;
-  let docsPath;
-
-  const colonIndex = rest.indexOf(':');
-  if (colonIndex !== -1) {
-    title = rest.slice(0, colonIndex).trim().replace(/^["']|["']$/g, '');
-    const after = rest.slice(colonIndex + 1).trim();
-    if (after.endsWith('.md')) docsPath = after.replace(/\\/g, '/');
-  }
-
-  title = title.replace(/^["']|["']$/g, '');
-  if (!title) return null;
-
-  return { indent, title, docsPath };
-}
-
 function assignSlugPaths(nodes, prefix = []) {
   const seen = new Map();
 
   for (const node of nodes) {
-    let slug = slugifyNavTitle(node.title);
-    const count = seen.get(slug) ?? 0;
-    if (count > 0) slug = `${slug}-${count + 1}`;
-    seen.set(slugifyNavTitle(node.title), count + 1);
+    const baseSlug = slugifyNavTitle(node.slugSource ?? node.title);
+    const count = seen.get(baseSlug) ?? 0;
+    const slug = count > 0 ? `${baseSlug}-${count + 1}` : baseSlug;
+    seen.set(baseSlug, count + 1);
 
     node.slug = slug;
     node.slugPath = [...prefix, slug];
-    if (node.children.length > 0) {
-      assignSlugPaths(node.children, node.slugPath);
-    }
+    delete node.slugSource;
+    if (node.children.length > 0) assignSlugPaths(node.children, node.slugPath);
   }
 }
 
-/** Parse mkdocs.yml notes nav into a nested tree. */
-export function parseNotesNavTree(mkdocsPath = MKDOCS_YML) {
-  const lines = fs.readFileSync(mkdocsPath, 'utf8').split('\n');
-  const navStart = lines.findIndex((line) => /^nav:\s*$/.test(line));
-  if (navStart === -1) return [];
+function buildDirectoryNode(dirPath, relativeParts = []) {
+  const entries = sortEntries(fs.readdirSync(dirPath, { withFileTypes: true }));
+  const children = [];
 
-  let notesStart = -1;
-  for (let i = navStart + 1; i < lines.length; i += 1) {
-    const trimmed = lines[i].trim();
-    if (trimmed.startsWith('#')) continue;
-    if (/^- 笔记:/.test(trimmed)) {
-      notesStart = i;
-      break;
-    }
-  }
-  if (notesStart === -1) return [];
+  for (const entry of entries) {
+    if (entry.name.startsWith('.')) continue;
 
-  const root = [];
-  const stack = [{ indent: 2, children: root }];
-
-  for (let i = notesStart + 1; i < lines.length; i += 1) {
-    const line = lines[i];
-    const trimmed = line.trim();
-
-    if (trimmed && !trimmed.startsWith('#') && /^  - /.test(line) && !/^    /.test(line)) {
-      break;
+    const fullPath = path.join(dirPath, entry.name);
+    if (entry.isDirectory()) {
+      if (entry.name.endsWith('.assets')) continue;
+      const child = buildDirectoryNode(fullPath, [...relativeParts, entry.name]);
+      if (child.children.length > 0) children.push(child);
+      continue;
     }
 
-    const parsed = parseNavLine(line);
-    if (!parsed || parsed.indent < 4) continue;
+    if (!entry.isFile() || !entry.name.endsWith('.md') || SKIP_FILES.has(entry.name)) continue;
 
-    const node = {
-      title: parsed.title,
-      docsPath: parsed.docsPath,
+    const title = titleFromMarkdown(fullPath);
+    if (!title) continue;
+
+    const docsPath = path.posix.join('notes', ...relativeParts, entry.name);
+    children.push({
+      title,
+      slugSource: path.basename(entry.name, '.md'),
+      docsPath,
       children: [],
-    };
-
-    while (stack.length > 1 && stack[stack.length - 1].indent >= parsed.indent) {
-      stack.pop();
-    }
-
-    stack[stack.length - 1].children.push(node);
-
-    if (!parsed.docsPath) {
-      stack.push({ indent: parsed.indent, children: node.children });
-    }
+    });
   }
 
-  assignSlugPaths(root);
-  return root;
+  return {
+    title: relativeParts.at(-1) ?? 'notes',
+    slugSource: relativeParts.at(-1) ?? 'notes',
+    children,
+  };
+}
+
+/** Build notes navigation from the docs/notes directory tree. */
+export function parseNotesNavTree(notesDir = DOCS_NOTES_DIR) {
+  if (!fs.existsSync(notesDir)) return [];
+  const root = buildDirectoryNode(notesDir);
+  assignSlugPaths(root.children);
+  return root.children;
 }
 
 export function walkNavNodes(nodes, visitor, trail = []) {
@@ -144,8 +148,8 @@ export function docsPathToNoteId(docsPath) {
   return docsPath.replace(/^notes\//, '').replace(/\.md$/i, '');
 }
 
-export function writeNotesNavJson(outputPath, mkdocsPath = MKDOCS_YML) {
-  const tree = parseNotesNavTree(mkdocsPath);
+export function writeNotesNavJson(outputPath, notesDir = DOCS_NOTES_DIR) {
+  const tree = parseNotesNavTree(notesDir);
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, JSON.stringify(tree, null, 2), 'utf8');
   return tree;
