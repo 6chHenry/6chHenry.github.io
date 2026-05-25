@@ -8,9 +8,13 @@ tags:
   - astrophotography
   - urban
 cover: https://picsum.photos/seed/star_trail/800/600
+coverDesc: 城市光污染中捕捉到的星轨——长曝光之下，建筑轮廓与天体轨迹在时间中交汇。
 images:
   - https://picsum.photos/seed/star_trail_2/800/600
   - https://picsum.photos/seed/star_trail_3/800/600
+imageDescs:
+  - 叠加合成前的单帧长曝光原片——城市灯光在地平线上燃烧，星点刚刚开始拖出尾迹。
+  - 约200张叠加后的最终成片——建筑轮廓之上，星轨划出了一道道同心圆弧。
 draft: false
 ---
 

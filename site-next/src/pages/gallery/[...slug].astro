@@ -4,6 +4,29 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import GalleryLightbox from '../../components/GalleryLightbox.astro';
 import { formatDate, normalizeSlug, sortByRecency } from '../../utils/content';
 
+const KANSAI_ORDER = ['osaka', 'nara', 'uji', 'kyoto', 'kobe', 'himeji'] as const;
+
+function sortGalleryEntries<T extends { id: string; data: { updatedAt?: Date; date?: Date } }>(entries: T[]): T[] {
+  const kansai = new Map<string, number>();
+  KANSAI_ORDER.forEach((slug, i) => kansai.set(`photography/${slug}.md`, i));
+
+  const kansaiEntries: T[] = [];
+  const otherEntries: T[] = [];
+
+  for (const e of entries) {
+    if (kansai.has(e.id)) {
+      kansaiEntries.push(e);
+    } else {
+      otherEntries.push(e);
+    }
+  }
+
+  kansaiEntries.sort((a, b) => (kansai.get(a.id) ?? 99) - (kansai.get(b.id) ?? 99));
+  otherEntries.sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
+
+  return [...kansaiEntries, ...otherEntries];
+}
+
 export async function getStaticPaths() {
   const entries = await getCollection('gallery', ({ data }) => !data.draft);
   return entries.map((entry) => ({
@@ -16,8 +39,9 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const { data } = entry;
 const allImages = [data.cover, ...data.images];
+const allImageDescs = [data.coverDesc ?? '', ...(data.imageDescs ?? [])];
 
-const allEntries = sortByRecency(
+const allEntries = sortGalleryEntries(
   await getCollection('gallery', ({ data }) => !data.draft),
 );
 const idx = allEntries.findIndex((e) => e.id === entry.id);
@@ -72,8 +96,10 @@ const categoryLabels: Record<string, string> = {
         src={data.cover}
         alt={data.title}
         data-images={JSON.stringify(allImages)}
+        data-descs={JSON.stringify(allImageDescs)}
       />
     </div>
+    <p class="gallery-detail-image-desc" id="gallery-image-desc"></p>
 
     {
       entry.body && (
@@ -86,6 +112,19 @@ const categoryLabels: Record<string, string> = {
     {
       data.images.length > 0 && (
         <div class="gallery-detail-grid">
+          <button
+            type="button"
+            data-thumb={data.cover}
+            data-index={0}
+            class="is-active"
+          >
+            <img
+              src={data.cover}
+              alt={data.title}
+              loading="lazy"
+              decoding="async"
+            />
+          </button>
           {data.images.map((imgSrc, i) => (
             <button
               type="button"
@@ -109,7 +148,7 @@ const categoryLabels: Record<string, string> = {
         <nav class="article-nav" aria-label="作品导航">
           {
             previous ? (
-              <a class="article-nav__link article-nav__link--prev" href={`${base}gallery/${previous.id}/`}>
+              <a class="article-nav__link article-nav__link--prev" href={`${base}gallery/${normalizeSlug(previous.id)}/`}>
                 <span class="article-nav__eyebrow">上一件</span>
                 <strong>{previous.data.title}</strong>
                 {previous.data.description && <span>{previous.data.description}</span>}
@@ -120,7 +159,7 @@ const categoryLabels: Record<string, string> = {
           }
           {
             next ? (
-              <a class="article-nav__link article-nav__link--next" href={`${base}gallery/${next.id}/`}>
+              <a class="article-nav__link article-nav__link--next" href={`${base}gallery/${normalizeSlug(next.id)}/`}>
                 <span class="article-nav__eyebrow">下一件</span>
                 <strong>{next.data.title}</strong>
                 {next.data.description && <span>{next.data.description}</span>}
@@ -144,15 +183,19 @@ const categoryLabels: Record<string, string> = {
 
   const hero = document.getElementById('gallery-hero') as HTMLImageElement | null;
   const grid = document.querySelector<HTMLElement>('.gallery-detail-grid');
+  const imageDescEl = document.getElementById('gallery-image-desc');
 
   if (hero && grid) {
     let currentSrc = hero.src;
+    let descs: string[] = [];
+    try { descs = JSON.parse(hero.dataset.descs || '[]'); } catch { /* ignore */ }
 
     grid.addEventListener('click', (event) => {
       const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-thumb]');
       if (!btn) return;
 
       const newSrc = btn.dataset.thumb;
+      const newIndex = parseInt(btn.dataset.index || '0', 10);
       if (!newSrc || newSrc === currentSrc) return;
 
       currentSrc = newSrc;
@@ -163,6 +206,10 @@ const categoryLabels: Record<string, string> = {
         hero.onload = () => hero.classList.remove('is-swapping');
         hero.onerror = () => hero.classList.remove('is-swapping');
       }, 180);
+
+      if (imageDescEl) {
+        imageDescEl.textContent = descs[newIndex] ?? '';
+      }
 
       for (const b of grid.querySelectorAll('button')) {
         b.classList.toggle('is-active', b === btn);

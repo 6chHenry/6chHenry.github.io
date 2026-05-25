@@ -224,10 +224,14 @@ function migrateFile(sourceFile, sourceRoot, sourceDirName, collection, previous
 
   if (collection === 'gallery') {
     if (oldData.cover) newData.cover = oldData.cover;
+    if (oldData.coverDesc) newData.coverDesc = oldData.coverDesc;
     if (oldData.images) {
       newData.images = Array.isArray(oldData.images)
         ? oldData.images
         : String(oldData.images).split(',').map((s) => s.trim()).filter(Boolean);
+    }
+    if (oldData.imageDescs && Array.isArray(oldData.imageDescs)) {
+      newData.imageDescs = oldData.imageDescs;
     }
     if (oldData.category) newData.category = oldData.category;
   }

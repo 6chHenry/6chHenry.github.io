@@ -13,7 +13,7 @@ const cityMeta: Record<string, { kanji: string; en: string; color: string; desc:
   osaka:   { kanji: '大阪', en: 'Osaka',   color: '#e60012', desc: '道頓堀的霓虹、大阪城的绿意、通天阁下的昭和记忆。' },
   nara:    { kanji: '奈良', en: 'Nara',    color: '#8b4513', desc: '春日大社的石灯笼、东大寺的巨佛、若草山的小鹿。' },
   uji:     { kanji: '宇治', en: 'Uji',     color: '#4a9e6e', desc: '宇治川的清流、平等院凤凰堂、中村藤吉的抹茶。' },
-  kyoto:   { kanji: '京都', en: 'Kyoto',   color: '#5a9e4b', desc: '岚山的竹林、金阁寺的倒影、伏见稻荷的千本�的鸟居。' },
+  kyoto:   { kanji: '京都', en: 'Kyoto',   color: '#5a9e4b', desc: '岚山的竹林、金阁寺的倒影、伏见稻荷的千本鸟居。' },
   kobe:    { kanji: '神戸', en: 'Kobe',    color: '#0066b3', desc: '港塔的暮色、美利坚公园的海风、摩耶山的夜景。' },
   himeji:  { kanji: '姫路', en: 'Himeji',  color: '#9e9e9e', desc: '白鹭城的天守阁、好古园的枯山水、日本第一名城。' },
 };
@@ -137,8 +137,10 @@ const cities = cityOrder
     {
       cities.map((city) => {
         const allImages = [city.entry.data.cover, ...city.entry.data.images];
+        const allImageDescs = [city.entry.data.coverDesc ?? '', ...(city.entry.data.imageDescs ?? [])];
         const meta = JSON.stringify({
           images: allImages,
+          imageDescs: allImageDescs,
           title: `${city.kanji} · ${city.en}`,
           description: city.entry.data.description ?? '',
           category: 'photography',

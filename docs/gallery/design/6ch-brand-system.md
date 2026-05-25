@@ -8,11 +8,17 @@ tags:
   - branding
   - visual-identity
 cover: https://picsum.photos/seed/brand_6ch/800/600
+coverDesc: 6ch. 林间笔记的品牌视觉核心——森林绿与树木意象的抽象凝练。
 images:
   - https://picsum.photos/seed/brand_6ch_2/800/600
   - https://picsum.photos/seed/brand_6ch_3/800/600
   - https://picsum.photos/seed/brand_6ch_4/800/600
   - https://picsum.photos/seed/brand_6ch_5/800/600
+imageDescs:
+  - Logo 的形态演变——从树木与书本的具象组合逐步提炼为抽象的几何符号。
+  - 完整色板展示——从森林绿的主色到苔藓绿的辅色，再到琥珀金的暖色点缀。
+  - 字体搭配方案——Cormorant Garamond 与 LXGW WenKai 在不同场景下的排版效果。
+  - 品牌物料应用——名片、信纸与网站页面的整体视觉呈现。
 draft: false
 ---
 

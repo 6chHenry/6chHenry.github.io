@@ -8,9 +8,13 @@ tags:
   - web-design
   - mobile
 cover: https://picsum.photos/seed/ui_showcase/800/600
+coverDesc: 2024–2025 年 UI/UX 设计作品的精选封面——数据仪表盘与移动端界面的合集。
 images:
   - https://picsum.photos/seed/ui_showcase_2/800/600
   - https://picsum.photos/seed/ui_showcase_3/800/600
+imageDescs:
+  - 数据可视化仪表盘的暗色模式设计——用深灰底色与霓虹色数据线营造专业感。
+  - 移动端教育应用的交互流程——从首页到课程详情的关键界面跳转设计。
 draft: false
 ---
 

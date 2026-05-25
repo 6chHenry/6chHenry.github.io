@@ -6,11 +6,12 @@ interface Props {
   description?: string;
   category: string;
   images: string[];
+  imageDescs?: string[];
   date?: string;
   index: number;
 }
 
-const { href, cover, title, description, category, images, date, index } = Astro.props;
+const { href, cover, title, description, category, images, imageDescs = [], date, index } = Astro.props;
 
 const categoryLabels: Record<string, string> = {
   illustration: '插画',
@@ -22,6 +23,7 @@ const categoryLabels: Record<string, string> = {
 
 const meta = {
   images,
+  imageDescs,
   title,
   description: description ?? '',
   category,

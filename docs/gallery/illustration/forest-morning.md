@@ -8,10 +8,15 @@ tags:
   - forest
   - digital-art
 cover: https://picsum.photos/seed/forest_mist/800/600
+coverDesc: 清晨的第一缕阳光穿过薄雾与枝叶——整幅作品的氛围定调之作。
 images:
   - https://picsum.photos/seed/forest_mist_2/800/600
   - https://picsum.photos/seed/forest_mist_3/800/600
   - https://picsum.photos/seed/forest_mist_4/800/600
+imageDescs:
+  - 线稿阶段——树木轮廓与雾气的大致分布，用最轻的笔触勾勒出画面骨架。
+  - 上色过程中的中间状态——绿色调从深到浅逐渐铺开，阳光穿过树叶的雏形显现。
+  - 雾气渐变与丁达尔光效的细节特写——光柱穿过薄雾的散射效果让整幅画面活了起来。
 draft: false
 ---
 

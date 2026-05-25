@@ -1,5 +1,6 @@
 interface GalleryMeta {
   images: string[];
+  imageDescs: string[];
   title: string;
   description: string;
   category: string;
@@ -54,6 +55,7 @@ export function initGalleryLightbox() {
   const catEl = lightbox.querySelector<HTMLElement>('.glbx__category');
   const titleEl = lightbox.querySelector<HTMLElement>('.glbx__title');
   const descEl = lightbox.querySelector<HTMLElement>('.glbx__desc');
+  const imageDescEl = lightbox.querySelector<HTMLElement>('.glbx__image-desc');
   const dateEl = lightbox.querySelector<HTMLElement>('.glbx__date');
   const detailBtn = lightbox.querySelector<HTMLAnchorElement>('.glbx__detail-btn');
   const prevBtn = lightbox.querySelector<HTMLButtonElement>('.glbx__nav--prev');
@@ -79,6 +81,7 @@ export function initGalleryLightbox() {
         img.onload = onDone;
         img.onerror = onDone;
         counter.textContent = `${index + 1} / ${currentMeta.images.length}`;
+        if (imageDescEl) imageDescEl.textContent = currentMeta.imageDescs?.[index] ?? '';
         if (prevBtn) prevBtn.style.visibility = index > 0 ? '' : 'hidden';
         if (nextBtn) nextBtn.style.visibility = index < currentMeta.images.length - 1 ? '' : 'hidden';
       }, 150);
@@ -88,6 +91,7 @@ export function initGalleryLightbox() {
       img.classList.remove('is-switching');
       loaded = true;
       counter.textContent = `${index + 1} / ${currentMeta.images.length}`;
+      if (imageDescEl) imageDescEl.textContent = currentMeta.imageDescs?.[index] ?? '';
       if (prevBtn) prevBtn.style.visibility = index > 0 ? '' : 'hidden';
       if (nextBtn) nextBtn.style.visibility = index < currentMeta.images.length - 1 ? '' : 'hidden';
     }

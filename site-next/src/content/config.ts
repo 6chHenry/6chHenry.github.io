@@ -31,7 +31,9 @@ const gallery = defineCollection({
   type: 'content',
   schema: baseSchema.extend({
     cover: z.string(),
+    coverDesc: z.string().optional(),
     images: z.array(z.string()).default([]),
+    imageDescs: z.array(z.string()).default([]),
     category: z.enum(['illustration', 'photography', 'design', 'ui-ux', 'other']).default('other'),
   }),
 });
