@@ -1,0 +1,52 @@
+---
+interface Props {
+  href: string;
+  cover: string;
+  title: string;
+  description?: string;
+  category: string;
+  images: string[];
+  date?: string;
+  index: number;
+}
+
+const { href, cover, title, description, category, images, date, index } = Astro.props;
+
+const categoryLabels: Record<string, string> = {
+  illustration: '插画',
+  photography: '摄影',
+  design: '设计',
+  'ui-ux': 'UI/UX',
+  other: '其他',
+};
+
+const meta = {
+  images,
+  title,
+  description: description ?? '',
+  category,
+  date: date ?? '',
+  detailUrl: href,
+};
+---
+
+<a
+  href={href}
+  class="gallery-card"
+  data-category={category}
+  data-gallery-meta={JSON.stringify(meta)}
+  style={`animation-delay: ${index * 0.08}s`}
+>
+  <img
+    class="gallery-card__image"
+    src={cover}
+    alt={title}
+    loading={index < 6 ? 'eager' : 'lazy'}
+    decoding="async"
+  />
+  <span class="gallery-card__category">{categoryLabels[category] ?? category}</span>
+  <div class="gallery-card__overlay">
+    <h2 class="gallery-card__title">{title}</h2>
+    {description && <p class="gallery-card__desc">{description}</p>}
+  </div>
+</a>

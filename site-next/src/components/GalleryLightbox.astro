@@ -1,0 +1,66 @@
+<div
+  id="gallery-lightbox"
+  class="glbx"
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-label="图片预览"
+>
+  <div class="glbx__backdrop" data-lightbox-close></div>
+
+  <div class="glbx__panel">
+    <button
+      type="button"
+      class="glbx__close"
+      aria-label="关闭"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+
+    <div class="glbx__image-area">
+      <img class="glbx__image" src="" alt="" />
+
+      <button
+        type="button"
+        class="glbx__nav glbx__nav--prev"
+        aria-label="上一张"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="glbx__nav glbx__nav--next"
+        aria-label="下一张"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+
+      <span class="glbx__counter">1 / 1</span>
+    </div>
+
+    <div class="glbx__info">
+      <span class="glbx__category"></span>
+      <h2 class="glbx__title"></h2>
+      <p class="glbx__desc"></p>
+      <time class="glbx__date"></time>
+
+      <div class="glbx__actions">
+        <a class="glbx__detail-btn" href="#">
+          查看详情
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:0.85rem;height:0.85rem">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

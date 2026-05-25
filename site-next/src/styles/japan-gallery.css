@@ -1,0 +1,404 @@
+/* Kansai Journey — immersive gallery page */
+
+/* ---- Hero Carousel ---- */
+.jg-carousel {
+  position: relative;
+  width: 100%;
+  height: min(60dvh, 42rem);
+  overflow: hidden;
+  border-radius: var(--ch-radius-lg);
+  margin-bottom: 1.5rem;
+}
+
+.jg-carousel__track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.jg-carousel__slide {
+  flex: 0 0 100%;
+  position: relative;
+  height: 100%;
+  cursor: pointer;
+}
+
+.jg-carousel__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.jg-carousel__slide-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 3rem 2rem;
+  background: linear-gradient(
+    180deg,
+    transparent 40%,
+    rgba(0, 0, 0, 0.45) 75%,
+    rgba(0, 0, 0, 0.75)
+  );
+}
+
+.jg-carousel__city-kanji {
+  font-family: var(--ch-display-font);
+  font-size: clamp(2.5rem, 5vw, 3.8rem);
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.15em;
+  line-height: 1.1;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.jg-carousel__city-en {
+  font-family: var(--ch-mono-font);
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 0.4rem;
+}
+
+.jg-carousel__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.65rem;
+  height: 2.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background var(--ch-transition-fast), transform var(--ch-transition-fast);
+}
+
+.jg-carousel__nav:hover {
+  background: rgba(0, 0, 0, 0.55);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.jg-carousel__nav--prev { left: 1rem; }
+.jg-carousel__nav--next { right: 1rem; }
+
+.jg-carousel__nav svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.jg-carousel__dots {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.jg-carousel__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background var(--ch-transition-fast), border-color var(--ch-transition-fast);
+}
+
+.jg-carousel__dot.is-active {
+  background: #fff;
+  border-color: #fff;
+}
+
+/* ---- Railway Timeline ---- */
+.jg-timeline {
+  position: sticky;
+  top: var(--ch-header-height);
+  z-index: 10;
+  background: color-mix(in srgb, var(--ch-surface-solid) 92%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--ch-border-soft);
+  padding: 0.85rem 0;
+  margin-bottom: 3rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.jg-timeline::-webkit-scrollbar { display: none; }
+
+.jg-timeline__track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: max-content;
+  padding: 0 1.5rem;
+  gap: 0;
+}
+
+.jg-timeline__stop {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  transition: opacity var(--ch-transition-fast);
+}
+
+.jg-timeline__stop:hover {
+  opacity: 0.8;
+}
+
+.jg-timeline__dot {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  border: 2px solid var(--ch-border);
+  background: var(--ch-surface-solid);
+  transition:
+    background var(--ch-transition-fast),
+    border-color var(--ch-transition-fast),
+    box-shadow var(--ch-transition-fast),
+    transform var(--ch-transition-fast);
+}
+
+.jg-timeline__stop.is-active .jg-timeline__dot {
+  transform: scale(1.35);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--stop-color, #888) 50%, transparent);
+}
+
+.jg-timeline__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0.35rem;
+}
+
+.jg-timeline__label-kanji {
+  font-family: var(--ch-display-font);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ch-fg);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  margin-top: 0.4rem;
+}
+
+.jg-timeline__label-en {
+  font-family: var(--ch-mono-font);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ch-fg-muted);
+  white-space: nowrap;
+}
+
+.jg-timeline__line {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--ch-border-soft);
+  margin-bottom: 1.6rem;
+}
+
+/* ---- City Sections ---- */
+.jg-section {
+  margin-bottom: 4rem;
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.jg-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.jg-section__header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--section-accent, var(--ch-accent-tertiary));
+}
+
+.jg-section__kanji {
+  font-family: var(--ch-display-font);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 600;
+  color: var(--ch-fg);
+  letter-spacing: 0.1em;
+}
+
+.jg-section__en {
+  font-family: var(--ch-mono-font);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ch-fg-muted);
+}
+
+.jg-section__desc {
+  margin: 0.6rem 0 0 1rem;
+  color: var(--ch-fg-muted);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  max-width: 36rem;
+}
+
+.jg-section__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.jg-section__grid button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  border-radius: var(--ch-radius-sm);
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--ch-surface-elevated);
+  border: 1px solid var(--ch-border-soft);
+  transition:
+    transform var(--ch-transition-fast),
+    box-shadow var(--ch-transition-fast),
+    border-color var(--ch-transition-fast);
+}
+
+.jg-section__grid button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ch-glow);
+  border-color: color-mix(in srgb, var(--section-accent, var(--ch-accent-secondary)) 35%, var(--ch-border));
+}
+
+.jg-section__grid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.jg-section__empty {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 8rem;
+  border: 1px dashed var(--ch-border-soft);
+  border-radius: var(--ch-radius-sm);
+  color: var(--ch-fg-muted);
+  font-size: 0.9rem;
+  font-family: var(--ch-display-font);
+  letter-spacing: 0.04em;
+}
+
+/* ---- Back link ---- */
+.jg-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+  font-family: var(--ch-mono-font);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ch-fg-muted);
+  text-decoration: none;
+  transition: color var(--ch-transition-fast);
+}
+
+.jg-back:hover {
+  color: var(--ch-accent);
+}
+
+.jg-back svg {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 720px) {
+  .jg-carousel {
+    height: min(50dvh, 28rem);
+    border-radius: var(--ch-radius);
+    margin-bottom: 1rem;
+  }
+
+  .jg-carousel__nav {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .jg-carousel__nav--prev { left: 0.5rem; }
+  .jg-carousel__nav--next { right: 0.5rem; }
+
+  .jg-carousel__slide-overlay {
+    padding: 2rem 1.5rem;
+  }
+
+  .jg-timeline {
+    padding: 0.65rem 0;
+    margin-bottom: 2rem;
+  }
+
+  .jg-timeline__track {
+    justify-content: flex-start;
+  }
+
+  .jg-timeline__line {
+    width: 1.5rem;
+  }
+
+  .jg-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .jg-section__grid {
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 0.5rem;
+  }
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .jg-carousel__track {
+    transition: none;
+  }
+
+  .jg-section {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .jg-carousel__nav:hover,
+  .jg-section__grid button:hover {
+    transform: none;
+  }
+}

@@ -27,4 +27,13 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { notes, essay, projects };
+const gallery = defineCollection({
+  type: 'content',
+  schema: baseSchema.extend({
+    cover: z.string(),
+    images: z.array(z.string()).default([]),
+    category: z.enum(['illustration', 'photography', 'design', 'ui-ux', 'other']).default('other'),
+  }),
+});
+
+export const collections = { notes, essay, projects, gallery };

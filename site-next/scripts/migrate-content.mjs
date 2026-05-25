@@ -12,6 +12,7 @@ const COLLECTIONS = {
   notes: ['notes'],
   essay: ['essay', 'summary'],
   projects: ['projects'],
+  gallery: ['gallery'],
 };
 
 const SKIP_FILES = new Set(['index.md', 'math-test.md', 'academy.md']);
@@ -65,11 +66,33 @@ function parseFrontmatter(raw) {
   const yaml = raw.slice(start[0].length, end);
   const body = raw.slice(bodyStart);
   const data = {};
-  for (const line of yaml.split('\n')) {
+  const lines = yaml.split('\n');
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     const match = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
     if (!match) continue;
+
     const [, key, value] = match;
-    data[key] = value.replace(/^['"]|['"]$/g, '');
+    const trimmed = value.replace(/^['"]|['"]$/g, '');
+
+    if (trimmed === '' && i + 1 < lines.length && lines[i + 1].match(/^\s+-\s+/)) {
+      const items = [];
+      let j = i + 1;
+      while (j < lines.length) {
+        const itemMatch = lines[j].match(/^\s+-\s+(.+)$/);
+        if (!itemMatch) break;
+        items.push(itemMatch[1].replace(/^['"]|['"]$/g, ''));
+        j++;
+      }
+      if (items.length > 0) {
+        data[key] = key === 'tags' ? items.join(',') : items;
+        i = j - 1;
+        continue;
+      }
+    }
+
+    data[key] = trimmed;
   }
   return { data, body };
 }
@@ -118,6 +141,7 @@ function inferTags(relPath, collection) {
   if (collection === 'notes' && parts.length > 1) tags.add(parts[0]);
   if (collection === 'essay') tags.add('essay');
   if (collection === 'projects') tags.add('projects');
+  if (collection === 'gallery') tags.add('gallery');
   return [...tags];
 }
 
@@ -197,6 +221,16 @@ function migrateFile(sourceFile, sourceRoot, sourceDirName, collection, previous
     draft: false,
     legacyPath,
   };
+
+  if (collection === 'gallery') {
+    if (oldData.cover) newData.cover = oldData.cover;
+    if (oldData.images) {
+      newData.images = Array.isArray(oldData.images)
+        ? oldData.images
+        : String(oldData.images).split(',').map((s) => s.trim()).filter(Boolean);
+    }
+    if (oldData.category) newData.category = oldData.category;
+  }
 
   const transformed = transformBody(body, collection, relPath.replace(/\\/g, '/'));
   const destDir = path.join(CONTENT, collection, path.dirname(relPath));

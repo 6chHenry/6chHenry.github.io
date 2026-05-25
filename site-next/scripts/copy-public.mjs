@@ -12,6 +12,7 @@ const COLLECTIONS = {
   notes: ['notes'],
   essay: ['essay', 'summary'],
   projects: ['projects'],
+  gallery: ['gallery'],
 };
 
 function copyDir(src, dest) {

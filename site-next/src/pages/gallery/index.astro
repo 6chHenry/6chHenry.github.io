@@ -1,0 +1,125 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GalleryCard from '../../components/GalleryCard.astro';
+import GalleryLightbox from '../../components/GalleryLightbox.astro';
+import { buildContentUrl, formatDate, sortByRecency } from '../../utils/content';
+
+const japanCities = new Set(['osaka', 'kyoto', 'nara', 'uji', 'kobe', 'himeji']);
+const base = import.meta.env.BASE_URL;
+const entries = sortByRecency(
+  await getCollection('gallery', ({ data }) => !data.draft),
+).filter((entry) => {
+  const parts = entry.id.split('/');
+  const slug = (parts[parts.length - 1] || '').replace(/\.md$/, '');
+  if (parts[0] === 'photography' && japanCities.has(slug)) return false;
+  return true;
+});
+
+const categories = ['illustration', 'photography', 'design', 'ui-ux', 'other'] as const;
+const categoryLabels: Record<string, string> = {
+  illustration: '插画',
+  photography: '摄影',
+  design: '设计',
+  'ui-ux': 'UI/UX',
+  other: '其他',
+};
+---
+
+<BaseLayout
+  title="画廊 | 6ch. · 林间笔记"
+  description="6ch. 的作品集与视觉创作"
+>
+  <section class="container page-shell">
+    <header class="page-header">
+      <p class="section-kicker">Gallery</p>
+      <h1>画廊</h1>
+      <p class="section-lead">
+        视觉创作的陈列室 — 插画、摄影、设计，每一幅都是林间的一扇窗。
+      </p>
+    </header>
+
+    {
+      entries.length > 0 ? (
+        <>
+          <div class="gallery-filters" role="group" aria-label="按分类筛选">
+            <button
+              type="button"
+              class="gallery-filter"
+              data-category=""
+              aria-pressed="true"
+            >
+              全部
+            </button>
+            {
+              categories.map((cat) => (
+                <button
+                  type="button"
+                  class="gallery-filter"
+                  data-category={cat}
+                  aria-pressed="false"
+                >
+                  {categoryLabels[cat]}
+                </button>
+              ))
+            }
+          </div>
+
+          <div class="gallery-grid">
+            {
+              entries.map((entry, i) => {
+                const allImages = [entry.data.cover, ...entry.data.images];
+                return (
+                  <GalleryCard
+                    href={buildContentUrl('gallery', entry.id, base)}
+                    cover={entry.data.cover}
+                    title={entry.data.title}
+                    description={entry.data.description}
+                    category={entry.data.category}
+                    images={allImages}
+                    date={entry.data.date ? formatDate(entry.data.date) : undefined}
+                    index={i}
+                  />
+                );
+              })
+            }
+          </div>
+
+          <GalleryLightbox />
+        </>
+      ) : (
+        <div class="gallery-empty card card--elevated">
+          <p>
+            画廊还在筹备中，作品即将上架。<br />
+            林间正在生长，请稍后再来。
+          </p>
+        </div>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<script>
+  import { initGalleryFilters, initGalleryLightbox } from '../../scripts/gallery';
+  initGalleryFilters();
+  initGalleryLightbox();
+</script>
+
+<style>
+  .gallery-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 18rem;
+    text-align: center;
+    padding: 3rem;
+  }
+
+  .gallery-empty p {
+    margin: 0;
+    color: var(--ch-fg-muted);
+    font-size: 1.05rem;
+    line-height: 2;
+    font-family: var(--ch-display-font);
+  }
+</style>

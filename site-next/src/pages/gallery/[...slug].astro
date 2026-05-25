@@ -1,0 +1,172 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GalleryLightbox from '../../components/GalleryLightbox.astro';
+import { formatDate, normalizeSlug, sortByRecency } from '../../utils/content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('gallery', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: normalizeSlug(entry.id) },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { data } = entry;
+const allImages = [data.cover, ...data.images];
+
+const allEntries = sortByRecency(
+  await getCollection('gallery', ({ data }) => !data.draft),
+);
+const idx = allEntries.findIndex((e) => e.id === entry.id);
+const previous = idx > 0 ? allEntries[idx - 1] : null;
+const next = idx < allEntries.length - 1 ? allEntries[idx + 1] : null;
+
+const base = import.meta.env.BASE_URL;
+
+const categoryLabels: Record<string, string> = {
+  illustration: '插画',
+  photography: '摄影',
+  design: '设计',
+  'ui-ux': 'UI/UX',
+  other: '其他',
+};
+---
+
+<BaseLayout
+  title={`${data.title} | 画廊 | 6ch.`}
+  description={data.description}
+>
+  <article class="container page-shell">
+    <header class="page-header">
+      <p class="section-kicker">Gallery</p>
+      <h1>{data.title}</h1>
+      {data.description && <p class="section-lead">{data.description}</p>}
+    </header>
+
+    <div class="gallery-detail-meta">
+      <span class="gallery-detail-category">
+        {categoryLabels[data.category] ?? data.category}
+      </span>
+      {data.date && (
+        <time class="gallery-detail-date" datetime={data.date.toISOString()}>
+          {formatDate(data.date)}
+        </time>
+      )}
+      {
+        data.tags.length > 0 && (
+          <div class="gallery-detail-tags">
+            {data.tags.map((tag) => (
+              <a href={`${base}tags/${encodeURIComponent(tag)}/`}>#{tag}</a>
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    <div class="gallery-detail-hero">
+      <img
+        id="gallery-hero"
+        src={data.cover}
+        alt={data.title}
+        data-images={JSON.stringify(allImages)}
+      />
+    </div>
+
+    {
+      entry.body && (
+        <div class="prose card card--elevated" style="padding: 2rem 2.15rem 2.5rem;" data-pagefind-body>
+          <Content />
+        </div>
+      )
+    }
+
+    {
+      data.images.length > 0 && (
+        <div class="gallery-detail-grid">
+          {data.images.map((imgSrc, i) => (
+            <button
+              type="button"
+              data-thumb={imgSrc}
+              data-index={i + 1}
+            >
+              <img
+                src={imgSrc}
+                alt={`${data.title} - ${i + 2}`}
+                loading="lazy"
+                decoding="async"
+              />
+            </button>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      (previous || next) && (
+        <nav class="article-nav" aria-label="作品导航">
+          {
+            previous ? (
+              <a class="article-nav__link article-nav__link--prev" href={`${base}gallery/${previous.id}/`}>
+                <span class="article-nav__eyebrow">上一件</span>
+                <strong>{previous.data.title}</strong>
+                {previous.data.description && <span>{previous.data.description}</span>}
+              </a>
+            ) : (
+              <span class="article-nav__spacer" aria-hidden="true"></span>
+            )
+          }
+          {
+            next ? (
+              <a class="article-nav__link article-nav__link--next" href={`${base}gallery/${next.id}/`}>
+                <span class="article-nav__eyebrow">下一件</span>
+                <strong>{next.data.title}</strong>
+                {next.data.description && <span>{next.data.description}</span>}
+              </a>
+            ) : (
+              <span class="article-nav__spacer" aria-hidden="true"></span>
+            )
+          }
+        </nav>
+      )
+    }
+  </article>
+
+  <GalleryLightbox />
+</BaseLayout>
+
+<script>
+  import { initGalleryLightbox } from '../../scripts/gallery';
+
+  initGalleryLightbox();
+
+  const hero = document.getElementById('gallery-hero') as HTMLImageElement | null;
+  const grid = document.querySelector<HTMLElement>('.gallery-detail-grid');
+
+  if (hero && grid) {
+    let currentSrc = hero.src;
+
+    grid.addEventListener('click', (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-thumb]');
+      if (!btn) return;
+
+      const newSrc = btn.dataset.thumb;
+      if (!newSrc || newSrc === currentSrc) return;
+
+      currentSrc = newSrc;
+      hero.classList.add('is-swapping');
+
+      setTimeout(() => {
+        hero.src = newSrc;
+        hero.onload = () => hero.classList.remove('is-swapping');
+        hero.onerror = () => hero.classList.remove('is-swapping');
+      }, 180);
+
+      for (const b of grid.querySelectorAll('button')) {
+        b.classList.toggle('is-active', b === btn);
+      }
+    });
+  }
+</script>
