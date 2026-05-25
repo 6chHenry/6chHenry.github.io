@@ -2,15 +2,12 @@
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import GalleryLightbox from '../../components/GalleryLightbox.astro';
-import { formatDate, normalizeSlug, sortByRecency } from '../../utils/content';
-
-const KANSAI_ORDER = ['osaka', 'nara', 'uji', 'kyoto', 'kobe', 'himeji'] as const;
-const BAY_AREA_ORDER = ['guangzhou', 'hong-kong', 'macau'] as const;
+import { formatDate, normalizeSlug } from '../../utils/content';
+import { GALLERY_CITY_ORDER } from '../../data/gallery-order';
 
 function sortGalleryEntries<T extends { id: string; data: { updatedAt?: Date; date?: Date } }>(entries: T[]): T[] {
   const grouped = new Map<string, number>();
-  KANSAI_ORDER.forEach((slug, i) => grouped.set(`photography/${slug}.md`, i));
-  BAY_AREA_ORDER.forEach((slug, i) => grouped.set(`photography/${slug}.md`, i + KANSAI_ORDER.length));
+  GALLERY_CITY_ORDER.forEach((slug, i) => grouped.set(slug, i));
 
   const groupedEntries: T[] = [];
   const otherEntries: T[] = [];
