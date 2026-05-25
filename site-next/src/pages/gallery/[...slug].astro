@@ -5,26 +5,28 @@ import GalleryLightbox from '../../components/GalleryLightbox.astro';
 import { formatDate, normalizeSlug, sortByRecency } from '../../utils/content';
 
 const KANSAI_ORDER = ['osaka', 'nara', 'uji', 'kyoto', 'kobe', 'himeji'] as const;
+const BAY_AREA_ORDER = ['guangzhou', 'hong-kong', 'macau'] as const;
 
 function sortGalleryEntries<T extends { id: string; data: { updatedAt?: Date; date?: Date } }>(entries: T[]): T[] {
-  const kansai = new Map<string, number>();
-  KANSAI_ORDER.forEach((slug, i) => kansai.set(`photography/${slug}.md`, i));
+  const grouped = new Map<string, number>();
+  KANSAI_ORDER.forEach((slug, i) => grouped.set(`photography/${slug}.md`, i));
+  BAY_AREA_ORDER.forEach((slug, i) => grouped.set(`photography/${slug}.md`, i + KANSAI_ORDER.length));
 
-  const kansaiEntries: T[] = [];
+  const groupedEntries: T[] = [];
   const otherEntries: T[] = [];
 
   for (const e of entries) {
-    if (kansai.has(e.id)) {
-      kansaiEntries.push(e);
+    if (grouped.has(e.id)) {
+      groupedEntries.push(e);
     } else {
       otherEntries.push(e);
     }
   }
 
-  kansaiEntries.sort((a, b) => (kansai.get(a.id) ?? 99) - (kansai.get(b.id) ?? 99));
+  groupedEntries.sort((a, b) => (grouped.get(a.id) ?? 99) - (grouped.get(b.id) ?? 99));
   otherEntries.sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
 
-  return [...kansaiEntries, ...otherEntries];
+  return [...groupedEntries, ...otherEntries];
 }
 
 export async function getStaticPaths() {

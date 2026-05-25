@@ -140,6 +140,12 @@ export function initGalleryLightbox() {
         event.preventDefault();
         return;
       }
+      const isBayAreaCard = href.includes('/gallery/photography/greater-bay-area');
+      if (isBayAreaCard) {
+        window.location.href = href.replace('/gallery/photography/greater-bay-area', '/gallery/bay-area');
+        event.preventDefault();
+        return;
+      }
       event.preventDefault();
     }
 

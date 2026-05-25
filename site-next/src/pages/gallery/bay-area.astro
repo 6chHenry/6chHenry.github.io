@@ -1,0 +1,203 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GalleryLightbox from '../../components/GalleryLightbox.astro';
+
+const base = import.meta.env.BASE_URL;
+
+const allEntries = await getCollection('gallery', ({ data }) => !data.draft);
+
+const cityOrder = ['guangzhou', 'hong-kong', 'macau'] as const;
+
+const cityMeta: Record<string, { kanji: string; en: string; color: string; desc: string }> = {
+  guangzhou:  { kanji: '广州', en: 'Guangzhou', color: '#c41e3a', desc: '珠江新城的霓虹、中山纪念堂的庄严、沙面的欧陆旧梦。' },
+  'hong-kong': { kanji: '香港', en: 'Hong Kong', color: '#1a5276', desc: '维港的天际线、太平山的夜色、港岛的密集与开阔。' },
+  macau:      { kanji: '澳门', en: 'Macau',    color: '#2d7a5f', desc: '葡式立面的旧城、大三巴的石阶、路氹的璀璨灯火。' },
+};
+
+const citySlugSet = new Set(cityOrder);
+
+const cityEntries = allEntries.filter((e) => {
+  const slug = e.id.split('/').pop()?.replace(/\.md$/, '') || '';
+  return citySlugSet.has(slug);
+});
+
+const cities = cityOrder
+  .map((slug) => {
+    const entry = cityEntries.find((e) => {
+      const s = e.id.split('/').pop()?.replace(/\.md$/, '') || '';
+      return s === slug;
+    });
+    return { slug, ...cityMeta[slug], entry };
+  })
+  .filter((c) => c.entry);
+---
+
+<BaseLayout
+  title="粤港澳三城游 · Greater Bay Area | 6ch."
+  description="广州、香港、澳门——三座城市，三种节奏，一段在岭南、海港与旧城之间的视觉旅程。"
+>
+  <section class="container page-shell">
+    <a class="jg-back" href={`${base}gallery/`}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+      返回画廊
+    </a>
+
+    <header class="page-header">
+      <p class="section-kicker">Greater Bay Area · 2026</p>
+      <h1>粤港澳三城游</h1>
+      <p class="section-lead">
+        广州、香港、澳门——三座相邻而截然不同的城市。从珠江的烟火气，到维港的天际线，
+        再到澳门的碎石路，每一帧都是湾区不同侧面的切片。
+      </p>
+    </header>
+
+    <!-- Hero Carousel -->
+    <div class="jg-carousel">
+      <div class="jg-carousel__track">
+        {
+          cities.map((city) => (
+            <div
+              class="jg-carousel__slide"
+              data-target={`jg-${city.slug}`}
+            >
+              <img
+                src={city.entry.data.cover}
+                alt={city.kanji}
+                loading="eager"
+                decoding="async"
+              />
+              <div class="jg-carousel__slide-overlay">
+                <span class="jg-carousel__city-kanji">{city.kanji}</span>
+                <span class="jg-carousel__city-en">{city.en}</span>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <button type="button" class="jg-carousel__nav jg-carousel__nav--prev" aria-label="上一张">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+      <button type="button" class="jg-carousel__nav jg-carousel__nav--next" aria-label="下一张">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+
+      <div class="jg-carousel__dots">
+        {
+          cities.map((_, i) => (
+            <button
+              type="button"
+              class:list={['jg-carousel__dot', { 'is-active': i === 0 }]}
+              aria-label={`城市 ${i + 1}`}
+            />
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <nav class="jg-timeline" aria-label="城市导航">
+      <div class="jg-timeline__track">
+        {
+          cities.map((city, i) => (
+            <>
+              {i > 0 && <span class="jg-timeline__line" aria-hidden="true" />}
+              <button
+                type="button"
+                class:list={['jg-timeline__stop', { 'is-active': i === 0 }]}
+                data-target={`jg-${city.slug}`}
+                style={`--stop-color: ${city.color}`}
+              >
+                <span
+                  class="jg-timeline__dot"
+                  style={`background: ${i === 0 ? city.color : 'var(--ch-surface-solid)'}; border-color: ${city.color}`}
+                />
+                <span class="jg-timeline__label">
+                  <span class="jg-timeline__label-kanji">{city.kanji}</span>
+                  <span class="jg-timeline__label-en">{city.en}</span>
+                </span>
+              </button>
+            </>
+          ))
+        }
+      </div>
+    </nav>
+
+    <!-- City Sections -->
+    {
+      cities.map((city) => {
+        const allImages = [city.entry.data.cover, ...city.entry.data.images];
+        const allImageDescs = [city.entry.data.coverDesc ?? '', ...(city.entry.data.imageDescs ?? [])];
+        const meta = JSON.stringify({
+          images: allImages,
+          imageDescs: allImageDescs,
+          title: `${city.kanji} · ${city.en}`,
+          description: city.entry.data.description ?? '',
+          category: 'photography',
+          date: city.entry.data.date
+            ? new Date(city.entry.data.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })
+            : '',
+          detailUrl: `${base}gallery/photography/${city.slug}/`,
+        });
+
+        return (
+          <section
+            id={`jg-${city.slug}`}
+            class="jg-section"
+            style={`--section-accent: ${city.color}`}
+          >
+            <header class="jg-section__header">
+              <h2 class="jg-section__kanji">{city.kanji}</h2>
+              <span class="jg-section__en">{city.en}</span>
+            </header>
+            <p class="jg-section__desc">{city.desc}</p>
+
+            <div class="jg-section__grid">
+              {
+                allImages.length > 0 ? (
+                  allImages.map((imgSrc, i) => (
+                    <button
+                      type="button"
+                      data-gallery-meta={meta}
+                      data-gallery-index={i}
+                    >
+                      <img
+                        src={imgSrc}
+                        alt={`${city.kanji}`}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </button>
+                  ))
+                ) : (
+                  <div class="jg-section__empty">
+                    即将上架 · Coming soon
+                  </div>
+                )
+              }
+            </div>
+          </section>
+        );
+      })
+    }
+  </section>
+
+  <GalleryLightbox />
+</BaseLayout>
+
+<script>
+  import { initGalleryLightbox } from '../../scripts/gallery';
+  import { initJapanCarousel, initJapanTimeline, initJapanSections } from '../../scripts/japan-gallery';
+
+  initGalleryLightbox();
+  initJapanCarousel();
+  initJapanTimeline();
+  initJapanSections();
+</script>
