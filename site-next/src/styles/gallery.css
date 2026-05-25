@@ -11,6 +11,7 @@
 .gallery-filter {
   display: inline-flex;
   align-items: center;
+  gap: 0.45rem;
   padding: 0.52rem 1.05rem;
   border-radius: 999px;
   border: 1px solid var(--ch-glass-border);
@@ -30,6 +31,18 @@
     box-shadow var(--ch-transition-fast);
 }
 
+.gallery-filter__count {
+  min-width: 1.45rem;
+  padding: 0.08rem 0.42rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ch-surface-solid) 74%, transparent);
+  color: var(--ch-fg-muted);
+  font-family: var(--ch-mono-font);
+  font-size: 0.68rem;
+  line-height: 1.35;
+  text-align: center;
+}
+
 .gallery-filter:hover {
   border-color: color-mix(in srgb, var(--ch-accent-secondary) 38%, var(--ch-glass-border));
   color: var(--ch-accent-secondary);
@@ -41,6 +54,11 @@
   background: var(--ch-accent-dim);
   color: var(--ch-accent);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--ch-accent-tertiary) 28%, transparent);
+}
+
+.gallery-filter[aria-pressed='true'] .gallery-filter__count {
+  background: color-mix(in srgb, var(--ch-accent-tertiary) 16%, var(--ch-surface-solid));
+  color: var(--ch-accent);
 }
 
 /* ---- Grid ---- */
@@ -90,6 +108,18 @@
   border-color: color-mix(in srgb, var(--ch-accent-secondary) 32%, var(--ch-glass-border));
 }
 
+.gallery-card:focus-visible,
+.gallery-card.is-linked {
+  outline: 2px solid color-mix(in srgb, var(--ch-accent-secondary) 58%, transparent);
+  outline-offset: 4px;
+  border-color: color-mix(in srgb, var(--ch-accent-secondary) 48%, var(--ch-glass-border));
+  box-shadow: var(--ch-glow);
+}
+
+.gallery-card.is-linked {
+  transform: translateY(-4px);
+}
+
 .gallery-card__image {
   display: block;
   width: 100%;
@@ -99,7 +129,8 @@
   background: var(--ch-surface-elevated);
 }
 
-.gallery-card:hover .gallery-card__image {
+.gallery-card:hover .gallery-card__image,
+.gallery-card.is-linked .gallery-card__image {
   transform: scale(1.04);
 }
 
@@ -120,7 +151,9 @@
   transition: opacity var(--ch-transition);
 }
 
-.gallery-card:hover .gallery-card__overlay {
+.gallery-card:hover .gallery-card__overlay,
+.gallery-card:focus-visible .gallery-card__overlay,
+.gallery-card.is-linked .gallery-card__overlay {
   opacity: 1;
 }
 
@@ -747,6 +780,7 @@
 
   .gallery-card,
   .gallery-card:hover,
+  .gallery-card.is-linked,
   .gallery-filter:hover,
   .gallery-detail-grid button:hover {
     transform: none;

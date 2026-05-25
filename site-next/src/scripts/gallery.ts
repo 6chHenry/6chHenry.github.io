@@ -46,6 +46,41 @@ export function initGalleryFilters() {
   });
 }
 
+export function initGalleryTimelineHighlights() {
+  const timelineNodes = document.querySelectorAll<HTMLElement>('[data-trip-target]');
+  const galleryCards = document.querySelectorAll<HTMLElement>('[data-gallery-slug]');
+  if (timelineNodes.length === 0 || galleryCards.length === 0) return;
+
+  const clearHighlights = () => {
+    timelineNodes.forEach((node) => node.classList.remove('is-linked'));
+    galleryCards.forEach((card) => card.classList.remove('is-linked'));
+  };
+
+  const setHighlight = (slug: string | undefined) => {
+    clearHighlights();
+    if (!slug) return;
+
+    document.querySelector<HTMLElement>(`[data-trip-target="${slug}"]`)?.classList.add('is-linked');
+    document.querySelector<HTMLElement>(`[data-gallery-slug="${slug}"]`)?.classList.add('is-linked');
+  };
+
+  timelineNodes.forEach((node) => {
+    const slug = node.dataset.tripTarget;
+    node.addEventListener('pointerenter', () => setHighlight(slug));
+    node.addEventListener('focus', () => setHighlight(slug));
+    node.addEventListener('pointerleave', clearHighlights);
+    node.addEventListener('blur', clearHighlights);
+  });
+
+  galleryCards.forEach((card) => {
+    const slug = card.dataset.gallerySlug;
+    card.addEventListener('pointerenter', () => setHighlight(slug));
+    card.addEventListener('focus', () => setHighlight(slug));
+    card.addEventListener('pointerleave', clearHighlights);
+    card.addEventListener('blur', clearHighlights);
+  });
+}
+
 export function initGalleryLightbox() {
   const lightbox = document.getElementById('gallery-lightbox');
   if (!lightbox) return;

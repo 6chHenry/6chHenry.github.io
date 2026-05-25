@@ -1,6 +1,6 @@
 ---
 title: "ALCM: Autonomous LLM-Augmented Causal Discovery Framework"
-updatedAt: "2025-08-22T04:18:05.333Z"
+updatedAt: "2026-05-25T15:40:40.440Z"
 tags:
   - "Research"
 draft: false
@@ -90,9 +90,9 @@ where 𝐇2 represents the outputs from the second hidden layer, 𝐖o and 𝐛o
 The neural network is trained on a dataset comprising simulated graphs with varying densities, node degrees, and sparsity levels. For each graph, the outputs of PC, LiNGAM, and NOTEARS are evaluated using Accuracy and NHD, and the composite scores are computed. The ground-truth weights for training are derived by normalizing these composite scores as described in Equation (3). The training objective minimizes the mean squared error (MSE) between the predicted weights and the ground-truth weights. Using the dynamically learned weights, the hybrid approach synthesizes a causal graph by aggregating the outputs of PC, LiNGAM, and NOTEARS. For each edge e
 , the final score is computed as:
 
-$Score_{e} =\sum_{method} W_{method} \cdot 𝟙_{method(e)}$
+$Score_{e} = \sum_{method} W_{method} \cdot \mathbf{1}_{method(e)}$
 
-Here, $𝟙_{method(e)}$ is an indicator function that equals 1 if the edge e is identified by the method and 0 otherwise. Edges with scores exceeding a predefined threshold are retained in the hybrid causal graph. For edges uniquely identified by only one method, one LLM is employed as a decisive layer. The LLM evaluates these edges based on contextual knowledge and causal reasoning to ensure that only plausible causal links are included. The validated edges are then added to the hybrid graph, enhancing its comprehensiveness and accuracy.
+Here, $\mathbf{1}_{method(e)}$ is an indicator function that equals 1 if the edge e is identified by the method and 0 otherwise. Edges with scores exceeding a predefined threshold are retained in the hybrid causal graph. For edges uniquely identified by only one method, one LLM is employed as a decisive layer. The LLM evaluates these edges based on contextual knowledge and causal reasoning to ensure that only plausible causal links are included. The validated edges are then added to the hybrid graph, enhancing its comprehensiveness and accuracy.
 
 > Normalized Hamming Distance (NHD): quantifies the difference between the predicted causal graph and the ground truth by measuring the proportion of mismatched edges, adjusted for the size of the graph. NHD is instrumental in assessing the structural similarity of the causal graphs, offering insights into the nuanced differences that may not be captured by other metrics. In the context of a graph with m nodes, the NHD between the predicted graph G p and the ground-truth graph G is determined by calculating the number of edges that exist in one graph but not the other. This count is then divided by the total number of all possible edges–this formula is defined in Equation 6. In essence, the NHD provides a normalized measure of dissimilarity, offering insights into the accuracy of the predicted graph compared to the ground-truth graph, accounting for the total potential edges in the graph with m nodes.
 > 

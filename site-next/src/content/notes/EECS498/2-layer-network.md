@@ -1,6 +1,6 @@
 ---
 title: "2-layer-network"
-updatedAt: "2025-03-06T01:16:53.847Z"
+updatedAt: "2026-05-25T15:40:40.437Z"
 tags:
   - "EECS498"
 draft: false
@@ -52,7 +52,7 @@ legacyPath: "/notes/EECS498/2-layer-network/"
     $\frac{\partial L}{\partial b2} = \sum_{i=1}^N (probs_i - \text{one-hot label}_i)$
     \]
 
-  #### **(2) 梯度 $( \frac{\partial L}{\partial W1} ) 和 ( \frac{\partial L}{\partial b1} )$**
+  #### **(2) 梯度 \( \frac{\partial L}{\partial W1} \) 和 \( \frac{\partial L}{\partial b1} \)**
 
   - 根据链式法则：
     \[

@@ -9,9 +9,10 @@ interface Props {
   imageDescs?: string[];
   date?: string;
   index: number;
+  slug?: string;
 }
 
-const { href, cover, title, description, category, images, imageDescs = [], date, index } = Astro.props;
+const { href, cover, title, description, category, images, imageDescs = [], date, index, slug } = Astro.props;
 
 const categoryLabels: Record<string, string> = {
   illustration: '插画',
@@ -36,6 +37,7 @@ const meta = {
   href={href}
   class="gallery-card"
   data-category={category}
+  data-gallery-slug={slug}
   data-gallery-meta={JSON.stringify(meta)}
   style={`animation-delay: ${index * 0.08}s`}
 >

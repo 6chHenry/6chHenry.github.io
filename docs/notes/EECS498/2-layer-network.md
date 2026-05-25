@@ -44,7 +44,7 @@
     $\frac{\partial L}{\partial b2} = \sum_{i=1}^N (probs_i - \text{one-hot label}_i)$
     \]
 
-  #### **(2) 梯度 $( \frac{\partial L}{\partial W1} ) 和 ( \frac{\partial L}{\partial b1} )$**
+  #### **(2) 梯度 \( \frac{\partial L}{\partial W1} \) 和 \( \frac{\partial L}{\partial b1} \)**
 
   - 根据链式法则：
     \[
