@@ -13,4 +13,8 @@ export const GALLERY_CITY_ORDER: string[] = [
   'photography/guangzhou.md',
   'photography/hong-kong.md',
   'photography/macau.md',
+  // Hubei-Jiangxi Journey
+  'photography/wuhan.md',
+  'photography/lushan.md',
+  'photography/nanchang.md',
 ];

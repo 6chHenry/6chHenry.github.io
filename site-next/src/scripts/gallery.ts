@@ -146,6 +146,12 @@ export function initGalleryLightbox() {
         event.preventDefault();
         return;
       }
+      const isHubeiJiangxiCard = href.includes('/gallery/photography/hubei-jiangxi');
+      if (isHubeiJiangxiCard) {
+        window.location.href = href.replace('/gallery/photography/hubei-jiangxi', '/gallery/hubei-jiangxi');
+        event.preventDefault();
+        return;
+      }
       event.preventDefault();
     }
 

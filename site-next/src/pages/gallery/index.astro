@@ -5,7 +5,7 @@ import GalleryCard from '../../components/GalleryCard.astro';
 import GalleryLightbox from '../../components/GalleryLightbox.astro';
 import { buildContentUrl, formatDate, sortByRecency } from '../../utils/content';
 
-const hiddenCities = new Set(['osaka', 'kyoto', 'nara', 'uji', 'kobe', 'himeji', 'guangzhou', 'hong-kong', 'macau']);
+const hiddenCities = new Set(['osaka', 'kyoto', 'nara', 'uji', 'kobe', 'himeji', 'guangzhou', 'hong-kong', 'macau', 'wuhan', 'lushan', 'nanchang']);
 const base = import.meta.env.BASE_URL;
 const entries = sortByRecency(
   await getCollection('gallery', ({ data }) => !data.draft),
