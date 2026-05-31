@@ -1,0 +1,125 @@
+---
+import type { TravelGalleryLink } from '../utils/essay-visuals';
+
+interface Props {
+  gallery: TravelGalleryLink;
+}
+
+const { gallery } = Astro.props;
+---
+
+<aside class="travel-gallery-link" aria-label={`相关图集：${gallery.title}`}>
+  <a class="travel-gallery-link__media" href={gallery.href}>
+    <img src={gallery.cover} alt={gallery.coverAlt} loading="lazy" decoding="async" />
+  </a>
+  <div class="travel-gallery-link__body">
+    <p>对应图集</p>
+    <h2>{gallery.title}</h2>
+    <span>{gallery.note}</span>
+    <a href={gallery.href}>走进图集</a>
+  </div>
+</aside>
+
+<style>
+  .travel-gallery-link {
+    display: grid;
+    grid-template-columns: minmax(9rem, 0.42fr) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: stretch;
+    margin: 0 0 2rem;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 24%, var(--ch-glass-border));
+    border-radius: 12px;
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--ch-surface-solid) 72%, transparent), color-mix(in srgb, var(--ch-accent-dim) 58%, transparent)),
+      radial-gradient(circle at 88% 18%, color-mix(in srgb, var(--ch-accent-warm) 13%, transparent), transparent 42%);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, white 30%, transparent);
+  }
+
+  .travel-gallery-link__media {
+    display: block;
+    min-height: 10rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .travel-gallery-link__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 10rem;
+    object-fit: cover;
+  }
+
+  .travel-gallery-link__body {
+    display: grid;
+    align-content: center;
+    gap: 0.42rem;
+    padding: 1.1rem 1.15rem 1.1rem 0;
+  }
+
+  .travel-gallery-link__body p {
+    margin: 0;
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-academic-font);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .travel-gallery-link__body h2 {
+    margin: 0;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: clamp(1.45rem, 3vw, 2.1rem);
+    line-height: 1;
+  }
+
+  .travel-gallery-link__body span {
+    color: var(--ch-fg-muted);
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  .travel-gallery-link__body a {
+    justify-self: start;
+    min-height: 2.45rem;
+    margin-top: 0.28rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 28%, var(--ch-glass-border));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ch-surface-solid) 54%, transparent);
+    color: var(--ch-accent);
+    font-family: var(--ch-academic-font);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+      background var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      transform var(--ch-transition-fast);
+  }
+
+  .travel-gallery-link__body a:hover,
+  .travel-gallery-link__body a:focus-visible {
+    background: color-mix(in srgb, var(--ch-accent-dim) 78%, var(--ch-surface-solid));
+    border-color: color-mix(in srgb, var(--ch-accent-secondary) 46%, var(--ch-glass-border));
+    color: var(--ch-fg);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 640px) {
+    .travel-gallery-link {
+      grid-template-columns: 1fr;
+    }
+
+    .travel-gallery-link__media,
+    .travel-gallery-link__media img {
+      min-height: 12rem;
+    }
+
+    .travel-gallery-link__body {
+      padding: 0 1rem 1.1rem;
+    }
+  }
+</style>

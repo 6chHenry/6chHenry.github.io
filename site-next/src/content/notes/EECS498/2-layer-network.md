@@ -1,6 +1,6 @@
 ---
 title: "2-layer-network"
-updatedAt: "2026-05-25T15:40:40.437Z"
+updatedAt: "2026-04-01T04:00:00.000Z"
 tags:
   - "EECS498"
 draft: false

@@ -1,9 +1,6 @@
 import { buildCharacterTreeSvg } from './character-tree';
 import { buildContentUrl, formatRecencyDate, sortByRecency } from './content';
 
-export const FOREST_MAP_WIDTH = 1280;
-export const FOREST_MAP_HEIGHT = 720;
-
 export interface ForestMapEntry {
   id: string;
   collection: string;
@@ -21,12 +18,13 @@ export interface ForestTreeNode {
   title: string;
   href: string;
   collection: string;
-  x: number;
-  y: number;
-  size: number;
+  timestamp: number;
+  x?: number;
+  y?: number;
+  scale?: number;
   dateLabel?: string;
   summary: string;
-  treeSvg: string;
+  treeSvg?: string;
   recentRank?: number;
 }
 
@@ -36,53 +34,79 @@ export interface ForestMapData {
   totalCount: number;
 }
 
-function hashString(input: string): number {
-  let hash = 2166136261;
-  for (let i = 0; i < input.length; i += 1) {
-    hash ^= input.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function createRng(seed: number) {
-  let state = seed >>> 0;
-  return () => {
-    state += 0x6d2b79f5;
-    let t = Math.imul(state ^ (state >>> 15), 1 | state);
-    t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
-}
-
-function collectionBand(collection: string) {
-  if (collection === 'notes') {
-    return { x: 110, y: 100, width: 620, height: 430, label: 'Notes Grove' };
-  }
-  if (collection === 'essay') {
-    return { x: 660, y: 185, width: 480, height: 330, label: 'Essay Grove' };
-  }
-  return { x: 360, y: 430, width: 580, height: 190, label: 'Project Grove' };
-}
-
 function getTimestamp(entry: ForestMapEntry): number {
   return entry.data.updatedAt?.getTime() ?? entry.data.date?.getTime() ?? 0;
 }
 
-function computeTreeSize(entry: ForestMapEntry, newestTs: number, oldestTs: number): number {
-  const bodyLength = entry.body?.length ?? 0;
-  const bodyWeight = clamp(Math.log10(Math.max(80, bodyLength)) / 4.2, 0.56, 1);
-  const ts = getTimestamp(entry);
-  const recency = newestTs > oldestTs && ts > 0 ? (ts - oldestTs) / (newestTs - oldestTs) : 0.5;
-  return 0.72 + bodyWeight * 0.42 + recency * 0.18;
-}
+const GROVE_TREE_LIMIT = 11;
+
+const GROVE_POSITIONS: Record<string, Array<{ x: number; y: number; scale: number }>> = {
+  notes: [
+    { x: 17, y: 69, scale: 0.92 },
+    { x: 27, y: 54, scale: 1.08 },
+    { x: 39, y: 72, scale: 0.98 },
+    { x: 50, y: 49, scale: 1.18 },
+    { x: 62, y: 68, scale: 0.9 },
+    { x: 73, y: 55, scale: 1.04 },
+    { x: 84, y: 73, scale: 0.86 },
+    { x: 22, y: 86, scale: 0.78 },
+    { x: 56, y: 84, scale: 0.82 },
+    { x: 78, y: 86, scale: 0.76 },
+    { x: 36, y: 39, scale: 0.84 },
+  ],
+  essay: [
+    { x: 16, y: 74, scale: 0.88 },
+    { x: 27, y: 57, scale: 1.02 },
+    { x: 39, y: 76, scale: 0.94 },
+    { x: 51, y: 51, scale: 1.16 },
+    { x: 63, y: 68, scale: 0.98 },
+    { x: 75, y: 49, scale: 0.9 },
+    { x: 84, y: 78, scale: 0.82 },
+    { x: 22, y: 88, scale: 0.72 },
+    { x: 46, y: 88, scale: 0.78 },
+    { x: 68, y: 87, scale: 0.76 },
+    { x: 57, y: 34, scale: 0.82 },
+  ],
+  projects: [
+    { x: 17, y: 72, scale: 0.86 },
+    { x: 29, y: 56, scale: 1.08 },
+    { x: 42, y: 75, scale: 0.92 },
+    { x: 55, y: 50, scale: 1.22 },
+    { x: 68, y: 70, scale: 0.96 },
+    { x: 80, y: 56, scale: 0.84 },
+    { x: 34, y: 88, scale: 0.76 },
+    { x: 58, y: 87, scale: 0.8 },
+    { x: 76, y: 84, scale: 0.72 },
+    { x: 22, y: 42, scale: 0.78 },
+    { x: 70, y: 37, scale: 0.74 },
+  ],
+};
 
 function sanitizeClipId(value: string): string {
-  return value.replace(/[^\w\u4e00-\u9fff-]+/g, '-').slice(0, 60);
+  return value.replace(/[^\w\u4e00-\u9fff-]+/g, '-').slice(0, 64);
+}
+
+function buildShowcaseLookup(entries: ForestMapEntry[]) {
+  const byCollection = new Map<string, ForestMapEntry[]>();
+
+  for (const entry of sortByRecency(entries)) {
+    const group = byCollection.get(entry.collection) ?? [];
+    group.push(entry);
+    byCollection.set(entry.collection, group);
+  }
+
+  const lookup = new Map<string, { index: number; position: { x: number; y: number; scale: number } }>();
+  for (const [collection, group] of byCollection) {
+    const positions = GROVE_POSITIONS[collection] ?? GROVE_POSITIONS.notes;
+    group.slice(0, GROVE_TREE_LIMIT).forEach((entry, index) => {
+      lookup.set(`${entry.collection}:${entry.id}`, {
+        index,
+        position: positions[index % positions.length],
+      });
+    });
+  }
+
+  return lookup;
 }
 
 function cleanMarkdownForSummary(body: string): string {
@@ -124,56 +148,40 @@ function buildSummary(entry: ForestMapEntry): string {
   return `${summary.slice(0, 84).replace(/[，,、：:；;。.!！?？\s]+$/g, '')}...`;
 }
 
-export function buildCurvePath(points: Array<{ x: number; y: number }>): string {
-  if (points.length === 0) return '';
-  if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
-
-  let path = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
-  for (let i = 0; i < points.length - 1; i += 1) {
-    const current = points[i];
-    const next = points[i + 1];
-    const midX = (current.x + next.x) / 2;
-    path += ` C ${midX.toFixed(1)} ${current.y.toFixed(1)}, ${midX.toFixed(1)} ${next.y.toFixed(1)}, ${next.x.toFixed(1)} ${next.y.toFixed(1)}`;
-  }
-  return path;
-}
-
 export function buildForestMapStops(entries: ForestMapEntry[], base = import.meta.env.BASE_URL): ForestMapData {
-  const dated = entries.filter((entry) => getTimestamp(entry) > 0);
-  const newestTs = Math.max(...dated.map(getTimestamp), 0);
-  const oldestTs = Math.min(...dated.map(getTimestamp), newestTs);
+  const showcaseLookup = buildShowcaseLookup(entries);
 
   const trees = entries
-    .map((entry, index) => {
-      const body = entry.body ?? '';
-      const band = collectionBand(entry.collection);
-      const rng = createRng(hashString(`${entry.collection}:${entry.id}`));
-      const rowBias = entry.collection === 'projects' ? 0.25 : 0;
-      const x = band.x + rng() * band.width;
-      const y = band.y + (rng() * 0.72 + rowBias) * band.height;
-      const size = computeTreeSize(entry, newestTs, oldestTs);
-      const clipId = `map-tree-${index}-${sanitizeClipId(entry.id)}`;
+    .map((entry) => {
+      const key = `${entry.collection}:${entry.id}`;
+      const showcase = showcaseLookup.get(key);
+      const timestamp = getTimestamp(entry);
 
       return {
-        id: `${entry.collection}:${entry.id}`,
+        id: key,
         title: entry.data.title,
         href: buildContentUrl(entry.collection, entry.id, base),
         collection: entry.collection,
-        x,
-        y,
-        size,
+        timestamp,
+        ...(showcase
+          ? {
+              x: showcase.position.x,
+              y: showcase.position.y,
+              scale: showcase.position.scale,
+              treeSvg: buildCharacterTreeSvg({
+                seed: key,
+                title: entry.data.title,
+                body: entry.body ?? '',
+                clipId: `grove-tree-${showcase.index}-${sanitizeClipId(key)}`,
+                variant: 'compact',
+              }),
+            }
+          : {}),
         dateLabel: formatRecencyDate(entry),
         summary: buildSummary(entry),
-        treeSvg: buildCharacterTreeSvg({
-          seed: `${entry.collection}:${entry.id}`,
-          title: entry.data.title,
-          body,
-          clipId,
-          variant: 'compact',
-        }),
       };
     })
-    .sort((a, b) => a.y - b.y);
+    .sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
 
   const treeById = new Map(trees.map((tree) => [tree.id, tree]));
   const recentTrees = sortByRecency(entries)

@@ -1,4 +1,6 @@
-![三傻大鬧寶萊塢- 維基百科，自由的百科全書](https://upload.wikimedia.org/wikipedia/zh/thumb/e/e5/3_Idiots.jpg/220px-3_Idiots.jpg)
+---
+updatedAt: "2025-03-19T04:37:19.615Z"
+---
 
 All is well.
 

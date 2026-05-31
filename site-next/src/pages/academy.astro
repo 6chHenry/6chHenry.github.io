@@ -40,22 +40,10 @@ const education = [
     alt: 'SAI',
   },
   {
-    title: 'A+ Club of SJTU ME, Shanghai Jiao Tong University',
-    date: 'Mar. 2025 -- Present',
-    image: 'aplus.jpg',
-    alt: 'A+ Club',
-  },
-  {
     title: 'Zhiyuan Honor Program, Shanghai Jiao Tong University',
     date: 'Feb. 2025 -- Present',
     image: 'sjtu.png',
     alt: 'SJTU',
-  },
-  {
-    title: 'School of Mechanical Engineering, Shanghai Jiao Tong University',
-    date: 'Sept. 2024 -- Apr. 2025',
-    image: 'sjtu-1740821286474-3.png',
-    alt: 'SJTU ME',
   },
 ];
 
@@ -221,6 +209,7 @@ const projects = [
 <style>
   .academy-page {
     max-width: 76rem;
+    font-family: var(--ch-academic-font);
   }
 
   .academy-hero {
@@ -248,10 +237,10 @@ const projects = [
 
   .academy-hero h1 {
     margin: 0;
-    font-family: var(--ch-display-font);
+    font-family: var(--ch-academic-font);
     font-size: clamp(2.45rem, 6vw, 4.6rem);
     line-height: 1;
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
     color: var(--ch-fg);
   }
 
@@ -359,10 +348,10 @@ const projects = [
   .academy-section h2,
   .academy-card h2 {
     margin: 0 0 1rem;
-    font-family: var(--ch-display-font);
+    font-family: var(--ch-academic-font);
     color: var(--ch-accent);
     font-size: 1.35rem;
-    letter-spacing: 0.03em;
+    letter-spacing: 0;
   }
 
   .academy-section p {

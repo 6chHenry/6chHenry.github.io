@@ -1,18 +1,18 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ContentCard from '../../components/ContentCard.astro';
 import { buildContentUrl, formatRecencyDate, sortByRecency } from '../../utils/content';
+import { buildEssayExcerpt, getEntryCoverImage, getMoviePosterFromBody, getTravelGalleryLink, getTravelPoster } from '../../utils/essay-visuals';
 
 const entries = sortByRecency(await getCollection('essay', ({ data }) => !data.draft));
 const base = import.meta.env.BASE_URL;
 
 const categoryMeta = {
-  Movies: { title: '影评', desc: '电影、剧集和观看后的记录。', order: 10 },
+  Movies: { title: '影评', desc: '电影、剧集和观看后的余温。', order: 10 },
   Music: { title: '歌评', desc: '专辑、单曲和阶段性的听歌整理。', order: 20 },
-  Travel: { title: '旅游', desc: '旅行路线、城市观察和路上的流水账。', order: 30 },
-  Reading: { title: '书评', desc: '读书后的想法和给作品的回信。', order: 40 },
-  Life: { title: '生活', desc: '生日、学期、关系和个人生活片段。', order: 50 },
+  Travel: { title: '旅行', desc: '路线、城市、路上的流水账，以及照片留下的旁证。', order: 30 },
+  Reading: { title: '书评', desc: '读完一本书之后，留给作品的回信。', order: 40 },
+  Life: { title: '生活', desc: '生日、学期、关系和个人生活切片。', order: 50 },
   Thoughts: { title: '思考', desc: '关于人、技术、效率和自我状态的短文。', order: 60 },
   Plans: { title: '计划与总结', desc: '阶段计划、周结和年度复盘。', order: 70 },
   Misc: { title: '杂项', desc: '暂时没有归入固定主题的文字。', order: 90 },
@@ -24,36 +24,48 @@ function inferCategory(id: string): CategoryKey {
   const [top] = id.split('/');
   if (top && top in categoryMeta) return top as CategoryKey;
   if (/计划|总结|周结|review plan|week\d+|2025/i.test(id)) return 'Plans';
-  if (/旅|游记|港澳|香港|京都|大阪|神户|姬路/.test(id)) return 'Travel';
+  if (/游记|港澳|香港|京都|大阪|神户|姬路/.test(id)) return 'Travel';
   if (/书评|情书/.test(id)) return 'Reading';
   if (/生日|后记|冬至|情感|复合|学期|高中|18岁/.test(id)) return 'Life';
   if (/ai|j人|二倍速|懒惰|睡眠|杂谈/.test(id.toLowerCase())) return 'Thoughts';
   return 'Misc';
 }
 
-const groupedEntries = [...entries.reduce((groups, entry) => {
-  const key = inferCategory(entry.id);
-  const current = groups.get(key) ?? [];
-  current.push(entry);
-  groups.set(key, current);
-  return groups;
-}, new Map<CategoryKey, typeof entries>()).entries()]
+const groupedEntries = [
+  ...entries
+    .reduce((groups, entry) => {
+      const key = inferCategory(entry.id);
+      const current = groups.get(key) ?? [];
+      current.push(entry);
+      groups.set(key, current);
+      return groups;
+    }, new Map<CategoryKey, typeof entries>())
+    .entries(),
+]
   .sort(([a], [b]) => categoryMeta[a].order - categoryMeta[b].order)
   .map(([key, items]) => ({ key, ...categoryMeta[key], entries: items }));
+
+function getEntryHref(entry: (typeof entries)[number]) {
+  return buildContentUrl('essay', entry.id, base);
+}
+
+function getEntryExcerpt(entry: (typeof entries)[number]) {
+  return entry.data.description ?? buildEssayExcerpt(entry.body, entry.data.title);
+}
 ---
 
-<BaseLayout title="杂谈 | 6ch. · 林间笔记" description="6ch. 的随笔与思考">
-  <section class="container page-shell">
-    <header class="page-header">
+<BaseLayout title="杂谈 | 6ch. · 林间笔记" description="6ch. 的随笔、影评与旅行札记">
+  <section class="container page-shell essay-page">
+    <header class="page-header essay-page__header">
       <p class="section-kicker">Essays</p>
       <h1>杂谈</h1>
-      <p class="section-lead">随笔、旅行与偶发念头 — 不必成体系，但值得留下。</p>
+      <p class="section-lead">不完全是目录，更像几只抽屉：电影票根、旅行照片、读书回声和某些突然亮起的念头。</p>
     </header>
 
     <div class="essay-groups">
       {
         groupedEntries.map((group) => (
-          <section class="essay-group" aria-labelledby={`essay-group-${group.key}`}>
+          <section class:list={['essay-group', `essay-group--${group.key.toLowerCase()}`]} aria-labelledby={`essay-group-${group.key}`}>
             <header class="essay-group__header">
               <div>
                 <p class="section-kicker">{group.key}</p>
@@ -62,19 +74,107 @@ const groupedEntries = [...entries.reduce((groups, entry) => {
               </div>
               <span>{group.entries.length} 篇</span>
             </header>
-            <ul class="content-list essay-group__list">
+
+            <ul class:list={['essay-card-grid', group.key === 'Movies' && 'essay-card-grid--posters', group.key === 'Travel' && 'essay-card-grid--travel']}>
               {
-                group.entries.map((entry) => (
-                  <li>
-                    <ContentCard
-                      href={buildContentUrl('essay', entry.id, base)}
-                      title={entry.data.title}
-                      description={entry.data.description ?? ''}
-                      date={formatRecencyDate(entry)}
-                      collection={group.title}
-                    />
-                  </li>
-                ))
+                group.entries.map((entry) => {
+                  const href = getEntryHref(entry);
+                  const excerpt = getEntryExcerpt(entry);
+                  const date = formatRecencyDate(entry);
+                  const isMovie = group.key === 'Movies';
+                  const isTravel = group.key === 'Travel';
+                  const gallery = isTravel ? getTravelGalleryLink(entry.id, base) : undefined;
+                  const poster = isMovie ? getMoviePosterFromBody(entry.body, entry.id) : undefined;
+                  const travelPoster = isTravel ? getTravelPoster(entry.id, base) : undefined;
+                  const maxShow = 6;
+                  const visiblePhotos = travelPoster ? travelPoster.photos.slice(0, maxShow) : [];
+                  const photoOverflow = travelPoster ? travelPoster.photos.length - maxShow : 0;
+                  const layoutVariant = travelPoster ? (entry.id.length + travelPoster.photos.length) % 3 : 0;
+                  const coverImage = !isMovie && !isTravel && !entry.id.includes('高中回忆录') ? getEntryCoverImage(entry.body) : null;
+
+                  return (
+                    <li>
+                      {isMovie ? (
+                        <a class:list={['essay-card', 'essay-card--movie', poster && 'has-image']} href={href}>
+                          <span class="essay-card__poster" aria-hidden={poster ? 'true' : undefined}>
+                            {poster ? (
+                              <img src={poster} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+                            ) : (
+                              <span class="essay-card__poster-type">{entry.data.title}</span>
+                            )}
+                          </span>
+                          <span class="essay-card__body">
+                            <span class="essay-card__kicker">影评</span>
+                            <strong>{entry.data.title}</strong>
+                            <span>{excerpt}</span>
+                            {date && <time>{date}</time>}
+                          </span>
+                        </a>
+                      ) : isTravel && travelPoster ? (
+                        <article class="essay-card essay-card--travel-poster">
+                          <div class="essay-card__body">
+                            <span class="essay-card__kicker">旅行札记</span>
+                            <h3>
+                              <a href={href}>{entry.data.title}</a>
+                            </h3>
+                            <p>{excerpt}</p>
+                            <div class="essay-card__meta">
+                              {date && <time>{date}</time>}
+                              <a href={travelPoster.galleryHref}>图集 · {travelPoster.galleryTitle} →</a>
+                            </div>
+                          </div>
+                          <div
+                            class="travel-eye"
+                            aria-hidden="true"
+                            data-count={visiblePhotos.length}
+                            data-variant={layoutVariant}
+                          >
+                            {visiblePhotos.map((src, i) => {
+                              const roles = ['main', 'accent-1', 'accent-2', 'accent-3', 'accent-4', 'accent-5'];
+                              return (
+                                <span class:list={['travel-eye__photo', `travel-eye__photo--${roles[i] || `accent-${i}`}`]}>
+                                  <img src={src} alt="" loading="lazy" decoding="async" />
+                                </span>
+                              );
+                            })}
+                            {photoOverflow > 0 && (
+                              <span class="travel-eye__overflow">+{photoOverflow}</span>
+                            )}
+                            <span class="travel-eye__cities">{travelPoster.cities}</span>
+                          </div>
+                        </article>
+                      ) : isTravel ? (
+                        <article class="essay-card essay-card--travel">
+                          {gallery && (
+                            <a class="essay-card__photo" href={gallery.href} aria-label={`打开图集：${gallery.title}`}>
+                              <img src={gallery.cover} alt={gallery.coverAlt} loading="lazy" decoding="async" />
+                            </a>
+                          )}
+                          <div class="essay-card__body">
+                            <span class="essay-card__kicker">旅行札记</span>
+                            <h3>
+                              <a href={href}>{entry.data.title}</a>
+                            </h3>
+                            <p>{excerpt}</p>
+                            <div class="essay-card__meta">
+                              {date && <time>{date}</time>}
+                              {gallery && <a href={gallery.href}>对应图集 · {gallery.title}</a>}
+                            </div>
+                          </div>
+                        </article>
+                      ) : (
+                        <a class:list={['essay-card', 'essay-card--text', coverImage && 'essay-card--with-cover']} href={href} style={coverImage ? `--cover-image: url(${coverImage})` : ''}>
+                          <span class="essay-card__body">
+                            <span class="essay-card__kicker">{group.title}</span>
+                            <strong>{entry.data.title}</strong>
+                            <span>{excerpt}</span>
+                            {date && <time>{date}</time>}
+                          </span>
+                        </a>
+                      )}
+                    </li>
+                  );
+                })
               }
             </ul>
           </section>
@@ -85,16 +185,23 @@ const groupedEntries = [...entries.reduce((groups, entry) => {
 </BaseLayout>
 
 <style>
+  .essay-page {
+    padding-bottom: 4rem;
+  }
+
+  .essay-page__header {
+    max-width: 46rem;
+  }
+
   .essay-groups {
     display: flex;
     flex-direction: column;
-    gap: 2.4rem;
-    padding-bottom: 4rem;
+    gap: 3.2rem;
   }
 
   .essay-group {
     display: grid;
-    grid-template-columns: minmax(11rem, 0.32fr) minmax(0, 1fr);
+    grid-template-columns: minmax(11rem, 0.28fr) minmax(0, 1fr);
     gap: 1.35rem;
     align-items: start;
   }
@@ -113,8 +220,8 @@ const groupedEntries = [...entries.reduce((groups, entry) => {
     margin: 0 0 0.4rem;
     color: var(--ch-accent);
     font-family: var(--ch-display-font);
-    font-size: 1.35rem;
-    line-height: 1.25;
+    font-size: 1.45rem;
+    line-height: 1.18;
   }
 
   .essay-group__header p:last-child {
@@ -126,13 +233,616 @@ const groupedEntries = [...entries.reduce((groups, entry) => {
 
   .essay-group__header > span {
     flex: 0 0 auto;
-    color: var(--ch-accent-tertiary);
+    color: var(--ch-accent-warm);
     font-family: var(--ch-mono-font);
     font-size: 0.75rem;
   }
 
-  .essay-group__list {
-    padding-bottom: 0;
+  .essay-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .essay-card-grid--posters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .essay-card-grid--travel {
+    grid-template-columns: 1fr;
+  }
+
+  .essay-card {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 18%, var(--ch-glass-border));
+    border-radius: 10px;
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--ch-surface-solid) 64%, transparent), color-mix(in srgb, var(--ch-accent-dim) 46%, transparent)),
+      radial-gradient(circle at 88% 14%, color-mix(in srgb, var(--ch-accent-warm) 9%, transparent), transparent 38%);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, white 28%, transparent);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      transform var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      background var(--ch-transition-fast);
+  }
+
+  .essay-card:hover,
+  .essay-card:focus-visible,
+  .essay-card:focus-within {
+    border-color: color-mix(in srgb, var(--ch-accent-secondary) 38%, var(--ch-glass-border));
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--ch-surface-solid) 74%, transparent), color-mix(in srgb, var(--ch-accent-dim) 70%, transparent)),
+      radial-gradient(circle at 88% 14%, color-mix(in srgb, var(--ch-accent-warm) 13%, transparent), transparent 38%);
+    color: inherit;
+    transform: translateY(-2px);
+  }
+
+  .essay-card:focus-visible,
+  .essay-card a:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--ch-accent-warm) 72%, var(--ch-accent-secondary));
+    outline-offset: 3px;
+  }
+
+  .essay-card__body {
+    display: grid;
+    min-width: 0;
+    gap: 0.42rem;
+    padding: 1rem;
+  }
+
+  .essay-card__kicker {
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-academic-font);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .essay-card strong,
+  .essay-card h3 {
+    margin: 0;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: 1.08rem;
+    line-height: 1.18;
+  }
+
+  .essay-card h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .essay-card__body > span:not(.essay-card__kicker),
+  .essay-card p {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    color: var(--ch-fg-muted);
+    font-size: 0.86rem;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .essay-card time,
+  .essay-card__meta {
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-mono-font);
+    font-size: 0.7rem;
+  }
+
+  .essay-card--movie {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-height: 100%;
+  }
+
+  .essay-card__poster {
+    position: relative;
+    display: grid;
+    aspect-ratio: 4 / 5.7;
+    min-height: 14rem;
+    place-items: center;
+    overflow: hidden;
+    background:
+      linear-gradient(150deg, color-mix(in srgb, var(--ch-accent) 28%, var(--ch-surface-solid)), color-mix(in srgb, var(--ch-accent-warm) 14%, var(--ch-surface-solid))),
+      repeating-linear-gradient(90deg, color-mix(in srgb, white 7%, transparent) 0 1px, transparent 1px 10px);
+  }
+
+  .essay-card__poster img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .essay-card--movie:hover .essay-card__poster img,
+  .essay-card--movie:focus-visible .essay-card__poster img {
+    transform: scale(1.035);
+  }
+
+  .essay-card__poster::after {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, transparent 48%, color-mix(in srgb, var(--ch-accent) 42%, transparent)),
+      radial-gradient(circle at 22% 12%, color-mix(in srgb, var(--ch-accent-warm) 18%, transparent), transparent 38%);
+    content: "";
+    pointer-events: none;
+  }
+
+  .essay-card__poster-type {
+    position: relative;
+    z-index: 1;
+    max-width: 72%;
+    color: color-mix(in srgb, var(--ch-accent-ink) 86%, var(--ch-fg));
+    font-family: var(--ch-display-font);
+    font-size: clamp(1.5rem, 4vw, 2.35rem);
+    line-height: 0.96;
+    text-align: center;
+    writing-mode: vertical-rl;
+  }
+
+  .essay-card--movie .essay-card__body {
+    padding: 0.92rem;
+  }
+
+  /* ============================================= */
+  /*  Travel poster card — scrapbook collage       */
+  /* ============================================= */
+
+  .essay-card--travel-poster {
+    display: grid;
+    grid-template-columns: minmax(14rem, 0.38fr) minmax(0, 1fr);
+    min-height: 14.5rem;
+    max-height: 15.5rem;
+    height: 14.5rem;
+    overflow: hidden;
+  }
+
+  .travel-eye {
+    position: relative;
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--ch-accent-dim) 8%, transparent), color-mix(in srgb, var(--ch-surface-solid) 4%, transparent));
+  }
+
+  /* --- Photos: pure image, no frame --- */
+  .travel-eye__photo {
+    position: absolute;
+    display: block;
+    border-radius: 3px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.13);
+    overflow: hidden;
+    transition:
+      transform 380ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 380ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .travel-eye__photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* --- Hover: slight lift --- */
+  .essay-card--travel-poster:hover .travel-eye__photo,
+  .essay-card--travel-poster:focus-within .travel-eye__photo {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+  }
+  .essay-card--travel-poster:hover .travel-eye__photo--main,
+  .essay-card--travel-poster:focus-within .travel-eye__photo--main {
+    z-index: 10;
+    transform: var(--rot-main) scale(1.04);
+  }
+  .essay-card--travel-poster:hover .travel-eye__photo--accent-1,
+  .essay-card--travel-poster:focus-within .travel-eye__photo--accent-1 {
+    z-index: 10;
+    transform: var(--rot-a1) scale(1.06);
+  }
+  .essay-card--travel-poster:hover .travel-eye__photo--accent-2,
+  .essay-card--travel-poster:focus-within .travel-eye__photo--accent-2 {
+    z-index: 10;
+    transform: var(--rot-a2) scale(1.05);
+  }
+  .essay-card--travel-poster:hover .travel-eye__photo--accent-3,
+  .essay-card--travel-poster:focus-within .travel-eye__photo--accent-3 {
+    z-index: 10;
+    transform: var(--rot-a3) scale(1.05);
+  }
+  .essay-card--travel-poster:hover .travel-eye__photo--accent-4,
+  .essay-card--travel-poster:focus-within .travel-eye__photo--accent-4 {
+    z-index: 10;
+    transform: var(--rot-a4) scale(1.06);
+  }
+  .essay-card--travel-poster:hover .travel-eye__photo--accent-5,
+  .essay-card--travel-poster:focus-within .travel-eye__photo--accent-5 {
+    z-index: 10;
+    transform: var(--rot-a5) scale(1.05);
+  }
+
+  /* ============================================= */
+  /*  Layouts: 5 photos  (三城游, 港澳手记)        */
+  /* ============================================= */
+  .travel-eye[data-count="5"][data-variant="0"] {
+    --rot-main: rotate(-3deg); --rot-a1: rotate(4deg); --rot-a2: rotate(-5deg);
+    --rot-a3: rotate(2deg); --rot-a4: rotate(-2deg);
+  }
+  .travel-eye[data-count="5"][data-variant="0"] .travel-eye__photo--main {
+    top: -4%; left: 4%;
+    width: 52%; height: 74%;
+    transform: var(--rot-main); z-index: 1;
+  }
+  .travel-eye[data-count="5"][data-variant="0"] .travel-eye__photo--accent-1 {
+    top: 5%; right: 2%;
+    width: 44%; height: 54%;
+    transform: var(--rot-a1); z-index: 2;
+  }
+  .travel-eye[data-count="5"][data-variant="0"] .travel-eye__photo--accent-2 {
+    top: 36%; left: 32%;
+    width: 38%; height: 52%;
+    transform: var(--rot-a2); z-index: 3;
+  }
+  .travel-eye[data-count="5"][data-variant="0"] .travel-eye__photo--accent-3 {
+    bottom: -6%; left: 10%;
+    width: 36%; height: 46%;
+    transform: var(--rot-a3); z-index: 2;
+  }
+  .travel-eye[data-count="5"][data-variant="0"] .travel-eye__photo--accent-4 {
+    bottom: 4%; right: 6%;
+    width: 34%; height: 44%;
+    transform: var(--rot-a4); z-index: 1;
+  }
+
+  /* 5 photos, variant 1 — swapped main right */
+  .travel-eye[data-count="5"][data-variant="1"] {
+    --rot-main: rotate(3deg); --rot-a1: rotate(-4deg); --rot-a2: rotate(5deg);
+    --rot-a3: rotate(-2deg); --rot-a4: rotate(2deg);
+  }
+  .travel-eye[data-count="5"][data-variant="1"] .travel-eye__photo--main {
+    top: -3%; right: 3%;
+    width: 50%; height: 72%;
+    transform: var(--rot-main); z-index: 2;
+  }
+  .travel-eye[data-count="5"][data-variant="1"] .travel-eye__photo--accent-1 {
+    top: 4%; left: 3%;
+    width: 42%; height: 50%;
+    transform: var(--rot-a1); z-index: 1;
+  }
+  .travel-eye[data-count="5"][data-variant="1"] .travel-eye__photo--accent-2 {
+    top: 34%; right: 28%;
+    width: 40%; height: 50%;
+    transform: var(--rot-a2); z-index: 3;
+  }
+  .travel-eye[data-count="5"][data-variant="1"] .travel-eye__photo--accent-3 {
+    bottom: -5%; right: 5%;
+    width: 35%; height: 44%;
+    transform: var(--rot-a3); z-index: 1;
+  }
+  .travel-eye[data-count="5"][data-variant="1"] .travel-eye__photo--accent-4 {
+    bottom: 6%; left: 24%;
+    width: 32%; height: 42%;
+    transform: var(--rot-a4); z-index: 2;
+  }
+
+  /* 5 photos, variant 2 — centered hero */
+  .travel-eye[data-count="5"][data-variant="2"] {
+    --rot-main: rotate(-2deg); --rot-a1: rotate(5deg); --rot-a2: rotate(-4deg);
+    --rot-a3: rotate(3deg); --rot-a4: rotate(-3deg);
+  }
+  .travel-eye[data-count="5"][data-variant="2"] .travel-eye__photo--main {
+    top: -5%; left: 16%;
+    width: 56%; height: 76%;
+    transform: var(--rot-main); z-index: 1;
+  }
+  .travel-eye[data-count="5"][data-variant="2"] .travel-eye__photo--accent-1 {
+    top: 2%; right: 2%;
+    width: 40%; height: 48%;
+    transform: var(--rot-a1); z-index: 2;
+  }
+  .travel-eye[data-count="5"][data-variant="2"] .travel-eye__photo--accent-2 {
+    top: 30%; left: 3%;
+    width: 34%; height: 50%;
+    transform: var(--rot-a2); z-index: 3;
+  }
+  .travel-eye[data-count="5"][data-variant="2"] .travel-eye__photo--accent-3 {
+    bottom: -4%; right: 8%;
+    width: 36%; height: 46%;
+    transform: var(--rot-a3); z-index: 2;
+  }
+  .travel-eye[data-count="5"][data-variant="2"] .travel-eye__photo--accent-4 {
+    bottom: 8%; left: 30%;
+    width: 30%; height: 38%;
+    transform: var(--rot-a4); z-index: 1;
+  }
+
+  /* ============================================= */
+  /*  Layout: 6 photos  (日本游记)                 */
+  /* ============================================= */
+  .travel-eye[data-count="6"][data-variant="0"] {
+    --rot-main: rotate(-3deg); --rot-a1: rotate(4deg); --rot-a2: rotate(-5deg);
+    --rot-a3: rotate(2deg); --rot-a4: rotate(-2deg); --rot-a5: rotate(5deg);
+  }
+  .travel-eye[data-count="6"][data-variant="0"] .travel-eye__photo--main {
+    top: -4%; left: 3%;
+    width: 46%; height: 66%;
+    transform: var(--rot-main); z-index: 1;
+  }
+  .travel-eye[data-count="6"][data-variant="0"] .travel-eye__photo--accent-1 {
+    top: 3%; right: 2%;
+    width: 40%; height: 46%;
+    transform: var(--rot-a1); z-index: 2;
+  }
+  .travel-eye[data-count="6"][data-variant="0"] .travel-eye__photo--accent-2 {
+    top: 28%; left: 28%;
+    width: 36%; height: 48%;
+    transform: var(--rot-a2); z-index: 4;
+  }
+  .travel-eye[data-count="6"][data-variant="0"] .travel-eye__photo--accent-3 {
+    top: 48%; right: 4%;
+    width: 32%; height: 42%;
+    transform: var(--rot-a3); z-index: 3;
+  }
+  .travel-eye[data-count="6"][data-variant="0"] .travel-eye__photo--accent-4 {
+    bottom: -5%; left: 8%;
+    width: 34%; height: 42%;
+    transform: var(--rot-a4); z-index: 2;
+  }
+  .travel-eye[data-count="6"][data-variant="0"] .travel-eye__photo--accent-5 {
+    bottom: 2%; right: 20%;
+    width: 28%; height: 38%;
+    transform: var(--rot-a5); z-index: 5;
+  }
+
+  /* 6 photos, variant 1 */
+  .travel-eye[data-count="6"][data-variant="1"] {
+    --rot-main: rotate(2deg); --rot-a1: rotate(-5deg); --rot-a2: rotate(4deg);
+    --rot-a3: rotate(-3deg); --rot-a4: rotate(3deg); --rot-a5: rotate(-2deg);
+  }
+  .travel-eye[data-count="6"][data-variant="1"] .travel-eye__photo--main {
+    top: -3%; right: 3%;
+    width: 48%; height: 64%;
+    transform: var(--rot-main); z-index: 2;
+  }
+  .travel-eye[data-count="6"][data-variant="1"] .travel-eye__photo--accent-1 {
+    top: 2%; left: 3%;
+    width: 38%; height: 44%;
+    transform: var(--rot-a1); z-index: 1;
+  }
+  .travel-eye[data-count="6"][data-variant="1"] .travel-eye__photo--accent-2 {
+    top: 32%; right: 26%;
+    width: 38%; height: 48%;
+    transform: var(--rot-a2); z-index: 4;
+  }
+  .travel-eye[data-count="6"][data-variant="1"] .travel-eye__photo--accent-3 {
+    top: 46%; left: 8%;
+    width: 30%; height: 40%;
+    transform: var(--rot-a3); z-index: 3;
+  }
+  .travel-eye[data-count="6"][data-variant="1"] .travel-eye__photo--accent-4 {
+    bottom: -6%; right: 6%;
+    width: 34%; height: 44%;
+    transform: var(--rot-a4); z-index: 1;
+  }
+  .travel-eye[data-count="6"][data-variant="1"] .travel-eye__photo--accent-5 {
+    bottom: 4%; left: 24%;
+    width: 30%; height: 40%;
+    transform: var(--rot-a5); z-index: 5;
+  }
+
+  /* 6 photos, variant 2 */
+  .travel-eye[data-count="6"][data-variant="2"] {
+    --rot-main: rotate(-4deg); --rot-a1: rotate(3deg); --rot-a2: rotate(-2deg);
+    --rot-a3: rotate(5deg); --rot-a4: rotate(-3deg); --rot-a5: rotate(2deg);
+  }
+  .travel-eye[data-count="6"][data-variant="2"] .travel-eye__photo--main {
+    top: -5%; left: 14%;
+    width: 50%; height: 70%;
+    transform: var(--rot-main); z-index: 1;
+  }
+  .travel-eye[data-count="6"][data-variant="2"] .travel-eye__photo--accent-1 {
+    top: 4%; right: 2%;
+    width: 36%; height: 42%;
+    transform: var(--rot-a1); z-index: 2;
+  }
+  .travel-eye[data-count="6"][data-variant="2"] .travel-eye__photo--accent-2 {
+    top: 25%; left: 3%;
+    width: 32%; height: 50%;
+    transform: var(--rot-a2); z-index: 3;
+  }
+  .travel-eye[data-count="6"][data-variant="2"] .travel-eye__photo--accent-3 {
+    top: 50%; right: 3%;
+    width: 32%; height: 42%;
+    transform: var(--rot-a3); z-index: 4;
+  }
+  .travel-eye[data-count="6"][data-variant="2"] .travel-eye__photo--accent-4 {
+    bottom: -4%; left: 22%;
+    width: 34%; height: 42%;
+    transform: var(--rot-a4); z-index: 2;
+  }
+  .travel-eye[data-count="6"][data-variant="2"] .travel-eye__photo--accent-5 {
+    bottom: 3%; right: 22%;
+    width: 28%; height: 36%;
+    transform: var(--rot-a5); z-index: 5;
+  }
+
+  /* --- +N badge --- */
+  .travel-eye__overflow {
+    position: absolute;
+    bottom: 6%; right: 6%;
+    z-index: 15;
+    display: flex; align-items: center; justify-content: center;
+    min-width: 1.8rem; height: 1.8rem;
+    padding: 0 0.4rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ch-accent-dim) 82%, var(--ch-surface-solid));
+    color: var(--ch-fg);
+    font-family: var(--ch-mono-font);
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.04em;
+    opacity: 0.88;
+  }
+
+  /* --- City label: fit-content, bottom-right --- */
+  .travel-eye__cities {
+    position: absolute;
+    right: 4px; bottom: 4px;
+    z-index: 20;
+    display: inline-block;
+    width: fit-content;
+    max-width: calc(100% - 8px);
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: 0.82rem; font-weight: 600;
+    letter-spacing: 0.1em;
+    text-align: right;
+    line-height: 1.3;
+    pointer-events: none;
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.55),
+      0 1px 3px rgba(0, 0, 0, 0.06);
+    background: color-mix(in srgb, var(--ch-surface-solid) 65%, transparent);
+    backdrop-filter: blur(10px);
+    border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 18%, transparent);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .essay-card--travel-poster .essay-card__body {
+    align-content: center;
+    padding: 1.2rem 1.25rem;
+  }
+
+  .essay-card--travel-poster .essay-card__meta a {
+    color: var(--ch-accent);
+    font-family: var(--ch-academic-font);
+    font-size: 0.78rem; font-weight: 700;
+    text-decoration: none;
+  }
+
+  /* ============================================= */
+  /*  Fallback travel card                         */
+  /* ============================================= */
+
+  .essay-card--travel {
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.42fr) minmax(0, 1fr);
+    min-height: 13rem;
+  }
+
+  .essay-card__photo {
+    display: block;
+    min-height: 13rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .essay-card__photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .essay-card--travel:hover .essay-card__photo img,
+  .essay-card--travel:focus-within .essay-card__photo img {
+    transform: scale(1.025);
+  }
+
+  .essay-card--travel .essay-card__body {
+    align-content: center;
+    padding: 1.2rem 1.25rem;
+  }
+
+  .essay-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 0.8rem;
+    align-items: center;
+  }
+
+  .essay-card__meta a {
+    color: var(--ch-accent);
+    font-family: var(--ch-academic-font);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .essay-card--text {
+    display: block;
+    min-height: 11.5rem;
+  }
+
+  .essay-card--text::after {
+    position: absolute;
+    right: -2.2rem;
+    bottom: -2.5rem;
+    width: 7rem;
+    height: 7rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ch-accent-secondary) 10%, transparent);
+    content: "";
+  }
+
+  .essay-card--with-cover {
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--ch-surface-solid) 58%, transparent), color-mix(in srgb, var(--ch-accent-dim) 52%, transparent)),
+      var(--cover-image) center / cover no-repeat;
+  }
+
+  .essay-card--with-cover::before {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--ch-accent-dim) 28%, transparent), color-mix(in srgb, var(--ch-surface-solid) 18%, transparent)),
+      radial-gradient(circle at 88% 14%, color-mix(in srgb, var(--ch-accent-warm) 6%, transparent), transparent 38%);
+    content: "";
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .essay-card--with-cover:hover,
+  .essay-card--with-cover:focus-visible {
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--ch-surface-solid) 68%, transparent), color-mix(in srgb, var(--ch-accent-dim) 72%, transparent)),
+      var(--cover-image) center / cover no-repeat;
+  }
+
+  .essay-card--with-cover:hover::before,
+  .essay-card--with-cover:focus-visible::before {
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--ch-accent-dim) 42%, transparent), color-mix(in srgb, var(--ch-surface-solid) 28%, transparent)),
+      radial-gradient(circle at 88% 14%, color-mix(in srgb, var(--ch-accent-warm) 9%, transparent), transparent 38%);
+  }
+
+  .essay-card--text > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .essay-card--with-cover > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 1080px) {
+    .essay-card-grid--posters {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   @media (max-width: 760px) {
@@ -143,6 +853,43 @@ const groupedEntries = [...entries.reduce((groups, entry) => {
 
     .essay-group__header {
       position: static;
+    }
+
+    .essay-card-grid,
+    .essay-card-grid--posters {
+      grid-template-columns: 1fr;
+    }
+
+    .essay-card--travel {
+      grid-template-columns: 1fr;
+    }
+
+    .essay-card--travel-poster {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+      min-height: auto;
+      max-height: none;
+      height: auto;
+    }
+
+    .travel-eye {
+      min-height: 14rem;
+      padding: 5%;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .essay-card__poster {
+      min-height: 18rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .essay-card,
+    .essay-card__poster img,
+    .essay-card__photo img,
+    .travel-eye__photo {
+      transition: none;
     }
   }
 </style>

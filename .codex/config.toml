@@ -1,0 +1,12 @@
+[mcp_servers.hamid-vakilzadeh-mcpsemanticscholar]
+url = "https://server.smithery.ai/@hamid-vakilzadeh/mcpsemanticscholar/mcp?api_key=274d8360-dc61-4ee9-ace1-04c5c31502fc&profile=outer-crab-s0Yrog"
+
+[mcp_servers.lark-mcp]
+args = [
+    "/c",
+    "npx -y @larksuiteoapi/lark-mcp mcp -a cli_a82cdaf918b9900e -s i5Glh2XTaN0btikHzTfckgoFP8KlyeaV --oauth",
+]
+command = "cmd"
+
+[mcp_servers.openags-paper-search-mcp]
+url = "https://server.smithery.ai/@openags/paper-search-mcp/mcp?api_key=274d8360-dc61-4ee9-ace1-04c5c31502fc&profile=outer-crab-s0Yrog"

@@ -1,3 +1,27 @@
+---
+title: "DreamCatch AI"
+description: "基于多模态 AI 的梦境捕捉与重建系统，将语音、结构化记忆和视觉锚点串成一个低摩擦产品流程。"
+date: 2026-04-19
+updatedAt: 2026-04-19T04:43:27.821Z
+tags:
+  - "AI Product"
+  - "Multimodal AI"
+  - "Product Design"
+featured: true
+status: "Proposal"
+period: "2026 Spring"
+role: "Product concept, AI workflow, UX system"
+techStack:
+  - "Qwen ASR"
+  - "LLM structured extraction"
+  - "FLUX"
+  - "Vector search"
+links:
+  - {"label":"Proposal","href":"/projects/DreamCup/dreamcatch_proposal/","type":"article"}
+accent: "gold"
+summary: "DreamCatch AI focuses on the fragile first minutes after waking: capture speech, structure memory fragments, ask targeted follow-up questions, and generate visual cues that help users revisit dreams later."
+---
+
 # DreamCatch AI
 
 掬梦

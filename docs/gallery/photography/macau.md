@@ -1,7 +1,7 @@
 ---
 title: 澳门
 description: 葡式立面、旧城石阶、教堂遗迹与海边街巷，让澳门在小尺度里保存了丰富的时间层次。
-date: 2026-05-25
+date: 2026-04-05
 category: photography
 cover: /assets/gallery/photography/macau.assets/Landmark.JPEG
 coverDesc: 澳门的地标建筑在城市街区中抬升，显出这座小城混合而鲜明的轮廓。

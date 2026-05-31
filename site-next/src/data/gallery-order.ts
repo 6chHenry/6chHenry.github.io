@@ -11,8 +11,8 @@ export const GALLERY_CITY_ORDER: string[] = [
   'photography/himeji.md',
   // Greater Bay Area
   'photography/guangzhou.md',
-  'photography/hong-kong.md',
   'photography/macau.md',
+  'photography/hong-kong.md',
   // Hubei-Jiangxi Journey
   'photography/wuhan.md',
   'photography/lushan.md',

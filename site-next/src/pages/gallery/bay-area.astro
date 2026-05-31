@@ -7,12 +7,12 @@ const base = import.meta.env.BASE_URL;
 
 const allEntries = await getCollection('gallery', ({ data }) => !data.draft);
 
-const cityOrder = ['guangzhou', 'hong-kong', 'macau'] as const;
+const cityOrder = ['guangzhou', 'macau', 'hong-kong'] as const;
 
 const cityMeta: Record<string, { kanji: string; en: string; color: string; desc: string }> = {
   guangzhou:  { kanji: '广州', en: 'Guangzhou', color: '#c41e3a', desc: '珠江新城的霓虹、中山纪念堂的庄严、沙面的欧陆旧梦。' },
-  'hong-kong': { kanji: '香港', en: 'Hong Kong', color: '#1a5276', desc: '维港的天际线、太平山的夜色、港岛的密集与开阔。' },
   macau:      { kanji: '澳门', en: 'Macau',    color: '#2d7a5f', desc: '葡式立面的旧城、大三巴的石阶、路氹的璀璨灯火。' },
+  'hong-kong': { kanji: '香港', en: 'Hong Kong', color: '#1a5276', desc: '维港的天际线、太平山的夜色、港岛的密集与开阔。' },
 };
 
 const citySlugSet = new Set(cityOrder);

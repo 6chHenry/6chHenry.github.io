@@ -7,6 +7,12 @@ import { buildContentUrl, formatRecencyDate, sortByRecency } from '../utils/cont
 import { buildForestMapStops } from '../utils/forest-map';
 
 const base = import.meta.env.BASE_URL;
+const heroPhotos = [
+  { src: `${base}assets/gallery/photography/kyoto.assets/kifune_shrine.jpg`, alt: 'Kyoto shrine path' },
+  { src: `${base}assets/gallery/photography/kobe.assets/kobe_sunset.jpg`, alt: 'Kobe sunset' },
+  { src: `${base}assets/gallery/photography/geermu.assets/railway_sunset.jpg`, alt: 'Geermu railway sunset' },
+  { src: `${base}assets/gallery/photography/hong-kong.assets/Victoria_Peak.JPG`, alt: 'Hong Kong skyline' },
+];
 
 const [notes, essays, projects] = await Promise.all([
   getCollection('notes', ({ data }) => !data.draft),
@@ -28,10 +34,10 @@ const recent = sortByRecency(allContent)
   }));
 
 const features = [
-  { href: `${base}notes/`, icon: 'book' as const, title: '笔记', desc: '成体系的学习记录', count: notes.length },
-  { href: `${base}essay/`, icon: 'pen' as const, title: '杂谈', desc: '随笔、旅行与思考', count: essays.length },
-  { href: `${base}projects/`, icon: 'code' as const, title: '项目', desc: '实验与工程实践', count: projects.length },
-  { href: `${base}search/`, icon: 'search' as const, title: '搜索', desc: '全文检索所有内容', count: null },
+  { href: `${base}notes/`, icon: 'book' as const, title: '笔记', desc: 'AI、数学与工程学习记录', count: notes.length },
+  { href: `${base}essay/`, icon: 'pen' as const, title: '杂谈', desc: '旅行、生活与自我观察', count: essays.length },
+  { href: `${base}projects/`, icon: 'code' as const, title: '作品集', desc: '产品原型与工程实践', count: projects.length },
+  { href: `${base}search/`, icon: 'search' as const, title: '搜索', desc: '检索所有笔记和文章', count: null },
 ];
 ---
 
@@ -43,17 +49,26 @@ const features = [
     <div class="home-mist" aria-hidden="true"></div>
     <div class="home-light" aria-hidden="true"></div>
     <div class="home-grain" aria-hidden="true"></div>
+    <div class="home-photo-collage" aria-hidden="true">
+      {
+        heroPhotos.map((photo, index) => (
+          <figure class={`home-photo home-photo--${index + 1}`}>
+            <img src={photo.src} alt={photo.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+          </figure>
+        ))
+      }
+    </div>
 
     <div class="home-inner">
       <div class="home-avatar-wrap">
         <img class="home-avatar" src={`${base}img/avatar1.jpg`} alt="6ch." width="124" height="124" />
       </div>
-      <p class="home-eyebrow">Forest Journal · Personal Site</p>
-      <h1 class="home-title">Welcome to <em>6ch.</em>'s Grove</h1>
-      <p class="home-tagline">AI · Embodied Intelligence · Self-directed Inquiry</p>
+      <p class="home-eyebrow">Forest Journal · Personal Archive</p>
+      <h1 class="home-title"><span>6ch.</span></h1>
+      <p class="home-tagline">AI / Embodied Intelligence / Travel Notes / Self-directed Inquiry</p>
       <p class="home-subtitle">
         上海交通大学 · 人工智能学院<br />
-        在林间的宽阔里，分享学习、旅行与思考
+        把学习、工程和旅行记忆整理成一片可以反复进入的林地。
       </p>
     </div>
   </section>
@@ -77,8 +92,6 @@ const features = [
     <div id="statistics" class="home-stats card card--elevated" role="region" aria-label="站点统计">
       <ul>
         <li>运行时间 <span id="web-time"></span></li>
-        <li>访客 <span id="busuanzi_value_site_uv">—</span></li>
-        <li>访问 <span id="busuanzi_value_site_pv">—</span></li>
       </ul>
     </div>
   </div>
@@ -86,7 +99,7 @@ const features = [
   <section class="container home-section">
     <p class="section-kicker">Explore</p>
     <h2 class="section-title">走进这片林</h2>
-    <p class="section-lead">笔记、杂谈与项目，像不同的林径，各自通向不同的风景。</p>
+    <p class="section-lead">这里不只是文章目录，而是个人知识、作品和旅行切片的长期索引。</p>
 
     <div class="feature-grid">
       {
@@ -141,7 +154,7 @@ const features = [
   initHomeStats();
 </script>
 
-<script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script>
+
 
 <style>
   .pill :global(.forest-icon) {

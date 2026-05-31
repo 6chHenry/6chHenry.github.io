@@ -1,149 +1,342 @@
 ---
-import {
-  FOREST_MAP_HEIGHT,
-  FOREST_MAP_WIDTH,
-  buildCurvePath,
-  type ForestMapData,
-} from '../utils/forest-map';
+import type { ForestMapData, ForestTreeNode } from '../utils/forest-map';
 
 interface Props {
   stops: ForestMapData;
 }
 
-const { stops } = Astro.props;
-const recentPath = buildCurvePath(stops.recentTrees);
+interface GroveView {
+  collection: string;
+  label: string;
+  title: string;
+  desc: string;
+  href: string;
+  count: number;
+  x: number;
+  y: number;
+  trees: ForestTreeNode[];
+  recentTrail: ForestTreeNode[];
+}
 
-const groves = [
-  { title: 'Notes Grove', x: 154, y: 92 },
-  { title: 'Essay Grove', x: 780, y: 156 },
-  { title: 'Project Grove', x: 484, y: 610 },
+const { stops } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const groveConfig = [
+  {
+    collection: 'notes',
+    label: 'Notes Grove',
+    title: '笔记林',
+    desc: '课程、研究和技术路线沉积成主干。',
+    href: `${base}notes/`,
+    x: 22,
+    y: 68,
+  },
+  {
+    collection: 'essay',
+    label: 'Essay Grove',
+    title: '杂谈林',
+    desc: '旅行、生活和自我观察保留季节感。',
+    href: `${base}essay/`,
+    x: 72,
+    y: 28,
+  },
+  {
+    collection: 'projects',
+    label: 'Project Grove',
+    title: '项目林',
+    desc: '原型、实验和工程实践长出新的枝条。',
+    href: `${base}projects/`,
+    x: 52,
+    y: 59,
+  },
 ];
+
+const sortRecentTrees = (trees: ForestTreeNode[]) =>
+  [...trees].sort((a, b) => (b.timestamp ?? 0) - (a.timestamp ?? 0) || a.title.localeCompare(b.title, 'zh-CN'));
+
+const groves: GroveView[] = groveConfig.map((grove) => {
+  const collectionTrees = stops.trees.filter((tree) => tree.collection === grove.collection);
+  const recentTrees = sortRecentTrees(collectionTrees).filter((tree) => tree.timestamp > 0);
+
+  return {
+    ...grove,
+    count: collectionTrees.length,
+    trees: recentTrees.filter((tree) => tree.treeSvg && tree.x !== undefined && tree.y !== undefined).slice(0, 11),
+    recentTrail: recentTrees.slice(0, 6),
+  };
+});
+
+const overviewTrail = stops.recentTrees.slice(0, 6);
 ---
 
 <section class="forest-map" aria-labelledby="forest-map-title">
   <div class="container forest-map__intro">
-    <p class="section-kicker">Trail Map</p>
+    <p class="section-kicker">Forest Atlas</p>
     <h2 id="forest-map-title" class="section-title">汉字森林 · 林径地图</h2>
     <p class="section-lead forest-map__lead">
-      每棵树都是一篇内容。树冠来自文章里的汉字，大小随内容体量与更新时间变化；金色小径标出最近更新，并直接摘出标题。
+      把学习、旅行和作品收在同一片林里：有些念头长成树，有些经历留下路，回头看时便能沿着尾迹找回当时的风。
     </p>
   </div>
 
-  <div class="forest-map__scroll">
-    <div class="forest-map__stage" style={`--map-width: ${FOREST_MAP_WIDTH}; --map-height: ${FOREST_MAP_HEIGHT};`}>
-      <svg
-        class="forest-map__terrain"
-        viewBox={`0 0 ${FOREST_MAP_WIDTH} ${FOREST_MAP_HEIGHT}`}
-        preserveAspectRatio="xMidYMid meet"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient id="forest-map-sky" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--ch-bg-sky)" stop-opacity="0.52" />
-            <stop offset="62%" stop-color="var(--ch-surface-solid)" stop-opacity="0.78" />
-            <stop offset="100%" stop-color="var(--ch-bg-hill)" stop-opacity="0.42" />
-          </linearGradient>
-          <radialGradient id="forest-map-glade" cx="50%" cy="48%" r="52%">
-            <stop offset="0%" stop-color="var(--ch-accent-light)" stop-opacity="0.18" />
-            <stop offset="100%" stop-color="var(--ch-accent)" stop-opacity="0" />
-          </radialGradient>
-          <filter id="forest-map-path-glow" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="4" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
+  <div class="container forest-map__panel" data-forest-map data-view="overview" data-active-grove="overview">
+    <div class="forest-map__meadow">
+      <div class="forest-map__skyline" aria-hidden="true"></div>
 
-        <rect width={FOREST_MAP_WIDTH} height={FOREST_MAP_HEIGHT} rx="28" fill="url(#forest-map-sky)" />
-        <rect width={FOREST_MAP_WIDTH} height={FOREST_MAP_HEIGHT} rx="28" fill="url(#forest-map-glade)" />
-        <path
-          d="M0 548 C170 476 302 594 468 520 C636 445 748 560 920 488 C1060 430 1164 478 1280 430 L1280 720 L0 720 Z"
-          fill="var(--ch-accent)"
-          opacity="0.08"
-        />
-        <path
-          d="M0 612 C190 560 320 646 520 588 C710 532 876 640 1080 566 C1168 534 1224 526 1280 530 L1280 720 L0 720 Z"
-          fill="var(--ch-accent-secondary)"
-          opacity="0.08"
-        />
+      <div class="forest-map__viewport" aria-live="polite">
+        <svg class="forest-map__path" viewBox="0 0 760 420" preserveAspectRatio="none" aria-hidden="true">
+          <path
+            class="forest-map__path-halo"
+            d="M62 338 C142 262 214 292 286 222 C370 140 452 172 526 102 C584 48 650 54 704 78"
+            fill="none"
+          />
+          <path
+            class="forest-map__path-line"
+            d="M62 338 C142 262 214 292 286 222 C370 140 452 172 526 102 C584 48 650 54 704 78"
+            fill="none"
+          />
+        </svg>
+
+        <div class="forest-map__overview" data-forest-overview>
+          <div class="forest-map__overview-copy">
+            <span>林地索引</span>
+            <h3>三片林地，各有光线</h3>
+            <p>笔记偏向根系，杂谈保存季节，项目像新生的枝条。它们彼此分开，又被同一条林径牵连。</p>
+          </div>
+
+          <div class="forest-map__rings" aria-hidden="true">
+            {groves.map((grove) => <span class={`forest-map__ring forest-map__ring--${grove.collection}`}></span>)}
+          </div>
+
+          <div class="forest-map__grove-landmarks" aria-label="内容林地">
+            {
+              groves.map((grove) => (
+                <button
+                  id={`forest-landmark-${grove.collection}`}
+                  class={`forest-map__landmark forest-map__landmark--${grove.collection}`}
+                  type="button"
+                  data-grove-trigger={grove.collection}
+                  style={`left: ${grove.x}%; top: ${grove.y}%;`}
+                >
+                  <span>{grove.label}</span>
+                  <strong>{grove.title}</strong>
+                  <em>{grove.count} 棵树</em>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <button class="forest-map__back" type="button" data-forest-back>
+          回到林径
+        </button>
 
         {
           groves.map((grove) => (
-            <text x={grove.x} y={grove.y} class="forest-map__grove-label">
-              {grove.title}
-            </text>
-          ))
-        }
-
-        {
-          recentPath && (
-            <>
-              <path
-                d={recentPath}
-                class="forest-map__recent-path forest-map__recent-path--halo"
-                fill="none"
-                stroke="var(--ch-accent-warm)"
-                stroke-width="12"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                opacity="0.13"
-              />
-              <path
-                d={recentPath}
-                class="forest-map__recent-path"
-                fill="none"
-                stroke="var(--ch-accent-warm)"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-dasharray="8 12"
-                filter="url(#forest-map-path-glow)"
-                opacity="0.84"
-              />
-            </>
-          )
-        }
-      </svg>
-
-      <div class="forest-map__canopy" aria-label="内容树林">
-        {
-          stops.trees.map((tree) => (
-            <a
-              class:list={['forest-map__tree', `forest-map__tree--${tree.collection}`, tree.recentRank && 'is-recent']}
-              href={tree.href}
-              aria-label={`${tree.title}${tree.dateLabel ? `，${tree.dateLabel}` : ''}`}
-              style={`left: ${(tree.x / FOREST_MAP_WIDTH) * 100}%; top: ${(tree.y / FOREST_MAP_HEIGHT) * 100}%; --tree-scale: ${tree.size.toFixed(3)};`}
+            <div
+              id={`forest-grove-${grove.collection}`}
+              class:list={['forest-map__grove-view', `forest-map__grove-view--${grove.collection}`]}
+              role="region"
+              aria-labelledby={`forest-landmark-${grove.collection}`}
+              aria-hidden="true"
+              data-grove-panel={grove.collection}
+              inert
             >
-              <span class="forest-map__tree-art" set:html={tree.treeSvg}></span>
-              {tree.recentRank && <span class="forest-map__rank">{tree.recentRank}</span>}
-              <span class="forest-map__preview">
-                <span class="forest-map__preview-kicker">
-                  {tree.dateLabel ?? (tree.collection === 'notes' ? 'Notes' : tree.collection === 'essay' ? 'Essay' : 'Project')}
-                </span>
-                <strong>{tree.title}</strong>
-                <span>{tree.summary}</span>
-              </span>
-            </a>
-          ))
-        }
-      </div>
+              <div class="forest-map__grove-caption">
+                <span>{grove.label}</span>
+                <h3>{grove.title}</h3>
+                <p>{grove.desc}</p>
+              </div>
 
-      <div class="forest-map__recent-labels" aria-label="最近更新路径">
-        {
-          stops.recentTrees.map((tree, index) => (
-            <a
-              class="forest-map__recent-title"
-              href={tree.href}
-              style={`left: ${(tree.x / FOREST_MAP_WIDTH) * 100}%; top: ${(tree.y / FOREST_MAP_HEIGHT) * 100}%; --label-shift: ${index % 2 === 0 ? '-1' : '1'};`}
-            >
-              <span>{tree.recentRank}</span>
-              <strong>{tree.title}</strong>
-            </a>
+              <div class="forest-map__treefield" aria-label={`${grove.title}文字树`}>
+                {
+                  grove.trees.map((tree, index) => (
+                    <a
+                      class="forest-map__tree-node"
+                      href={tree.href}
+                      aria-label={`${tree.title}${tree.dateLabel ? `，${tree.dateLabel}` : ''}`}
+                      tabindex="-1"
+                      style={`left: ${tree.x}%; top: ${tree.y}%; --tree-scale: ${tree.scale ?? 1}; --tree-delay: ${index * 34}ms;`}
+                    >
+                      <span class="forest-map__tree-art" set:html={tree.treeSvg}></span>
+                      <span class="forest-map__tree-label">
+                        <strong>{tree.title}</strong>
+                        {tree.dateLabel && <small>{tree.dateLabel}</small>}
+                      </span>
+                    </a>
+                  ))
+                }
+              </div>
+            </div>
           ))
         }
       </div>
     </div>
+
+    <aside class="forest-map__sidebar" aria-label="所选林地最近更新">
+      <div class="forest-map__trail-panel forest-map__trail-panel--overview is-active" aria-hidden="false" data-grove-trail="overview">
+        <div class="forest-map__trail-head">
+          <span>尾迹</span>
+          <h3>全站尾迹</h3>
+          <strong>{overviewTrail.length} 片叶</strong>
+        </div>
+
+        <ol>
+          {
+            overviewTrail.map((tree) => (
+              <li>
+                <a href={tree.href}>
+                  <span class="forest-map__leaf">{tree.recentRank}</span>
+                  <div>
+                    <strong>{tree.title}</strong>
+                    <p>{tree.summary}</p>
+                  </div>
+                  {tree.dateLabel && <time>{tree.dateLabel}</time>}
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      {
+        groves.map((grove) => (
+          <div
+            class:list={['forest-map__trail-panel', `forest-map__trail-panel--${grove.collection}`]}
+            aria-hidden="true"
+            data-grove-trail={grove.collection}
+            inert
+          >
+            <div class="forest-map__trail-head">
+              <span>{grove.label}</span>
+              <h3>{grove.title}尾迹</h3>
+              <strong>{grove.recentTrail.length} 片叶</strong>
+            </div>
+
+            <ol>
+              {
+                grove.recentTrail.map((tree, trailIndex) => (
+                  <li>
+                    <a href={tree.href} tabindex="-1">
+                      <span class="forest-map__leaf">{trailIndex + 1}</span>
+                      <div>
+                        <strong>{tree.title}</strong>
+                        <p>{tree.summary}</p>
+                      </div>
+                      {tree.dateLabel && <time>{tree.dateLabel}</time>}
+                    </a>
+                  </li>
+                ))
+              }
+            </ol>
+
+            <a class="forest-map__open" href={grove.href} tabindex="-1">
+              进入{grove.title}
+            </a>
+          </div>
+        ))
+      }
+    </aside>
   </div>
 </section>
+
+<script>
+  const forestMaps = document.querySelectorAll('[data-forest-map]');
+
+  forestMaps.forEach((root) => {
+    const buttons = Array.from(root.querySelectorAll('[data-grove-trigger]'));
+    const backButtons = Array.from(root.querySelectorAll('[data-forest-back]'));
+    const panels = Array.from(root.querySelectorAll('[data-grove-panel]'));
+    const trails = Array.from(root.querySelectorAll('[data-grove-trail]'));
+
+    const setFocusable = (scope, enabled) => {
+      scope.querySelectorAll('a, button').forEach((node) => {
+        if (enabled) {
+          node.removeAttribute('tabindex');
+        } else {
+          node.setAttribute('tabindex', '-1');
+        }
+      });
+    };
+
+    const activateTrail = (target) => {
+      trails.forEach((trail) => {
+        const active = trail.getAttribute('data-grove-trail') === target;
+        trail.classList.toggle('is-active', active);
+        trail.setAttribute('aria-hidden', active ? 'false' : 'true');
+        trail.toggleAttribute('inert', !active);
+        setFocusable(trail, active);
+      });
+    };
+
+    const activateOverview = () => {
+      root.setAttribute('data-view', 'overview');
+      root.setAttribute('data-active-grove', 'overview');
+
+      backButtons.forEach((button) => {
+        button.setAttribute('tabindex', '-1');
+      });
+
+      buttons.forEach((button) => {
+        button.classList.remove('is-active');
+        button.removeAttribute('aria-current');
+        button.removeAttribute('tabindex');
+      });
+
+      panels.forEach((panel) => {
+        panel.classList.remove('is-active');
+        panel.setAttribute('aria-hidden', 'true');
+        panel.toggleAttribute('inert', true);
+        setFocusable(panel, false);
+      });
+
+      activateTrail('overview');
+    };
+
+    const activateGrove = (grove) => {
+      root.setAttribute('data-view', 'grove');
+      root.setAttribute('data-active-grove', grove);
+
+      backButtons.forEach((button) => {
+        button.removeAttribute('tabindex');
+      });
+
+      buttons.forEach((button) => {
+        const active = button.getAttribute('data-grove-trigger') === grove;
+        button.classList.toggle('is-active', active);
+        button.toggleAttribute('aria-current', active);
+        button.removeAttribute('tabindex');
+      });
+
+      panels.forEach((panel) => {
+        const active = panel.getAttribute('data-grove-panel') === grove;
+        panel.classList.toggle('is-active', active);
+        panel.setAttribute('aria-hidden', active ? 'false' : 'true');
+        panel.toggleAttribute('inert', !active);
+        setFocusable(panel, active);
+      });
+
+      activateTrail(grove);
+    };
+
+    buttons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        const grove = button.getAttribute('data-grove-trigger');
+        if (grove) activateGrove(grove);
+      });
+
+      button.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        event.preventDefault();
+        const direction = event.key === 'ArrowRight' ? 1 : -1;
+        const next = buttons[(index + direction + buttons.length) % buttons.length];
+        if (next instanceof HTMLElement) next.focus();
+      });
+    });
+
+    backButtons.forEach((button) => {
+      button.addEventListener('click', activateOverview);
+    });
+
+    activateOverview();
+  });
+</script>

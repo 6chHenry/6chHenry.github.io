@@ -1,8 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ContentLayout from '../../layouts/ContentLayout.astro';
+import TravelGalleryLink from '../../components/TravelGalleryLink.astro';
 import { buildContentUrl, normalizeSlug, sortByRecency } from '../../utils/content';
 import { buildEntryCharacterTree } from '../../utils/character-tree';
+import { getTravelGalleryLink } from '../../utils/essay-visuals';
 import type { GetStaticPaths } from 'astro';
 
 export const getStaticPaths = (async () => {
@@ -58,6 +60,7 @@ const entries = sortByRecency(await getCollection('essay', ({ data }) => !data.d
 const currentIndex = entry ? entries.findIndex((item) => item.id === entry.id) : -1;
 const previousEntry = currentIndex >= 0 ? entries[currentIndex + 1] : undefined;
 const nextEntry = currentIndex > 0 ? entries[currentIndex - 1] : undefined;
+const travelGallery = entry ? getTravelGalleryLink(entry.id) : undefined;
 ---
 
 {
@@ -92,6 +95,7 @@ const nextEntry = currentIndex > 0 ? entries[currentIndex - 1] : undefined;
         href: buildContentUrl('essay', nextEntry.id),
       }}
     >
+      {travelGallery && <TravelGalleryLink gallery={travelGallery} />}
       {Content && <Content />}
     </ContentLayout>
   )

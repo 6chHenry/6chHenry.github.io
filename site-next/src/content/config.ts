@@ -24,6 +24,22 @@ const projects = defineCollection({
   type: 'content',
   schema: baseSchema.extend({
     repo: z.string().url().optional(),
+    featured: z.boolean().default(false),
+    status: z.string().optional(),
+    period: z.string().optional(),
+    role: z.string().optional(),
+    techStack: z.array(z.string()).default([]),
+    links: z
+      .array(
+        z.object({
+          label: z.string(),
+          href: z.string(),
+          type: z.string().optional(),
+        }),
+      )
+      .default([]),
+    accent: z.string().optional(),
+    summary: z.string().optional(),
   }),
 });
 

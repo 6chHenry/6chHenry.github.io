@@ -1,7 +1,7 @@
 ---
 title: 广州
 description: 珠江、骑楼、老街与现代塔楼并置，广州的城市气质总在烟火气和天际线之间切换。
-date: 2026-05-25
+date: 2026-04-04
 category: photography
 cover: /assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_front.JPG
 coverDesc: 中山纪念堂的正面立面，是广州近现代城市记忆中庄重的一幕。

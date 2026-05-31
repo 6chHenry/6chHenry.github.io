@@ -1,6 +1,6 @@
 ---
 title: "贝尔曼公式（强化学习）核心知识点总结"
-updatedAt: "2026-05-25T15:40:40.438Z"
+updatedAt: "2026-04-02T04:00:00.000Z"
 tags:
   - "RL"
 draft: false

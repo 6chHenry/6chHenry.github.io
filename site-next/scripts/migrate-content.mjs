@@ -34,7 +34,8 @@ function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
-function getSourceUpdatedAt(absPath, previousUpdatedAt) {
+function getSourceUpdatedAt(absPath, previousUpdatedAt, explicitUpdatedAt) {
+  if (explicitUpdatedAt) return new Date(explicitUpdatedAt).toISOString();
   if (process.env.GITHUB_ACTIONS && previousUpdatedAt) return previousUpdatedAt;
   return new Date(fs.statSync(absPath).mtime).toISOString();
 }
@@ -74,7 +75,7 @@ function parseFrontmatter(raw) {
     if (!match) continue;
 
     const [, key, value] = match;
-    const trimmed = value.replace(/^['"]|['"]$/g, '');
+    const trimmed = value.trim();
 
     if (trimmed === '' && i + 1 < lines.length && lines[i + 1].match(/^\s+-\s+/)) {
       const items = [];
@@ -82,19 +83,34 @@ function parseFrontmatter(raw) {
       while (j < lines.length) {
         const itemMatch = lines[j].match(/^\s+-\s+(.+)$/);
         if (!itemMatch) break;
-        items.push(itemMatch[1].replace(/^['"]|['"]$/g, ''));
+        items.push(parseFrontmatterScalar(itemMatch[1]));
         j++;
       }
       if (items.length > 0) {
-        data[key] = key === 'tags' ? items.join(',') : items;
+        data[key] = key === 'tags' ? items.map(String).join(',') : items;
         i = j - 1;
         continue;
       }
     }
 
-    data[key] = trimmed;
+    data[key] = parseFrontmatterScalar(value);
   }
   return { data, body };
+}
+
+function parseFrontmatterScalar(value) {
+  const trimmed = value.trim();
+  if (trimmed === 'true') return true;
+  if (trimmed === 'false') return false;
+  if (trimmed === 'null') return null;
+  if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+    try {
+      return JSON.parse(trimmed);
+    } catch {
+      return trimmed;
+    }
+  }
+  return trimmed.replace(/^['"]|['"]$/g, '');
 }
 
 function isDraft(data) {
@@ -143,6 +159,37 @@ function inferTags(relPath, collection) {
   if (collection === 'projects') tags.add('projects');
   if (collection === 'gallery') tags.add('gallery');
   return [...tags];
+}
+
+function toStringList(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.map(String).map((item) => item.trim()).filter(Boolean);
+  return String(value)
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function normalizeProjectLinks(value) {
+  if (!value) return [];
+  const items = Array.isArray(value) ? value : [value];
+  return items
+    .map((item) => {
+      if (typeof item === 'string') {
+        try {
+          return JSON.parse(item);
+        } catch {
+          return null;
+        }
+      }
+      return item;
+    })
+    .filter((item) => item && typeof item.label === 'string' && typeof item.href === 'string')
+    .map((item) => ({
+      label: item.label,
+      href: item.href,
+      type: item.type,
+    }));
 }
 
 function transformBody(body, collection, relPath) {
@@ -205,7 +252,7 @@ function migrateFile(sourceFile, sourceRoot, sourceDirName, collection, previous
   const legacyPath = `/${collection}/${relPath}/`.replace(/\/+/g, '/');
   const destFile = path.join(CONTENT, collection, `${relPath}.md`);
   const destKey = path.relative(CONTENT, destFile).replace(/\\/g, '/');
-  const updatedAt = getSourceUpdatedAt(sourceFile, previousUpdatedAtByPath.get(destKey));
+  const updatedAt = getSourceUpdatedAt(sourceFile, previousUpdatedAtByPath.get(destKey), oldData.updatedAt);
 
   const newData = {
     title,
@@ -234,6 +281,18 @@ function migrateFile(sourceFile, sourceRoot, sourceDirName, collection, previous
       newData.imageDescs = oldData.imageDescs;
     }
     if (oldData.category) newData.category = oldData.category;
+  }
+
+  if (collection === 'projects') {
+    if (oldData.repo) newData.repo = oldData.repo;
+    if (oldData.featured !== undefined) newData.featured = oldData.featured === true || String(oldData.featured).toLowerCase() === 'true';
+    if (oldData.status) newData.status = oldData.status;
+    if (oldData.period) newData.period = oldData.period;
+    if (oldData.role) newData.role = oldData.role;
+    if (oldData.techStack) newData.techStack = toStringList(oldData.techStack);
+    if (oldData.links) newData.links = normalizeProjectLinks(oldData.links);
+    if (oldData.accent) newData.accent = oldData.accent;
+    if (oldData.summary) newData.summary = oldData.summary;
   }
 
   const transformed = transformBody(body, collection, relPath.replace(/\\/g, '/'));

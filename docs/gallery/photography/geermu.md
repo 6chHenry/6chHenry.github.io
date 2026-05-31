@@ -1,7 +1,7 @@
 ---
 title: 格尔木
 description: 察尔汗盐湖的碧波、昆仑山的雪线、高原上的羚羊——柴达木盆地里一座被雪山与盐湖包围的城市。
-date: 2026-05-25
+date: 2026-02-25
 category: photography
 cover: /assets/gallery/photography/geermu.assets/qarhan_saltlake_1.jpg
 coverDesc: 察尔汗盐湖的碧绿水面，天光云影在镜面般的盐湖上铺开——戈壁深处最惊艳的一帧。

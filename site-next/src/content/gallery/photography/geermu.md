@@ -1,8 +1,8 @@
 ---
 title: "格尔木"
 description: "察尔汗盐湖的碧波、昆仑山的雪线、高原上的羚羊——柴达木盆地里一座被雪山与盐湖包围的城市。"
-date: "2026-05-25"
-updatedAt: "2026-05-25T13:53:12.129Z"
+date: "2026-02-25"
+updatedAt: "2026-05-25T14:38:01.053Z"
 tags:
   - "photography"
   - "qinghai"

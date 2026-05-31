@@ -1,3 +1,8 @@
+---
+title: "ALCM: Autonomous LLM-Augmented Causal Discovery Framework"
+updatedAt: 2026-04-04T04:00:00.000Z
+---
+
 # ALCM: Autonomous LLM-Augmented Causal Discovery Framework
 
 ## Conventional data-driven causal discovery algorithms: 
