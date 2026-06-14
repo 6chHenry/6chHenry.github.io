@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import GalleryImage from '../components/GalleryImage.astro';
 import ForestIcon from '../components/ForestIcon.astro';
 import ForestMap from '../components/ForestMap.astro';
 import { buildContentUrl, formatRecencyDate, sortByRecency } from '../utils/content';
@@ -53,7 +54,13 @@ const features = [
       {
         heroPhotos.map((photo, index) => (
           <figure class={`home-photo home-photo--${index + 1}`}>
-            <img src={photo.src} alt={photo.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+            <GalleryImage
+              src={photo.src}
+              alt={photo.alt}
+              sizes="(max-width: 720px) 72vw, 28rem"
+              loading={index === 0 ? 'eager' : 'lazy'}
+              fetchpriority={index === 0 ? 'high' : 'auto'}
+            />
           </figure>
         ))
       }

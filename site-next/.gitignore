@@ -2,6 +2,10 @@ node_modules/
 dist/
 .astro/
 public/pagefind/
+public/assets/gallery/
+public/assets/gallery-original/
+public/assets/gallery-manifest.json
+.cache/
 .DS_Store
 .env
 .env.*

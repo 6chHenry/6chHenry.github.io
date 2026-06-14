@@ -51,6 +51,7 @@ function copyFile(src, dest) {
 
 function copyAssetDirs() {
   for (const collection of Object.keys(COLLECTIONS)) {
+    if (collection === 'gallery') continue;
     for (const sourceDirName of COLLECTIONS[collection]) {
       const sourceRoot = path.join(DOCS, sourceDirName);
       if (!fs.existsSync(sourceRoot)) continue;

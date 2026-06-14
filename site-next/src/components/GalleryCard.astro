@@ -1,4 +1,7 @@
 ---
+import GalleryImage from './GalleryImage.astro';
+import { resolveGalleryImage, resolveGalleryImages } from '../utils/gallery-images';
+
 interface Props {
   href: string;
   cover: string;
@@ -13,6 +16,8 @@ interface Props {
 }
 
 const { href, cover, title, description, category, images, imageDescs = [], date, index, slug } = Astro.props;
+const coverAsset = resolveGalleryImage(cover);
+const imageAssets = resolveGalleryImages(images);
 
 const categoryLabels: Record<string, string> = {
   illustration: '插画',
@@ -23,7 +28,7 @@ const categoryLabels: Record<string, string> = {
 };
 
 const meta = {
-  images,
+  images: imageAssets,
   imageDescs,
   title,
   description: description ?? '',
@@ -41,12 +46,13 @@ const meta = {
   data-gallery-meta={JSON.stringify(meta)}
   style={`animation-delay: ${index * 0.08}s`}
 >
-  <img
+  <GalleryImage
     class="gallery-card__image"
-    src={cover}
+    asset={coverAsset}
     alt={title}
-    loading={index < 6 ? 'eager' : 'lazy'}
-    decoding="async"
+    sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw"
+    loading={index === 0 ? 'eager' : 'lazy'}
+    fetchpriority={index === 0 ? 'high' : 'auto'}
   />
   <span class="gallery-card__category">{categoryLabels[category] ?? category}</span>
   <div class="gallery-card__overlay">

@@ -1,5 +1,6 @@
 ---
 import type { TravelGalleryLink } from '../utils/essay-visuals';
+import GalleryImage from './GalleryImage.astro';
 
 interface Props {
   gallery: TravelGalleryLink;
@@ -10,7 +11,12 @@ const { gallery } = Astro.props;
 
 <aside class="travel-gallery-link" aria-label={`相关图集：${gallery.title}`}>
   <a class="travel-gallery-link__media" href={gallery.href}>
-    <img src={gallery.cover} alt={gallery.coverAlt} loading="lazy" decoding="async" />
+    <GalleryImage
+      src={gallery.cover}
+      alt={gallery.coverAlt}
+      sizes="(max-width: 640px) 100vw, 24rem"
+      loading="lazy"
+    />
   </a>
   <div class="travel-gallery-link__body">
     <p>对应图集</p>

@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import GalleryCard from '../../components/GalleryCard.astro';
+import GalleryImage from '../../components/GalleryImage.astro';
 import GalleryLightbox from '../../components/GalleryLightbox.astro';
 import { buildContentUrl, formatDate, sortByRecency } from '../../utils/content';
 
@@ -143,12 +144,12 @@ const timeline = [
                 <div class="trip-timeline__dot" aria-hidden="true"></div>
                 <div class="trip-timeline__card">
                   <div class="trip-timeline__card-img">
-                    <img
+                    <GalleryImage
                       src={trip.cover}
                       alt={trip.title}
+                      sizes="(max-width: 860px) calc(100vw - 3rem), 11rem"
                       loading={i === 0 ? 'eager' : 'lazy'}
                       fetchpriority={i === 0 ? 'high' : 'auto'}
-                      decoding="async"
                     />
                     <div class="trip-timeline__card-accent" style={`background: ${trip.color}`}></div>
                   </div>

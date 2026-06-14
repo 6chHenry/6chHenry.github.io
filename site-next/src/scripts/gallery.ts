@@ -1,5 +1,13 @@
+interface GalleryImageAsset {
+  src: string;
+  webpSrcset: string;
+  width?: number;
+  height?: number;
+  original: string;
+}
+
 interface GalleryMeta {
-  images: string[];
+  images: GalleryImageAsset[];
   imageDescs: string[];
   title: string;
   description: string;
@@ -86,6 +94,7 @@ export function initGalleryLightbox() {
   if (!lightbox) return;
 
   const img = lightbox.querySelector<HTMLImageElement>('.glbx__image');
+  const source = lightbox.querySelector<HTMLSourceElement>('.glbx__source');
   const counter = lightbox.querySelector<HTMLElement>('.glbx__counter');
   const catEl = lightbox.querySelector<HTMLElement>('.glbx__category');
   const titleEl = lightbox.querySelector<HTMLElement>('.glbx__title');
@@ -98,6 +107,29 @@ export function initGalleryLightbox() {
 
   let loaded = false;
 
+  const preloadAdjacent = (index: number) => {
+    if (!currentMeta) return;
+    const asset = currentMeta.images[index + 1] ?? currentMeta.images[index - 1];
+    if (!asset) return;
+    const preload = new Image();
+    preload.srcset = asset.webpSrcset;
+    preload.sizes = '100vw';
+    preload.src = asset.src;
+  };
+
+  const setImageAsset = (asset: GalleryImageAsset) => {
+    if (!img) return;
+    if (source) {
+      source.srcset = asset.webpSrcset;
+      source.sizes = '100vw';
+    }
+    img.src = asset.src;
+    if (asset.width) img.width = asset.width;
+    else img.removeAttribute('width');
+    if (asset.height) img.height = asset.height;
+    else img.removeAttribute('height');
+  };
+
   const showImage = (index: number) => {
     if (!img || !counter || !currentMeta) return;
 
@@ -107,7 +139,7 @@ export function initGalleryLightbox() {
       img.classList.add('is-switching');
       setTimeout(() => {
         currentIndex = index;
-        img.src = currentMeta.images[currentIndex];
+        setImageAsset(currentMeta.images[currentIndex]);
         const onDone = () => {
           img.classList.remove('is-switching');
           img.onload = null;
@@ -119,16 +151,18 @@ export function initGalleryLightbox() {
         if (imageDescEl) imageDescEl.textContent = currentMeta.imageDescs?.[index] ?? '';
         if (prevBtn) prevBtn.style.visibility = index > 0 ? '' : 'hidden';
         if (nextBtn) nextBtn.style.visibility = index < currentMeta.images.length - 1 ? '' : 'hidden';
+        preloadAdjacent(index);
       }, 150);
     } else {
       currentIndex = index;
-      img.src = currentMeta.images[currentIndex];
+      setImageAsset(currentMeta.images[currentIndex]);
       img.classList.remove('is-switching');
       loaded = true;
       counter.textContent = `${index + 1} / ${currentMeta.images.length}`;
       if (imageDescEl) imageDescEl.textContent = currentMeta.imageDescs?.[index] ?? '';
       if (prevBtn) prevBtn.style.visibility = index > 0 ? '' : 'hidden';
       if (nextBtn) nextBtn.style.visibility = index < currentMeta.images.length - 1 ? '' : 'hidden';
+      preloadAdjacent(index);
     }
   };
 

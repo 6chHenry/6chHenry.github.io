@@ -1,0 +1,50 @@
+---
+import { resolveGalleryImage, type GalleryImageAsset } from '../utils/gallery-images';
+
+interface Props {
+  src?: string;
+  asset?: GalleryImageAsset;
+  alt: string;
+  sizes?: string;
+  loading?: 'eager' | 'lazy';
+  decoding?: 'async' | 'auto' | 'sync';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  src,
+  asset: providedAsset,
+  alt,
+  sizes = '100vw',
+  loading = 'lazy',
+  decoding = 'async',
+  fetchpriority = 'auto',
+  class: className,
+  ...attrs
+} = Astro.props;
+const asset = providedAsset ?? resolveGalleryImage(src ?? '');
+---
+
+<picture>
+  {asset.webpSrcset && <source type="image/webp" srcset={asset.webpSrcset} sizes={sizes} />}
+  <img
+    {...attrs}
+    class={className}
+    src={asset.src}
+    alt={alt}
+    width={asset.width}
+    height={asset.height}
+    sizes={sizes}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={fetchpriority}
+  />
+</picture>
+
+<style>
+  picture {
+    display: contents;
+  }
+</style>

@@ -308,6 +308,10 @@
   overflow: hidden;
 }
 
+.glbx__image-area > picture {
+  display: contents;
+}
+
 .glbx__image {
   max-width: 100%;
   max-height: calc(100dvh - 5rem);

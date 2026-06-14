@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import GalleryImage from '../../components/GalleryImage.astro';
 import { buildContentUrl, formatRecencyDate, sortByRecency } from '../../utils/content';
 import { buildEssayExcerpt, getEntryCoverImage, getMoviePosterFromBody, getTravelGalleryLink, getTravelPoster } from '../../utils/essay-visuals';
 
@@ -133,7 +134,12 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
                               const roles = ['main', 'accent-1', 'accent-2', 'accent-3', 'accent-4', 'accent-5'];
                               return (
                                 <span class:list={['travel-eye__photo', `travel-eye__photo--${roles[i] || `accent-${i}`}`]}>
-                                  <img src={src} alt="" loading="lazy" decoding="async" />
+                                  <GalleryImage
+                                    src={src}
+                                    alt=""
+                                    sizes="(max-width: 720px) 44vw, 18rem"
+                                    loading="lazy"
+                                  />
                                 </span>
                               );
                             })}
@@ -147,7 +153,12 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
                         <article class="essay-card essay-card--travel">
                           {gallery && (
                             <a class="essay-card__photo" href={gallery.href} aria-label={`打开图集：${gallery.title}`}>
-                              <img src={gallery.cover} alt={gallery.coverAlt} loading="lazy" decoding="async" />
+                              <GalleryImage
+                                src={gallery.cover}
+                                alt={gallery.coverAlt}
+                                sizes="(max-width: 720px) 100vw, 22rem"
+                                loading="lazy"
+                              />
                             </a>
                           )}
                           <div class="essay-card__body">

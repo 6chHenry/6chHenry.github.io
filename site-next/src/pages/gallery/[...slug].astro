@@ -2,8 +2,10 @@
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import GalleryLightbox from '../../components/GalleryLightbox.astro';
+import GalleryImage from '../../components/GalleryImage.astro';
 import { formatDate, normalizeSlug } from '../../utils/content';
 import { GALLERY_CITY_ORDER } from '../../data/gallery-order';
+import { resolveGalleryImages } from '../../utils/gallery-images';
 
 function sortGalleryEntries<T extends { id: string; data: { updatedAt?: Date; date?: Date } }>(entries: T[]): T[] {
   const grouped = new Map<string, number>();
@@ -38,6 +40,7 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const { data } = entry;
 const allImages = [data.cover, ...data.images];
+const allImageAssets = resolveGalleryImages(allImages);
 const allImageDescs = [data.coverDesc ?? '', ...(data.imageDescs ?? [])];
 
 const allEntries = sortGalleryEntries(
@@ -87,14 +90,25 @@ const categoryLabels: Record<string, string> = {
           </div>
         )
       }
+      <a
+        class="gallery-original-download"
+        id="gallery-original-download"
+        href={allImageAssets[0].original}
+        download
+      >
+        下载当前原图
+      </a>
     </div>
 
     <div class="gallery-detail-hero">
-      <img
+      <GalleryImage
         id="gallery-hero"
-        src={data.cover}
+        asset={allImageAssets[0]}
         alt={data.title}
-        data-images={JSON.stringify(allImages)}
+        sizes="(max-width: 900px) 100vw, 76rem"
+        loading="eager"
+        fetchpriority="high"
+        data-images={JSON.stringify(allImageAssets)}
         data-descs={JSON.stringify(allImageDescs)}
       />
     </div>
@@ -113,28 +127,28 @@ const categoryLabels: Record<string, string> = {
         <div class="gallery-detail-grid">
           <button
             type="button"
-            data-thumb={data.cover}
+            data-thumb={JSON.stringify(allImageAssets[0])}
             data-index={0}
             class="is-active"
           >
-            <img
-              src={data.cover}
+            <GalleryImage
+              asset={allImageAssets[0]}
               alt={data.title}
+              sizes="(max-width: 640px) 50vw, 16rem"
               loading="lazy"
-              decoding="async"
             />
           </button>
-          {data.images.map((imgSrc, i) => (
+          {allImageAssets.slice(1).map((asset, i) => (
             <button
               type="button"
-              data-thumb={imgSrc}
+              data-thumb={JSON.stringify(asset)}
               data-index={i + 1}
             >
-              <img
-                src={imgSrc}
+              <GalleryImage
+                asset={asset}
                 alt={`${data.title} - ${i + 2}`}
+                sizes="(max-width: 640px) 50vw, 16rem"
                 loading="lazy"
-                decoding="async"
               />
             </button>
           ))}
@@ -183,9 +197,11 @@ const categoryLabels: Record<string, string> = {
   const hero = document.getElementById('gallery-hero') as HTMLImageElement | null;
   const grid = document.querySelector<HTMLElement>('.gallery-detail-grid');
   const imageDescEl = document.getElementById('gallery-image-desc');
+  const downloadLink = document.getElementById('gallery-original-download') as HTMLAnchorElement | null;
 
   if (hero && grid) {
-    let currentSrc = hero.src;
+    let currentSrc = hero.getAttribute('src') ?? hero.src;
+    const heroSource = hero.closest('picture')?.querySelector<HTMLSourceElement>('source');
     let descs: string[] = [];
     try { descs = JSON.parse(hero.dataset.descs || '[]'); } catch { /* ignore */ }
 
@@ -193,19 +209,29 @@ const categoryLabels: Record<string, string> = {
       const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-thumb]');
       if (!btn) return;
 
-      const newSrc = btn.dataset.thumb;
+      const rawAsset = btn.dataset.thumb;
       const newIndex = parseInt(btn.dataset.index || '0', 10);
-      if (!newSrc || newSrc === currentSrc) return;
+      if (!rawAsset) return;
+      let asset: { src: string; webpSrcset: string; width?: number; height?: number; original: string };
+      try { asset = JSON.parse(rawAsset); } catch { return; }
+      if (asset.src === currentSrc) return;
 
-      currentSrc = newSrc;
+      currentSrc = asset.src;
       hero.classList.add('is-swapping');
 
       setTimeout(() => {
-        hero.src = newSrc;
+        if (heroSource) {
+          heroSource.srcset = asset.webpSrcset;
+          heroSource.sizes = '(max-width: 900px) 100vw, 76rem';
+        }
+        hero.src = asset.src;
+        if (asset.width) hero.width = asset.width;
+        if (asset.height) hero.height = asset.height;
         hero.onload = () => hero.classList.remove('is-swapping');
         hero.onerror = () => hero.classList.remove('is-swapping');
       }, 180);
 
+      if (downloadLink) downloadLink.href = asset.original;
       if (imageDescEl) {
         imageDescEl.textContent = descs[newIndex] ?? '';
       }
@@ -216,3 +242,23 @@ const categoryLabels: Record<string, string> = {
     });
   }
 </script>
+
+<style>
+  .gallery-original-download {
+    margin-left: auto;
+    padding: 0.42rem 0.75rem;
+    border: 1px solid var(--ch-border-soft);
+    border-radius: 999px;
+    color: var(--ch-accent);
+    font-family: var(--ch-academic-font);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .gallery-original-download:hover,
+  .gallery-original-download:focus-visible {
+    border-color: var(--ch-accent-secondary);
+    background: var(--ch-accent-dim);
+  }
+</style>
