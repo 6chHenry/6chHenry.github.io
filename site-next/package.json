@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/migrate-content.mjs && node scripts/copy-public.mjs",
     "dev": "astro dev",
     "prebuild": "node scripts/migrate-content.mjs && node scripts/copy-public.mjs",
     "build": "astro build && npx pagefind --site dist && node scripts/sync-pagefind.mjs",
