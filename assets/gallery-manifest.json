@@ -1,0 +1,454 @@
+{
+  "version": 1,
+  "generatedAt": "2026-06-14T06:36:50.529Z",
+  "images": {
+    "/assets/gallery/photography/geermu.assets/breadlike_mountain.jpg": {
+      "src": "/assets/gallery/photography/geermu.assets/breadlike_mountain.jpg",
+      "webpSrcset": "/assets/gallery/photography/geermu.assets/breadlike_mountain.640.webp 640w, /assets/gallery/photography/geermu.assets/breadlike_mountain.1280.webp 1280w, /assets/gallery/photography/geermu.assets/breadlike_mountain.2048.webp 2048w, /assets/gallery/photography/geermu.assets/breadlike_mountain.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/geermu.assets/breadlike_mountain.jpg"
+    },
+    "/assets/gallery/photography/geermu.assets/deer_on_plateau.jpg": {
+      "src": "/assets/gallery/photography/geermu.assets/deer_on_plateau.jpg",
+      "webpSrcset": "/assets/gallery/photography/geermu.assets/deer_on_plateau.640.webp 640w, /assets/gallery/photography/geermu.assets/deer_on_plateau.1280.webp 1280w, /assets/gallery/photography/geermu.assets/deer_on_plateau.1920.webp 1920w",
+      "width": 1920,
+      "height": 1280,
+      "original": "/assets/gallery-original/photography/geermu.assets/deer_on_plateau.jpg"
+    },
+    "/assets/gallery/photography/geermu.assets/kunlun_geopark.jpg": {
+      "src": "/assets/gallery/photography/geermu.assets/kunlun_geopark.jpg",
+      "webpSrcset": "/assets/gallery/photography/geermu.assets/kunlun_geopark.640.webp 640w, /assets/gallery/photography/geermu.assets/kunlun_geopark.1280.webp 1280w, /assets/gallery/photography/geermu.assets/kunlun_geopark.2048.webp 2048w, /assets/gallery/photography/geermu.assets/kunlun_geopark.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/geermu.assets/kunlun_geopark.jpg"
+    },
+    "/assets/gallery/photography/geermu.assets/kunlun_mountain_sign.jpg": {
+      "src": "/assets/gallery/photography/geermu.assets/kunlun_mountain_sign.jpg",
+      "webpSrcset": "/assets/gallery/photography/geermu.assets/kunlun_mountain_sign.640.webp 640w, /assets/gallery/photography/geermu.assets/kunlun_mountain_sign.1280.webp 1280w, /assets/gallery/photography/geermu.assets/kunlun_mountain_sign.1920.webp 1920w",
+      "width": 1920,
+      "height": 1440,
+      "original": "/assets/gallery-original/photography/geermu.assets/kunlun_mountain_sign.jpg"
+    },
+    "/assets/gallery/photography/geermu.assets/qarhan_saltlake_1.jpg": {
+      "src": "/assets/gallery/photography/geermu.assets/qarhan_saltlake_1.jpg",
+      "webpSrcset": "/assets/gallery/photography/geermu.assets/qarhan_saltlake_1.640.webp 640w, /assets/gallery/photography/geermu.assets/qarhan_saltlake_1.1280.webp 1280w, /assets/gallery/photography/geermu.assets/qarhan_saltlake_1.2048.webp 2048w, /assets/gallery/photography/geermu.assets/qarhan_saltlake_1.3200.webp 3200w",
+      "width": 3200,
+      "height": 2329,
+      "original": "/assets/gallery-original/photography/geermu.assets/qarhan_saltlake_1.jpg"
+    },
+    "/assets/gallery/photography/geermu.assets/qarhan_saltlake_2.jpg": {
+      "src": "/assets/gallery/photography/geermu.assets/qarhan_saltlake_2.jpg",
+      "webpSrcset": "/assets/gallery/photography/geermu.assets/qarhan_saltlake_2.640.webp 640w, /assets/gallery/photography/geermu.assets/qarhan_saltlake_2.1280.webp 1280w, /assets/gallery/photography/geermu.assets/qarhan_saltlake_2.2048.webp 2048w, /assets/gallery/photography/geermu.assets/qarhan_saltlake_2.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/geermu.assets/qarhan_saltlake_2.jpg"
+    },
+    "/assets/gallery/photography/geermu.assets/qarhan_saltlake_3.jpg": {
+      "src": "/assets/gallery/photography/geermu.assets/qarhan_saltlake_3.jpg",
+      "webpSrcset": "/assets/gallery/photography/geermu.assets/qarhan_saltlake_3.640.webp 640w, /assets/gallery/photography/geermu.assets/qarhan_saltlake_3.1080.webp 1080w",
+      "width": 1080,
+      "height": 1440,
+      "original": "/assets/gallery-original/photography/geermu.assets/qarhan_saltlake_3.jpg"
+    },
+    "/assets/gallery/photography/geermu.assets/railway_sunset.jpg": {
+      "src": "/assets/gallery/photography/geermu.assets/railway_sunset.jpg",
+      "webpSrcset": "/assets/gallery/photography/geermu.assets/railway_sunset.640.webp 640w, /assets/gallery/photography/geermu.assets/railway_sunset.1280.webp 1280w, /assets/gallery/photography/geermu.assets/railway_sunset.2048.webp 2048w, /assets/gallery/photography/geermu.assets/railway_sunset.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/geermu.assets/railway_sunset.jpg"
+    },
+    "/assets/gallery/photography/geermu.assets/snow_mountain.jpg": {
+      "src": "/assets/gallery/photography/geermu.assets/snow_mountain.jpg",
+      "webpSrcset": "/assets/gallery/photography/geermu.assets/snow_mountain.640.webp 640w, /assets/gallery/photography/geermu.assets/snow_mountain.1280.webp 1280w, /assets/gallery/photography/geermu.assets/snow_mountain.2048.webp 2048w, /assets/gallery/photography/geermu.assets/snow_mountain.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/geermu.assets/snow_mountain.jpg"
+    },
+    "/assets/gallery/photography/geermu.assets/wuji_palace_1.jpg": {
+      "src": "/assets/gallery/photography/geermu.assets/wuji_palace_1.jpg",
+      "webpSrcset": "/assets/gallery/photography/geermu.assets/wuji_palace_1.640.webp 640w, /assets/gallery/photography/geermu.assets/wuji_palace_1.1280.webp 1280w, /assets/gallery/photography/geermu.assets/wuji_palace_1.2048.webp 2048w, /assets/gallery/photography/geermu.assets/wuji_palace_1.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/geermu.assets/wuji_palace_1.jpg"
+    },
+    "/assets/gallery/photography/geermu.assets/wuji_palace_2.jpg": {
+      "src": "/assets/gallery/photography/geermu.assets/wuji_palace_2.jpg",
+      "webpSrcset": "/assets/gallery/photography/geermu.assets/wuji_palace_2.640.webp 640w, /assets/gallery/photography/geermu.assets/wuji_palace_2.1280.webp 1280w, /assets/gallery/photography/geermu.assets/wuji_palace_2.2048.webp 2048w, /assets/gallery/photography/geermu.assets/wuji_palace_2.3200.webp 3200w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/geermu.assets/wuji_palace_2.jpg"
+    },
+    "/assets/gallery/photography/guangzhou.assets/shamian_island.JPG": {
+      "src": "/assets/gallery/photography/guangzhou.assets/shamian_island.JPG",
+      "webpSrcset": "/assets/gallery/photography/guangzhou.assets/shamian_island.640.webp 640w, /assets/gallery/photography/guangzhou.assets/shamian_island.1280.webp 1280w, /assets/gallery/photography/guangzhou.assets/shamian_island.2048.webp 2048w, /assets/gallery/photography/guangzhou.assets/shamian_island.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/guangzhou.assets/shamian_island.JPG"
+    },
+    "/assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_front.JPG": {
+      "src": "/assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_front.JPG",
+      "webpSrcset": "/assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_front.640.webp 640w, /assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_front.1280.webp 1280w, /assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_front.2048.webp 2048w, /assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_front.3200.webp 3200w",
+      "width": 3200,
+      "height": 2133,
+      "original": "/assets/gallery-original/photography/guangzhou.assets/Yat-sen_Mausoleum_front.JPG"
+    },
+    "/assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_side.JPG": {
+      "src": "/assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_side.JPG",
+      "webpSrcset": "/assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_side.640.webp 640w, /assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_side.1280.webp 1280w, /assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_side.2048.webp 2048w, /assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_side.3200.webp 3200w",
+      "width": 3200,
+      "height": 2134,
+      "original": "/assets/gallery-original/photography/guangzhou.assets/Yat-sen_Mausoleum_side.JPG"
+    },
+    "/assets/gallery/photography/himeji.assets/himeji_castle.jpg": {
+      "src": "/assets/gallery/photography/himeji.assets/himeji_castle.jpg",
+      "webpSrcset": "/assets/gallery/photography/himeji.assets/himeji_castle.640.webp 640w, /assets/gallery/photography/himeji.assets/himeji_castle.1280.webp 1280w, /assets/gallery/photography/himeji.assets/himeji_castle.2048.webp 2048w, /assets/gallery/photography/himeji.assets/himeji_castle.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/himeji.assets/himeji_castle.jpg"
+    },
+    "/assets/gallery/photography/himeji.assets/inside_castle.jpg": {
+      "src": "/assets/gallery/photography/himeji.assets/inside_castle.jpg",
+      "webpSrcset": "/assets/gallery/photography/himeji.assets/inside_castle.640.webp 640w, /assets/gallery/photography/himeji.assets/inside_castle.1280.webp 1280w, /assets/gallery/photography/himeji.assets/inside_castle.2048.webp 2048w, /assets/gallery/photography/himeji.assets/inside_castle.3200.webp 3200w",
+      "width": 3193,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/himeji.assets/inside_castle.jpg"
+    },
+    "/assets/gallery/photography/himeji.assets/kokoen_garden.jpg": {
+      "src": "/assets/gallery/photography/himeji.assets/kokoen_garden.jpg",
+      "webpSrcset": "/assets/gallery/photography/himeji.assets/kokoen_garden.640.webp 640w, /assets/gallery/photography/himeji.assets/kokoen_garden.1280.webp 1280w, /assets/gallery/photography/himeji.assets/kokoen_garden.2048.webp 2048w, /assets/gallery/photography/himeji.assets/kokoen_garden.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/himeji.assets/kokoen_garden.jpg"
+    },
+    "/assets/gallery/photography/hong-kong.assets/Apple_Store.JPG": {
+      "src": "/assets/gallery/photography/hong-kong.assets/Apple_Store.JPG",
+      "webpSrcset": "/assets/gallery/photography/hong-kong.assets/Apple_Store.640.webp 640w, /assets/gallery/photography/hong-kong.assets/Apple_Store.1280.webp 1280w, /assets/gallery/photography/hong-kong.assets/Apple_Store.2048.webp 2048w, /assets/gallery/photography/hong-kong.assets/Apple_Store.3200.webp 3200w",
+      "width": 3200,
+      "height": 2133,
+      "original": "/assets/gallery-original/photography/hong-kong.assets/Apple_Store.JPG"
+    },
+    "/assets/gallery/photography/hong-kong.assets/HKU.JPG": {
+      "src": "/assets/gallery/photography/hong-kong.assets/HKU.JPG",
+      "webpSrcset": "/assets/gallery/photography/hong-kong.assets/HKU.640.webp 640w, /assets/gallery/photography/hong-kong.assets/HKU.1280.webp 1280w, /assets/gallery/photography/hong-kong.assets/HKU.2048.webp 2048w, /assets/gallery/photography/hong-kong.assets/HKU.3200.webp 3200w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/hong-kong.assets/HKU.JPG"
+    },
+    "/assets/gallery/photography/hong-kong.assets/Kenndy_City.JPG": {
+      "src": "/assets/gallery/photography/hong-kong.assets/Kenndy_City.JPG",
+      "webpSrcset": "/assets/gallery/photography/hong-kong.assets/Kenndy_City.640.webp 640w, /assets/gallery/photography/hong-kong.assets/Kenndy_City.1280.webp 1280w, /assets/gallery/photography/hong-kong.assets/Kenndy_City.2048.webp 2048w, /assets/gallery/photography/hong-kong.assets/Kenndy_City.3200.webp 3200w",
+      "width": 3200,
+      "height": 2401,
+      "original": "/assets/gallery-original/photography/hong-kong.assets/Kenndy_City.JPG"
+    },
+    "/assets/gallery/photography/hong-kong.assets/Metro_Sign.JPG": {
+      "src": "/assets/gallery/photography/hong-kong.assets/Metro_Sign.JPG",
+      "webpSrcset": "/assets/gallery/photography/hong-kong.assets/Metro_Sign.640.webp 640w, /assets/gallery/photography/hong-kong.assets/Metro_Sign.1280.webp 1280w, /assets/gallery/photography/hong-kong.assets/Metro_Sign.2048.webp 2048w, /assets/gallery/photography/hong-kong.assets/Metro_Sign.3200.webp 3200w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/hong-kong.assets/Metro_Sign.JPG"
+    },
+    "/assets/gallery/photography/hong-kong.assets/Victoria_Peak.JPG": {
+      "src": "/assets/gallery/photography/hong-kong.assets/Victoria_Peak.JPG",
+      "webpSrcset": "/assets/gallery/photography/hong-kong.assets/Victoria_Peak.640.webp 640w, /assets/gallery/photography/hong-kong.assets/Victoria_Peak.1280.webp 1280w, /assets/gallery/photography/hong-kong.assets/Victoria_Peak.2048.webp 2048w, /assets/gallery/photography/hong-kong.assets/Victoria_Peak.3200.webp 3200w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/hong-kong.assets/Victoria_Peak.JPG"
+    },
+    "/assets/gallery/photography/kobe.assets/be_kobe.jpg": {
+      "src": "/assets/gallery/photography/kobe.assets/be_kobe.jpg",
+      "webpSrcset": "/assets/gallery/photography/kobe.assets/be_kobe.640.webp 640w, /assets/gallery/photography/kobe.assets/be_kobe.1280.webp 1280w, /assets/gallery/photography/kobe.assets/be_kobe.2048.webp 2048w, /assets/gallery/photography/kobe.assets/be_kobe.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/kobe.assets/be_kobe.jpg"
+    },
+    "/assets/gallery/photography/kobe.assets/kobe_blues.jpg": {
+      "src": "/assets/gallery/photography/kobe.assets/kobe_blues.jpg",
+      "webpSrcset": "/assets/gallery/photography/kobe.assets/kobe_blues.640.webp 640w, /assets/gallery/photography/kobe.assets/kobe_blues.1280.webp 1280w, /assets/gallery/photography/kobe.assets/kobe_blues.2048.webp 2048w, /assets/gallery/photography/kobe.assets/kobe_blues.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/kobe.assets/kobe_blues.jpg"
+    },
+    "/assets/gallery/photography/kobe.assets/kobe_sky.jpg": {
+      "src": "/assets/gallery/photography/kobe.assets/kobe_sky.jpg",
+      "webpSrcset": "/assets/gallery/photography/kobe.assets/kobe_sky.640.webp 640w, /assets/gallery/photography/kobe.assets/kobe_sky.1280.webp 1280w, /assets/gallery/photography/kobe.assets/kobe_sky.2048.webp 2048w, /assets/gallery/photography/kobe.assets/kobe_sky.3200.webp 3200w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/kobe.assets/kobe_sky.jpg"
+    },
+    "/assets/gallery/photography/kobe.assets/kobe_sunset.jpg": {
+      "src": "/assets/gallery/photography/kobe.assets/kobe_sunset.jpg",
+      "webpSrcset": "/assets/gallery/photography/kobe.assets/kobe_sunset.640.webp 640w, /assets/gallery/photography/kobe.assets/kobe_sunset.1280.webp 1280w, /assets/gallery/photography/kobe.assets/kobe_sunset.2048.webp 2048w, /assets/gallery/photography/kobe.assets/kobe_sunset.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/kobe.assets/kobe_sunset.jpg"
+    },
+    "/assets/gallery/photography/kobe.assets/kobe_tower.jpg": {
+      "src": "/assets/gallery/photography/kobe.assets/kobe_tower.jpg",
+      "webpSrcset": "/assets/gallery/photography/kobe.assets/kobe_tower.640.webp 640w, /assets/gallery/photography/kobe.assets/kobe_tower.1280.webp 1280w, /assets/gallery/photography/kobe.assets/kobe_tower.2048.webp 2048w, /assets/gallery/photography/kobe.assets/kobe_tower.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/kobe.assets/kobe_tower.jpg"
+    },
+    "/assets/gallery/photography/kobe.assets/kobe_university.jpg": {
+      "src": "/assets/gallery/photography/kobe.assets/kobe_university.jpg",
+      "webpSrcset": "/assets/gallery/photography/kobe.assets/kobe_university.640.webp 640w, /assets/gallery/photography/kobe.assets/kobe_university.1280.webp 1280w, /assets/gallery/photography/kobe.assets/kobe_university.2048.webp 2048w, /assets/gallery/photography/kobe.assets/kobe_university.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/kobe.assets/kobe_university.jpg"
+    },
+    "/assets/gallery/photography/kyoto.assets/Atago_Nenbutsuji_temple.jpg": {
+      "src": "/assets/gallery/photography/kyoto.assets/Atago_Nenbutsuji_temple.jpg",
+      "webpSrcset": "/assets/gallery/photography/kyoto.assets/Atago_Nenbutsuji_temple.640.webp 640w, /assets/gallery/photography/kyoto.assets/Atago_Nenbutsuji_temple.1280.webp 1280w, /assets/gallery/photography/kyoto.assets/Atago_Nenbutsuji_temple.2048.webp 2048w, /assets/gallery/photography/kyoto.assets/Atago_Nenbutsuji_temple.3200.webp 3200w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/kyoto.assets/Atago_Nenbutsuji_temple.jpg"
+    },
+    "/assets/gallery/photography/kyoto.assets/inside_eizan_railway.jpg": {
+      "src": "/assets/gallery/photography/kyoto.assets/inside_eizan_railway.jpg",
+      "webpSrcset": "/assets/gallery/photography/kyoto.assets/inside_eizan_railway.640.webp 640w, /assets/gallery/photography/kyoto.assets/inside_eizan_railway.1280.webp 1280w, /assets/gallery/photography/kyoto.assets/inside_eizan_railway.2048.webp 2048w, /assets/gallery/photography/kyoto.assets/inside_eizan_railway.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/kyoto.assets/inside_eizan_railway.jpg"
+    },
+    "/assets/gallery/photography/kyoto.assets/kifune_shrine.jpg": {
+      "src": "/assets/gallery/photography/kyoto.assets/kifune_shrine.jpg",
+      "webpSrcset": "/assets/gallery/photography/kyoto.assets/kifune_shrine.640.webp 640w, /assets/gallery/photography/kyoto.assets/kifune_shrine.1280.webp 1280w, /assets/gallery/photography/kyoto.assets/kifune_shrine.2048.webp 2048w, /assets/gallery/photography/kyoto.assets/kifune_shrine.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/kyoto.assets/kifune_shrine.jpg"
+    },
+    "/assets/gallery/photography/kyoto.assets/kinkaku-ji.jpg": {
+      "src": "/assets/gallery/photography/kyoto.assets/kinkaku-ji.jpg",
+      "webpSrcset": "/assets/gallery/photography/kyoto.assets/kinkaku-ji.640.webp 640w, /assets/gallery/photography/kyoto.assets/kinkaku-ji.1280.webp 1280w, /assets/gallery/photography/kyoto.assets/kinkaku-ji.2048.webp 2048w, /assets/gallery/photography/kyoto.assets/kinkaku-ji.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/kyoto.assets/kinkaku-ji.jpg"
+    },
+    "/assets/gallery/photography/kyoto.assets/kiyomizudera_temple.jpg": {
+      "src": "/assets/gallery/photography/kyoto.assets/kiyomizudera_temple.jpg",
+      "webpSrcset": "/assets/gallery/photography/kyoto.assets/kiyomizudera_temple.640.webp 640w, /assets/gallery/photography/kyoto.assets/kiyomizudera_temple.1280.webp 1280w, /assets/gallery/photography/kyoto.assets/kiyomizudera_temple.2048.webp 2048w, /assets/gallery/photography/kyoto.assets/kiyomizudera_temple.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/kyoto.assets/kiyomizudera_temple.jpg"
+    },
+    "/assets/gallery/photography/kyoto.assets/kurama_station.jpg": {
+      "src": "/assets/gallery/photography/kyoto.assets/kurama_station.jpg",
+      "webpSrcset": "/assets/gallery/photography/kyoto.assets/kurama_station.640.webp 640w, /assets/gallery/photography/kyoto.assets/kurama_station.1280.webp 1280w, /assets/gallery/photography/kyoto.assets/kurama_station.2048.webp 2048w, /assets/gallery/photography/kyoto.assets/kurama_station.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/kyoto.assets/kurama_station.jpg"
+    },
+    "/assets/gallery/photography/kyoto.assets/kyoto_station.jpg": {
+      "src": "/assets/gallery/photography/kyoto.assets/kyoto_station.jpg",
+      "webpSrcset": "/assets/gallery/photography/kyoto.assets/kyoto_station.640.webp 640w, /assets/gallery/photography/kyoto.assets/kyoto_station.1280.webp 1280w, /assets/gallery/photography/kyoto.assets/kyoto_station.2048.webp 2048w, /assets/gallery/photography/kyoto.assets/kyoto_station.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/kyoto.assets/kyoto_station.jpg"
+    },
+    "/assets/gallery/photography/kyoto.assets/sanzenin_vertical.jpg": {
+      "src": "/assets/gallery/photography/kyoto.assets/sanzenin_vertical.jpg",
+      "webpSrcset": "/assets/gallery/photography/kyoto.assets/sanzenin_vertical.640.webp 640w, /assets/gallery/photography/kyoto.assets/sanzenin_vertical.1280.webp 1280w, /assets/gallery/photography/kyoto.assets/sanzenin_vertical.2048.webp 2048w, /assets/gallery/photography/kyoto.assets/sanzenin_vertical.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/kyoto.assets/sanzenin_vertical.jpg"
+    },
+    "/assets/gallery/photography/kyoto.assets/sanzenin.jpg": {
+      "src": "/assets/gallery/photography/kyoto.assets/sanzenin.jpg",
+      "webpSrcset": "/assets/gallery/photography/kyoto.assets/sanzenin.640.webp 640w, /assets/gallery/photography/kyoto.assets/sanzenin.1280.webp 1280w, /assets/gallery/photography/kyoto.assets/sanzenin.2048.webp 2048w, /assets/gallery/photography/kyoto.assets/sanzenin.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/kyoto.assets/sanzenin.jpg"
+    },
+    "/assets/gallery/photography/kyoto.assets/water_divination.jpg": {
+      "src": "/assets/gallery/photography/kyoto.assets/water_divination.jpg",
+      "webpSrcset": "/assets/gallery/photography/kyoto.assets/water_divination.640.webp 640w, /assets/gallery/photography/kyoto.assets/water_divination.1280.webp 1280w, /assets/gallery/photography/kyoto.assets/water_divination.2048.webp 2048w, /assets/gallery/photography/kyoto.assets/water_divination.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/kyoto.assets/water_divination.jpg"
+    },
+    "/assets/gallery/photography/kyoto.assets/youzhai_pavilion_1.jpg": {
+      "src": "/assets/gallery/photography/kyoto.assets/youzhai_pavilion_1.jpg",
+      "webpSrcset": "/assets/gallery/photography/kyoto.assets/youzhai_pavilion_1.640.webp 640w, /assets/gallery/photography/kyoto.assets/youzhai_pavilion_1.1280.webp 1280w, /assets/gallery/photography/kyoto.assets/youzhai_pavilion_1.2048.webp 2048w, /assets/gallery/photography/kyoto.assets/youzhai_pavilion_1.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/kyoto.assets/youzhai_pavilion_1.jpg"
+    },
+    "/assets/gallery/photography/kyoto.assets/youzhai_pavilion_2.jpg": {
+      "src": "/assets/gallery/photography/kyoto.assets/youzhai_pavilion_2.jpg",
+      "webpSrcset": "/assets/gallery/photography/kyoto.assets/youzhai_pavilion_2.640.webp 640w, /assets/gallery/photography/kyoto.assets/youzhai_pavilion_2.1280.webp 1280w, /assets/gallery/photography/kyoto.assets/youzhai_pavilion_2.2048.webp 2048w, /assets/gallery/photography/kyoto.assets/youzhai_pavilion_2.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/kyoto.assets/youzhai_pavilion_2.jpg"
+    },
+    "/assets/gallery/photography/lushan.assets/lushan_ruqinlake.jpg": {
+      "src": "/assets/gallery/photography/lushan.assets/lushan_ruqinlake.jpg",
+      "webpSrcset": "/assets/gallery/photography/lushan.assets/lushan_ruqinlake.640.webp 640w, /assets/gallery/photography/lushan.assets/lushan_ruqinlake.1280.webp 1280w, /assets/gallery/photography/lushan.assets/lushan_ruqinlake.2048.webp 2048w, /assets/gallery/photography/lushan.assets/lushan_ruqinlake.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/lushan.assets/lushan_ruqinlake.jpg"
+    },
+    "/assets/gallery/photography/lushan.assets/lushan_snow.jpg": {
+      "src": "/assets/gallery/photography/lushan.assets/lushan_snow.jpg",
+      "webpSrcset": "/assets/gallery/photography/lushan.assets/lushan_snow.640.webp 640w, /assets/gallery/photography/lushan.assets/lushan_snow.1280.webp 1280w, /assets/gallery/photography/lushan.assets/lushan_snow.2048.webp 2048w, /assets/gallery/photography/lushan.assets/lushan_snow.3200.webp 3200w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/lushan.assets/lushan_snow.jpg"
+    },
+    "/assets/gallery/photography/lushan.assets/lushan_sunset.jpg": {
+      "src": "/assets/gallery/photography/lushan.assets/lushan_sunset.jpg",
+      "webpSrcset": "/assets/gallery/photography/lushan.assets/lushan_sunset.640.webp 640w, /assets/gallery/photography/lushan.assets/lushan_sunset.1280.webp 1280w, /assets/gallery/photography/lushan.assets/lushan_sunset.2048.webp 2048w, /assets/gallery/photography/lushan.assets/lushan_sunset.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/lushan.assets/lushan_sunset.jpg"
+    },
+    "/assets/gallery/photography/macau.assets/bus_stop.JPG": {
+      "src": "/assets/gallery/photography/macau.assets/bus_stop.JPG",
+      "webpSrcset": "/assets/gallery/photography/macau.assets/bus_stop.640.webp 640w, /assets/gallery/photography/macau.assets/bus_stop.1280.webp 1280w, /assets/gallery/photography/macau.assets/bus_stop.2048.webp 2048w, /assets/gallery/photography/macau.assets/bus_stop.2687.webp 2687w",
+      "width": 2133,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/macau.assets/bus_stop.JPG"
+    },
+    "/assets/gallery/photography/macau.assets/bus.JPG": {
+      "src": "/assets/gallery/photography/macau.assets/bus.JPG",
+      "webpSrcset": "/assets/gallery/photography/macau.assets/bus.640.webp 640w, /assets/gallery/photography/macau.assets/bus.1280.webp 1280w, /assets/gallery/photography/macau.assets/bus.2048.webp 2048w, /assets/gallery/photography/macau.assets/bus.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/macau.assets/bus.JPG"
+    },
+    "/assets/gallery/photography/macau.assets/Landmark.JPEG": {
+      "src": "/assets/gallery/photography/macau.assets/Landmark.JPEG",
+      "webpSrcset": "/assets/gallery/photography/macau.assets/Landmark.640.webp 640w, /assets/gallery/photography/macau.assets/Landmark.1280.webp 1280w, /assets/gallery/photography/macau.assets/Landmark.1440.webp 1440w",
+      "width": 1440,
+      "height": 1920,
+      "original": "/assets/gallery-original/photography/macau.assets/Landmark.JPEG"
+    },
+    "/assets/gallery/photography/macau.assets/Londonese.JPG": {
+      "src": "/assets/gallery/photography/macau.assets/Londonese.JPG",
+      "webpSrcset": "/assets/gallery/photography/macau.assets/Londonese.640.webp 640w, /assets/gallery/photography/macau.assets/Londonese.1280.webp 1280w, /assets/gallery/photography/macau.assets/Londonese.1296.webp 1296w",
+      "width": 1296,
+      "height": 1710,
+      "original": "/assets/gallery-original/photography/macau.assets/Londonese.JPG"
+    },
+    "/assets/gallery/photography/nanchang.assets/nanchang_bridge.jpg": {
+      "src": "/assets/gallery/photography/nanchang.assets/nanchang_bridge.jpg",
+      "webpSrcset": "/assets/gallery/photography/nanchang.assets/nanchang_bridge.640.webp 640w, /assets/gallery/photography/nanchang.assets/nanchang_bridge.1280.webp 1280w, /assets/gallery/photography/nanchang.assets/nanchang_bridge.2048.webp 2048w, /assets/gallery/photography/nanchang.assets/nanchang_bridge.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/nanchang.assets/nanchang_bridge.jpg"
+    },
+    "/assets/gallery/photography/nanchang.assets/nanchang_icon.jpg": {
+      "src": "/assets/gallery/photography/nanchang.assets/nanchang_icon.jpg",
+      "webpSrcset": "/assets/gallery/photography/nanchang.assets/nanchang_icon.640.webp 640w, /assets/gallery/photography/nanchang.assets/nanchang_icon.1280.webp 1280w, /assets/gallery/photography/nanchang.assets/nanchang_icon.2048.webp 2048w, /assets/gallery/photography/nanchang.assets/nanchang_icon.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/nanchang.assets/nanchang_icon.jpg"
+    },
+    "/assets/gallery/photography/nanchang.assets/tengwang_pavilion.jpg": {
+      "src": "/assets/gallery/photography/nanchang.assets/tengwang_pavilion.jpg",
+      "webpSrcset": "/assets/gallery/photography/nanchang.assets/tengwang_pavilion.640.webp 640w, /assets/gallery/photography/nanchang.assets/tengwang_pavilion.1280.webp 1280w, /assets/gallery/photography/nanchang.assets/tengwang_pavilion.2048.webp 2048w, /assets/gallery/photography/nanchang.assets/tengwang_pavilion.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/nanchang.assets/tengwang_pavilion.jpg"
+    },
+    "/assets/gallery/photography/nara.assets/deer.jpg": {
+      "src": "/assets/gallery/photography/nara.assets/deer.jpg",
+      "webpSrcset": "/assets/gallery/photography/nara.assets/deer.640.webp 640w, /assets/gallery/photography/nara.assets/deer.1280.webp 1280w, /assets/gallery/photography/nara.assets/deer.2048.webp 2048w, /assets/gallery/photography/nara.assets/deer.3200.webp 3200w",
+      "width": 3200,
+      "height": 1800,
+      "original": "/assets/gallery-original/photography/nara.assets/deer.jpg"
+    },
+    "/assets/gallery/photography/nara.assets/kasuga_taisha_shrine.jpg": {
+      "src": "/assets/gallery/photography/nara.assets/kasuga_taisha_shrine.jpg",
+      "webpSrcset": "/assets/gallery/photography/nara.assets/kasuga_taisha_shrine.640.webp 640w, /assets/gallery/photography/nara.assets/kasuga_taisha_shrine.1280.webp 1280w, /assets/gallery/photography/nara.assets/kasuga_taisha_shrine.2048.webp 2048w, /assets/gallery/photography/nara.assets/kasuga_taisha_shrine.3200.webp 3200w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/nara.assets/kasuga_taisha_shrine.jpg"
+    },
+    "/assets/gallery/photography/nara.assets/wakakusayama.jpg": {
+      "src": "/assets/gallery/photography/nara.assets/wakakusayama.jpg",
+      "webpSrcset": "/assets/gallery/photography/nara.assets/wakakusayama.640.webp 640w, /assets/gallery/photography/nara.assets/wakakusayama.1280.webp 1280w, /assets/gallery/photography/nara.assets/wakakusayama.2048.webp 2048w, /assets/gallery/photography/nara.assets/wakakusayama.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/nara.assets/wakakusayama.jpg"
+    },
+    "/assets/gallery/photography/osaka.assets/glico.jpg": {
+      "src": "/assets/gallery/photography/osaka.assets/glico.jpg",
+      "webpSrcset": "/assets/gallery/photography/osaka.assets/glico.640.webp 640w, /assets/gallery/photography/osaka.assets/glico.1280.webp 1280w, /assets/gallery/photography/osaka.assets/glico.2048.webp 2048w, /assets/gallery/photography/osaka.assets/glico.3200.webp 3200w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/osaka.assets/glico.jpg"
+    },
+    "/assets/gallery/photography/osaka.assets/hankai_railway.jpg": {
+      "src": "/assets/gallery/photography/osaka.assets/hankai_railway.jpg",
+      "webpSrcset": "/assets/gallery/photography/osaka.assets/hankai_railway.640.webp 640w, /assets/gallery/photography/osaka.assets/hankai_railway.1280.webp 1280w, /assets/gallery/photography/osaka.assets/hankai_railway.2048.webp 2048w, /assets/gallery/photography/osaka.assets/hankai_railway.3200.webp 3200w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/osaka.assets/hankai_railway.jpg"
+    },
+    "/assets/gallery/photography/osaka.assets/osaka_city_park.jpg": {
+      "src": "/assets/gallery/photography/osaka.assets/osaka_city_park.jpg",
+      "webpSrcset": "/assets/gallery/photography/osaka.assets/osaka_city_park.640.webp 640w, /assets/gallery/photography/osaka.assets/osaka_city_park.1280.webp 1280w, /assets/gallery/photography/osaka.assets/osaka_city_park.2048.webp 2048w, /assets/gallery/photography/osaka.assets/osaka_city_park.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/osaka.assets/osaka_city_park.jpg"
+    },
+    "/assets/gallery/photography/osaka.assets/Tsutenkaku.jpg": {
+      "src": "/assets/gallery/photography/osaka.assets/Tsutenkaku.jpg",
+      "webpSrcset": "/assets/gallery/photography/osaka.assets/Tsutenkaku.640.webp 640w, /assets/gallery/photography/osaka.assets/Tsutenkaku.1280.webp 1280w, /assets/gallery/photography/osaka.assets/Tsutenkaku.2048.webp 2048w, /assets/gallery/photography/osaka.assets/Tsutenkaku.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/osaka.assets/Tsutenkaku.jpg"
+    },
+    "/assets/gallery/photography/uji.assets/byodoin_temple.jpg": {
+      "src": "/assets/gallery/photography/uji.assets/byodoin_temple.jpg",
+      "webpSrcset": "/assets/gallery/photography/uji.assets/byodoin_temple.640.webp 640w, /assets/gallery/photography/uji.assets/byodoin_temple.1280.webp 1280w, /assets/gallery/photography/uji.assets/byodoin_temple.2048.webp 2048w, /assets/gallery/photography/uji.assets/byodoin_temple.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/uji.assets/byodoin_temple.jpg"
+    },
+    "/assets/gallery/photography/uji.assets/matcha.jpg": {
+      "src": "/assets/gallery/photography/uji.assets/matcha.jpg",
+      "webpSrcset": "/assets/gallery/photography/uji.assets/matcha.640.webp 640w, /assets/gallery/photography/uji.assets/matcha.1280.webp 1280w, /assets/gallery/photography/uji.assets/matcha.2048.webp 2048w, /assets/gallery/photography/uji.assets/matcha.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/uji.assets/matcha.jpg"
+    },
+    "/assets/gallery/photography/uji.assets/riverside_singing.jpg": {
+      "src": "/assets/gallery/photography/uji.assets/riverside_singing.jpg",
+      "webpSrcset": "/assets/gallery/photography/uji.assets/riverside_singing.640.webp 640w, /assets/gallery/photography/uji.assets/riverside_singing.1280.webp 1280w, /assets/gallery/photography/uji.assets/riverside_singing.2048.webp 2048w, /assets/gallery/photography/uji.assets/riverside_singing.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/uji.assets/riverside_singing.jpg"
+    },
+    "/assets/gallery/photography/wuhan.assets/goujian_sword.jpg": {
+      "src": "/assets/gallery/photography/wuhan.assets/goujian_sword.jpg",
+      "webpSrcset": "/assets/gallery/photography/wuhan.assets/goujian_sword.640.webp 640w, /assets/gallery/photography/wuhan.assets/goujian_sword.1280.webp 1280w, /assets/gallery/photography/wuhan.assets/goujian_sword.2048.webp 2048w, /assets/gallery/photography/wuhan.assets/goujian_sword.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/wuhan.assets/goujian_sword.jpg"
+    },
+    "/assets/gallery/photography/wuhan.assets/snow_yellow_crane_tower.jpg": {
+      "src": "/assets/gallery/photography/wuhan.assets/snow_yellow_crane_tower.jpg",
+      "webpSrcset": "/assets/gallery/photography/wuhan.assets/snow_yellow_crane_tower.640.webp 640w, /assets/gallery/photography/wuhan.assets/snow_yellow_crane_tower.1280.webp 1280w, /assets/gallery/photography/wuhan.assets/snow_yellow_crane_tower.2048.webp 2048w, /assets/gallery/photography/wuhan.assets/snow_yellow_crane_tower.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/wuhan.assets/snow_yellow_crane_tower.jpg"
+    },
+    "/assets/gallery/photography/wuhan.assets/wuhan_icon.jpg": {
+      "src": "/assets/gallery/photography/wuhan.assets/wuhan_icon.jpg",
+      "webpSrcset": "/assets/gallery/photography/wuhan.assets/wuhan_icon.640.webp 640w, /assets/gallery/photography/wuhan.assets/wuhan_icon.1280.webp 1280w, /assets/gallery/photography/wuhan.assets/wuhan_icon.2048.webp 2048w, /assets/gallery/photography/wuhan.assets/wuhan_icon.3200.webp 3200w",
+      "width": 3200,
+      "height": 2400,
+      "original": "/assets/gallery-original/photography/wuhan.assets/wuhan_icon.jpg"
+    },
+    "/assets/gallery/photography/wuhan.assets/yellow_crane_tower.jpg": {
+      "src": "/assets/gallery/photography/wuhan.assets/yellow_crane_tower.jpg",
+      "webpSrcset": "/assets/gallery/photography/wuhan.assets/yellow_crane_tower.640.webp 640w, /assets/gallery/photography/wuhan.assets/yellow_crane_tower.1280.webp 1280w, /assets/gallery/photography/wuhan.assets/yellow_crane_tower.2048.webp 2048w, /assets/gallery/photography/wuhan.assets/yellow_crane_tower.3024.webp 3024w",
+      "width": 2400,
+      "height": 3200,
+      "original": "/assets/gallery-original/photography/wuhan.assets/yellow_crane_tower.jpg"
+    }
+  }
+}
