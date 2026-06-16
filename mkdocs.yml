@@ -360,8 +360,8 @@ nav:
   - 杂谈:
     - index: essay/index.md
     - "思考":
-      - "大伟哥分享": summary/大伟哥分享-整理版.md
-      - "归属": summary/杂谈.md
+      - "大伟哥分享": essay/Thoughts/大伟哥分享-整理版.md
+      - "归属": essay/Thoughts/归属.md
       - "二倍速": essay/二倍速.md
       - "香港红绿灯": essay/香港红绿灯.md
       - "J人": essay/J人.md
@@ -405,4 +405,3 @@ nav:
       - HoughTransform: projects/CarLaneDetection/HoughTransform.md
     
   - 关于我: about/index.md
-
