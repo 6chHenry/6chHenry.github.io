@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "migrate": "node scripts/migrate-content.mjs",
     "copy-public": "node scripts/copy-public.mjs",
-    "optimize-images": "node scripts/optimize-gallery-images.mjs"
+    "optimize-images": "node scripts/optimize-gallery-images.mjs",
+    "publish-content": "node scripts/publish-content.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",
