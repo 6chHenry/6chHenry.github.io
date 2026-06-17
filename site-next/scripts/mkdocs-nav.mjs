@@ -15,20 +15,21 @@ function sortEntries(entries) {
 }
 
 function readFrontmatterAndBody(raw) {
-  const start = raw.match(/^---\r?\n/);
-  if (!start) return { data: {}, body: raw };
-  const endMatch = /\r?\n---\r?\n/.exec(raw.slice(start[0].length));
-  if (!endMatch) return { data: {}, body: raw };
+  const source = raw.replace(/^\uFEFF/, '');
+  const start = source.match(/^---\r?\n/);
+  if (!start) return { data: {}, body: source };
+  const endMatch = /\r?\n---\r?\n/.exec(source.slice(start[0].length));
+  if (!endMatch) return { data: {}, body: source };
 
   const data = {};
   const end = start[0].length + endMatch.index;
-  for (const line of raw.slice(start[0].length, end).split(/\r?\n/)) {
+  for (const line of source.slice(start[0].length, end).split(/\r?\n/)) {
     const match = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
     if (!match) continue;
     data[match[1]] = match[2].replace(/^['"]|['"]$/g, '');
   }
 
-  return { data, body: raw.slice(end + endMatch[0].length) };
+  return { data, body: source.slice(end + endMatch[0].length) };
 }
 
 function isDraft(data) {

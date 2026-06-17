@@ -554,6 +554,25 @@
     ]
   },
   {
+    "title": "Quant",
+    "children": [
+      {
+        "title": "Quant 面试题库：Brainteaser、概率与交易思维",
+        "docsPath": "notes/Quant/Quant面试题库.md",
+        "children": [],
+        "slug": "quant面试题库",
+        "slugPath": [
+          "quant",
+          "quant面试题库"
+        ]
+      }
+    ],
+    "slug": "quant",
+    "slugPath": [
+      "quant"
+    ]
+  },
+  {
     "title": "Research",
     "children": [
       {

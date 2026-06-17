@@ -55,19 +55,20 @@ function walkMarkdown(dir, files = []) {
 }
 
 function parseFrontmatter(raw) {
-  const start = raw.match(/^---\r?\n/);
+  const source = raw.replace(/^\uFEFF/, '');
+  const start = source.match(/^---\r?\n/);
   if (!start) {
-    return { data: {}, body: raw };
+    return { data: {}, body: source };
   }
-  const endMatch = /\r?\n---\r?\n/.exec(raw.slice(start[0].length));
-  if (!endMatch) return { data: {}, body: raw };
+  const endMatch = /\r?\n---\r?\n/.exec(source.slice(start[0].length));
+  if (!endMatch) return { data: {}, body: source };
 
   const end = start[0].length + endMatch.index;
   const bodyStart = end + endMatch[0].length;
-  const yaml = raw.slice(start[0].length, end);
-  const body = raw.slice(bodyStart);
+  const yaml = source.slice(start[0].length, end);
+  const body = source.slice(bodyStart);
   const data = {};
-  const lines = yaml.split('\n');
+  const lines = yaml.split(/\r?\n/);
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -193,7 +194,7 @@ function normalizeProjectLinks(value) {
 }
 
 function transformBody(body, collection, relPath) {
-  let output = body;
+  let output = body.replace(/\r\n?/g, '\n');
 
   output = output.replace(
     /^!!!\s+(\w+)\s+"([^"]+)"\n((?:    .+\n?)*)/gm,
