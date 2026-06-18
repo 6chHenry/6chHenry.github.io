@@ -1,236 +1,251 @@
-# 北欧旅行规划页设计
+# 北欧旅行规划页面重设计
 
-## Summary
+## 目标
 
-在笔记页面新增 `Travel` 分类，并创建第一篇“北欧旅行规划”视觉灵感页。页面以 Stockholm 为 base，采用“地图主导 + 日程卡片”的方案：顶部用卡通北欧路线图展示 Stockholm、Oslo、Bergen、Helsinki、Tromsø 的空间关系；下方用 5 天主线卡片给出可执行旅行骨架；Helsinki 和 Tromsø 作为可选延伸，不硬塞进 5 天主线。
+将现有“北欧旅行规划”从通用渐变卡片页面重设计为一篇优雅、准确、可交互的北欧旅行编辑手账。
 
-该页面是旅行规划灵感页，不是已经完成的游记。内容需要明确区分“主线可执行路线”和“未来可选支线”。
+页面继续服务于旅行规划，而不是模拟完整地图应用。核心体验是：
 
-## Approved Direction
+- 真实、清晰的北欧地理轮廓。
+- 杂志双栏式首屏。
+- 克制的纸张、票根、胶带和手写批注细节。
+- 可点击的五日主线。
+- 日期切换时同步更新地图高亮和票根内容。
 
-- 方案选择：方案 B，新增可复用 Astro 旅行规划组件。
-- 页面定位：视觉灵感页，地图和路线氛围优先，实际交通可行性作为辅助说明。
-- 旅行时长：5 天主线 + 可选延伸。
-- 季节定位：通用规划版，不绑定冬季或夏季。
-- 笔记目录：`docs/notes/Travel/`。
+## 已确认的视觉方向
 
-## Source Files
+整体以“杂志双栏式”为骨架，加入少量“旅行手账式”装饰。
 
-新增源内容：
+- 地图占首屏左侧约 58%。
+- 标题、摘要、数据和动态票根占右侧约 42%。
+- 主要表面使用暖白纸张色。
+- 地图使用灰绿海面、米色陆地、深绿边界和砖红主路线。
+- 装饰仅包括一处胶带、一张票根和少量批注。
+- 不使用玻璃拟态、卡片墙、强渐变或夸张阴影。
 
-- `docs/notes/Travel/北欧旅行规划.md`
+## 地图
 
-新增源资产：
+### 数据与授权
 
-- `docs/notes/Travel/北欧旅行规划.assets/nordic-route.svg`
+使用 Natural Earth 1:10m 公共领域国家边界数据生成地图轮廓。
 
-新增 Astro 组件：
+包含：
 
-- `site-next/src/components/travel/TravelRouteMap.astro`
-- `site-next/src/components/travel/TravelItinerary.astro`
-- `site-next/src/components/travel/TravelCityCard.astro`
+- Norway
+- Sweden
+- Finland
 
-新增样式：
+不直接复制商业手绘地图，也不使用需要 ShareAlike 的现成地图作为主底图。
 
-- `site-next/src/styles/travel-planning.css`
+### 投影与坐标
 
-生成内容仍由现有迁移流程处理，不直接编辑 `site-next/dist/`。
+地图使用适合北欧区域的 Lambert Azimuthal Equal Area 投影：
 
-## Page Structure
-
-页面按以下顺序组织：
-
-1. Hero
-   - 标题：北欧旅行规划。
-   - 说明：从 Stockholm 出发的 5 天主线与可选延伸。
-   - 标注：这是规划页，不是已完成游记。
-
-2. Cartoon Route Map
-   - 主导视觉。
-   - 显示 Stockholm、Oslo、Bergen、Helsinki、Tromsø。
-   - Stockholm 标记为 base。
-   - 实线表示 5 天主线。
-   - 虚线表示 Helsinki / Tromsø 可选延伸。
-   - 点线表示慢旅行备选交通。
-
-3. Five-Day Main Itinerary
-   - Day 1: Stockholm
-   - Day 2: Stockholm → Oslo
-   - Day 3: Oslo → Bergen
-   - Day 4: Bergen / fjord-style day trip
-   - Day 5: Bergen → Stockholm 或 Oslo → Stockholm，作为返程缓冲
-
-4. Optional Extensions
-   - Helsinki：建议通过 Stockholm overnight ferry 或飞行，加 1-2 天。
-   - Tromsø：建议通过 Oslo / Stockholm 飞行，加 2-3 天。
-
-5. Transport Overview
-   - 飞机：适合跨区域连接，尤其 Tromsø。
-   - 火车：适合 Oslo → Bergen 或慢旅行版本。
-   - 渡轮：适合 Stockholm → Helsinki。
-   - 页面应避免暗示所有城市都适合塞进 5 天。
-
-6. Planning Checklist
-   - 预算。
-   - 季节。
-   - 申根与出入境。
-   - 住宿城市。
-   - 极光 / 峡湾优先级。
-
-## Route Content
-
-主线聚焦 Stockholm + Norway corridor：
-
-- Stockholm 是 base 和出发点。
-- Oslo 是中转兼城市体验。
-- Bergen 是峡湾入口，也是主线的视觉重点。
-- Helsinki 和 Tromsø 是独立支线，不进入 5 天主线。
-
-页面文案应使用类似以下原则：
-
-> 5 天主线聚焦 Stockholm + Norway corridor；Helsinki 和 Tromsø 是可选延伸，不建议硬塞进同一个 5 天行程。
-
-## Component Design
-
-### TravelRouteMap
-
-职责：
-
-- 渲染卡通路线图区域。
-- 接收城市点位、路线线段和图例数据。
-- 支持主线 / 延伸线 / 慢旅行备选三种线型。
-
-实现约束：
-
-- 使用 SVG 坐标，不做真实 GIS 投影。
-- 目标是视觉表达路线关系，不追求地理精确。
-- 首版静态渲染，不依赖客户端 JS。
-
-### TravelItinerary
-
-职责：
-
-- 渲染 5 天主线卡片。
-- 每张卡展示 day、route、transport、theme、reality check。
-
-实现约束：
-
-- 移动端单列。
-- 桌面端可用网格或横向阶段布局。
-- 内容必须可被 Pagefind 索引。
-
-### TravelCityCard
-
-职责：
-
-- 渲染城市规划卡片。
-- 展示城市定位、冬季亮点、夏季亮点、交通接入和主线 / 延伸标签。
-
-实现约束：
-
-- 可复用于未来旅行规划页。
-- 不绑定北欧专有字段名。
-
-## Data Shape
-
-组件首版使用页面内静态数据或 Astro frontmatter 数据，不接外部 API。
-
-建议结构：
-
-```ts
-type TravelStop = {
-  id: string;
-  name: string;
-  country: string;
-  role: "base" | "main" | "extension";
-  days: string;
-  transport: string;
-  winter: string;
-  summer: string;
-  notes: string;
-};
-
-type ItineraryDay = {
-  day: string;
-  title: string;
-  route: string;
-  transport: string;
-  theme: string;
-  realisticNote: string;
-};
+```text
++proj=laea +lat_0=63 +lon_0=15
 ```
 
-数据量小，首版不需要 JSON 数据文件。若未来旅行规划页增多，再考虑抽成共享 data 模块。
+城市使用实际经纬度投影到同一坐标系：
 
-## Visual Design
+- Stockholm: `18.0686, 59.3293`
+- Oslo: `10.7522, 59.9139`
+- Bergen: `5.3221, 60.3930`
+- Helsinki: `24.9384, 60.1699`
+- Tromsø: `18.9553, 69.6492`
 
-整体视觉使用北欧冷色系：
+最终地图必须满足：
 
-- 主色：深海蓝、冰蓝、松林绿。
-- 点缀：极光紫、暖黄色窗口灯光。
-- 地图：简化卡通 SVG。
-- 卡片：半透明浅色规划卡片。
+- Helsinki 位于芬兰南岸。
+- Stockholm 位于瑞典东岸。
+- Oslo 和 Bergen 位于挪威。
+- Tromsø 位于挪威北部。
+- 裁掉与路线无关的 Svalbard 等远北岛群，避免浪费首屏空间。
 
-交互首版保持静态：
+### 手绘处理
 
-- hover 阴影或轻微位移可以用 CSS 实现。
-- 不引入复杂 JS。
-- 地图标记 hover 可有 CSS title/label，但不依赖交互才能理解内容。
+真实轮廓之上加入：
 
-## Navigation And Routing
+- 轻微纸张颗粒。
+- 简化的路线虚线。
+- 城市圆点。
+- 英文城市名与短标注。
 
-新增 `docs/notes/Travel/北欧旅行规划.md` 后，现有 notes nav 扫描流程应自动生成：
+标注使用纯 ASCII，避免构建或命令行编码损坏：
 
-- `/notes/category/travel/`
-- `/notes/Travel/北欧旅行规划/`
+- `base / D1`
+- `rail / D2`
+- `fjord / D3-4`
+- `optional ferry`
+- `arctic extension`
 
-`Travel` 目录名使用英文，与现有 `docs/essay/Travel` 保持一致。
+## 标题与字体
 
-## Search
+主标题缩短为：
 
-页面正文需包含以下可搜索关键词：
+```text
+北欧五日
+```
 
-- 北欧旅行
-- Stockholm
-- Oslo
-- Bergen
-- Helsinki
-- Tromsø
-- 斯德哥尔摩
-- 卑尔根
-- 奥斯陆
-- 赫尔辛基
-- 特罗姆瑟
+副标题为：
 
-Pagefind 应能搜到该页面。
+```text
+从斯德哥尔摩出发
+```
 
-## Verification Plan
+字体系统：
+
+- 中文标题：`Noto Serif SC`，中等字重。
+- 中文正文：`Noto Sans SC`。
+- 英文编辑标题：Georgia。
+- 数字和小型标签沿用英文衬线或站点现有 mono 字体。
+
+中文衬线字体仅用于标题、章节标题和少量引文，避免整页呈现古风。
+
+## 首屏结构
+
+### 左栏
+
+- `Nordic Field Notes` 英文地图标题。
+- 真实轮廓地图。
+- 胶带装饰。
+- 一张简短规划批注。
+
+### 右栏
+
+- `Planning Journal` eyebrow。
+- 主标题“北欧五日”。
+- 副标题“从斯德哥尔摩出发”。
+- 规划简介。
+- `5 days / 3 core cities / 2 extensions` 数据摘要。
+- 随日期切换的动态票根。
+
+## 五日主线交互
+
+五日主线使用可点击、可键盘操作的 tab 结构。
+
+### Day 1
+
+- 只高亮 Stockholm 城市点。
+- 不显示任何伪造路线或向上虚线。
+- 票根显示抵达、老城、水边与恢复节奏。
+
+### Day 2
+
+- 高亮 Stockholm 到 Oslo。
+- 票根显示 SJ / Vy、铁路优先、航班备选。
+
+### Day 3
+
+- 高亮 Oslo 到 Bergen。
+- 票根强调 Bergen Line 和靠窗座位。
+
+### Day 4
+
+- 高亮 Bergen 当地区域或短程峡湾环线。
+- 票根强调天气优先、峡湾与城市备选。
+
+### Day 5
+
+- 高亮 Bergen 返回 Stockholm 的返程关系。
+- 票根强调航班、行李和延误缓冲。
+
+### 动画
+
+采用“克制编辑感”：
+
+- 路线为细线，短暂改变透明度和 dash offset。
+- 城市点淡入，不缩放。
+- 票根在原位轻微翻页，不横向滑入。
+- 动画约 `250ms`。
+- 支持 `prefers-reduced-motion`，关闭全部非必要动画。
+
+## 后续内容
+
+首屏下方按统一编辑网格组织：
+
+1. 五日主线详细说明。
+2. Stockholm、Oslo、Bergen 三个主线城市。
+3. Helsinki 和 Tromsø 两个可选延伸。
+4. 交通方式比较。
+5. 季节、预算、住宿和天气决策清单。
+6. 官方交通与旅游资料链接。
+
+内容应比当前版本更完整，但不堆砌重复卡片。
+
+## 组件边界
+
+- `NordicTravelPlanning.astro`
+  - 页面数据和整体结构。
+- `TravelRouteMap.astro`
+  - 地图、路线层、节点和可访问描述。
+- `TravelItinerary.astro`
+  - 五日 tabs 和详细日程。
+- `TravelCityCard.astro`
+  - 主线城市与延伸城市内容。
+- `nordic-travel.ts`
+  - 日期切换、路线状态和票根同步。
+- `travel-planning.css`
+  - 页面级设计系统、响应式和暗色模式。
+
+地图源资产继续位于：
+
+```text
+docs/notes/Travel/北欧旅行规划.assets/nordic-route.svg
+```
+
+## 响应式
+
+- 桌面端使用地图与文字双栏。
+- 850px 以下改为地图在上、文字在下。
+- 五日 tabs 在移动端改为纵向列表。
+- 不产生横向滚动。
+- 点击目标不小于 44px。
+- 地图保留明确宽高或 aspect ratio，避免布局偏移。
+
+## 暗色模式
+
+暗色模式不是简单颜色反转：
+
+- 纸张改为深灰绿色。
+- 陆地使用低饱和暖灰。
+- 砖红路线适当提亮。
+- 正文、边界、票根和选中状态保持足够对比度。
+
+## 可访问性
+
+- 地图提供简短 `title` 和 `desc`。
+- 日期切换使用语义化 tab/button。
+- 当前日期使用 `aria-selected`。
+- 票根更新使用 `aria-live="polite"`。
+- 键盘焦点清晰可见。
+- 不依赖颜色单独表达主线和延伸。
+
+## 验证
 
 实现后运行：
 
 ```powershell
 cd F:\EECS498\6ch\site-next
 npm run build
-npm run preview -- --host 127.0.0.1 --port 4321
+npm run preview
 ```
 
-人工检查：
+检查：
 
-- Notes 导航出现 `Travel` 分类。
-- `Travel` 分类下出现 `北欧旅行规划`。
-- `/notes/Travel/北欧旅行规划/` 页面可访问。
-- 地图 SVG 正常显示。
-- 5 天主线卡片显示在地图下方。
-- Helsinki / Tromsø 显示为可选延伸。
-- 移动端布局不横向撑破。
-- Pagefind 搜索 `北欧旅行`、`Stockholm`、`Bergen`、`Tromsø` 能返回该页面。
-- `.superpowers/brainstorm/` 临时文件不提交。
+- 页面、首页、Notes 导航和 Travel 分类入口正常。
+- 地图地理位置准确。
+- Day 1 不显示路线。
+- Day 2 至 Day 5 路线和票根正确同步。
+- 中文与英文无乱码。
+- 375px、768px 和桌面宽度无横向滚动。
+- 亮色和暗色模式均清晰。
+- reduced motion 下无路线和翻页动画。
+- Pagefind 能搜索 `北欧旅行`、`Stockholm`、`Bergen`、`Helsinki` 和 `Tromsø`。
 
-## Out Of Scope
+## 不包含
 
-- 不做真实 GIS 地图。
-- 不接地图 API。
-- 不做预算自动计算。
-- 不做航班实时查询。
-- 不生成复杂客户端交互。
-- 不把五个城市强行写成 5 天全覆盖的可执行路线。
+- 实时航班、火车或票价查询。
+- 地图拖动、缩放或 GIS 控件。
+- 交通图标沿路线移动。
+- 地图自动平移和镜头缩放。
+- 直接使用商业插画或版权不清晰的网络地图。
