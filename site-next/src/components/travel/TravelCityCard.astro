@@ -1,0 +1,88 @@
+---
+interface City {
+  name: string;
+  cn: string;
+  country: string;
+  role: string;
+  duration: string;
+  transport: string;
+  highlights: string[];
+  planningNote: string;
+  extension?: boolean;
+}
+
+interface Props {
+  cities: City[];
+}
+
+const { cities } = Astro.props;
+const coreCities = cities.filter((city) => !city.extension);
+const extensions = cities.filter((city) => city.extension);
+const initialCity = coreCities[0];
+---
+
+<section class="nordic-section nordic-city-section" aria-labelledby="nordic-city-title" data-cinematic-reveal>
+  <header class="nordic-section__heading">
+    <span class="nordic-section__number">02</span>
+    <div>
+      <p class="nordic-eyebrow">Chapter Two / City Portraits</p>
+      <h2 id="nordic-city-title">三座城市，三个镜头</h2>
+      <p>选择城市，让它成为当前章节的主角。延伸城市留在片尾彩蛋。</p>
+    </div>
+    <time aria-hidden="true">00:03:18</time>
+  </header>
+
+  <div class="nordic-city-portrait">
+    <article class="nordic-city-feature" data-city-feature>
+      <div class="nordic-city-feature__meta">
+        <span data-city-role>{initialCity.role} / {initialCity.country}</span>
+        <strong data-city-duration>{initialCity.duration}</strong>
+      </div>
+      <h3 data-city-name>{initialCity.name}</h3>
+      <p class="nordic-city-feature__cn" data-city-cn>{initialCity.cn}</p>
+      <p data-city-transport>{initialCity.transport}</p>
+      <ul data-city-highlights>
+        {initialCity.highlights.map((highlight) => <li>{highlight}</li>)}
+      </ul>
+      <blockquote data-city-note>{initialCity.planningNote}</blockquote>
+    </article>
+
+    <div class="nordic-city-cast" role="tablist" aria-label="主线城市">
+      {
+        coreCities.map((city, index) => (
+          <button
+            type="button"
+            role="tab"
+            aria-selected={index === 0 ? 'true' : 'false'}
+            data-city-tab
+            data-city-name={city.name}
+            data-city-cn={city.cn}
+            data-city-role={`${city.role} / ${city.country}`}
+            data-city-duration={city.duration}
+            data-city-transport={city.transport}
+            data-city-highlights={JSON.stringify(city.highlights)}
+            data-city-note={city.planningNote}
+          >
+            <span>0{index + 1}</span>
+            <strong>{city.name}</strong>
+            <small>{city.role}</small>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="nordic-after-credits">
+    <p class="nordic-eyebrow">After-Credit Scenes</p>
+    {
+      extensions.map((city) => (
+        <article>
+          <div><span>{city.country}</span><strong>{city.duration}</strong></div>
+          <h3>{city.name}</h3>
+          <p>{city.transport}</p>
+          <small>{city.planningNote}</small>
+        </article>
+      ))
+    }
+  </div>
+</section>

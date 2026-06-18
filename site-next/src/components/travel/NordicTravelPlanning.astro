@@ -1,0 +1,234 @@
+---
+import TravelRouteMap from './TravelRouteMap.astro';
+import TravelItinerary from './TravelItinerary.astro';
+import TravelCityCard from './TravelCityCard.astro';
+import type { ItineraryDay } from './TravelItinerary.astro';
+
+const base = import.meta.env.BASE_URL;
+const mapAssetHref = `${base}assets/essay/Travel/北欧旅行规划.assets/nordic-route.svg`;
+
+const days: ItineraryDay[] = [
+  {
+    id: 'stockholm',
+    label: 'DAY 01',
+    title: '先让身体抵达北方',
+    short: '老城、水边与恢复节奏。',
+    routePath: '',
+    origin: [393.3, 549.3],
+    destination: [393.3, 549.3],
+    ticketCode: 'CITY NOTE 01',
+    ticketMode: 'ARRIVAL DAY',
+    ticketRoute: 'STOCKHOLM',
+    ticketSummary: '抵达、老城、水边与恢复节奏。第一天不安排跨国移动。',
+    ticketDetail: 'Gamla stan · Metro · Walk',
+  },
+  {
+    id: 'oslo',
+    label: 'DAY 02',
+    title: '进入 Norway corridor',
+    short: '铁路前往 Oslo，控制当日安排。',
+    routePath: 'M393.3 549.3 Q314.3 548.3 239.2 523.6',
+    origin: [393.3, 549.3],
+    destination: [239.2, 523.6],
+    ticketCode: 'RAIL NOTE 02',
+    ticketMode: 'SJ / VY',
+    ticketRoute: 'STOCKHOLM → OSLO',
+    ticketSummary: '把 Oslo 当作进入 Norway corridor 的入口，当天不安排过密。',
+    ticketDetail: 'Rail first · Flight as backup',
+  },
+  {
+    id: 'bergen',
+    label: 'DAY 03',
+    title: '把风景留给火车',
+    short: '完整保留 Oslo–Bergen 山地铁路。',
+    routePath: 'M239.2 523.6 Q189.3 490.4 129.3 491.7',
+    origin: [239.2, 523.6],
+    destination: [129.3, 491.7],
+    ticketCode: 'RAIL NOTE 03',
+    ticketMode: 'WINDOW SEAT',
+    ticketRoute: 'OSLO → BERGEN',
+    ticketSummary: '保留整段 Bergen Line，让高原、湖泊和山地成为当天主角。',
+    ticketDetail: 'Bergen Line · Slow travel',
+  },
+  {
+    id: 'fjord',
+    label: 'DAY 04',
+    title: '峡湾与天气',
+    short: '按天气选择峡湾或 Bergen 慢游。',
+    routePath: 'M129.3 491.7 C93 467 76 518 111 540 C147 560 171 519 129.3 491.7',
+    origin: [129.3, 491.7],
+    destination: [111, 540],
+    ticketCode: 'FJORD NOTE 04',
+    ticketMode: 'WEATHER FIRST',
+    ticketRoute: 'BERGEN · FJORD DAY',
+    ticketSummary: '天气允许时进入峡湾；条件不佳就回到 Bryggen 与城市慢游。',
+    ticketDetail: 'Cruise · Flåm · Weather buffer',
+  },
+  {
+    id: 'return',
+    label: 'DAY 05',
+    title: '给返程留下余地',
+    short: '返程与延误缓冲，不继续增加城市。',
+    routePath: 'M129.3 491.7 Q242 408 393.3 549.3',
+    origin: [129.3, 491.7],
+    destination: [393.3, 549.3],
+    ticketCode: 'FLIGHT NOTE 05',
+    ticketMode: 'RETURN BUFFER',
+    ticketRoute: 'BERGEN → STOCKHOLM',
+    ticketSummary: '返程、行李和延误缓冲。最后一天不继续增加新城市。',
+    ticketDetail: 'BGO → ARN · Flexible booking',
+  },
+];
+
+const cities = [
+  {
+    name: 'Stockholm',
+    cn: '斯德哥尔摩',
+    country: 'Sweden',
+    role: 'base city',
+    duration: '1–2 days',
+    transport: '国际抵达与区域交通枢纽，承担行程起点、终点和 Helsinki 延伸接口。',
+    highlights: ['Gamla stan', '水边步行', '群岛或博物馆'],
+    planningNote: '第一天不跨国移动，让身体和行李先进入稳定节奏。',
+  },
+  {
+    name: 'Oslo',
+    cn: '奥斯陆',
+    country: 'Norway',
+    role: 'gateway',
+    duration: '0.5–1 day',
+    transport: '从 Stockholm 优先查询 SJ / Vy 铁路；班次不合适时再把航班作为备选。',
+    highlights: ['歌剧院海边', 'MUNCH', 'Bergen Line 接口'],
+    planningNote: '它是通向 Bergen 的节点，不必为了打卡塞入过多内容。',
+  },
+  {
+    name: 'Bergen',
+    cn: '卑尔根',
+    country: 'Norway',
+    role: 'fjord base',
+    duration: '2 days',
+    transport: 'Oslo–Bergen 铁路优先；返程可从 Bergen 机场直接飞回 Stockholm。',
+    highlights: ['Bryggen', 'Fløibanen', '峡湾一日行程'],
+    planningNote: '五日主线的风景重心，至少留出一个完整日和天气备选。',
+  },
+  {
+    name: 'Helsinki',
+    cn: '赫尔辛基',
+    country: 'Finland',
+    role: 'sea extension',
+    duration: '+1–2 days',
+    transport: '从 Stockholm 乘夜船获得海上过渡感；时间有限时直接飞行。',
+    highlights: ['设计区', '海边市场', 'Suomenlinna'],
+    planningNote: '适合七天以上版本，不并入五日主线。',
+    extension: true,
+  },
+  {
+    name: 'Tromsø',
+    cn: '特罗姆瑟',
+    country: 'Norway',
+    role: 'arctic extension',
+    duration: '+2–3 days',
+    transport: '从 Oslo、Stockholm 或 Helsinki 转飞，按季节单独安排预算。',
+    highlights: ['极光季', '雪地活动', '午夜太阳'],
+    planningNote: '距离主线很远，应作为独立北极圈章节，而不是临时加塞。',
+    extension: true,
+  },
+];
+
+const initialTicket = {
+  code: days[0].ticketCode,
+  mode: days[0].ticketMode,
+  route: days[0].ticketRoute,
+  summary: days[0].ticketSummary,
+  detail: days[0].ticketDetail,
+};
+---
+
+<div class="travel-plan" data-nordic-travel>
+  <div class="nordic-aurora" aria-hidden="true"></div>
+  <TravelRouteMap assetHref={mapAssetHref} ticket={initialTicket} />
+  <TravelItinerary days={days} />
+  <TravelCityCard cities={cities} />
+
+  <section class="nordic-section nordic-transport-section" aria-labelledby="nordic-transport-title" data-cinematic-reveal>
+    <header class="nordic-section__heading">
+      <span class="nordic-section__number">03</span>
+      <div>
+        <p class="nordic-eyebrow">Chapter Three / Movement</p>
+        <h2 id="nordic-transport-title">移动方式不是附录</h2>
+        <p>铁路负责风景，航班负责回收时间，夜船负责延伸氛围。</p>
+      </div>
+      <time aria-hidden="true">00:05:42</time>
+    </header>
+
+    <div class="nordic-clapperboard">
+      <div class="nordic-clapperboard__bar" aria-hidden="true"></div>
+      <article>
+        <span>01 / Rail</span>
+        <h3>把 Oslo–Bergen 留给火车</h3>
+        <p>如果只能保留一段长距离铁路，优先 Bergen Line。Stockholm–Oslo 则按当季班次决定。</p>
+        <small>WINDOW SEAT / SLOW TRAVEL</small>
+      </article>
+      <article>
+        <span>02 / Flight</span>
+        <h3>用航班完成返程缓冲</h3>
+        <p>Bergen 返回 Stockholm 或接入 Tromsø 时，航班比重复陆路更合理。</p>
+        <small>TIME RECOVERY / FLEXIBLE FARE</small>
+      </article>
+      <article>
+        <span>03 / Ferry</span>
+        <h3>把 Helsinki 变成海上章节</h3>
+        <p>Stockholm 夜船适合七天以上版本。它提供完整过渡，但会占用一个晚上。</p>
+        <small>AFTER-CREDIT SCENE / ONE NIGHT</small>
+      </article>
+    </div>
+  </section>
+
+  <section class="nordic-section nordic-decisions" aria-labelledby="nordic-decisions-title" data-cinematic-reveal>
+    <header class="nordic-section__heading">
+      <span class="nordic-section__number">04</span>
+      <div>
+        <p class="nordic-eyebrow">Chapter Four / Production Notes</p>
+        <h2 id="nordic-decisions-title">出发前，先完成取舍</h2>
+      </div>
+      <time aria-hidden="true">00:07:09</time>
+    </header>
+
+    <ol class="nordic-production-list">
+      <li><span>Season</span><h3>冬季还是夏季</h3><p>冬季优先 Tromsø、极光和雪地活动；夏季优先峡湾、群岛、徒步与长日照。</p></li>
+      <li><span>Priority</span><h3>风景还是城市</h3><p>想看风景就固定 Oslo–Bergen 铁路与 Bergen；想看设计与城市，则增加 Stockholm 与 Helsinki。</p></li>
+      <li><span>Buffer</span><h3>是否接受转机风险</h3><p>Tromsø 需要独立预算和缓冲。五日版本不加入它，是为了保住主线稳定性。</p></li>
+      <li><span>Booking</span><h3>先锁哪一段</h3><p>先确认国际抵达、Bergen Line 和返程航班，再决定峡湾产品与城市住宿。</p></li>
+    </ol>
+  </section>
+
+  <section class="nordic-resources" aria-labelledby="nordic-resources-title" data-cinematic-reveal>
+    <div>
+      <p class="nordic-eyebrow">End Credits / Official Sources</p>
+      <h2 id="nordic-resources-title">核验入口</h2>
+      <p>班次、票价和季节性活动会变化，真正预订前应回到官方渠道复核。</p>
+    </div>
+    <ul>
+      <li><a href="https://www.sj.se/en"><span>01</span>SJ · Sweden rail</a></li>
+      <li><a href="https://www.vy.no/en"><span>02</span>Vy · Norway rail</a></li>
+      <li><a href="https://www.fjordtours.com/en/norway/tours/norway-in-a-nutshell"><span>03</span>Fjord Tours</a></li>
+      <li><a href="https://en.visitbergen.com/"><span>04</span>Visit Bergen</a></li>
+      <li><a href="https://www.tallink.com/"><span>05</span>Tallink Silja</a></li>
+      <li><a href="https://www.vikingline.com/"><span>06</span>Viking Line</a></li>
+      <li><a href="https://avinor.no/en/airport/tromso-airport/"><span>07</span>Tromsø Airport</a></li>
+      <li><a href="https://www.visittromso.no/"><span>08</span>Visit Tromsø</a></li>
+    </ul>
+  </section>
+
+  <p class="sr-only">Search aliases: Tromso / Tromsø.</p>
+
+  <footer class="nordic-map-credit">
+    <span>Map geometry: Natural Earth public-domain data</span>
+    <span>Route annotations and cinematic treatment: original</span>
+  </footer>
+</div>
+
+<script>
+  import { initNordicTravel } from '../../scripts/nordic-travel';
+  initNordicTravel();
+</script>

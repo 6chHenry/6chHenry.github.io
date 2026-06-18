@@ -4,6 +4,7 @@
 @import './audio-player.css';
 @import 'leaflet/dist/leaflet.css';
 @import './travel-map.css';
+@import './travel-planning.css';
 @import './gallery.css';
 @import './japan-gallery.css';
 @import 'katex/dist/katex.min.css';

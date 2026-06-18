@@ -190,7 +190,7 @@
 地图源资产继续位于：
 
 ```text
-docs/notes/Travel/北欧旅行规划.assets/nordic-route.svg
+docs/essay/Travel/北欧旅行规划.assets/nordic-route.svg
 ```
 
 ## 响应式

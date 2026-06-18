@@ -1,0 +1,88 @@
+---
+interface Ticket {
+  code: string;
+  mode: string;
+  route: string;
+  summary: string;
+  detail: string;
+}
+
+interface Props {
+  assetHref: string;
+  ticket: Ticket;
+}
+
+const { assetHref, ticket } = Astro.props;
+---
+
+<section class="nordic-hero" data-cinematic-reveal>
+  <div class="nordic-film-edge nordic-film-edge--top" aria-hidden="true"></div>
+  <div class="nordic-film-edge nordic-film-edge--bottom" aria-hidden="true"></div>
+
+  <div class="nordic-map-panel">
+    <span class="nordic-map-panel__tape" aria-hidden="true"></span>
+    <div class="nordic-map-panel__heading">
+      <span>Nordic</span>
+      <span>Field Notes</span>
+      <small>59°N–69°N / Route Draft 02</small>
+    </div>
+    <div class="nordic-rec" aria-hidden="true"><span></span> REC</div>
+    <time class="nordic-timecode" aria-hidden="true">00:00:18</time>
+
+    <div class="nordic-map-panel__camera">
+      <img
+        class="nordic-map-panel__image"
+        src={assetHref}
+        alt="依据真实国界和城市坐标绘制的北欧路线图，包含 Stockholm、Oslo、Bergen、Helsinki 和 Tromsø"
+        width="760"
+        height="760"
+        loading="eager"
+        decoding="async"
+      />
+
+      <svg class="nordic-map-active" viewBox="0 0 760 760" aria-hidden="true">
+        <path class="nordic-map-active__route" data-nordic-route d="" hidden></path>
+        <circle class="nordic-map-active__point" data-nordic-origin cx="393.3" cy="549.3" r="7" hidden></circle>
+        <circle class="nordic-map-active__point is-arriving" data-nordic-destination cx="393.3" cy="549.3" r="8"></circle>
+      </svg>
+    </div>
+
+    <p class="nordic-map-panel__note">
+      主线只走 Stockholm → Oslo → Bergen。Helsinki 与 Tromsø 留作片尾延伸，按季节和总天数接入。
+    </p>
+  </div>
+
+  <div class="nordic-intro">
+    <div class="nordic-intro__slate">
+      <p class="nordic-eyebrow">A Film Before Departure · 2026</p>
+      <span aria-hidden="true">TAKE 01 / NORTHBOUND</span>
+    </div>
+    <h1>北欧五日</h1>
+    <p class="nordic-intro__context">从斯德哥尔摩出发</p>
+    <p class="nordic-intro__dek">
+      一部尚未开拍的旅行短片。先把铁路、峡湾、城市与返程缓冲写进分镜，再等待真正的出发日期。
+    </p>
+
+    <dl class="nordic-stats">
+      <div><dt>05</dt><dd>main days</dd></div>
+      <div><dt>03</dt><dd>core cities</dd></div>
+      <div><dt>02</dt><dd>extensions</dd></div>
+    </dl>
+
+    <aside class="nordic-ticket" data-nordic-ticket aria-live="polite">
+      <div class="nordic-ticket__notch" aria-hidden="true"></div>
+      <div class="nordic-ticket__head">
+        <span data-ticket-code>{ticket.code}</span>
+        <span data-ticket-mode>{ticket.mode}</span>
+      </div>
+      <p class="nordic-ticket__route" data-ticket-route>{ticket.route}</p>
+      <p class="nordic-ticket__summary" data-ticket-summary>{ticket.summary}</p>
+      <p class="nordic-ticket__detail" data-ticket-detail>{ticket.detail}</p>
+    </aside>
+  </div>
+</section>
+
+<div class="nordic-opening-credits" aria-hidden="true">
+  <span>Directed by weather & rail</span>
+  <span>Scroll to begin ↓</span>
+</div>

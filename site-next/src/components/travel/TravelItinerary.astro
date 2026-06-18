@@ -1,0 +1,81 @@
+---
+export interface ItineraryDay {
+  id: string;
+  label: string;
+  title: string;
+  short: string;
+  routePath: string;
+  origin: [number, number];
+  destination: [number, number];
+  ticketCode: string;
+  ticketMode: string;
+  ticketRoute: string;
+  ticketSummary: string;
+  ticketDetail: string;
+}
+
+interface Props {
+  days: ItineraryDay[];
+}
+
+const { days } = Astro.props;
+const initialDay = days[0];
+---
+
+<section class="nordic-section nordic-itinerary" aria-labelledby="nordic-itinerary-title" data-cinematic-reveal>
+  <header class="nordic-section__heading">
+    <span class="nordic-section__number">01</span>
+    <div>
+      <p class="nordic-eyebrow">Chapter One / Five-Day Spine</p>
+      <h2 id="nordic-itinerary-title">沿着北方，缓慢移动</h2>
+      <p>点击场次切换当天路线。地图、票根和当前分镜会同步更新。</p>
+    </div>
+    <time aria-hidden="true">00:01:24</time>
+  </header>
+
+  <div class="nordic-itinerary__stage">
+    <div class="nordic-days" role="tablist" aria-label="北欧五日主线">
+      {
+        days.map((day, index) => (
+          <button
+            class="nordic-day"
+            type="button"
+            role="tab"
+            aria-selected={index === 0 ? 'true' : 'false'}
+            data-nordic-day
+            data-route-path={day.routePath}
+            data-origin={day.origin.join(',')}
+            data-destination={day.destination.join(',')}
+            data-ticket-code={day.ticketCode}
+            data-ticket-mode={day.ticketMode}
+            data-ticket-route={day.ticketRoute}
+            data-ticket-summary={day.ticketSummary}
+            data-ticket-detail={day.ticketDetail}
+            data-scene-number={String(index + 1).padStart(2, '0')}
+            data-scene-title={day.title}
+            data-scene-summary={day.ticketSummary}
+            data-scene-detail={day.ticketDetail}
+          >
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <div>
+              <h3>{day.title}</h3>
+              <p>{day.short}</p>
+            </div>
+            <em>{day.ticketMode}</em>
+          </button>
+        ))
+      }
+    </div>
+
+    <article class="nordic-scene" data-nordic-scene aria-live="polite">
+      <div class="nordic-scene__meta">
+        <span>SCENE <b data-scene-number>01</b></span>
+        <span>35MM / NORTHBOUND</span>
+      </div>
+      <h3 data-scene-title>{initialDay.title}</h3>
+      <p data-scene-summary>{initialDay.ticketSummary}</p>
+      <div class="nordic-scene__track" aria-hidden="true"><span></span></div>
+      <small data-scene-detail>{initialDay.ticketDetail}</small>
+    </article>
+  </div>
+</section>

@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ContentLayout from '../../layouts/ContentLayout.astro';
+import NordicTravelPlanning from '../../components/travel/NordicTravelPlanning.astro';
 import TravelGalleryLink from '../../components/TravelGalleryLink.astro';
 import { buildContentUrl, normalizeSlug, sortByRecency } from '../../utils/content';
 import { buildEntryCharacterTree } from '../../utils/character-tree';
@@ -51,7 +52,11 @@ const { entry, redirectTo } = Astro.props;
 const isRedirect = typeof redirectTo === 'string';
 const rendered = entry ? await render(entry) : undefined;
 const Content = rendered?.Content;
-const filteredHeadings = rendered?.headings.filter((h) => h.depth <= 3) ?? [];
+const showNordicTravelPlanning =
+  entry?.id.replace(/\.md$/i, '') === 'Travel/北欧旅行规划';
+const filteredHeadings = showNordicTravelPlanning
+  ? []
+  : rendered?.headings.filter((h) => h.depth <= 3) ?? [];
 const characterTreeSvg = entry
   ? buildEntryCharacterTree(
       entry,
@@ -96,9 +101,11 @@ const travelGallery = entry ? getTravelGalleryLink(entry.id) : undefined;
         description: nextEntry.data.description,
         href: buildContentUrl('essay', nextEntry.id),
       }}
+      immersive={showNordicTravelPlanning}
     >
-      {travelGallery && <TravelGalleryLink gallery={travelGallery} />}
-      {Content && <Content />}
+      {showNordicTravelPlanning && <NordicTravelPlanning />}
+      {!showNordicTravelPlanning && travelGallery && <TravelGalleryLink gallery={travelGallery} />}
+      {!showNordicTravelPlanning && Content && <Content />}
     </ContentLayout>
   )
 }

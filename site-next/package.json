@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/migrate-content.mjs && node scripts/copy-public.mjs && node scripts/optimize-gallery-images.mjs",
+    "predev": "node scripts/migrate-content.mjs && node scripts/clean-astro-cache.mjs && node scripts/copy-public.mjs && node scripts/optimize-gallery-images.mjs",
     "dev": "astro dev",
-    "prebuild": "node scripts/migrate-content.mjs && node scripts/copy-public.mjs && node scripts/optimize-gallery-images.mjs",
+    "prebuild": "node scripts/migrate-content.mjs && node scripts/clean-astro-cache.mjs && node scripts/copy-public.mjs && node scripts/optimize-gallery-images.mjs",
     "build": "astro build && npx pagefind --site dist && node scripts/sync-pagefind.mjs && node scripts/report-build-size.mjs",
     "preview": "astro preview",
     "migrate": "node scripts/migrate-content.mjs",
