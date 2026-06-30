@@ -494,8 +494,16 @@ const languages = ['zh', 'en'] as const;
 
   .paimon-hero h1 {
     margin: 0;
-    font-size: clamp(3.4rem, 8.5vw, 7rem);
-    line-height: 0.92;
+    font-size: clamp(2.55rem, 4.35vw, 4.7rem);
+    line-height: 1.02;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .paimon-case[data-lang='zh'] .paimon-hero h1 {
+    font-size: clamp(3rem, 5vw, 5.2rem);
+    line-height: 0.98;
+    white-space: nowrap;
   }
 
   .paimon-hero__subtitle {
@@ -679,18 +687,21 @@ const languages = ['zh', 'en'] as const;
 
   .paimon-section {
     display: grid;
-    grid-template-columns: minmax(10.5rem, 0.28fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     align-items: start;
-    gap: clamp(1.4rem, 4vw, 4.2rem);
-    padding: clamp(2.35rem, 4.6vw, 4rem) 0 0;
+    gap: clamp(1rem, 2.4vw, 1.7rem);
+    padding: clamp(2.8rem, 5vw, 4.4rem) 0 0;
   }
 
   .paimon-section__heading,
   .paimon-overview > div,
   .paimon-retrospective > div {
     position: relative;
+    width: min(100%, 52rem);
+    margin: 0 auto;
     padding-top: 0.9rem;
     border-top: 1px solid color-mix(in srgb, var(--paimon-line) 72%, transparent);
+    text-align: center;
   }
 
   .paimon-section__heading::before,
@@ -698,19 +709,20 @@ const languages = ['zh', 'en'] as const;
   .paimon-retrospective > div::before {
     position: absolute;
     top: -1px;
-    left: 0;
-    width: 2.25rem;
+    left: 50%;
+    width: 3.25rem;
     height: 1px;
     background: var(--paimon-gold);
     content: '';
+    transform: translateX(-50%);
   }
 
   .paimon-section__heading h2,
   .paimon-overview h2,
   .paimon-retrospective h2 {
     margin: 0;
-    max-width: 13.5em;
-    font-size: clamp(1.28rem, 1.62vw, 1.82rem);
+    max-width: none;
+    font-size: clamp(1.45rem, 2.12vw, 2.28rem);
     line-height: 1.24;
     text-wrap: balance;
   }
@@ -718,8 +730,8 @@ const languages = ['zh', 'en'] as const;
   .paimon-case[data-lang='zh'] .paimon-section__heading h2,
   .paimon-case[data-lang='zh'] .paimon-overview h2,
   .paimon-case[data-lang='zh'] .paimon-retrospective h2 {
-    font-size: clamp(1.34rem, 1.78vw, 1.95rem);
-    line-height: 1.28;
+    font-size: clamp(1.55rem, 2.35vw, 2.46rem);
+    line-height: 1.24;
   }
 
   .paimon-label {
@@ -730,17 +742,28 @@ const languages = ['zh', 'en'] as const;
   .paimon-overview > p,
   .paimon-retrospective p {
     margin: 0;
-    max-width: 48rem;
+    max-width: 56rem;
+    margin-inline: auto;
     padding-top: 0.85rem;
     border-top: 1px solid color-mix(in srgb, var(--ch-border-soft) 70%, transparent);
     font-size: clamp(0.98rem, 1.1vw, 1.12rem);
+    text-align: left;
   }
 
   .paimon-problem-grid {
     display: grid;
+    width: min(100%, 64rem);
+    margin: 0 auto;
     gap: 0;
     border-top: 1px solid color-mix(in srgb, var(--ch-border-soft) 74%, transparent);
     counter-reset: problem;
+  }
+
+  .paimon-pillar-grid,
+  .paimon-chain-section > div:last-child,
+  .paimon-reliability ul {
+    width: min(100%, 64rem);
+    margin-inline: auto;
   }
 
   .paimon-problem-grid p {
@@ -976,6 +999,10 @@ const languages = ['zh', 'en'] as const;
 
     .paimon-hero h1 {
       font-size: clamp(2.9rem, 18vw, 4rem);
+    }
+
+    .paimon-case[data-lang='zh'] .paimon-hero h1 {
+      font-size: clamp(2.35rem, 14.5vw, 3.25rem);
     }
 
     .paimon-section__heading h2,
