@@ -91,12 +91,12 @@ const copy = {
     },
     reliability: {
       label: 'Reliability',
-      title: '让 Demo 诚实，比让它显得聪明更重要',
+      title: '我宁愿它少答，也别装懂',
       items: [
-        '引用校验先于“看起来很完整”的回答。',
-        '来源被分为官方、可信 Wiki、社区与未知网页，社区索引不会被包装成官方事实。',
-        '证据不足时降低置信度或拒答，而不是补写确定口吻。',
-        '固定问题集覆盖检索、剧透、引用、限流和事件写入的回归检查。',
+        '每条回答先看引用能不能对上，对不上就不放出来。',
+        '官方资料、Wiki 和社区讨论分开看。社区里的说法可以参考，但不能当官方设定。',
+        '资料不够时就说不确定，必要时不回答，不为了显得顺滑硬编。',
+        '我留了一组固定问题，每次改动后都跑一遍，看检索、剧透控制和引用有没有坏。',
       ],
     },
     retrospective: {
@@ -176,12 +176,12 @@ const copy = {
     },
     reliability: {
       label: 'Reliability',
-      title: 'Making the demo honest matters more than making it sound smart',
+      title: 'I would rather have it say less than make things up',
       items: [
-        'Citation validation comes before answers that merely look complete.',
-        'Sources are separated into official, trusted wiki, community, and unknown web material.',
-        'Weak evidence lowers confidence or triggers refusal instead of certainty.',
-        'A fixed evaluation set checks retrieval, spoilers, citations, rate limits, and event writing.',
+        'Every answer has to line up with its citations before I show it.',
+        'Official pages, wiki material, and community threads are treated differently. A forum theory should not become canon.',
+        'When the evidence is thin, the answer says so or stops there.',
+        'I keep a small set of repeat questions to catch broken retrieval, spoilers, citations, rate limits, and event logging.',
       ],
     },
     retrospective: {
@@ -902,12 +902,21 @@ const languages = ['zh', 'en'] as const;
 
   .paimon-reliability ul {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+    justify-content: center;
     gap: 0.75rem;
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+
+  .paimon-reliability li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 9.2rem;
+    text-align: center;
   }
 
   .paimon-nav {
@@ -977,7 +986,7 @@ const languages = ['zh', 'en'] as const;
     }
 
     .paimon-reliability ul {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
@@ -1022,6 +1031,7 @@ const languages = ['zh', 'en'] as const;
     .paimon-problem-grid,
     .paimon-pillar-grid,
     .paimon-evidence-chain,
+    .paimon-reliability ul,
     .paimon-nav {
       grid-template-columns: 1fr;
     }
