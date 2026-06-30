@@ -679,49 +679,106 @@ const languages = ['zh', 'en'] as const;
 
   .paimon-section {
     display: grid;
-    grid-template-columns: minmax(12rem, 0.38fr) minmax(0, 1fr);
-    gap: clamp(1rem, 3vw, 2.5rem);
-    padding: clamp(2.6rem, 5vw, 4.8rem) 0 0;
+    grid-template-columns: minmax(10.5rem, 0.28fr) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(1.4rem, 4vw, 4.2rem);
+    padding: clamp(2.35rem, 4.6vw, 4rem) 0 0;
+  }
+
+  .paimon-section__heading,
+  .paimon-overview > div,
+  .paimon-retrospective > div {
+    position: relative;
+    padding-top: 0.9rem;
+    border-top: 1px solid color-mix(in srgb, var(--paimon-line) 72%, transparent);
+  }
+
+  .paimon-section__heading::before,
+  .paimon-overview > div::before,
+  .paimon-retrospective > div::before {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 2.25rem;
+    height: 1px;
+    background: var(--paimon-gold);
+    content: '';
   }
 
   .paimon-section__heading h2,
   .paimon-overview h2,
   .paimon-retrospective h2 {
     margin: 0;
-    font-size: clamp(1.8rem, 4vw, 3.4rem);
-    line-height: 1.05;
+    max-width: 13.5em;
+    font-size: clamp(1.28rem, 1.62vw, 1.82rem);
+    line-height: 1.24;
+    text-wrap: balance;
+  }
+
+  .paimon-case[data-lang='zh'] .paimon-section__heading h2,
+  .paimon-case[data-lang='zh'] .paimon-overview h2,
+  .paimon-case[data-lang='zh'] .paimon-retrospective h2 {
+    font-size: clamp(1.34rem, 1.78vw, 1.95rem);
+    line-height: 1.28;
   }
 
   .paimon-label {
-    margin: 0 0 0.6rem;
+    margin: 0 0 0.8rem;
     color: var(--paimon-gold);
   }
 
   .paimon-overview > p,
   .paimon-retrospective p {
     margin: 0;
-    font-size: 1.08rem;
+    max-width: 48rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid color-mix(in srgb, var(--ch-border-soft) 70%, transparent);
+    font-size: clamp(0.98rem, 1.1vw, 1.12rem);
   }
 
-  .paimon-problem-grid,
+  .paimon-problem-grid {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid color-mix(in srgb, var(--ch-border-soft) 74%, transparent);
+    counter-reset: problem;
+  }
+
+  .paimon-problem-grid p {
+    display: grid;
+    grid-template-columns: 2.7rem minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem;
+    margin: 0;
+    padding: 1rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--ch-border-soft) 74%, transparent);
+    counter-increment: problem;
+  }
+
+  .paimon-problem-grid p::before {
+    color: var(--paimon-gold);
+    content: counter(problem, decimal-leading-zero);
+    font-family: var(--ch-mono-font);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    line-height: 1.9;
+  }
+
   .paimon-pillar-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
     gap: 0.8rem;
   }
 
-  .paimon-problem-grid p,
   .paimon-pillar,
   .paimon-reliability li {
     margin: 0;
-    padding: 1rem;
+    padding: 1rem 1.05rem;
     border: 1px solid var(--ch-border-soft);
-    border-radius: 10px;
-    background: color-mix(in srgb, var(--ch-glass-bg) 88%, transparent);
-  }
-
-  .paimon-pillar-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--ch-surface-solid) 72%, transparent), color-mix(in srgb, var(--ch-glass-bg) 92%, transparent)),
+      color-mix(in srgb, var(--ch-glass-bg) 86%, transparent);
   }
 
   .paimon-pillar {
@@ -739,11 +796,11 @@ const languages = ['zh', 'en'] as const;
   }
 
   .paimon-pillar h3 {
-    margin: 0.55rem 0 0.4rem;
+    margin: 0.48rem 0 0.35rem;
     color: var(--ch-fg);
     font-family: var(--ch-display-font);
-    font-size: 1.18rem;
-    line-height: 1.2;
+    font-size: clamp(1.02rem, 1.35vw, 1.2rem);
+    line-height: 1.22;
   }
 
   .paimon-pillar span {
@@ -751,6 +808,7 @@ const languages = ['zh', 'en'] as const;
   }
 
   .paimon-chain-lead {
+    max-width: 46rem;
     margin: 0 0 1rem;
   }
 
@@ -766,8 +824,8 @@ const languages = ['zh', 'en'] as const;
 
   .paimon-evidence-chain li {
     position: relative;
-    min-height: 8.6rem;
-    padding: 0.9rem;
+    min-height: 7.2rem;
+    padding: 0.85rem;
     border: 1px solid color-mix(in srgb, var(--paimon-gold) 28%, var(--ch-border-soft));
     border-radius: 10px;
     background:
@@ -821,7 +879,9 @@ const languages = ['zh', 'en'] as const;
 
   .paimon-reliability ul {
     display: grid;
-    gap: 0.65rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 0.75rem;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -889,9 +949,12 @@ const languages = ['zh', 'en'] as const;
       grid-template-columns: 1fr;
     }
 
-    .paimon-problem-grid,
     .paimon-pillar-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .paimon-reliability ul {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -913,6 +976,15 @@ const languages = ['zh', 'en'] as const;
 
     .paimon-hero h1 {
       font-size: clamp(2.9rem, 18vw, 4rem);
+    }
+
+    .paimon-section__heading h2,
+    .paimon-overview h2,
+    .paimon-retrospective h2,
+    .paimon-case[data-lang='zh'] .paimon-section__heading h2,
+    .paimon-case[data-lang='zh'] .paimon-overview h2,
+    .paimon-case[data-lang='zh'] .paimon-retrospective h2 {
+      font-size: clamp(1.42rem, 9vw, 2.05rem);
     }
 
     .paimon-hero__visual {
