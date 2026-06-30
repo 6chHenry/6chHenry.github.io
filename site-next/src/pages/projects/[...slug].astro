@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ContentLayout from '../../layouts/ContentLayout.astro';
+import PaimonCaseStudy from '../../components/PaimonCaseStudy.astro';
 import { buildContentUrl, normalizeSlug, sortByRecency } from '../../utils/content';
 import { buildEntryCharacterTree } from '../../utils/character-tree';
 import type { GetStaticPaths } from 'astro';
@@ -14,6 +15,7 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { entry } = Astro.props;
+const isPaimonCaseStudy = entry.id === 'PaimonAsksEverything/paimon-asks-everything.md';
 const { Content, headings } = await render(entry);
 const filteredHeadings = headings.filter((h) => h.depth <= 3);
 const characterTreeSvg = buildEntryCharacterTree(
@@ -26,23 +28,49 @@ const previousEntry = currentIndex >= 0 ? entries[currentIndex + 1] : undefined;
 const nextEntry = currentIndex > 0 ? entries[currentIndex - 1] : undefined;
 ---
 
-<ContentLayout
-  title={entry.data.title}
-  description={entry.data.description}
-  date={entry.data.date}
-  tags={entry.data.tags}
-  headings={filteredHeadings.map((h) => ({ depth: h.depth, slug: h.slug, text: h.text }))}
-  characterTreeSvg={characterTreeSvg}
-  previous={previousEntry && {
-    title: previousEntry.data.title,
-    description: previousEntry.data.description,
-    href: buildContentUrl('projects', previousEntry.id),
-  }}
-  next={nextEntry && {
-    title: nextEntry.data.title,
-    description: nextEntry.data.description,
-    href: buildContentUrl('projects', nextEntry.id),
-  }}
->
-  <Content />
-</ContentLayout>
+{
+  isPaimonCaseStudy ? (
+    <PaimonCaseStudy
+      entry={entry}
+      previous={
+        previousEntry && {
+          title: previousEntry.data.title,
+          description: previousEntry.data.description,
+          href: buildContentUrl('projects', previousEntry.id),
+        }
+      }
+      next={
+        nextEntry && {
+          title: nextEntry.data.title,
+          description: nextEntry.data.description,
+          href: buildContentUrl('projects', nextEntry.id),
+        }
+      }
+    />
+  ) : (
+    <ContentLayout
+      title={entry.data.title}
+      description={entry.data.description}
+      date={entry.data.date}
+      tags={entry.data.tags}
+      headings={filteredHeadings.map((h) => ({ depth: h.depth, slug: h.slug, text: h.text }))}
+      characterTreeSvg={characterTreeSvg}
+      previous={
+        previousEntry && {
+          title: previousEntry.data.title,
+          description: previousEntry.data.description,
+          href: buildContentUrl('projects', previousEntry.id),
+        }
+      }
+      next={
+        nextEntry && {
+          title: nextEntry.data.title,
+          description: nextEntry.data.description,
+          href: buildContentUrl('projects', nextEntry.id),
+        }
+      }
+    >
+      <Content />
+    </ContentLayout>
+  )
+}
