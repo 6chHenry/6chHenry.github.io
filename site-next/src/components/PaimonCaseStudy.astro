@@ -1,0 +1,1089 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+interface ArticleNavLink {
+  title: string;
+  href: string;
+  description?: string;
+}
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+  previous?: ArticleNavLink;
+  next?: ArticleNavLink;
+}
+
+const { entry, previous, next } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const assetBase = `${base}assets/projects/paimon-asks-everything/`;
+const resolveHref = (href: string) => (href.startsWith('/') ? `${base}${href.slice(1)}` : href);
+
+const links = entry.data.links ?? [];
+const liveLink = links.find((link) => link.type === 'demo');
+const repoLink = links.find((link) => link.type === 'repo');
+const techStack = entry.data.techStack ?? [];
+
+const copy = {
+  zh: {
+    langLabel: '中文',
+    pageTitle: '派蒙三千问',
+    pageSubtitle: 'Paimon Asks Everything',
+    kicker: 'Case Study / AI Agent',
+    summary:
+      '一个面向原神玩家与发行观察的双语证据型 Agent：它不急着生成答案，而是先判断进度、控制剧透、检索来源，再把可追溯的证据组织成回答。',
+    demo: '在线体验',
+    github: 'GitHub',
+    exhibit: {
+      eyebrow: 'Project Artifact',
+      title: '剧透安全的游戏理解系统',
+      notes: ['双语检索', '来源分级', '结构化引用'],
+    },
+    overview: {
+      label: 'Overview',
+      title: '我想做的不是一个聊天框，而是一套有边界的理解系统',
+      text:
+        '《原神》的故事信息散落在任务、版本活动、圣遗物、角色资料、Wiki 和社区讨论里。普通问答很容易把玩家还没玩到的剧情直接说破，也容易把推测写得像事实。我把这个项目设计成“派蒙作为向导”的产品：先确认玩家语境，再决定能说什么、从哪里查、证据够不够、应该如何降级表达。',
+    },
+    problem: {
+      label: 'Problem',
+      title: '玩家想问清楚，系统必须先学会克制',
+      cards: [
+        '同一个问题，对新玩家、回归玩家和活跃玩家意味着不同的剧透风险。',
+        '中文和英文资料并不总是同构，实体别名、版本边界和社区说法会互相缠绕。',
+        '发行侧真正需要的不是原始聊天记录，而是哪些主题反复造成理解断点。',
+      ],
+    },
+    pillars: {
+      label: 'Product Strategy',
+      title: '四个模块把创意落到可验证体验',
+      items: [
+        {
+          label: '剧透安全问答',
+          text: '回答跟随玩家进度，遇到高风险剧情先停下，必要时要求二次确认。',
+        },
+        {
+          label: '证据约束回答',
+          text: '每个结论都尽量回到来源、引用和置信边界，而不是让模型凭语气取胜。',
+        },
+        {
+          label: '至冬关系图',
+          text: '把人物、组织、概念做成可探索节点，让复杂世界观从碎片变成关系。',
+        },
+        {
+          label: '发行洞察',
+          text: '用匿名聚合信号识别兴趣点、误解点和 FAQ 机会，而不是保存个人问题。',
+        },
+      ],
+    },
+    chain: {
+      label: 'Evidence Chain',
+      title: '核心创意是一条“先证据，后生成”的链',
+      lead:
+        '我把 Agent 的工作流设计成一条证据链：用户问题进入后，先经过语境判断与剧透门控，再检索、分级、引用，最后才进入生成。这样页面里的每个回答都像一张可回看的研究卡片。',
+      items: ['玩家问题', '剧透门控', '双语检索', '来源分级', '证据回答', '匿名洞察'],
+    },
+    map: {
+      label: 'System Design',
+      title: '从“派蒙笔记 AI 化”到发行观察窗口',
+      caption:
+        '这张图保留了最初的产品思路：派蒙是向导，不是替代游戏体验；准确性高于顺滑表达；发行价值来自玩家真正卡住的地方。',
+    },
+    reliability: {
+      label: 'Reliability',
+      title: '我宁愿它少答，也别装懂',
+      items: [
+        '每条回答先看引用能不能对上，对不上就不放出来。',
+        '官方资料、Wiki 和社区讨论分开看。社区里的说法可以参考，但不能当官方设定。',
+        '资料不够时就说不确定，必要时不回答，不为了显得顺滑硬编。',
+        '我留了一组固定问题，每次改动后都跑一遍，看检索、剧透控制和引用有没有坏。',
+      ],
+    },
+    retrospective: {
+      label: 'Retrospective',
+      title: '下一步我会继续增强“游戏感”和“可信度”之间的平衡',
+      text:
+        '现在的公开 Demo 仍有 Vercel 冷启动、站外趋势层未完全接入、轻量限流等限制。下一步我会让 UI 更贴近游戏语境，同时继续强化本地语料、搜索稳定性和派蒙式表达的一致性。',
+    },
+    nav: {
+      previous: '上一篇',
+      next: '下一篇',
+    },
+  },
+  en: {
+    langLabel: 'EN',
+    pageTitle: 'Paimon Asks Everything',
+    pageSubtitle: 'Paimon Sanqianwen',
+    kicker: 'Case Study / AI Agent',
+    summary:
+      'A bilingual evidence-grounded agent for Genshin players and release insight exploration. It does not rush to generate. It checks progress, gates spoilers, retrieves sources, and turns traceable evidence into answers.',
+    demo: 'Live Demo',
+    github: 'GitHub',
+    exhibit: {
+      eyebrow: 'Project Artifact',
+      title: 'A spoiler-safe game understanding system',
+      notes: ['Bilingual retrieval', 'Source governance', 'Structured citations'],
+    },
+    overview: {
+      label: 'Overview',
+      title: 'I was not building a chat box. I was building a bounded understanding system.',
+      text:
+        'Genshin lore lives across quests, version events, artifacts, character profiles, wikis, and community threads. A normal Q&A interface can easily spoil players or present speculation as fact. I shaped the project around Paimon as a guide: understand player context first, decide what can be said, choose where to search, judge whether evidence is enough, then answer with clear boundaries.',
+    },
+    problem: {
+      label: 'Problem',
+      title: 'Players want clarity. The system has to learn restraint first.',
+      cards: [
+        'The same question carries different spoiler risk for new, returning, and active players.',
+        'Chinese and English sources do not always align across aliases, version boundaries, and community wording.',
+        'Release teams need aggregate confusion signals, not raw personal question logs.',
+      ],
+    },
+    pillars: {
+      label: 'Product Strategy',
+      title: 'Four modules turn the idea into a testable experience',
+      items: [
+        {
+          label: 'Spoiler-safe Q&A',
+          text: 'Answers adapt to player progress and stop before high-risk narrative reveals.',
+        },
+        {
+          label: 'Evidence-grounded answers',
+          text: 'Claims are tied back to sources, citations, and confidence boundaries instead of fluent guesswork.',
+        },
+        {
+          label: 'Snezhnaya relationship map',
+          text: 'Characters, factions, and concepts become explorable nodes instead of scattered notes.',
+        },
+        {
+          label: 'Release insights',
+          text: 'Anonymous aggregate signals reveal interest, confusion, and FAQ opportunities without storing personal questions.',
+        },
+      ],
+    },
+    chain: {
+      label: 'Evidence Chain',
+      title: 'The core idea is evidence before generation',
+      lead:
+        'I designed the agent workflow as an evidence chain: a question enters, passes context and spoiler gates, then retrieval, source grading, citation checks, and only finally generation. Each answer behaves like a research card you can audit.',
+      items: ['Player question', 'Spoiler gate', 'Bilingual retrieval', 'Source grading', 'Evidence answer', 'Anonymous insight'],
+    },
+    map: {
+      label: 'System Design',
+      title: 'From Paimon notebook AI to a release observation window',
+      caption:
+        'The map captures the original product thesis: Paimon is a guide, not a replacement for play; accuracy beats fluency; release value emerges from the places where players actually get stuck.',
+    },
+    reliability: {
+      label: 'Reliability',
+      title: 'I would rather have it say less than make things up',
+      items: [
+        'Every answer has to line up with its citations before I show it.',
+        'Official pages, wiki material, and community threads are treated differently. A forum theory should not become canon.',
+        'When the evidence is thin, the answer says so or stops there.',
+        'I keep a small set of repeat questions to catch broken retrieval, spoilers, citations, rate limits, and event logging.',
+      ],
+    },
+    retrospective: {
+      label: 'Retrospective',
+      title: 'Next I would keep balancing game feel with trustworthiness',
+      text:
+        'The public demo still has Vercel cold-start limits, an unfinished external trend layer, and lightweight rate limiting. Next I would push the interface closer to the game while strengthening the local corpus, search reliability, and Paimon-style voice consistency.',
+    },
+    nav: {
+      previous: 'Previous',
+      next: 'Next',
+    },
+  },
+};
+
+const languages = ['zh', 'en'] as const;
+---
+
+<BaseLayout title={`派蒙三千问 | ${entry.data.title}`} description={entry.data.description}>
+  <article class="paimon-case" data-lang="zh" data-pagefind-body>
+    <section class="paimon-hero" aria-labelledby="paimon-title-zh">
+      <div class="paimon-hero__copy">
+        <div class="paimon-topline">
+          <p class="section-kicker">{copy.zh.kicker}</p>
+          <div class="paimon-language" role="group" aria-label="Language">
+            {
+              languages.map((lang) => (
+                <button type="button" class="paimon-language__button" data-lang-button={lang} aria-pressed={lang === 'zh' ? 'true' : 'false'}>
+                  {copy[lang].langLabel}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        {
+          languages.map((lang) => (
+            <div class="paimon-copy-panel" data-lang-panel={lang} hidden={lang !== 'zh'}>
+              <h1 id={lang === 'zh' ? 'paimon-title-zh' : undefined}>{copy[lang].pageTitle}</h1>
+              <p class="paimon-hero__subtitle">{copy[lang].pageSubtitle}</p>
+              <p class="paimon-hero__summary">{copy[lang].summary}</p>
+            </div>
+          ))
+        }
+
+        <div class="paimon-hero__actions" aria-label="Project links">
+          {
+            liveLink && (
+              <a class="paimon-link paimon-link--primary" href={resolveHref(liveLink.href)} target="_blank" rel="noopener">
+                <span data-lang-panel="zh">{copy.zh.demo}</span>
+                <span data-lang-panel="en" hidden>{copy.en.demo}</span>
+              </a>
+            )
+          }
+          {
+            repoLink && (
+              <a class="paimon-link" href={resolveHref(repoLink.href)} target="_blank" rel="noopener">
+                {copy.zh.github}
+              </a>
+            )
+          }
+        </div>
+        <ul class="paimon-meta" aria-label="Project metadata">
+          {techStack.slice(0, 4).map((tech) => <li>{tech}</li>)}
+        </ul>
+      </div>
+
+      <div class="paimon-hero__gallery">
+        <figure class="paimon-hero__visual">
+          <img
+            src={`${assetBase}banner.png`}
+            alt="Paimon Asks Everything promotional banner showing Paimon, a starry blue background, and four product feature cards."
+            width="2048"
+            height="680"
+            loading="eager"
+            decoding="async"
+          />
+          <figcaption class="paimon-exhibit-card">
+            {
+              languages.map((lang) => (
+                <span data-lang-panel={lang} hidden={lang !== 'zh'}>
+                  <span>{copy[lang].exhibit.eyebrow}</span>
+                  <strong>{copy[lang].exhibit.title}</strong>
+                </span>
+              ))
+            }
+          </figcaption>
+        </figure>
+        <div class="paimon-annotations" aria-hidden="true">
+          <span>source.bound</span>
+          <span>spoiler.level <= profile</span>
+          <span>citation.required</span>
+        </div>
+      </div>
+    </section>
+
+    {
+      languages.map((lang) => (
+        <div class="paimon-copy-panel" data-lang-panel={lang} hidden={lang !== 'zh'}>
+          <section class="paimon-section paimon-overview">
+            <div class="paimon-section__heading">
+              <p class="paimon-label">{copy[lang].overview.label}</p>
+              <h2>{copy[lang].overview.title}</h2>
+            </div>
+            <p>{copy[lang].overview.text}</p>
+          </section>
+
+          <section class="paimon-section">
+            <div class="paimon-section__heading">
+              <p class="paimon-label">{copy[lang].problem.label}</p>
+              <h2>{copy[lang].problem.title}</h2>
+            </div>
+            <div class="paimon-problem-grid">
+              {copy[lang].problem.cards.map((item) => <p>{item}</p>)}
+            </div>
+          </section>
+
+          <section class="paimon-section">
+            <div class="paimon-section__heading">
+              <p class="paimon-label">{copy[lang].pillars.label}</p>
+              <h2>{copy[lang].pillars.title}</h2>
+            </div>
+            <div class="paimon-pillar-grid">
+              {copy[lang].pillars.items.map((pillar, index) => (
+                <article class="paimon-pillar">
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <h3>{pillar.label}</h3>
+                  <p>{pillar.text}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section class="paimon-section paimon-chain-section">
+            <div class="paimon-section__heading">
+              <p class="paimon-label">{copy[lang].chain.label}</p>
+              <h2>{copy[lang].chain.title}</h2>
+            </div>
+            <div>
+              <p class="paimon-chain-lead">{copy[lang].chain.lead}</p>
+              <ol class="paimon-evidence-chain" aria-label={copy[lang].chain.label}>
+                {copy[lang].chain.items.map((item, index) => (
+                  <li>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <strong>{item}</strong>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </section>
+
+          <section class="paimon-section paimon-map-section">
+            <div class="paimon-section__heading">
+              <p class="paimon-label">{copy[lang].map.label}</p>
+              <h2>{copy[lang].map.title}</h2>
+            </div>
+            <figure class="paimon-map">
+              <img
+                src={`${assetBase}design-map.png`}
+                alt="Design mind map for Paimon Asks Everything, connecting core positioning, reasons for the product, design principles, release value, Snezhnaya adaptation, and core features."
+                width="1794"
+                height="1356"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption>{copy[lang].map.caption}</figcaption>
+            </figure>
+          </section>
+
+          <section class="paimon-section paimon-reliability">
+            <div class="paimon-section__heading">
+              <p class="paimon-label">{copy[lang].reliability.label}</p>
+              <h2>{copy[lang].reliability.title}</h2>
+            </div>
+            <ul>
+              {copy[lang].reliability.items.map((item) => <li>{item}</li>)}
+            </ul>
+          </section>
+
+          <section class="paimon-section paimon-retrospective">
+            <div class="paimon-section__heading">
+              <p class="paimon-label">{copy[lang].retrospective.label}</p>
+              <h2>{copy[lang].retrospective.title}</h2>
+            </div>
+            <div class="paimon-section__body">
+              <p>{copy[lang].retrospective.text}</p>
+            </div>
+          </section>
+        </div>
+      ))
+    }
+
+    {
+      (previous || next) && (
+        <nav class="paimon-nav" aria-label="Project navigation">
+          {previous ? (
+            <a href={previous.href}>
+              <span data-lang-panel="zh">{copy.zh.nav.previous}</span>
+              <span data-lang-panel="en" hidden>{copy.en.nav.previous}</span>
+              <strong>{previous.title}</strong>
+            </a>
+          ) : (
+            <span></span>
+          )}
+          {next ? (
+            <a href={next.href}>
+              <span data-lang-panel="zh">{copy.zh.nav.next}</span>
+              <span data-lang-panel="en" hidden>{copy.en.nav.next}</span>
+              <strong>{next.title}</strong>
+            </a>
+          ) : (
+            <span></span>
+          )}
+        </nav>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .paimon-case {
+    --paimon-navy: #07142f;
+    --paimon-navy-soft: #12264a;
+    --paimon-ink: #0a1a18;
+    --paimon-gold: var(--ch-accent-warm);
+    --paimon-line: color-mix(in srgb, var(--paimon-gold) 34%, var(--ch-border-soft));
+    width: min(calc(100% - 2.5rem), 80rem);
+    margin: 0 auto;
+    padding: 2.5rem 0 4.5rem;
+  }
+
+  .paimon-copy-panel[hidden],
+  [data-lang-panel][hidden] {
+    display: none !important;
+  }
+
+  .paimon-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.72fr) minmax(20rem, 1fr);
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    align-items: center;
+    min-height: min(740px, calc(100dvh - var(--ch-header-height) - 0.5rem));
+    padding: clamp(1.2rem, 3vw, 2rem);
+    overflow: hidden;
+    border: 1px solid var(--paimon-line);
+    border-radius: 14px;
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--ch-surface-solid) 91%, transparent), color-mix(in srgb, var(--paimon-navy) 16%, var(--ch-glass-bg))),
+      linear-gradient(90deg, color-mix(in srgb, var(--paimon-gold) 12%, transparent) 0 1px, transparent 1px 100%),
+      linear-gradient(0deg, color-mix(in srgb, var(--ch-accent-secondary) 10%, transparent) 0 1px, transparent 1px 100%);
+    background-size: auto, 42px 42px, 42px 42px;
+  }
+
+  .paimon-hero::before {
+    position: absolute;
+    inset: 1rem;
+    border: 1px solid color-mix(in srgb, var(--paimon-gold) 20%, transparent);
+    border-radius: 10px;
+    content: '';
+    pointer-events: none;
+  }
+
+  .paimon-hero__copy {
+    position: relative;
+    z-index: 1;
+  }
+
+  .paimon-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .paimon-language {
+    display: inline-grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height: 44px;
+    padding: 0.2rem;
+    border: 1px solid var(--paimon-line);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ch-surface-solid) 78%, transparent);
+  }
+
+  .paimon-language__button {
+    min-width: 3.2rem;
+    min-height: 36px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ch-fg-muted);
+    cursor: pointer;
+    font-family: var(--ch-mono-font);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+  }
+
+  .paimon-language__button[aria-pressed='true'] {
+    background: color-mix(in srgb, var(--paimon-gold) 22%, var(--ch-surface-solid));
+    color: var(--ch-accent-ink);
+  }
+
+  .paimon-hero h1,
+  .paimon-section h2 {
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+  }
+
+  .paimon-hero h1 {
+    margin: 0;
+    font-size: clamp(2.55rem, 4.35vw, 4.7rem);
+    line-height: 1.02;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .paimon-case[data-lang='zh'] .paimon-hero h1 {
+    font-size: clamp(3rem, 5vw, 5.2rem);
+    line-height: 0.98;
+    white-space: nowrap;
+  }
+
+  .paimon-hero__subtitle {
+    margin: 0.8rem 0 0;
+    color: var(--paimon-gold);
+    font-family: var(--ch-mono-font);
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .paimon-hero__summary,
+  .paimon-section p,
+  .paimon-pillar p,
+  .paimon-chain-lead,
+  .paimon-map figcaption,
+  .paimon-reliability li {
+    color: var(--ch-fg-muted);
+    line-height: 1.76;
+  }
+
+  .paimon-hero__summary {
+    max-width: 35rem;
+    margin: 1.1rem 0 0;
+    font-size: 1.06rem;
+  }
+
+  .paimon-hero__actions,
+  .paimon-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .paimon-hero__actions {
+    margin-top: 1.5rem;
+  }
+
+  .paimon-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.62rem 1rem;
+    border: 1px solid var(--paimon-line);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ch-surface-solid) 72%, transparent);
+    color: var(--ch-accent);
+    font-family: var(--ch-academic-font);
+    font-weight: 650;
+    text-decoration: none;
+    transition:
+      transform var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      background var(--ch-transition-fast);
+  }
+
+  .paimon-link:hover,
+  .paimon-link:focus-visible {
+    border-color: color-mix(in srgb, var(--paimon-gold) 58%, var(--ch-border-soft));
+    background: color-mix(in srgb, var(--ch-surface-solid) 86%, var(--ch-accent-dim));
+    transform: translateY(-2px);
+  }
+
+  .paimon-link--primary {
+    background: color-mix(in srgb, var(--paimon-gold) 20%, var(--ch-surface-solid));
+    color: color-mix(in srgb, var(--ch-accent-ink) 78%, var(--paimon-gold));
+  }
+
+  .paimon-meta {
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .paimon-meta li,
+  .paimon-label,
+  .paimon-pillar span,
+  .paimon-evidence-chain span,
+  .paimon-annotations span {
+    font-family: var(--ch-mono-font);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .paimon-meta li {
+    padding: 0.24rem 0.52rem;
+    border: 1px solid var(--ch-border-soft);
+    border-radius: 999px;
+    color: var(--ch-accent-secondary);
+  }
+
+  .paimon-hero__gallery {
+    position: relative;
+    z-index: 1;
+  }
+
+  .paimon-hero__visual,
+  .paimon-map {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--paimon-line);
+    border-radius: 12px;
+    background: var(--ch-surface-solid);
+  }
+
+  .paimon-hero__visual {
+    position: relative;
+    aspect-ratio: 2048 / 680;
+    box-shadow: 0 28px 90px color-mix(in srgb, var(--paimon-navy) 24%, transparent);
+  }
+
+  .paimon-hero__visual::after {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--paimon-gold) 22%, transparent) 0 1px, transparent 1px 100%),
+      linear-gradient(0deg, color-mix(in srgb, white 18%, transparent) 0 1px, transparent 1px 100%);
+    background-size: 9rem 9rem;
+    content: '';
+    mix-blend-mode: screen;
+    opacity: 0.22;
+    pointer-events: none;
+  }
+
+  .paimon-hero__visual img,
+  .paimon-map img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .paimon-exhibit-card {
+    position: absolute;
+    right: 0.85rem;
+    bottom: 0.85rem;
+    max-width: min(18rem, calc(100% - 1.7rem));
+    padding: 0.75rem 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--paimon-gold) 46%, transparent);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--paimon-navy) 72%, transparent);
+    color: #f7ead0;
+    backdrop-filter: blur(12px);
+  }
+
+  .paimon-exhibit-card span span {
+    display: block;
+    color: color-mix(in srgb, #f7ead0 70%, var(--paimon-gold));
+    font-family: var(--ch-mono-font);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .paimon-exhibit-card strong {
+    display: block;
+    margin-top: 0.24rem;
+    font-family: var(--ch-academic-font);
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+
+  .paimon-annotations {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-top: 0.75rem;
+  }
+
+  .paimon-annotations span {
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--ch-border-soft);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--ch-glass-bg) 88%, transparent);
+    color: var(--ch-accent-secondary);
+    text-align: center;
+    text-transform: none;
+  }
+
+  .paimon-section {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(1rem, 2.4vw, 1.7rem);
+    padding: clamp(2.8rem, 5vw, 4.4rem) 0 0;
+  }
+
+  .paimon-section__heading {
+    position: relative;
+    width: min(100%, 52rem);
+    margin: 0 auto;
+    padding-top: 0.9rem;
+    border-top: 1px solid color-mix(in srgb, var(--paimon-line) 72%, transparent);
+    text-align: center;
+  }
+
+  .paimon-section__heading::before {
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    width: 3.25rem;
+    height: 1px;
+    background: var(--paimon-gold);
+    content: '';
+    transform: translateX(-50%);
+  }
+
+  .paimon-section__heading h2,
+  .paimon-overview h2,
+  .paimon-retrospective h2 {
+    margin: 0;
+    max-width: none;
+    font-size: clamp(1.45rem, 2.12vw, 2.28rem);
+    line-height: 1.24;
+    text-wrap: balance;
+  }
+
+  .paimon-case[data-lang='zh'] .paimon-section__heading h2,
+  .paimon-case[data-lang='zh'] .paimon-overview h2,
+  .paimon-case[data-lang='zh'] .paimon-retrospective h2 {
+    font-size: clamp(1.55rem, 2.35vw, 2.46rem);
+    line-height: 1.24;
+  }
+
+  .paimon-label {
+    margin: 0 0 0.8rem;
+    color: var(--paimon-gold);
+  }
+
+  .paimon-overview > p,
+  .paimon-section__body p {
+    margin: 0;
+    max-width: 56rem;
+    margin-inline: auto;
+    padding-top: 0.85rem;
+    border-top: 1px solid color-mix(in srgb, var(--ch-border-soft) 70%, transparent);
+    font-size: clamp(0.98rem, 1.1vw, 1.12rem);
+    text-align: left;
+  }
+
+  .paimon-problem-grid {
+    display: grid;
+    width: min(100%, 64rem);
+    margin: 0 auto;
+    gap: 0;
+    border-top: 1px solid color-mix(in srgb, var(--ch-border-soft) 74%, transparent);
+    counter-reset: problem;
+  }
+
+  .paimon-pillar-grid,
+  .paimon-chain-section > div:last-child,
+  .paimon-reliability ul {
+    width: min(100%, 64rem);
+    margin-inline: auto;
+  }
+
+  .paimon-reliability ul {
+    width: min(100%, 70rem);
+    max-width: 70rem;
+    justify-self: center;
+  }
+
+  .paimon-problem-grid p {
+    display: grid;
+    grid-template-columns: 2.7rem minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem;
+    margin: 0;
+    padding: 1rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--ch-border-soft) 74%, transparent);
+    counter-increment: problem;
+  }
+
+  .paimon-problem-grid p::before {
+    color: var(--paimon-gold);
+    content: counter(problem, decimal-leading-zero);
+    font-family: var(--ch-mono-font);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    line-height: 1.9;
+  }
+
+  .paimon-pillar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 0.8rem;
+  }
+
+  .paimon-pillar,
+  .paimon-reliability li {
+    margin: 0;
+    padding: 1rem 1.05rem;
+    border: 1px solid var(--ch-border-soft);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--ch-surface-solid) 72%, transparent), color-mix(in srgb, var(--ch-glass-bg) 92%, transparent)),
+      color-mix(in srgb, var(--ch-glass-bg) 86%, transparent);
+  }
+
+  .paimon-pillar {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .paimon-pillar::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--paimon-gold), var(--ch-accent-secondary));
+    content: '';
+    opacity: 0.62;
+  }
+
+  .paimon-pillar h3 {
+    margin: 0.48rem 0 0.35rem;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: clamp(1.02rem, 1.35vw, 1.2rem);
+    line-height: 1.22;
+  }
+
+  .paimon-pillar span {
+    color: var(--paimon-gold);
+  }
+
+  .paimon-chain-lead {
+    max-width: 46rem;
+    margin: 0 0 1rem;
+  }
+
+  .paimon-evidence-chain {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: chain;
+  }
+
+  .paimon-evidence-chain li {
+    position: relative;
+    min-height: 7.2rem;
+    padding: 0.85rem;
+    border: 1px solid color-mix(in srgb, var(--paimon-gold) 28%, var(--ch-border-soft));
+    border-radius: 10px;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--paimon-navy-soft) 10%, var(--ch-glass-bg)), var(--ch-glass-bg)),
+      linear-gradient(90deg, color-mix(in srgb, var(--paimon-gold) 16%, transparent) 0 1px, transparent 1px 100%);
+    background-size: auto, 1.1rem 1.1rem;
+  }
+
+  .paimon-evidence-chain li:not(:last-child)::after {
+    position: absolute;
+    right: -0.58rem;
+    top: 50%;
+    width: 0.58rem;
+    height: 1px;
+    background: var(--paimon-line);
+    content: '';
+  }
+
+  .paimon-evidence-chain span {
+    display: block;
+    color: var(--paimon-gold);
+  }
+
+  .paimon-evidence-chain strong {
+    display: block;
+    margin-top: 0.8rem;
+    color: var(--ch-fg);
+    font-family: var(--ch-academic-font);
+    font-size: 0.92rem;
+    line-height: 1.35;
+  }
+
+  .paimon-map-section {
+    grid-template-columns: 1fr;
+  }
+
+  .paimon-map {
+    aspect-ratio: 1794 / 1356;
+  }
+
+  .paimon-map figcaption {
+    padding: 0.9rem 1rem;
+    border-top: 1px solid var(--ch-border-soft);
+    background: color-mix(in srgb, var(--ch-surface-solid) 88%, var(--ch-accent-dim));
+    font-size: 0.92rem;
+  }
+
+  .paimon-reliability {
+    align-items: start;
+  }
+
+  .paimon-reliability ul {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .paimon-reliability li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 9.2rem;
+    text-align: center;
+  }
+
+  .paimon-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--ch-border-soft);
+  }
+
+  .paimon-nav a {
+    min-height: 5.5rem;
+    padding: 1rem;
+    border: 1px solid var(--ch-border-soft);
+    border-radius: 10px;
+    background: var(--ch-glass-bg);
+    text-decoration: none;
+    transition:
+      transform var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      background var(--ch-transition-fast);
+  }
+
+  .paimon-nav a:hover,
+  .paimon-nav a:focus-visible {
+    border-color: color-mix(in srgb, var(--paimon-gold) 38%, var(--ch-border-soft));
+    background: var(--ch-glass-bg-hover);
+    transform: translateY(-2px);
+  }
+
+  .paimon-nav span {
+    display: block;
+    color: var(--paimon-gold);
+    font-family: var(--ch-mono-font);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .paimon-nav strong {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: 1.05rem;
+  }
+
+  @media (max-width: 1080px) {
+    .paimon-evidence-chain {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .paimon-evidence-chain li:not(:last-child)::after {
+      display: none;
+    }
+  }
+
+  @media (max-width: 980px) {
+    .paimon-hero,
+    .paimon-section {
+      grid-template-columns: 1fr;
+    }
+
+    .paimon-pillar-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .paimon-reliability ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .paimon-case {
+      width: min(calc(100% - 1rem), 80rem);
+      padding-top: 1rem;
+    }
+
+    .paimon-hero {
+      min-height: auto;
+      padding: 1rem;
+    }
+
+    .paimon-topline {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .paimon-hero h1 {
+      font-size: clamp(2.9rem, 18vw, 4rem);
+    }
+
+    .paimon-case[data-lang='zh'] .paimon-hero h1 {
+      font-size: clamp(2.35rem, 14.5vw, 3.25rem);
+    }
+
+    .paimon-section__heading h2,
+    .paimon-overview h2,
+    .paimon-retrospective h2,
+    .paimon-case[data-lang='zh'] .paimon-section__heading h2,
+    .paimon-case[data-lang='zh'] .paimon-overview h2,
+    .paimon-case[data-lang='zh'] .paimon-retrospective h2 {
+      font-size: clamp(1.42rem, 9vw, 2.05rem);
+    }
+
+    .paimon-hero__visual {
+      aspect-ratio: 1.45;
+    }
+
+    .paimon-annotations,
+    .paimon-problem-grid,
+    .paimon-pillar-grid,
+    .paimon-evidence-chain,
+    .paimon-reliability ul,
+    .paimon-nav {
+      grid-template-columns: 1fr;
+    }
+
+    .paimon-exhibit-card {
+      position: static;
+      max-width: none;
+      border-radius: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .paimon-link,
+    .paimon-nav a {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.paimon-case');
+
+  if (root) {
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-lang-button]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-lang-panel]')];
+
+    const setLanguage = (lang: string) => {
+      root.dataset.lang = lang;
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.langPanel !== lang;
+      });
+      buttons.forEach((button) => {
+        button.setAttribute('aria-pressed', button.dataset.langButton === lang ? 'true' : 'false');
+      });
+      try {
+        localStorage.setItem('paimon-case-lang', lang);
+      } catch {
+        // Ignore storage failures; the page still works in the current session.
+      }
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => setLanguage(button.dataset.langButton ?? 'zh'));
+    });
+
+    try {
+      const saved = localStorage.getItem('paimon-case-lang');
+      if (saved === 'en') setLanguage('en');
+    } catch {
+      setLanguage('zh');
+    }
+  }
+</script>

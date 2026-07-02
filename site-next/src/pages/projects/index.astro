@@ -40,10 +40,20 @@ const allEntries = entries.map((entry) => ({
             {
               featuredEntries.map((entry, index) => {
                 const primaryLink = entry.data.links?.[0]?.href ?? buildContentUrl('projects', entry.id, base);
+                const isPaimonProject =
+                  entry.data.title === 'Paimon Asks Everything' || entry.id.toLowerCase().includes('paimon-asks-everything');
                 return (
                   <article class={`project-card project-card--${entry.data.accent ?? 'forest'}`}>
                     <a class="project-card__main-link" href={resolveHref(primaryLink)} aria-label={`Open ${entry.data.title}`}></a>
-                    <div class="project-card__visual" aria-hidden="true">
+                    <div class={`project-card__visual${isPaimonProject ? ' project-card__visual--image' : ''}`} aria-hidden="true">
+                      {isPaimonProject && (
+                        <img
+                          src={`${base}assets/projects/paimon-asks-everything/banner.png`}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      )}
                       <span>{String(index + 1).padStart(2, '0')}</span>
                     </div>
                     <div class="project-card__body">
@@ -216,12 +226,27 @@ const allEntries = entries.map((entry) => ({
   .project-card__visual {
     position: relative;
     min-height: 10rem;
+    overflow: hidden;
     border-bottom: 1px solid color-mix(in srgb, var(--project-accent) 22%, var(--ch-border-soft));
     background:
       linear-gradient(135deg, color-mix(in srgb, var(--project-accent) 26%, transparent) 0 1px, transparent 1px 24px),
       radial-gradient(circle at 72% 32%, color-mix(in srgb, var(--project-accent) 48%, transparent), transparent 34%),
       linear-gradient(135deg, color-mix(in srgb, var(--ch-fg) 10%, transparent), transparent);
     background-size: 24px 24px, auto, auto;
+  }
+
+  .project-card__visual--image {
+    background: var(--ch-surface-solid);
+  }
+
+  .project-card__visual--image img {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
 
   .project-card__visual::before,
@@ -246,13 +271,37 @@ const allEntries = entries.map((entry) => ({
     border-radius: 999px 999px 10px 10px;
   }
 
+  .project-card__visual--image::before {
+    inset: 0;
+    width: auto;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    background:
+      linear-gradient(180deg, transparent 58%, color-mix(in srgb, var(--ch-surface-solid) 34%, transparent)),
+      linear-gradient(90deg, color-mix(in srgb, var(--ch-surface-solid) 16%, transparent), transparent 38%, color-mix(in srgb, var(--ch-surface-solid) 12%, transparent));
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .project-card__visual--image::after {
+    display: none;
+  }
+
   .project-card__visual span {
     position: absolute;
     right: 1rem;
     top: 0.8rem;
+    z-index: 1;
     font-family: var(--ch-mono-font);
     font-size: 0.78rem;
     color: var(--project-accent);
+  }
+
+  .project-card__visual--image span {
+    z-index: 2;
+    color: #f7ead0;
+    text-shadow: 0 1px 12px color-mix(in srgb, black 58%, transparent);
   }
 
   .project-card__body {
