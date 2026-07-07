@@ -49,6 +49,10 @@ venv.bak/
 .cursor/
 .superpowers/
 .codex/
+AGENTS.md
+CLAUDE.md
+gpu_monitor.py
+requirements_gpu.txt
 
 # MacOS
 .DS_Store
