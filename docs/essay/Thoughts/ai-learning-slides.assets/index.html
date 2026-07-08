@@ -799,27 +799,27 @@
     opacity:.78;
   }
   #deck .creation-flow{
-    margin-top:3.4vh;
+    margin:4vh auto 0;
     display:grid;
     grid-template-columns:1fr auto 1fr auto 1fr;
-    gap:1vw;
+    gap:1.35vw;
     align-items:center;
-    max-width:58vw;
+    max-width:76vw;
     font-family:var(--serif-zh);
   }
   #deck .creation-flow .flow-node{
-    padding:1.45vh 1.2vw;
+    padding:2.2vh 2vw;
     border-top:1px solid currentColor;
     border-bottom:1px solid currentColor;
     background:rgba(var(--ink-rgb),.035);
     text-align:center;
-    font-size:max(22px,1.55vw);
+    font-size:max(34px,2.55vw);
     line-height:1.15;
   }
   #deck .creation-flow .flow-arrow{
     color:#b8862a;
     font-family:var(--serif-en);
-    font-size:max(28px,2.1vw);
+    font-size:max(40px,3.2vw);
     line-height:1;
   }
   #deck .creation-cards{
@@ -855,6 +855,130 @@
     font-family:var(--serif-zh);
     font-size:max(28px,2.15vw);
     line-height:1.26;
+  }
+  #deck .dual-system-map{
+    margin-top:4.6vh;
+    display:grid;
+    grid-template-columns:1fr minmax(180px,.48fr) 1fr;
+    gap:2vw;
+    align-items:stretch;
+    font-family:var(--sans-zh);
+  }
+  #deck .dual-panel{
+    min-height:34vh;
+    padding:2.8vh 2vw;
+    border-top:1px solid currentColor;
+    border-bottom:1px solid currentColor;
+    background:rgba(var(--ink-rgb),.035);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  #deck .dual-kicker{
+    font-family:var(--mono);
+    font-size:max(11px,.78vw);
+    letter-spacing:.18em;
+    opacity:.6;
+  }
+  #deck .dual-title{
+    margin-top:2.8vh;
+    font-family:var(--serif-zh);
+    font-size:max(34px,2.7vw);
+    line-height:1.08;
+  }
+  #deck .dual-list{
+    margin-top:2.8vh;
+    display:grid;
+    gap:1vh;
+    font-size:max(16px,1.12vw);
+    line-height:1.42;
+    opacity:.78;
+  }
+  #deck .dual-bridge{
+    position:relative;
+    min-height:34vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:1.6vh;
+  }
+  #deck .dual-bridge::before,
+  #deck .dual-bridge::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    width:2.4vw;
+    height:1px;
+    background:#b8862a;
+  }
+  #deck .dual-bridge::before{
+    left:-2.2vw;
+  }
+  #deck .dual-bridge::after{
+    right:-2.2vw;
+  }
+  #deck .bridge-core{
+    width:12.2vw;
+    min-height:16vh;
+    padding:2.2vh 1.2vw;
+    border:1px solid #b8862a;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align:center;
+    background:rgba(184,134,42,.08);
+  }
+  #deck .bridge-title{
+    font-family:var(--serif-zh);
+    font-size:max(24px,1.8vw);
+    line-height:1.16;
+  }
+  #deck .bridge-desc{
+    margin-top:1.2vh;
+    font-size:max(13px,.94vw);
+    line-height:1.42;
+    opacity:.72;
+  }
+  #deck .bridge-arrow{
+    font-family:var(--mono);
+    font-size:max(11px,.78vw);
+    letter-spacing:.12em;
+    color:#8f681f;
+    white-space:nowrap;
+  }
+  #deck .dual-thesis{
+    margin-top:4vh;
+    padding:2vh 0 0;
+    border-top:1px solid rgba(var(--ink-rgb),.68);
+    font-family:var(--serif-zh);
+    font-size:max(26px,2vw);
+    line-height:1.28;
+    max-width:86vw;
+  }
+  #deck .dual-vla-figure{
+    margin-top:2.2vh;
+    width:min(88vw,1360px);
+    height:min(62vh,50vw);
+    border-top:1px solid rgba(var(--ink-rgb),.34);
+    border-bottom:1px solid rgba(var(--ink-rgb),.34);
+    background:rgba(var(--ink-rgb),.025);
+    overflow:hidden;
+  }
+  #deck .dual-vla-figure img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+  }
+  #deck .dual-vla-note{
+    margin-top:1.2vh;
+    max-width:88vw;
+    font-family:var(--sans-zh);
+    font-size:max(14px,.98vw);
+    line-height:1.35;
+    letter-spacing:.02em;
+    opacity:.66;
   }
   #deck .expression-flow{
     display:grid;
@@ -896,11 +1020,28 @@
     border-left:3px solid #b8862a;
     background:rgba(var(--ink-rgb),.035);
   }
+  #deck .expression-layout{
+    display:grid;
+    grid-template-columns:minmax(0,5.2fr) minmax(0,4.8fr);
+    gap:1.4vw;
+    align-items:center;
+  }
+  #deck .expression-copy{
+    align-self:center;
+  }
+  #deck .expression-method{
+    width:min(39.5vw,620px);
+    justify-self:start;
+    transform:translateX(-6.2vw);
+    padding-top:8.4vh;
+  }
   #deck .chain-note{
     margin-top:2.4vh;
-    padding:1.8vh 1.5vw;
+    padding:2vh 1.5vw;
+    border-left:5px solid #b8862a;
     border-top:1px solid currentColor;
     border-bottom:1px solid currentColor;
+    background:rgba(184,134,42,.11);
     font-family:var(--serif-zh);
     font-size:max(22px,1.55vw);
     line-height:1.35;
@@ -1115,12 +1256,88 @@
     max-height:78vh;
     object-fit:contain;
   }
+
+  /* ============ 进度跟踪条 ============ */
+  .progress-track{
+    position:fixed;top:0;left:0;width:100%;z-index:25;
+    pointer-events:none;
+    opacity:0;transition:opacity .5s ease;
+    background:rgba(255,255,255,.95);
+    border-bottom:1px solid rgba(5,5,5,.06);
+    padding:1.6vh 6vw 1.2vh;
+  }
+  .progress-track.pt-visible{opacity:1}
+  .pt-row{display:flex;align-items:flex-start;justify-content:space-between}
+  .pt-node{
+    display:flex;flex-direction:column;align-items:center;gap:.25vh;
+    flex:1;max-width:13vw;
+    opacity:.55;transition:all .5s cubic-bezier(.22,1,.36,1);
+  }
+  .pt-node.pt-active{opacity:1;transform:scale(1.12)}
+  .pt-dot-wrap{position:relative;display:flex;align-items:center;justify-content:center;height:18px;width:100%}
+  .pt-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:rgba(5,5,5,.15);
+    transition:all .5s cubic-bezier(.22,1,.36,1);
+    position:absolute;
+  }
+  .pt-node.pt-active .pt-dot{
+    width:10px;height:10px;
+    background:#050505;
+    box-shadow:0 0 8px rgba(5,5,5,.18);
+  }
+  .pt-lbl{
+    font-family:var(--sans-zh);
+    font-size:max(13px,.82vw);
+    letter-spacing:.03em;
+    white-space:nowrap;
+    color:rgba(5,5,5,.55);
+    transition:color .4s ease;
+    line-height:1.2;
+    font-weight:500;
+  }
+  .pt-node.pt-active .pt-lbl{color:#050505;font-weight:700}
+  .pt-conn{
+    flex:0 0 auto;
+    display:flex;align-items:center;justify-content:center;
+    align-self:center;margin-bottom:1.6vh;
+    min-width:clamp(34px,3.6vw,58px);padding:0 .35vw;
+  }
+  .pt-arr{
+    font-family:var(--serif-en);
+    display:inline-block;
+    font-size:max(12px,.82vw);
+    color:rgba(5,5,5,.12);
+    transform:scaleX(1.65);
+    transform-origin:center;
+    transition:color .5s ease,transform .5s cubic-bezier(.22,1,.36,1);
+    line-height:1;
+  }
+  .pt-conn-active .pt-arr{color:rgba(5,5,5,.35);transform:scaleX(1.9)}
+  .pt-subs{
+    display:flex;gap:.35vw;
+    margin-top:0;justify-content:center;
+    overflow:hidden;max-height:0;opacity:0;
+    transition:all .4s ease;
+  }
+  .pt-show-subs .pt-subs{max-height:3.6vh;opacity:1;margin-top:.2vh}
+  .pt-sub{
+    font-family:var(--sans-zh);
+    font-size:max(10px,.72vw);
+    letter-spacing:.03em;
+    padding:.2vh .45vw;
+    border-radius:4px;
+    color:rgba(5,5,5,.25);
+    white-space:nowrap;
+    transition:all .4s ease;
+  }
+  .pt-sub-active{color:#050505!important;background:rgba(5,5,5,.06)}
 </style>
 
 <section class="slide hero light">
   <div class="chrome">
     <div>Slide 1</div>
-    <div>01 / 17</div>
+    <div>01 / 19</div>
   </div>
   <div class="frame" style="display:grid; gap:4vh; align-content:center; min-height:80vh">
     <h1 class="h-hero" style="font-size:7.8vw; line-height:1.08" data-anim>像训练 AI<br>一样训练自己</h1>
@@ -1133,14 +1350,14 @@
 <section class="slide light">
   <div class="chrome">
     <div>Part 1｜回答同学们最关心的那些问题</div>
-    <div>02 / 17</div>
+    <div>02 / 19</div>
   </div>
   <div class="frame" style="padding-top:5vh; display:grid; grid-template-columns:5.2fr 6.8fr; gap:3vw; align-items:center">
     <div style="display:flex; flex-direction:column; gap:2.4vh; min-width:0">
       <div class="kicker" data-anim>问题 1</div>
       <h2 class="h-xl" style="font-size:2.85vw; line-height:1.16; white-space:nowrap" data-anim>最高效的高中学习方法是什么？</h2>
       <ul data-anim style="padding-left:1.2em; display:flex; flex-direction:column; gap:1.25vh; font-family:var(--sans-zh); font-size:max(15px,1.08vw); line-height:1.52; opacity:.86">
-        <li>最有效的方法不是题海，是总结“思维链”</li>
+        <li>最有效的方法不是题海，是总结"思维链"</li>
         <li>做完一组相近题目后，停下来提炼共通的解题逻辑：
           <ul style="margin-top:1vh; padding-left:1.1em; display:flex; flex-direction:column; gap:.55vh">
             <li>看到什么条件</li>
@@ -1160,14 +1377,14 @@
 
 <section class="slide light">
   <div class="chrome">
-    <div>Part 1｜要有创造欲：把思考变成作品</div>
-    <div>03 / 17</div>
+    <div>Part 1｜要有创作欲：把思考变成作品</div>
+    <div>03 / 19</div>
   </div>
   <div class="frame" style="padding-top:4.5vh">
     <div class="kicker" data-anim>承接：思维链之后</div>
-    <h2 class="h-xl" style="font-size:5.2vw; line-height:1.12" data-anim>要有创造欲</h2>
+    <h2 class="h-xl" style="font-size:5.2vw; line-height:1.12" data-anim>要有创作欲</h2>
     <p class="lead" style="margin-top:3vh; max-width:82vw; font-size:max(24px,1.9vw); line-height:1.42" data-anim>
-      创造欲，不只是创作艺术作品，而是把脑海中的想法主动转化为外在成果的冲动。
+      创作欲：把脑海中的想法主动转化为外在成果的冲动。
     </p>
     <div class="creation-flow" data-anim>
       <div class="flow-node">想法</div>
@@ -1200,29 +1417,41 @@
 
 <section class="slide light">
   <div class="chrome">
-    <div>Part 1｜要有创造欲：把思考变成作品</div>
-    <div>04 / 17</div>
+    <div>Part 1｜要有创作欲：把思考变成作品</div>
+    <div>04 / 19</div>
   </div>
-  <div class="frame grid-2-6-6" style="padding-top:4.5vh; gap:4vw">
-    <div>
+  <div class="frame" style="padding-top:4.2vh">
+    <div class="kicker" data-anim>双系统类比</div>
+    <h2 class="h-xl" style="font-size:4.8vw;line-height:1.12" data-anim>创作欲，就是训练脑和手的连接</h2>
+    <figure class="dual-vla-figure" data-anim>
+      <img src="images/04-dual-system-vla.png" alt="双系统：从想法到作品。决策系统连接执行系统，并通过反馈修正。">
+    </figure>
+    <div class="dual-vla-note" data-anim>创作欲训练的是如何把脑中的东西尽可能无损地传到现实里。</div>
+  </div>
+</section>
+
+<section class="slide light">
+  <div class="chrome">
+    <div>Part 1｜要有创作欲：把思考变成作品</div>
+    <div>05 / 19</div>
+  </div>
+  <div class="frame expression-layout">
+    <div class="expression-copy">
       <div class="kicker" data-anim>表达训练</div>
       <h2 class="h-xl" style="font-size:4.6vw; line-height:1.13" data-anim>把思维<br>传达到笔头</h2>
-      <p class="lead" style="margin-top:3.2vh; max-width:38vw" data-anim>
-        很多时候，我们不是没有想法，而是无法把脑海中模糊、跳跃的思考，整理成清晰、完整的表达。
-      </p>
-      <div class="chain-note" data-anim>
+      <p class="lead" style="margin-top:5.8vh; width:58vw; max-width:none; font-size:max(22px,1.55vw); line-height:1.46; white-space:nowrap" data-anim>
         把隐性的思维，转化为清晰、完整、可检查的显性表达。
-      </div>
+      </p>
     </div>
-    <div>
-      <div class="expression-flow" data-anim>
-        <div class="expression-step"><div class="step-nb">01</div><div class="step-text">脑海中的直觉</div></div>
-        <div class="expression-step"><div class="step-nb">02</div><div class="step-text">整理判断依据</div></div>
-        <div class="expression-step"><div class="step-nb">03</div><div class="step-text">写出完整过程</div></div>
-        <div class="expression-step"><div class="step-nb">04</div><div class="step-text">检查逻辑漏洞</div></div>
-        <div class="expression-step"><div class="step-nb">05</div><div class="step-text">形成可复用的方法</div></div>
+    <div class="expression-method">
+      <div class="expression-flow" data-anim style="gap:1.28vh">
+        <div class="expression-step"><div class="step-nb">01</div><div class="step-text" style="font-size:max(22px,1.58vw)">脑海中的直觉</div></div>
+        <div class="expression-step"><div class="step-nb">02</div><div class="step-text" style="font-size:max(22px,1.58vw)">整理判断依据</div></div>
+        <div class="expression-step"><div class="step-nb">03</div><div class="step-text" style="font-size:max(22px,1.58vw)">写出完整过程</div></div>
+        <div class="expression-step"><div class="step-nb">04</div><div class="step-text" style="font-size:max(22px,1.58vw)">检查逻辑漏洞</div></div>
+        <div class="expression-step"><div class="step-nb">05</div><div class="step-text" style="font-size:max(22px,1.58vw)">形成可复用的方法</div></div>
       </div>
-      <div class="question-grid" data-anim>
+      <div class="question-grid" data-anim style="font-size:max(16px,1.12vw); gap:1.05vh 1.25vw">
         <div>我观察到了什么？</div>
         <div>我为什么这样判断？</div>
         <div>我选择了什么方法？</div>
@@ -1239,7 +1468,7 @@
 <section class="slide light">
   <div class="chrome">
     <div>Part 2｜像训练 AI 一样训练自己</div>
-    <div>05 / 17</div>
+    <div>06 / 19</div>
   </div>
   <div class="frame" style="padding-top:4vh">
     <div class="kicker" data-anim>总框架</div>
@@ -1264,7 +1493,7 @@
         <div class="route-step" style="--w:80%; --tone:.075">
           <div class="route-level">02 规范化</div>
           <div class="route-method">老师纠错</div>
-          <div class="route-ai-inside">有监督训练</div>
+          <div class="route-ai-inside">有监督训练/微调</div>
         </div>
         <div class="route-step" style="--w:88%; --tone:.05">
           <div class="route-level">01 入门</div>
@@ -1280,7 +1509,7 @@
 <section class="slide light">
   <div class="chrome">
     <div>Part 2｜像训练 AI 一样训练自己</div>
-    <div>06 / 17</div>
+    <div>07 / 19</div>
   </div>
   <div class="frame" style="padding-top:5vh; position:relative">
     <div class="concept-box ai-only" data-anim style="position:absolute; top:3vh; right:0; width:30vw; border:1px solid currentColor; padding:2.2vh 1.8vw; font-family:var(--sans-zh); font-size:max(16px,1.08vw); line-height:1.42">
@@ -1311,11 +1540,11 @@
 <section class="slide light">
   <div class="chrome">
     <div>Part 2｜像训练 AI 一样训练自己</div>
-    <div>07 / 17</div>
+    <div>08 / 19</div>
   </div>
   <div class="frame grid-2-6-6" style="padding-top:5vh; position:relative">
     <div class="concept-box ai-only" data-anim style="position:absolute; top:3vh; right:0; width:30vw; border:1px solid currentColor; padding:2.2vh 1.8vw; font-family:var(--sans-zh); font-size:max(16px,1.08vw); line-height:1.42">
-      <div class="concept-label">有监督训练</div>
+      <div class="concept-label">有监督训练/微调</div>
       <div class="concept-line"><span>用标注样本和反馈校正输出</span></div>
     </div>
     <div>
@@ -1323,7 +1552,7 @@
       <p class="lead" style="margin-top:4vh" data-anim>老师讲题 = 高质量标注，作业批改 = 外部反馈</p>
     </div>
     <div>
-      <p class="lead" style="margin-bottom:2.4vh" data-anim>你要关注的不只是“对不对”，而是：</p>
+      <p class="lead" style="margin-bottom:2.4vh" data-anim>你要关注的不只是"对不对"，而是：</p>
       <ul data-anim style="padding-left:1.2em; display:flex; flex-direction:column; gap:1.4vh; font-family:var(--sans-zh); font-size:max(17px,1.3vw); line-height:1.55; opacity:.86">
         <li>这道题是什么题型？</li>
         <li>关键条件是什么？</li>
@@ -1337,34 +1566,32 @@
 <section class="slide light">
   <div class="chrome">
     <div>Part 2｜像训练 AI 一样训练自己</div>
-    <div>08 / 17</div>
+    <div>09 / 19</div>
   </div>
-  <div class="frame" style="padding-top:5vh; position:relative">
-    <div class="concept-box ai-only" data-anim style="position:absolute; top:3vh; right:0; width:30vw; border:1px solid currentColor; padding:2.2vh 1.8vw; font-family:var(--sans-zh); font-size:max(16px,1.08vw); line-height:1.42">
-      <div class="concept-label">强化学习</div>
-      <div class="concept-line"><span>在试错中根据奖励更新策略</span></div>
+  <div class="frame" style="position:relative;justify-content:flex-start">
+    <div class="concept-box ai-only" data-anim style="position:absolute;top:3vh;right:0;width:30vw;border:1px solid currentColor;padding:2.2vh 1.8vw;font-family:var(--sans-zh);font-size:max(16px,1.08vw);line-height:1.42">
+      <div class="concept-label">智能体</div>
+      <div class="concept-line"><span>能根据目标观察、判断、行动，并从反馈中调整策略的系统。</span></div>
     </div>
-    <h2 class="h-xl" style="font-size:5.1vw; line-height:1.12; max-width:58vw" data-anim>在试错中<br>更新策略</h2>
-    <div class="rl-cycle" data-anim>
-      <div class="rl-step">
-        <div class="rl-nb">01</div>
-        <div class="rl-title">限时做题</div>
-        <div class="rl-desc">模拟真实考试规则，不边看答案边做。</div>
+    <h2 class="h-xl" style="font-size:4.6vw;line-height:1.14;margin-top:16vh" data-anim>把自己想象成一个智能体</h2>
+    <p class="lead" style="margin-top:2vh;max-width:68vw" data-anim>
+      面对每道题（状态）→ 选择策略（动作）→ 得到反馈（奖励）→ 持续优化（更新）
+    </p>
+    <div class="grid-3" style="margin-top:4.4vh" data-anim>
+      <div class="pillar" style="border-top:2px solid rgba(127,127,127,.35);padding-top:2.4vh">
+        <div class="t" style="font-size:2.2vw">奖励怎么设计</div>
+        <div class="d">定义什么行为会被强化。关注思路清晰度、可迁移性，而非刷题量与分数涨跌。</div>
+        <div style="margin-top:2vh;font-family:var(--mono);font-size:max(11px,.82vw);letter-spacing:.16em;opacity:.55">→ 09 奖励函数</div>
       </div>
-      <div class="rl-step">
-        <div class="rl-nb">02</div>
-        <div class="rl-title">得到结果</div>
-        <div class="rl-desc">记录分数、用时、卡点和不确定步骤。</div>
+      <div class="pillar" style="border-top:2px solid rgba(127,127,127,.35);padding-top:2.4vh">
+        <div class="t" style="font-size:2.2vw">探索 vs 利用</div>
+        <div class="d">平时多尝试不同解法（高 &#x3b5;），拓宽视野；考试选最稳的路径（低 &#x3b5;），追求确定性。</div>
+        <div style="margin-top:2vh;font-family:var(--serif-en);font-style:italic;font-size:max(14px,1.05vw);opacity:.5">&#x3b5;-greedy 策略</div>
       </div>
-      <div class="rl-step">
-        <div class="rl-nb">03</div>
-        <div class="rl-title">定位错因</div>
-        <div class="rl-desc">区分知识不会、方法不稳、审题失误。</div>
-      </div>
-      <div class="rl-step">
-        <div class="rl-nb">04</div>
-        <div class="rl-title">调整策略</div>
-        <div class="rl-desc">把复盘写成下次先做什么，而不是只写“下次认真”。</div>
+      <div class="pillar" style="border-top:2px solid rgba(127,127,127,.35);padding-top:2.4vh">
+        <div class="t" style="font-size:2.2vw">信用分配</div>
+        <div class="d">等整道题做完再归因，你分不清哪一步出错。每步即时验证，才能精确定位到具体步骤。</div>
+        <div style="margin-top:2vh;font-family:var(--mono);font-size:max(11px,.82vw);letter-spacing:.16em;opacity:.55">→ 10 步步为营</div>
       </div>
     </div>
   </div>
@@ -1373,7 +1600,7 @@
 <section class="slide light" data-animate="directional">
   <div class="chrome">
     <div>Part 2｜像训练 AI 一样训练自己</div>
-    <div>09 / 17</div>
+    <div>10 / 19</div>
   </div>
   <div class="frame" style="padding-top:5vh; position:relative">
     <h2 class="h-xl" style="font-size:4.7vw; line-height:1.14; max-width:58vw; white-space:nowrap" data-anim>奖励函数如何选择</h2>
@@ -1397,12 +1624,49 @@
   </div>
 </section>
 
+<section class="slide light" data-animate="directional">
+  <div class="chrome">
+    <div>Part 2｜像训练 AI 一样训练自己</div>
+    <div>11 / 19</div>
+  </div>
+  <div class="frame" style="padding-top:5vh; position:relative">
+    <div class="concept-box ai-only" data-anim="right" style="position:absolute; top:3vh; right:0; width:30vw; border:1px solid currentColor; padding:2.2vh 1.8vw; font-family:var(--sans-zh); font-size:max(16px,1.08vw); line-height:1.42">
+      <div class="concept-label">信用分配</div>
+      <div class="concept-line"><span>蒙特卡洛方法（MC）— 终局整体归因，模糊</span></div>
+      <div class="concept-line"><span>时序差分算法（TD）— 每步即时归因，精确</span></div>
+    </div>
+    <div class="split">
+      <div>
+        <h2 class="h-xl" style="font-size:4.6vw; line-height:1.14" data-anim>步步为营：<br>即时纠错</h2>
+        <p class="lead" style="margin-top:2.8vh; font-size:max(18px,1.22vw)" data-anim>等整道题做完再归因（MC）——你已分不清是哪步出的问题。<br>TD 每步都验证，错误一出现就被定位到具体步骤。<br>信用分配越精确，改进就越高效。</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:2.4vh">
+        <div class="callout" data-anim style="border-left-color:#b8862a">
+          <div class="q-big">每做一步，立即验证这一步</div>
+          <ul style="margin-top:1.2vh; padding-left:1em; display:flex; flex-direction:column; gap:.8vh; font-family:var(--sans-zh); font-size:max(15px,1.08vw); line-height:1.45; opacity:.86">
+            <li>涉及计算 → 检查计算过程，多次验算</li>
+            <li>使用定理 → 检查使用条件是否满足</li>
+            <li>字母代入数值 → 立刻做出标记</li>
+          </ul>
+        </div>
+        <div class="callout" data-anim>
+          确保每次迭代时 <span class="hi">前面的步骤都是有把握的</span>。这一步确认无误的"奖励信号"，就是进入下一步的底气。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="slide light">
   <div class="chrome">
     <div>Part 2｜像训练 AI 一样训练自己</div>
-    <div>10 / 17</div>
+    <div>12 / 19</div>
   </div>
-  <div class="frame grid-2-6-6" style="padding-top:5vh">
+  <div class="frame grid-2-6-6" style="padding-top:5vh; position:relative">
+    <div class="concept-box ai-only" data-anim style="position:absolute; top:2.4vh; right:0; width:30vw; border:1px solid currentColor; padding:2.2vh 1.8vw; font-family:var(--sans-zh); font-size:max(16px,1.08vw); line-height:1.42">
+      <div class="concept-label">思维链</div>
+      <div class="concept-line"><span>让模型在输出最终答案前，先生成中间推理步骤</span></div>
+    </div>
     <div>
       <h2 class="h-xl" style="font-size:4.9vw; line-height:1.14" data-anim>把思考从黑箱<br>变透明</h2>
     </div>
@@ -1422,7 +1686,7 @@
 <section class="slide light">
   <div class="chrome">
     <div>Part 2｜像训练 AI 一样训练自己</div>
-    <div>11 / 17</div>
+    <div>13 / 19</div>
   </div>
   <div class="frame" style="padding-top:4vh">
     <div class="fit-legend" data-anim="right">
@@ -1463,7 +1727,7 @@
     </div>
     <div class="kicker" data-anim>过拟合与母题</div>
     <h2 class="h-xl" style="font-size:5vw; line-height:1.14" data-anim>别背题，<br>要吃透结构</h2>
-    <div class="grid-2-6-6" style="margin-top:5vh">
+    <div class="grid-2-6-6" style="margin-top:7vh">
       <div data-anim style="display:grid; grid-template-columns:.7fr 1.3fr 1.3fr; border-top:1px solid currentColor; border-bottom:1px solid currentColor; font-family:var(--sans-zh); font-size:max(15px,1.1vw); line-height:1.45">
         <div style="padding:1.3vh .8vw"></div><div style="padding:1.3vh .8vw">坏过拟合</div><div style="padding:1.3vh .8vw">好拟合</div>
         <div style="padding:1.5vh .8vw; border-top:1px solid rgba(127,127,127,.3)">表现</div><div style="padding:1.5vh .8vw; border-top:1px solid rgba(127,127,127,.3)">记数字、记答案、记题面</div><div style="padding:1.5vh .8vw; border-top:1px solid rgba(127,127,127,.3)">记结构、记入口、记方法</div>
@@ -1485,9 +1749,13 @@
 <section class="slide light">
   <div class="chrome">
     <div>Part 2｜像训练 AI 一样训练自己</div>
-    <div>12 / 17</div>
+    <div>14 / 19</div>
   </div>
-  <div class="frame" style="padding-top:5vh">
+  <div class="frame" style="padding-top:5vh; position:relative">
+    <div class="concept-box ai-only" data-anim style="position:absolute; top:2.4vh; right:0; width:30vw; border:1px solid currentColor; padding:2.2vh 1.8vw; font-family:var(--sans-zh); font-size:max(16px,1.08vw); line-height:1.42">
+      <div class="concept-label">泛化</div>
+      <div class="concept-line"><span>在未见过的数据上也能正确输出——AI 训练的终极目标</span></div>
+    </div>
     <div class="kicker" data-anim>通解范式</div>
     <h2 class="h-xl" style="font-size:5vw; line-height:1.14" data-anim>找到以不变应万变的通解</h2>
     <div style="margin-top:7vh; display:grid; grid-template-columns:1fr 1fr; gap:2.2vh 4vw">
@@ -1502,7 +1770,7 @@
 <section class="slide hero light">
   <div class="chrome">
     <div>Part 2｜像训练 AI 一样训练自己</div>
-    <div>13 / 17</div>
+    <div>15 / 19</div>
   </div>
   <div class="frame" style="padding-top:6vh; justify-content:center">
     <div class="loop-figure" data-anim>
@@ -1514,7 +1782,7 @@
 <section class="slide light">
   <div class="chrome">
     <div>Part 1｜回答同学们最关心的那些问题</div>
-    <div>14 / 17</div>
+    <div>16 / 19</div>
   </div>
   <div class="frame" style="padding-top:9vh!important">
     <div class="kicker" data-anim>问题 2</div>
@@ -1530,7 +1798,7 @@
 <section class="slide light">
   <div class="chrome">
     <div>Part 1｜回答同学们最关心的那些问题</div>
-    <div>15 / 17</div>
+    <div>17 / 19</div>
   </div>
   <div class="frame" style="padding-top:5vh">
     <div class="kicker" data-anim>问题 3</div>
@@ -1539,7 +1807,7 @@
       <div class="callout" data-anim>假期用来清空大脑：运动、旅行、打游戏都可以</div>
       <div class="callout" data-anim>但别完全脱手，保留轻量学习维持手感</div>
       <div class="callout" data-anim>压力大；写东西、运动、阶段性放空</div>
-      <div class="callout" data-anim>“有计划地放松”远好过失控拖延</div>
+      <div class="callout" data-anim>"有计划地放松"远好过失控拖延</div>
     </div>
   </div>
 </section>
@@ -1547,7 +1815,7 @@
 <section class="slide hero light">
   <div class="chrome">
     <div>Part 1｜回答同学们最关心的那些问题</div>
-    <div>16 / 17</div>
+    <div>18 / 19</div>
   </div>
   <div class="frame" style="display:grid; gap:5vh; align-content:center; min-height:80vh">
     <div class="kicker" data-anim>问题 4</div>
@@ -1564,14 +1832,14 @@
 <section class="slide light">
   <div class="chrome">
     <div>Part 1｜回答同学们最关心的那些问题</div>
-    <div>17 / 17</div>
+    <div>19 / 19</div>
   </div>
   <div class="frame grid-2-6-6" style="padding-top:4vh; gap:4vw">
     <div>
       <div class="kicker" data-anim>问题 5</div>
       <h2 class="h-xl" style="font-size:4.3vw; line-height:1.16" data-anim>专业怎么选？<br>完全没想法怎么办？</h2>
       <ul data-anim style="margin-top:3.2vh; padding-left:1.1em; display:flex; flex-direction:column; gap:.9vh; font-family:var(--sans-zh); font-size:max(14px,1vw); line-height:1.45; opacity:.86">
-        <li>专业选择不是找“完美热爱”，而是在信息不足时做可调整的风险选择</li>
+        <li>专业选择不是找"完美热爱"，而是在信息不足时做可调整的风险选择</li>
         <li>别被网上一面倒的劝退帖吓住</li>
         <li>重点看四件事：自己是否真的排斥；课程难度能不能接受；未来出路是否大致清晰；学校在这个专业上有没有资源</li>
         <li>完全没想法时，先排除明显不喜欢的方向</li>
@@ -1591,6 +1859,42 @@
 </section>
 
 
+</div>
+
+<!-- ============ 进度跟踪条 ============ -->
+<div id="pt" class="progress-track" aria-hidden="true">
+  <div class="pt-row">
+    <div class="pt-node" data-idx="0">
+      <div class="pt-dot-wrap"><div class="pt-dot"></div></div>
+      <div class="pt-lbl">行为克隆</div>
+    </div>
+    <div class="pt-conn"><span class="pt-arr">→</span></div>
+    <div class="pt-node" data-idx="1">
+      <div class="pt-dot-wrap"><div class="pt-dot"></div></div>
+      <div class="pt-lbl">有监督训练</div>
+    </div>
+    <div class="pt-conn"><span class="pt-arr">→</span></div>
+    <div class="pt-node pt-has-subs" data-idx="2">
+      <div class="pt-dot-wrap"><div class="pt-dot"></div></div>
+      <div class="pt-lbl">强化学习</div>
+      <div class="pt-subs">
+        <div class="pt-sub" data-sub="0">奖励设计</div>
+        <div class="pt-sub" data-sub="1">探索vs利用</div>
+        <div class="pt-sub" data-sub="2">信用分配</div>
+      </div>
+    </div>
+    <div class="pt-conn"><span class="pt-arr">→</span></div>
+    <div class="pt-node" data-idx="3">
+      <div class="pt-dot-wrap"><div class="pt-dot"></div></div>
+      <div class="pt-lbl">思维链</div>
+    </div>
+    <div class="pt-conn"><span class="pt-arr">→</span></div>
+    <div class="pt-node" data-idx="4">
+      <div class="pt-dot-wrap"><div class="pt-dot"></div></div>
+      <div class="pt-lbl">泛化</div>
+    </div>
+  </div>
+  </div>
 </div>
 
 <div id="nav"></div>
@@ -1740,10 +2044,33 @@ slides.forEach((s,i)=>{
   nav.appendChild(b);
 });
 
+/* =============== 进度跟踪条 =============== */
+function updateProgress(si){
+  const pt=document.getElementById('pt');
+  if(!pt)return;
+  const map={6:{m:0},7:{m:1},8:{m:2},9:{m:2,s:0},10:{m:2,s:2},11:{m:3},12:{m:4},13:{m:4}};
+  const info=map[si];
+  pt.classList.toggle('pt-visible',!!info);
+  if(!info)return;
+  pt.querySelectorAll('.pt-node').forEach(el=>{
+    const i=parseInt(el.dataset.idx);
+    el.classList.toggle('pt-active',i===info.m);
+  });
+  pt.querySelectorAll('.pt-conn').forEach((el,i)=>{
+    el.classList.toggle('pt-conn-active',i<info.m);
+  });
+  const rl=pt.querySelector('.pt-has-subs');
+  if(rl)rl.classList.toggle('pt-show-subs',info.m===2);
+  pt.querySelectorAll('.pt-sub').forEach(el=>{
+    el.classList.toggle('pt-sub-active',parseInt(el.dataset.sub)===info.s);
+  });
+}
+
 function go(n){
   if(lock)return;
   idx=Math.max(0,Math.min(total-1,n));
   window.__currentSlideIndex = idx;
+  updateProgress(idx);
   deck.style.transform=`translateX(${-idx*100}vw)`;
   nav.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
   /* 主题切换：优先读 data-theme，其次从 class（light/dark）推断 */
