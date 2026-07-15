@@ -34,11 +34,56 @@ const recent = sortByRecency(allContent)
     collection: entry.collection,
   }));
 
-const features = [
-  { href: `${base}notes/`, icon: 'book' as const, title: '笔记', desc: 'AI、数学与工程学习记录', count: notes.length },
-  { href: `${base}essay/`, icon: 'pen' as const, title: '杂谈', desc: '旅行、生活与自我观察', count: essays.length },
-  { href: `${base}projects/`, icon: 'code' as const, title: '作品集', desc: '产品原型与工程实践', count: projects.length },
-  { href: `${base}search/`, icon: 'search' as const, title: '搜索', desc: '检索所有笔记和文章', count: null },
+const latestNote = sortByRecency(notes)[0];
+const latestEssay = sortByRecency(essays)[0];
+const latestProject = sortByRecency(projects)[0];
+
+const practices = [
+  {
+    index: '01',
+    tone: 'learn',
+    icon: 'book' as const,
+    eyebrow: 'Learn · 学习',
+    title: '把理解留下来',
+    description: '不只收藏知识，而是把复杂概念拆开、重组，直到它能被下一次思考继续使用。',
+    href: `${base}notes/`,
+    count: `${notes.length} 篇笔记`,
+    latest: latestNote && {
+      href: buildContentUrl(latestNote.collection, latestNote.id, base),
+      title: latestNote.data.title,
+      date: formatRecencyDate(latestNote),
+    },
+  },
+  {
+    index: '02',
+    tone: 'make',
+    icon: 'code' as const,
+    eyebrow: 'Make · 创作',
+    title: '把想法做成东西',
+    description: '让研究、代码与界面落在同一个作品里；原型是我思考时最诚实的一版草稿。',
+    href: `${base}projects/`,
+    count: `${projects.length} 个项目`,
+    latest: latestProject && {
+      href: buildContentUrl(latestProject.collection, latestProject.id, base),
+      title: latestProject.data.title,
+      date: formatRecencyDate(latestProject),
+    },
+  },
+  {
+    index: '03',
+    tone: 'wander',
+    icon: 'pen' as const,
+    eyebrow: 'Wander · 漫游',
+    title: '去别处重新看世界',
+    description: '旅行、电影和日常观察，提醒我在技术之外，继续感受具体的人与真实的生活。',
+    href: `${base}essay/`,
+    count: `${essays.length} 则杂谈`,
+    latest: latestEssay && {
+      href: buildContentUrl(latestEssay.collection, latestEssay.id, base),
+      title: latestEssay.data.title,
+      date: formatRecencyDate(latestEssay),
+    },
+  },
 ];
 ---
 
@@ -148,21 +193,44 @@ const features = [
   </section>
 
   <section class="container home-section">
-    <p class="section-kicker">Explore</p>
-    <h2 class="section-title">走进这片林</h2>
-    <p class="section-lead">这里不只是文章目录，而是个人知识、作品和旅行切片的长期索引。</p>
+    <p class="section-kicker">Practice</p>
+    <h2 class="section-title">我反复做的三件事</h2>
+    <p class="section-lead">这个网站大致由三种动作长出来：弄懂一件事，做出一个东西，再去别处看看。</p>
 
-    <div class="feature-grid">
+    <div class="practice-grid">
       {
-        features.map((item) => (
-          <a class="feature-card card" href={item.href}>
-            <span class="feature-card__icon">
+        practices.map((item) => (
+          <article class="practice-card" data-practice={item.tone} data-index={item.index}>
+            <div class="practice-card__topline">
+              <span class="practice-card__index">{item.index}</span>
+              <span class="practice-card__icon">
               <ForestIcon name={item.icon} />
-            </span>
-            <h2>{item.title}</h2>
-            <p>{item.desc}</p>
-            {item.count !== null && <span class="feature-card__count">{item.count} 篇</span>}
-          </a>
+              </span>
+            </div>
+            <p class="practice-card__eyebrow">{item.eyebrow}</p>
+            <h3>{item.title}</h3>
+            <p class="practice-card__description">{item.description}</p>
+
+            {
+              item.latest && (
+                <div class="practice-card__latest">
+                  <span>
+                    最近留下
+                    {item.latest.date && <time>{item.latest.date}</time>}
+                  </span>
+                  <a href={item.latest.href}>
+                    {item.latest.title}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              )
+            }
+
+            <footer class="practice-card__footer">
+              <span>{item.count}</span>
+              <a href={item.href}>沿这条路继续 <span aria-hidden="true">→</span></a>
+            </footer>
+          </article>
         ))
       }
     </div>
