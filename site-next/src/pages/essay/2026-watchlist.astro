@@ -6,56 +6,92 @@ import { buildContentUrl } from '../../utils/content';
 const base = import.meta.env.BASE_URL;
 const essayHref = `${base}essay/`;
 const paddedCount = String(watchlist2026.length).padStart(2, '0');
+
+function withBase(path: string): string {
+  return `${base}${path}`.replace(/\/{2,}/g, '/');
+}
 ---
 
 <BaseLayout title="2026 观影清单 | 6ch. · 林间笔记" description="6ch. 的 2026 年观影记录">
   <section class="container page-shell watchlist-page">
-    <a class="watchlist-back" href={essayHref}>← 返回杂谈</a>
+    <a class="watchlist-back" href={essayHref}>
+      <svg viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M15.5 10H4.5m4-4-4 4 4 4" />
+      </svg>
+      返回杂谈
+    </a>
 
-    <header class="watchlist-hero">
-      <div class="watchlist-hero__copy">
-        <p class="section-kicker">2026 · Viewing log</p>
-        <h1>2026<br /><em>观影清单</em></h1>
-        <p>把今年看过的故事收进一卷片单。没有排名，只按看见它们的次序留下痕迹。</p>
+    <header class="watchlist-masthead">
+      <div class="watchlist-masthead__copy">
+        <p class="section-kicker">Viewing notes · 2026</p>
+        <h1><span>2026</span> 观影清单</h1>
+        <p>把今年看过的故事贴进手账。没有排名，只按遇见它们的次序留下一页。</p>
       </div>
 
-      <div class="watchlist-counter" aria-label={`今年已看 ${watchlist2026.length} 部`}>
-        <span>Films watched</span>
+      <div class="watchlist-count" aria-label={`今年已看 ${watchlist2026.length} 部`}>
         <strong>{paddedCount}</strong>
-        <small>and counting</small>
+        <span>Films<br />watched</span>
       </div>
     </header>
 
-    <div class="film-strip" aria-hidden="true">
-      {Array.from({ length: 12 }).map(() => <i></i>)}
+    <div class="watchlist-ledger">
+      <div class="watchlist-ledger__label" aria-hidden="true">
+        <span>Film memo / 2026</span>
+        <i></i>
+        <span>01—{paddedCount}</span>
+      </div>
+
+      <ol class="watchlist" aria-label="2026 年已看影片">
+        {
+          watchlist2026.map((film, index) => {
+            const reviewHref = film.reviewId ? buildContentUrl('essay', film.reviewId, base) : undefined;
+            const tilt = index % 2 === 0 ? '-0.28deg' : '0.24deg';
+            const tapeTilt = index % 2 === 0 ? '-3deg' : '2.5deg';
+
+            return (
+              <li
+                class:list={['watchlist-item', { 'watchlist-item--with-description': Boolean(film.description) }]}
+                style={`--item-index: ${index}; --card-tilt: ${tilt}; --tape-tilt: ${tapeTilt}`}
+              >
+                <span class="watchlist-item__number">{String(index + 1).padStart(2, '0')}</span>
+
+                <div class="watchlist-item__copy">
+                  <span class="watchlist-item__meta">{reviewHref ? '已看 · 留有影评' : '已看 · 观影记录'}</span>
+                  <h2>《{film.title}》</h2>
+                  {film.description && <p class="watchlist-item__description">{film.description}</p>}
+
+                  {reviewHref ? (
+                    <a class="watchlist-item__review" href={reviewHref} aria-label={`阅读《${film.title}》影评`}>
+                      读影评
+                      <svg viewBox="0 0 20 20" aria-hidden="true">
+                        <path d="M6 14 14 6m-6 0h6v6" />
+                      </svg>
+                    </a>
+                  ) : (
+                    <span class="watchlist-item__seen">
+                      <i aria-hidden="true"></i>
+                      已收录
+                    </span>
+                  )}
+                </div>
+
+                <figure class="watchlist-poster">
+                  <span class="watchlist-poster__tape" aria-hidden="true"></span>
+                  <img
+                    src={withBase(film.poster)}
+                    alt={film.posterAlt}
+                    width="480"
+                    height="720"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </figure>
+              </li>
+            );
+          })
+        }
+      </ol>
     </div>
-
-    <ol class="watchlist" aria-label="2026 年已看影片">
-      {
-        watchlist2026.map((film, index) => {
-          const reviewHref = film.reviewId ? buildContentUrl('essay', film.reviewId, base) : undefined;
-
-          return (
-            <li class="watchlist-item" style={`--item-index: ${index}`}>
-              <span class="watchlist-item__number">{String(index + 1).padStart(2, '0')}</span>
-              <div class="watchlist-item__title">
-                <span>{reviewHref ? '已看 · 留有影评' : '已看 · 观影记录'}</span>
-                <h2>《{film.title}》</h2>
-              </div>
-              {reviewHref ? (
-                <a class="watchlist-item__review" href={reviewHref} aria-label={`阅读《${film.title}》影评`}>
-                  读影评 <span aria-hidden="true">↗</span>
-                </a>
-              ) : (
-                <span class="watchlist-item__seen">
-                  <i aria-hidden="true"></i> Seen
-                </span>
-              )}
-            </li>
-          );
-        })
-      }
-    </ol>
 
     <footer class="watchlist-footer">
       <span>To be continued</span>
@@ -66,20 +102,34 @@ const paddedCount = String(watchlist2026.length).padStart(2, '0');
 
 <style>
   .watchlist-page {
-    --watchlist-line: color-mix(in srgb, var(--ch-accent-secondary) 22%, var(--ch-glass-border));
-    width: min(calc(100% - 2.5rem), 64rem);
-    padding-top: 2.4rem;
-    padding-bottom: 5rem;
+    --paper-line: color-mix(in srgb, var(--ch-accent-secondary) 19%, var(--ch-glass-border));
+    --paper-surface: color-mix(in srgb, var(--ch-surface-solid) 94%, var(--ch-bg-mist));
+    width: min(calc(100% - 2.5rem), 60rem);
+    padding-top: 2rem;
+    padding-bottom: 4.5rem;
   }
 
   .watchlist-back {
     display: inline-flex;
+    min-height: 44px;
+    gap: 0.45rem;
+    align-items: center;
     color: var(--ch-fg-muted);
-    font-family: var(--ch-mono-font);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
+    font-family: var(--ch-academic-font);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
     text-decoration: none;
-    text-transform: uppercase;
+  }
+
+  .watchlist-back svg,
+  .watchlist-item__review svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.6;
   }
 
   .watchlist-back:hover,
@@ -87,167 +137,252 @@ const paddedCount = String(watchlist2026.length).padStart(2, '0');
     color: var(--ch-accent);
   }
 
-  .watchlist-hero {
+  .watchlist-masthead {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: clamp(2rem, 8vw, 7rem);
+    gap: clamp(2rem, 8vw, 5.5rem);
     align-items: end;
-    padding: clamp(3.2rem, 8vw, 6.8rem) 0 clamp(2.4rem, 5vw, 4rem);
+    padding: clamp(2.4rem, 6vw, 4.5rem) 0 2.5rem;
   }
 
-  .watchlist-hero__copy {
-    max-width: 42rem;
+  .watchlist-masthead__copy {
+    max-width: 37rem;
   }
 
-  .watchlist-hero h1 {
+  .watchlist-masthead h1 {
     margin: 0;
     color: var(--ch-fg);
     font-family: var(--ch-display-font);
-    font-size: clamp(3.7rem, 10vw, 7.8rem);
+    font-size: clamp(2.5rem, 6vw, 3.75rem);
+    font-weight: 550;
+    letter-spacing: 0.035em;
+    line-height: 1.02;
+  }
+
+  .watchlist-masthead h1 span {
+    display: block;
+    margin-bottom: 0.28rem;
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-mono-font);
+    font-size: 0.22em;
     font-weight: 500;
-    letter-spacing: -0.035em;
-    line-height: 0.72;
+    letter-spacing: 0.2em;
   }
 
-  .watchlist-hero h1 em {
-    color: var(--ch-accent);
-    font-size: 0.6em;
-    font-style: normal;
-    letter-spacing: 0.08em;
-  }
-
-  .watchlist-hero__copy > p:last-child {
-    max-width: 30rem;
-    margin: 2rem 0 0;
+  .watchlist-masthead__copy > p:last-child {
+    max-width: 31rem;
+    margin: 1.15rem 0 0;
     color: var(--ch-fg-muted);
-    font-size: 0.96rem;
-    line-height: 1.8;
+    font-size: 0.94rem;
+    line-height: 1.75;
   }
 
-  .watchlist-counter {
-    display: grid;
-    min-width: 9.5rem;
-    padding: 1.1rem 1.2rem 1rem;
-    border: 1px solid color-mix(in srgb, var(--ch-accent-warm) 34%, var(--watchlist-line));
-    border-radius: 2px;
+  .watchlist-count {
+    position: relative;
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-end;
+    min-width: 9rem;
+    padding: 0.85rem 0.95rem 0.75rem;
+    border-top: 1px solid color-mix(in srgb, var(--ch-accent-warm) 45%, var(--paper-line));
+    border-bottom: 1px solid color-mix(in srgb, var(--ch-accent-warm) 45%, var(--paper-line));
+  }
+
+  .watchlist-count::before,
+  .watchlist-count::after {
+    position: absolute;
+    left: 50%;
+    width: 3.8rem;
+    height: 1rem;
     background:
-      linear-gradient(145deg, color-mix(in srgb, var(--ch-surface-solid) 72%, transparent), color-mix(in srgb, var(--ch-accent-dim) 50%, transparent));
-    box-shadow: inset 0 1px 0 color-mix(in srgb, white 26%, transparent);
-    transform: rotate(1.5deg);
+      repeating-linear-gradient(90deg, color-mix(in srgb, white 18%, transparent) 0 1px, transparent 1px 5px),
+      color-mix(in srgb, var(--ch-accent-warm) 24%, var(--ch-surface-solid));
+    clip-path: polygon(0 18%, 5% 0, 11% 12%, 18% 2%, 26% 15%, 35% 4%, 44% 13%, 53% 2%, 63% 16%, 72% 4%, 82% 13%, 91% 1%, 100% 16%, 98% 88%, 90% 100%, 81% 88%, 72% 98%, 63% 86%, 54% 100%, 44% 88%, 34% 99%, 24% 86%, 14% 100%, 5% 88%, 0 96%);
+    content: "";
+    opacity: 0.8;
+    pointer-events: none;
   }
 
-  .watchlist-counter span,
-  .watchlist-counter small {
+  .watchlist-count::before {
+    top: -0.55rem;
+    transform: translateX(-50%) rotate(-2deg);
+  }
+
+  .watchlist-count::after {
+    bottom: -0.55rem;
+    transform: translateX(-50%) rotate(1.5deg);
+  }
+
+  .watchlist-count strong {
+    color: var(--ch-accent);
+    font-family: var(--ch-display-font);
+    font-size: 2.45rem;
+    font-weight: 500;
+    line-height: 0.82;
+  }
+
+  .watchlist-count span {
     color: var(--ch-fg-muted);
     font-family: var(--ch-mono-font);
-    font-size: 0.62rem;
-    letter-spacing: 0.12em;
+    font-size: 0.59rem;
+    letter-spacing: 0.1em;
+    line-height: 1.45;
     text-transform: uppercase;
   }
 
-  .watchlist-counter strong {
-    color: var(--ch-accent-warm);
-    font-family: var(--ch-display-font);
-    font-size: 4.4rem;
-    font-weight: 500;
-    line-height: 0.9;
+  .watchlist-ledger {
+    padding: clamp(0.8rem, 2vw, 1.35rem);
+    border: 1px solid var(--paper-line);
+    border-radius: 8px;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 23px, color-mix(in srgb, var(--ch-accent-secondary) 3.5%, transparent) 23px 24px),
+      linear-gradient(135deg, color-mix(in srgb, var(--paper-surface) 88%, transparent), color-mix(in srgb, var(--ch-accent-dim) 25%, var(--paper-surface)));
+    box-shadow:
+      0 18px 46px color-mix(in srgb, var(--ch-fg) 7%, transparent),
+      inset 0 1px 0 color-mix(in srgb, white 32%, transparent);
   }
 
-  .watchlist-counter small {
-    justify-self: end;
-  }
-
-  .film-strip {
+  .watchlist-ledger__label {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: clamp(0.45rem, 1.5vw, 1rem);
-    padding: 0.42rem 0;
-    border-top: 1px solid var(--watchlist-line);
-    border-bottom: 1px solid var(--watchlist-line);
+    grid-template-columns: auto 1fr auto;
+    gap: 0.8rem;
+    align-items: center;
+    padding: 0.35rem 0.45rem 1.1rem;
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-mono-font);
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
-  .film-strip i {
-    aspect-ratio: 2.3 / 1;
-    border: 1px solid color-mix(in srgb, var(--ch-accent-warm) 35%, var(--watchlist-line));
-    border-radius: 1px;
-    background: color-mix(in srgb, var(--ch-accent-warm) 7%, transparent);
+  .watchlist-ledger__label i {
+    height: 1px;
+    background: var(--paper-line);
   }
 
   .watchlist {
+    display: grid;
+    gap: 1.15rem;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   .watchlist-item {
+    position: relative;
     display: grid;
-    grid-template-columns: 4.5rem minmax(0, 1fr) auto;
-    gap: 1.2rem;
+    grid-template-columns: 3rem minmax(0, 1fr) 8.5rem;
+    gap: 1.25rem;
     align-items: center;
-    min-height: 9.5rem;
-    padding: 1.6rem 0;
-    border-bottom: 1px solid var(--watchlist-line);
-    animation: watchlist-reveal 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: calc(var(--item-index) * 70ms + 100ms);
+    min-height: 12.5rem;
+    width: calc(100% - 1.1rem);
+    padding: 1.1rem 1.2rem 1.1rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 16%, var(--paper-line));
+    border-radius: 3px;
+    background:
+      repeating-linear-gradient(92deg, transparent 0 5px, color-mix(in srgb, var(--ch-fg) 1.6%, transparent) 5px 6px),
+      radial-gradient(circle at 13% 18%, color-mix(in srgb, var(--ch-accent-warm) 5%, transparent), transparent 31%),
+      var(--paper-surface);
+    box-shadow:
+      0 8px 18px color-mix(in srgb, var(--ch-fg) 7%, transparent),
+      inset 0 1px 0 color-mix(in srgb, white 36%, transparent);
+    transform: rotate(var(--card-tilt));
+    transform-origin: center;
+    transition:
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 220ms ease,
+      border-color 220ms ease;
+  }
+
+  .watchlist-item:nth-child(even) {
+    margin-left: 1.1rem;
+  }
+
+  .watchlist-item:hover,
+  .watchlist-item:focus-within {
+    border-color: color-mix(in srgb, var(--ch-accent-warm) 36%, var(--paper-line));
+    box-shadow:
+      0 13px 26px color-mix(in srgb, var(--ch-fg) 10%, transparent),
+      inset 0 1px 0 color-mix(in srgb, white 40%, transparent);
+    transform: rotate(0deg) translateY(-2px);
   }
 
   .watchlist-item__number {
     align-self: start;
-    padding-top: 0.55rem;
+    padding-top: 0.25rem;
     color: var(--ch-accent-warm);
     font-family: var(--ch-mono-font);
-    font-size: 0.7rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+  }
+
+  .watchlist-item__copy {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+  }
+
+  .watchlist-item__meta {
+    color: var(--ch-accent-tertiary);
+    font-family: var(--ch-mono-font);
+    font-size: 0.62rem;
     letter-spacing: 0.1em;
   }
 
-  .watchlist-item__title > span {
-    color: var(--ch-accent-tertiary);
-    font-family: var(--ch-mono-font);
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
   .watchlist-item h2 {
-    margin: 0.28rem 0 0;
+    max-width: 28rem;
+    margin: 0.35rem 0 1.1rem;
     color: var(--ch-fg);
     font-family: var(--ch-display-font);
-    font-size: clamp(1.65rem, 4vw, 2.6rem);
-    font-weight: 500;
-    line-height: 1.2;
+    font-size: clamp(1.5rem, 3.2vw, 2.05rem);
+    font-weight: 550;
+    letter-spacing: 0.015em;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+
+  .watchlist-item--with-description h2 {
+    margin-bottom: 0.6rem;
+  }
+
+  .watchlist-item__description {
+    max-width: 31rem;
+    margin: 0 0 0.75rem;
+    padding-left: 0.7rem;
+    border-left: 1px solid color-mix(in srgb, var(--ch-accent-warm) 38%, var(--paper-line));
+    color: var(--ch-fg-muted);
+    font-size: 0.78rem;
+    line-height: 1.65;
   }
 
   .watchlist-item__review,
   .watchlist-item__seen {
     display: inline-flex;
-    gap: 0.45rem;
+    min-height: 44px;
+    gap: 0.42rem;
     align-items: center;
-    justify-content: center;
-    min-width: 6.7rem;
-    padding: 0.62rem 0.85rem;
-    border: 1px solid var(--watchlist-line);
-    border-radius: 999px;
     color: var(--ch-fg-muted);
     font-family: var(--ch-academic-font);
     font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    text-decoration: none;
+    letter-spacing: 0.04em;
   }
 
   .watchlist-item__review {
+    padding: 0 0.8rem;
+    border: 1px solid var(--paper-line);
+    border-radius: 999px;
+    text-decoration: none;
     transition:
-      color var(--ch-transition-fast),
-      border-color var(--ch-transition-fast),
-      background var(--ch-transition-fast),
-      transform var(--ch-transition-fast);
+      color 180ms ease,
+      border-color 180ms ease,
+      background 180ms ease;
   }
 
   .watchlist-item__review:hover,
   .watchlist-item__review:focus-visible {
-    border-color: color-mix(in srgb, var(--ch-accent-warm) 56%, var(--watchlist-line));
-    background: color-mix(in srgb, var(--ch-accent-warm) 9%, transparent);
+    border-color: color-mix(in srgb, var(--ch-accent-warm) 52%, var(--paper-line));
+    background: color-mix(in srgb, var(--ch-accent-warm) 8%, transparent);
     color: var(--ch-accent-warm);
-    transform: translateY(-2px);
   }
 
   .watchlist-item__seen i {
@@ -258,73 +393,168 @@ const paddedCount = String(watchlist2026.length).padStart(2, '0');
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--ch-accent-tertiary) 12%, transparent);
   }
 
+  .watchlist-poster {
+    position: relative;
+    z-index: 2;
+    align-self: center;
+    aspect-ratio: 2 / 3;
+    margin: 0;
+    padding: 0.28rem;
+    border: 1px solid color-mix(in srgb, var(--ch-fg) 10%, var(--paper-line));
+    background: color-mix(in srgb, var(--ch-bg-mist) 90%, white);
+    box-shadow:
+      0 9px 18px color-mix(in srgb, var(--ch-fg) 16%, transparent),
+      0 1px 1px color-mix(in srgb, var(--ch-fg) 14%, transparent);
+    transform: rotate(calc(var(--card-tilt) * -2));
+  }
+
+  .watchlist-poster img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .watchlist-poster__tape {
+    position: absolute;
+    top: -0.72rem;
+    left: 50%;
+    z-index: 3;
+    width: 5rem;
+    height: 1.45rem;
+    background:
+      repeating-linear-gradient(90deg, color-mix(in srgb, white 18%, transparent) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(3deg, transparent 0 4px, color-mix(in srgb, var(--ch-accent-warm) 9%, transparent) 4px 5px),
+      color-mix(in srgb, var(--ch-accent-warm) 34%, var(--ch-surface-solid));
+    box-shadow: 0 2px 5px color-mix(in srgb, var(--ch-fg) 8%, transparent);
+    clip-path: polygon(0 14%, 5% 2%, 12% 13%, 20% 0, 29% 12%, 38% 2%, 48% 14%, 58% 1%, 68% 12%, 78% 2%, 88% 15%, 96% 3%, 100% 13%, 98% 87%, 91% 100%, 82% 88%, 73% 98%, 64% 86%, 55% 100%, 45% 88%, 35% 98%, 25% 87%, 15% 100%, 6% 88%, 0 96%);
+    opacity: 0.86;
+    pointer-events: none;
+    transform: translateX(-50%) rotate(var(--tape-tilt));
+  }
+
   .watchlist-footer {
     display: flex;
     justify-content: space-between;
     gap: 1rem;
     align-items: baseline;
-    padding-top: 2.4rem;
+    padding: 2rem 0.35rem 0;
   }
 
   .watchlist-footer span {
     color: var(--ch-accent-warm);
     font-family: var(--ch-mono-font);
-    font-size: 0.65rem;
-    letter-spacing: 0.16em;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
   }
 
   .watchlist-footer p {
     margin: 0;
     color: var(--ch-fg-muted);
-    font-size: 0.86rem;
-  }
-
-  @keyframes watchlist-reveal {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    font-size: 0.82rem;
   }
 
   @media (max-width: 680px) {
-    .watchlist-hero {
-      grid-template-columns: 1fr;
+    .watchlist-page {
+      width: min(calc(100% - 1.5rem), 60rem);
+      padding-top: 1rem;
+    }
+
+    .watchlist-masthead {
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
       align-items: start;
+      padding: 2.1rem 0 2rem;
     }
 
-    .watchlist-counter {
-      min-width: 8.5rem;
-      justify-self: end;
+    .watchlist-masthead h1 {
+      font-size: clamp(2.15rem, 11vw, 3rem);
     }
 
-    .film-strip {
-      grid-template-columns: repeat(8, 1fr);
+    .watchlist-masthead__copy > p:last-child {
+      max-width: 19rem;
+      font-size: 0.86rem;
     }
 
-    .film-strip i:nth-child(n + 9) {
-      display: none;
+    .watchlist-count {
+      min-width: 5.9rem;
+      gap: 0.38rem;
+      padding-inline: 0.45rem;
     }
 
-    .watchlist-item {
-      grid-template-columns: 2rem minmax(0, 1fr);
-      gap: 0.8rem;
+    .watchlist-count strong {
+      font-size: 2rem;
+    }
+
+    .watchlist-count span {
+      font-size: 0.48rem;
+    }
+
+    .watchlist-ledger {
+      padding: 0.7rem;
+    }
+
+    .watchlist-ledger__label {
+      padding-inline: 0.2rem;
+    }
+
+    .watchlist-item,
+    .watchlist-item:nth-child(even) {
+      grid-template-columns: 1.7rem minmax(0, 1fr) clamp(5.2rem, 26vw, 6.4rem);
+      gap: 0.7rem;
+      min-height: 10.6rem;
+      width: 100%;
+      margin-left: 0;
+      padding: 0.9rem 0.75rem 0.9rem 0.65rem;
+    }
+
+    .watchlist-item h2 {
+      margin-bottom: 0.65rem;
+      font-size: clamp(1.05rem, 4.6vw, 1.28rem);
+    }
+
+    .watchlist-item--with-description h2 {
+      margin-bottom: 0.45rem;
+    }
+
+    .watchlist-item__description {
+      margin-bottom: 0.45rem;
+      padding-left: 0.5rem;
+      font-size: 0.7rem;
+      line-height: 1.55;
+    }
+
+    .watchlist-item__meta {
+      font-size: 0.55rem;
+      letter-spacing: 0.06em;
     }
 
     .watchlist-item__review,
     .watchlist-item__seen {
-      grid-column: 2;
-      justify-self: start;
+      font-size: 0.68rem;
+    }
+
+    .watchlist-poster__tape {
+      width: 3.8rem;
+      height: 1.15rem;
+    }
+  }
+
+  @media (max-width: 430px) {
+    .watchlist-masthead {
+      grid-template-columns: 1fr;
+    }
+
+    .watchlist-count {
+      justify-self: end;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .watchlist-item {
-      animation: none;
+    .watchlist-item,
+    .watchlist-item__review {
+      transition: none;
     }
   }
 </style>
