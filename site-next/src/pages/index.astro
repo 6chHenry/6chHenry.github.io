@@ -80,28 +80,72 @@ const features = [
     </div>
   </section>
 
-  <nav class="home-actions" aria-label="快捷入口">
-    <a class="pill" href={`${base}about/`}>
-      <ForestIcon name="leaf" /> 关于我
-    </a>
-    <a class="pill" href={`${base}notes/`}>
-      <ForestIcon name="book" /> 笔记
-    </a>
-    <a class="pill" href={`${base}essay/`}>
-      <ForestIcon name="pen" /> 杂谈
-    </a>
-    <button type="button" class="pill pill--ghost pill--warm" id="home-stats-toggle" aria-expanded="false" aria-controls="statistics">
-      <ForestIcon name="tree" /> 站点统计
-    </button>
-  </nav>
+  <section class="home-wayfinder" aria-labelledby="home-wayfinder-title">
+    <div class="home-wayfinder__shell">
+      <header class="home-wayfinder__header">
+        <p class="home-wayfinder__kicker">Trailhead · 林地入口</p>
+        <div>
+          <h2 id="home-wayfinder-title">选一条路，往林子里走</h2>
+          <p>这不是一张站点地图，而是四条进入我的路径。</p>
+        </div>
+      </header>
 
-  <div class="home-hero-footer">
-    <div id="statistics" class="home-stats card card--elevated" role="region" aria-label="站点统计">
-      <ul>
-        <li>运行时间 <span id="web-time"></span></li>
-      </ul>
+      <nav class="home-wayfinder__grid" aria-label="探索入口">
+        <a class="home-path" href={`${base}about/`}>
+          <span class="home-path__topline">
+            <span class="home-path__index">01</span>
+            <span class="home-path__icon"><ForestIcon name="leaf" /></span>
+          </span>
+          <span class="home-path__title">认识我</span>
+          <span class="home-path__description">我的坐标、兴趣与正在寻找的问题</span>
+          <span class="home-path__arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="home-path" href={`${base}notes/`}>
+          <span class="home-path__topline">
+            <span class="home-path__index">02</span>
+            <span class="home-path__icon"><ForestIcon name="book" /></span>
+          </span>
+          <span class="home-path__title">翻阅笔记</span>
+          <span class="home-path__description">AI、数学与工程学习留下的知识年轮</span>
+          <span class="home-path__arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="home-path" href={`${base}essay/`}>
+          <span class="home-path__topline">
+            <span class="home-path__index">03</span>
+            <span class="home-path__icon"><ForestIcon name="pen" /></span>
+          </span>
+          <span class="home-path__title">读些杂谈</span>
+          <span class="home-path__description">旅行、电影与生活片段的私人标本</span>
+          <span class="home-path__arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="home-path" href={`${base}projects/`}>
+          <span class="home-path__topline">
+            <span class="home-path__index">04</span>
+            <span class="home-path__icon"><ForestIcon name="code" /></span>
+          </span>
+          <span class="home-path__title">看看作品</span>
+          <span class="home-path__description">从模型到界面，把想法做成可体验的作品</span>
+          <span class="home-path__arrow" aria-hidden="true">→</span>
+        </a>
+      </nav>
+
+      <footer class="home-wayfinder__footer">
+        <p><span>Archive note</span> · 内容仍在生长，路径会随我一起改变。</p>
+        <button type="button" class="home-wayfinder__stats" id="home-stats-toggle" aria-expanded="false" aria-controls="statistics">
+          <ForestIcon name="tree" />
+          <span>查看这片林的年轮</span>
+        </button>
+      </footer>
+
+      <div id="statistics" class="home-stats" role="region" aria-label="站点统计">
+        <div class="home-stats__inner">
+          <ul>
+            <li>从第一颗种子到现在 <span id="web-time"></span></li>
+          </ul>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
   <section class="container home-section">
     <p class="section-kicker">Explore</p>
@@ -160,12 +204,3 @@ const features = [
   import { initHomeStats } from '../scripts/home';
   initHomeStats();
 </script>
-
-
-
-<style>
-  .pill :global(.forest-icon) {
-    width: 0.95rem;
-    height: 0.95rem;
-  }
-</style>
