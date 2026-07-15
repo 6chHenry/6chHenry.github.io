@@ -785,9 +785,117 @@
 /* ── Recent updates ── */
 
 .recent-section {
-  padding: 0 0 4rem;
+  padding: 3.5rem 0 4.5rem;
   border-top: 1px solid color-mix(in srgb, var(--ch-accent) 12%, transparent);
-  padding-top: 3rem;
+}
+
+.recent-section__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1.8rem;
+}
+
+.recent-section__header .section-lead {
+  margin-bottom: 0;
+}
+
+.recent-section__edition {
+  flex: 0 0 auto;
+  margin: 0 0 0.2rem;
+  color: var(--ch-fg-muted);
+  font-family: var(--ch-academic-font);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.recent-section__edition span {
+  color: var(--ch-accent-warm);
+  font-family: var(--ch-mono-font);
+  font-weight: 600;
+}
+
+.content-list.recent-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  padding-bottom: 0;
+}
+
+.content-row.recent-row {
+  min-height: 5.7rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem;
+  padding: 0.95rem 1rem;
+  border-color: color-mix(in srgb, var(--ch-accent-secondary) 18%, var(--ch-glass-border));
+  border-radius: 14px;
+  background:
+    linear-gradient(140deg, color-mix(in srgb, var(--ch-surface-solid) 68%, transparent), color-mix(in srgb, var(--ch-accent-dim) 28%, transparent)),
+    var(--ch-glass-bg);
+}
+
+.recent-row__index {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border: 1px solid var(--ch-border-soft);
+  border-radius: 50%;
+  color: var(--ch-fg-muted);
+  background: color-mix(in srgb, var(--ch-surface-solid) 52%, transparent);
+  font-family: var(--ch-mono-font);
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+  transition:
+    color var(--ch-transition-fast),
+    border-color var(--ch-transition-fast),
+    transform var(--ch-transition);
+}
+
+.recent-row:hover .recent-row__index,
+.recent-row:focus-visible .recent-row__index {
+  border-color: color-mix(in srgb, var(--ch-accent-tertiary) 48%, var(--ch-border));
+  color: var(--ch-accent);
+  transform: rotate(-8deg);
+}
+
+.recent-row__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.32rem;
+}
+
+.recent-row__type {
+  color: var(--ch-accent-secondary);
+  font-family: var(--ch-academic-font);
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.recent-row__type--essay {
+  color: var(--ch-accent-tertiary);
+}
+
+.recent-row__type--projects {
+  color: var(--ch-accent-warm);
+}
+
+.recent-row .content-row__date {
+  font-size: 0.64rem;
+}
+
+.recent-row .content-row__arrow {
+  align-self: center;
+}
+
+.content-row.recent-row:hover,
+.content-row.recent-row:focus-visible {
+  transform: translateY(-2px);
 }
 
 /* ── Forest trail map ── */
@@ -1780,6 +1888,36 @@
 
   .practice-card__topline {
     margin-bottom: 1.7rem;
+  }
+
+  .recent-section {
+    padding-block: 3rem 3.5rem;
+  }
+
+  .recent-section__header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .recent-section__edition {
+    margin: 0;
+  }
+
+  .content-list.recent-list {
+    grid-template-columns: 1fr;
+  }
+
+  .content-row.recent-row {
+    min-height: 5.4rem;
+    gap: 0.8rem;
+    padding: 0.85rem 0.8rem;
+  }
+
+  .recent-row__index {
+    width: 2rem;
+    height: 2rem;
   }
 }
 

@@ -23,6 +23,11 @@ const [notes, essays, projects] = await Promise.all([
 
 const allContent = [...notes, ...essays, ...projects];
 const forestStops = buildForestMapStops(allContent, base);
+const collectionLabels: Record<string, string> = {
+  notes: '笔记',
+  essay: '杂谈',
+  projects: '作品',
+};
 
 const recent = sortByRecency(allContent)
   .filter((entry) => entry.data.updatedAt || entry.data.date)
@@ -32,6 +37,7 @@ const recent = sortByRecency(allContent)
     title: entry.data.title,
     date: formatRecencyDate(entry),
     collection: entry.collection,
+    collectionLabel: collectionLabels[entry.collection] ?? '记录',
   }));
 
 const latestNote = sortByRecency(notes)[0];
@@ -239,21 +245,28 @@ const practices = [
   {
     recent.length > 0 && (
       <section class="container recent-section">
-        <p class="section-kicker">Recent</p>
-        <h2 class="section-title">最近更新</h2>
-        <ul class="content-list">
+        <header class="recent-section__header">
+          <div>
+            <p class="section-kicker">Recent traces</p>
+            <h2 class="section-title">最近留下的痕迹</h2>
+            <p class="section-lead">按时间拾起最近的八次更新，看这片林正在往哪里生长。</p>
+          </div>
+          <p class="recent-section__edition"><span>Latest 08</span> · chronological field notes</p>
+        </header>
+        <ul class="content-list recent-list">
           {
-            recent.map((item) => (
+            recent.map((item, index) => (
               <li>
-                <a class="content-row" href={item.href}>
-                  <span class="content-row__marker" aria-hidden="true"></span>
+                <a class="content-row recent-row" href={item.href}>
+                  <span class="recent-row__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
                   <div class="content-row__body">
+                    <div class="recent-row__meta">
+                      <span class={`recent-row__type recent-row__type--${item.collection}`}>{item.collectionLabel}</span>
+                      {item.date && <time class="content-row__date">{item.date}</time>}
+                    </div>
                     <h2 class="content-row__title">{item.title}</h2>
                   </div>
-                  <div class="content-row__aside">
-                    {item.date && <time class="content-row__date">{item.date}</time>}
-                    <span class="content-row__arrow" aria-hidden="true">→</span>
-                  </div>
+                  <span class="content-row__arrow" aria-hidden="true">→</span>
                 </a>
               </li>
             ))
