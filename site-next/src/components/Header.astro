@@ -246,6 +246,25 @@ function isActive(href: string, exact?: boolean) {
       padding: 0.65rem 0.85rem;
     }
   }
+
+  @media (max-width: 480px) {
+    .site-header__inner {
+      gap: 0.55rem;
+    }
+
+    .site-header__actions {
+      gap: 0.25rem;
+    }
+
+    .site-header__actions > a[aria-label='GitHub'] {
+      display: none;
+    }
+
+    .icon-btn {
+      width: 2.35rem;
+      height: 2.35rem;
+    }
+  }
 </style>
 
 <script>

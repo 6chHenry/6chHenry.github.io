@@ -39,20 +39,28 @@ const allEntries = entries.map((entry) => ({
           <div class="featured-projects__grid">
             {
               featuredEntries.map((entry, index) => {
-                const primaryLink = entry.data.links?.[0]?.href ?? buildContentUrl('projects', entry.id, base);
                 const isPaimonProject =
                   entry.data.title === 'Paimon Asks Everything' || entry.id.toLowerCase().includes('paimon-asks-everything');
+                const caseStudyLink = buildContentUrl('projects', entry.id, base);
+                const primaryLink = isPaimonProject ? caseStudyLink : (entry.data.links?.[0]?.href ?? caseStudyLink);
                 return (
                   <article class={`project-card project-card--${entry.data.accent ?? 'forest'}`}>
                     <a class="project-card__main-link" href={resolveHref(primaryLink)} aria-label={`Open ${entry.data.title}`}></a>
                     <div class={`project-card__visual${isPaimonProject ? ' project-card__visual--image' : ''}`} aria-hidden="true">
                       {isPaimonProject && (
-                        <img
-                          src={`${base}assets/projects/paimon-asks-everything/banner.png`}
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
-                        />
+                        <>
+                          <img
+                            src={`${base}assets/projects/paimon-asks-everything/banner.png`}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          <dl class="project-card__signals">
+                            <div><dt>08</dt><dd>regions</dd></div>
+                            <div><dt>03</dt><dd>profiles</dd></div>
+                            <div><dt>02</dt><dd>search routes</dd></div>
+                          </dl>
+                        </>
                       )}
                       <span>{String(index + 1).padStart(2, '0')}</span>
                     </div>
@@ -71,6 +79,7 @@ const allEntries = entries.map((entry) => ({
                       )}
                       {entry.data.links.length > 0 && (
                         <div class="project-card__links">
+                          {isPaimonProject && <a href={caseStudyLink}>Case Study</a>}
                           {entry.data.links.map((link) => (
                             <a href={resolveHref(link.href)} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener' : undefined}>
                               {link.label}
@@ -304,6 +313,47 @@ const allEntries = entries.map((entry) => ({
     text-shadow: 0 1px 12px color-mix(in srgb, black 58%, transparent);
   }
 
+  .project-card__signals {
+    position: absolute;
+    left: 0.7rem;
+    bottom: 0.7rem;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, #f7ead0 42%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, #07142f 78%, transparent);
+    color: #f7ead0;
+    backdrop-filter: blur(12px);
+  }
+
+  .project-card__signals div {
+    min-width: 4.6rem;
+    padding: 0.42rem 0.52rem;
+    border-right: 1px solid color-mix(in srgb, #f7ead0 20%, transparent);
+  }
+
+  .project-card__signals div:last-child {
+    border-right: 0;
+  }
+
+  .project-card__signals dt {
+    font-family: var(--ch-display-font);
+    font-size: 1.15rem;
+    line-height: 1;
+  }
+
+  .project-card__signals dd {
+    margin: 0.2rem 0 0;
+    color: color-mix(in srgb, #f7ead0 70%, var(--ch-accent-warm));
+    font-family: var(--ch-mono-font);
+    font-size: 0.52rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
   .project-card__body {
     position: relative;
     z-index: 2;
@@ -473,6 +523,10 @@ const allEntries = entries.map((entry) => ({
 
     .project-note-row aside {
       justify-items: start;
+    }
+
+    .project-card__signals div {
+      min-width: 0;
     }
   }
 </style>
