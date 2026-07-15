@@ -1,0 +1,330 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { watchlist2026 } from '../../data/watchlist';
+import { buildContentUrl } from '../../utils/content';
+
+const base = import.meta.env.BASE_URL;
+const essayHref = `${base}essay/`;
+const paddedCount = String(watchlist2026.length).padStart(2, '0');
+---
+
+<BaseLayout title="2026 观影清单 | 6ch. · 林间笔记" description="6ch. 的 2026 年观影记录">
+  <section class="container page-shell watchlist-page">
+    <a class="watchlist-back" href={essayHref}>← 返回杂谈</a>
+
+    <header class="watchlist-hero">
+      <div class="watchlist-hero__copy">
+        <p class="section-kicker">2026 · Viewing log</p>
+        <h1>2026<br /><em>观影清单</em></h1>
+        <p>把今年看过的故事收进一卷片单。没有排名，只按看见它们的次序留下痕迹。</p>
+      </div>
+
+      <div class="watchlist-counter" aria-label={`今年已看 ${watchlist2026.length} 部`}>
+        <span>Films watched</span>
+        <strong>{paddedCount}</strong>
+        <small>and counting</small>
+      </div>
+    </header>
+
+    <div class="film-strip" aria-hidden="true">
+      {Array.from({ length: 12 }).map(() => <i></i>)}
+    </div>
+
+    <ol class="watchlist" aria-label="2026 年已看影片">
+      {
+        watchlist2026.map((film, index) => {
+          const reviewHref = film.reviewId ? buildContentUrl('essay', film.reviewId, base) : undefined;
+
+          return (
+            <li class="watchlist-item" style={`--item-index: ${index}`}>
+              <span class="watchlist-item__number">{String(index + 1).padStart(2, '0')}</span>
+              <div class="watchlist-item__title">
+                <span>{reviewHref ? '已看 · 留有影评' : '已看 · 观影记录'}</span>
+                <h2>《{film.title}》</h2>
+              </div>
+              {reviewHref ? (
+                <a class="watchlist-item__review" href={reviewHref} aria-label={`阅读《${film.title}》影评`}>
+                  读影评 <span aria-hidden="true">↗</span>
+                </a>
+              ) : (
+                <span class="watchlist-item__seen">
+                  <i aria-hidden="true"></i> Seen
+                </span>
+              )}
+            </li>
+          );
+        })
+      }
+    </ol>
+
+    <footer class="watchlist-footer">
+      <span>To be continued</span>
+      <p>片单仍在继续。</p>
+    </footer>
+  </section>
+</BaseLayout>
+
+<style>
+  .watchlist-page {
+    --watchlist-line: color-mix(in srgb, var(--ch-accent-secondary) 22%, var(--ch-glass-border));
+    width: min(calc(100% - 2.5rem), 64rem);
+    padding-top: 2.4rem;
+    padding-bottom: 5rem;
+  }
+
+  .watchlist-back {
+    display: inline-flex;
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-mono-font);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .watchlist-back:hover,
+  .watchlist-back:focus-visible {
+    color: var(--ch-accent);
+  }
+
+  .watchlist-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(2rem, 8vw, 7rem);
+    align-items: end;
+    padding: clamp(3.2rem, 8vw, 6.8rem) 0 clamp(2.4rem, 5vw, 4rem);
+  }
+
+  .watchlist-hero__copy {
+    max-width: 42rem;
+  }
+
+  .watchlist-hero h1 {
+    margin: 0;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: clamp(3.7rem, 10vw, 7.8rem);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 0.72;
+  }
+
+  .watchlist-hero h1 em {
+    color: var(--ch-accent);
+    font-size: 0.6em;
+    font-style: normal;
+    letter-spacing: 0.08em;
+  }
+
+  .watchlist-hero__copy > p:last-child {
+    max-width: 30rem;
+    margin: 2rem 0 0;
+    color: var(--ch-fg-muted);
+    font-size: 0.96rem;
+    line-height: 1.8;
+  }
+
+  .watchlist-counter {
+    display: grid;
+    min-width: 9.5rem;
+    padding: 1.1rem 1.2rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-warm) 34%, var(--watchlist-line));
+    border-radius: 2px;
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--ch-surface-solid) 72%, transparent), color-mix(in srgb, var(--ch-accent-dim) 50%, transparent));
+    box-shadow: inset 0 1px 0 color-mix(in srgb, white 26%, transparent);
+    transform: rotate(1.5deg);
+  }
+
+  .watchlist-counter span,
+  .watchlist-counter small {
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-mono-font);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .watchlist-counter strong {
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-display-font);
+    font-size: 4.4rem;
+    font-weight: 500;
+    line-height: 0.9;
+  }
+
+  .watchlist-counter small {
+    justify-self: end;
+  }
+
+  .film-strip {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: clamp(0.45rem, 1.5vw, 1rem);
+    padding: 0.42rem 0;
+    border-top: 1px solid var(--watchlist-line);
+    border-bottom: 1px solid var(--watchlist-line);
+  }
+
+  .film-strip i {
+    aspect-ratio: 2.3 / 1;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-warm) 35%, var(--watchlist-line));
+    border-radius: 1px;
+    background: color-mix(in srgb, var(--ch-accent-warm) 7%, transparent);
+  }
+
+  .watchlist {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .watchlist-item {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+    gap: 1.2rem;
+    align-items: center;
+    min-height: 9.5rem;
+    padding: 1.6rem 0;
+    border-bottom: 1px solid var(--watchlist-line);
+    animation: watchlist-reveal 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--item-index) * 70ms + 100ms);
+  }
+
+  .watchlist-item__number {
+    align-self: start;
+    padding-top: 0.55rem;
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-mono-font);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+  }
+
+  .watchlist-item__title > span {
+    color: var(--ch-accent-tertiary);
+    font-family: var(--ch-mono-font);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .watchlist-item h2 {
+    margin: 0.28rem 0 0;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: clamp(1.65rem, 4vw, 2.6rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .watchlist-item__review,
+  .watchlist-item__seen {
+    display: inline-flex;
+    gap: 0.45rem;
+    align-items: center;
+    justify-content: center;
+    min-width: 6.7rem;
+    padding: 0.62rem 0.85rem;
+    border: 1px solid var(--watchlist-line);
+    border-radius: 999px;
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-academic-font);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+  }
+
+  .watchlist-item__review {
+    transition:
+      color var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      background var(--ch-transition-fast),
+      transform var(--ch-transition-fast);
+  }
+
+  .watchlist-item__review:hover,
+  .watchlist-item__review:focus-visible {
+    border-color: color-mix(in srgb, var(--ch-accent-warm) 56%, var(--watchlist-line));
+    background: color-mix(in srgb, var(--ch-accent-warm) 9%, transparent);
+    color: var(--ch-accent-warm);
+    transform: translateY(-2px);
+  }
+
+  .watchlist-item__seen i {
+    width: 0.38rem;
+    height: 0.38rem;
+    border-radius: 999px;
+    background: var(--ch-accent-tertiary);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--ch-accent-tertiary) 12%, transparent);
+  }
+
+  .watchlist-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+    padding-top: 2.4rem;
+  }
+
+  .watchlist-footer span {
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-mono-font);
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .watchlist-footer p {
+    margin: 0;
+    color: var(--ch-fg-muted);
+    font-size: 0.86rem;
+  }
+
+  @keyframes watchlist-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 680px) {
+    .watchlist-hero {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .watchlist-counter {
+      min-width: 8.5rem;
+      justify-self: end;
+    }
+
+    .film-strip {
+      grid-template-columns: repeat(8, 1fr);
+    }
+
+    .film-strip i:nth-child(n + 9) {
+      display: none;
+    }
+
+    .watchlist-item {
+      grid-template-columns: 2rem minmax(0, 1fr);
+      gap: 0.8rem;
+    }
+
+    .watchlist-item__review,
+    .watchlist-item__seen {
+      grid-column: 2;
+      justify-self: start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .watchlist-item {
+      animation: none;
+    }
+  }
+</style>
