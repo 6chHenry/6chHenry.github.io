@@ -1005,79 +1005,6 @@
   background: color-mix(in srgb, var(--ch-accent) 15%, transparent);
 }
 
-.forest-map__selector {
-  position: relative;
-  z-index: 5;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.65rem;
-  padding: 0.85rem;
-}
-
-.forest-map__grove-tab {
-  min-height: 4.75rem;
-  padding: 0.78rem 0.85rem;
-  border: 1px solid color-mix(in srgb, var(--forest-grove) 18%, var(--ch-glass-border));
-  border-radius: 10px;
-  background:
-    linear-gradient(145deg, color-mix(in srgb, var(--ch-surface-solid) 54%, transparent), color-mix(in srgb, var(--ch-accent-dim) 42%, transparent));
-  color: var(--ch-fg);
-  cursor: pointer;
-  text-align: left;
-  touch-action: manipulation;
-  transition:
-    transform var(--ch-transition-fast),
-    border-color var(--ch-transition-fast),
-    background var(--ch-transition-fast),
-    box-shadow var(--ch-transition-fast);
-  backdrop-filter: blur(14px) saturate(1.08);
-  -webkit-backdrop-filter: blur(14px) saturate(1.08);
-}
-
-.forest-map__grove-tab:hover,
-.forest-map__grove-tab:focus-visible,
-.forest-map__grove-tab.is-active {
-  border-color: color-mix(in srgb, var(--forest-grove) 42%, var(--ch-glass-border));
-  background:
-    linear-gradient(145deg, color-mix(in srgb, var(--ch-surface-solid) 68%, transparent), color-mix(in srgb, var(--forest-grove) 12%, transparent));
-  box-shadow: inset 0 1px 0 color-mix(in srgb, white 35%, transparent);
-  transform: translateY(-1px);
-}
-
-.forest-map__grove-tab:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--ch-accent-warm) 72%, var(--forest-grove));
-  outline-offset: 2px;
-}
-
-.forest-map__grove-tab span,
-.forest-map__trail-head span,
-.forest-map__grove-caption span {
-  color: color-mix(in srgb, var(--forest-grove) 76%, var(--ch-accent-warm));
-  font-family: var(--ch-academic-font);
-  font-size: 0.68rem;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-}
-
-.forest-map__grove-tab strong {
-  display: block;
-  margin-top: 0.26rem;
-  color: color-mix(in srgb, var(--ch-accent) 86%, var(--ch-fg));
-  font-family: var(--ch-display-font);
-  font-size: 1.08rem;
-  line-height: 1.08;
-}
-
-.forest-map__grove-tab em {
-  display: block;
-  margin-top: 0.45rem;
-  color: var(--ch-fg-muted);
-  font-family: var(--ch-mono-font);
-  font-size: 0.66rem;
-  font-style: normal;
-  letter-spacing: 0.07em;
-}
-
 .forest-map__viewport {
   position: relative;
   z-index: 1;
@@ -1712,33 +1639,6 @@
     padding: 0.65rem 0.7rem;
   }
 
-  .forest-map__landmark--notes {
-    left: 28% !important;
-    top: 74% !important;
-  }
-
-  .forest-map__landmark--essay {
-    left: 70% !important;
-    top: 39% !important;
-  }
-
-  .forest-map__landmark--projects {
-    left: 55% !important;
-    top: 62% !important;
-  }
-
-  .forest-map__ring--notes {
-    width: 12rem;
-  }
-
-  .forest-map__ring--essay {
-    width: 11rem;
-  }
-
-  .forest-map__ring--projects {
-    width: 9rem;
-  }
-
   .forest-map__grove-caption {
     right: 0.65rem;
     left: 0.65rem;
@@ -1763,6 +1663,767 @@
 
   .forest-map__trail-panel time {
     grid-column: 2;
+  }
+}
+
+/* Field atlas treatment: a drawn landscape rather than a glass dashboard. */
+.forest-map__panel {
+  --atlas-paper: #f1efe4;
+  --atlas-paper-deep: #e5e8da;
+  --atlas-paper-raised: #f7f4e9;
+  --atlas-ink: #17372a;
+  --atlas-ink-muted: #52675d;
+  --atlas-line: rgb(23 55 42 / 18%);
+  --atlas-grid: rgb(23 55 42 / 7%);
+  --atlas-trail: #a87035;
+  --atlas-notes: #315a43;
+  --atlas-essay: #7b8864;
+  --atlas-projects: #946838;
+  grid-template-columns: minmax(0, 1.46fr) minmax(18.5rem, 0.54fr);
+  gap: 0;
+  padding: 0.42rem;
+  border-color: color-mix(in srgb, var(--atlas-ink) 24%, transparent);
+  border-radius: 7px;
+  background: var(--atlas-paper-deep);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 70%) inset,
+    0 24px 70px rgb(26 54 40 / 14%),
+    0 5px 16px rgb(26 54 40 / 8%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+[data-theme='dark'] .forest-map__panel {
+  --atlas-paper: #0b1710;
+  --atlas-paper-deep: #07110c;
+  --atlas-paper-raised: #112117;
+  --atlas-ink: #dce8dd;
+  --atlas-ink-muted: #96ab9b;
+  --atlas-line: rgb(191 214 198 / 20%);
+  --atlas-grid: rgb(191 214 198 / 7%);
+  --atlas-trail: #d2a05e;
+  --atlas-notes: #7faf8b;
+  --atlas-essay: #b1bd8d;
+  --atlas-projects: #d0a16b;
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 7%) inset,
+    0 28px 76px rgb(0 0 0 / 34%);
+}
+
+.forest-map__panel[data-active-grove='overview'],
+.forest-map__panel[data-active-grove='notes'] {
+  --forest-grove: var(--atlas-notes);
+}
+
+.forest-map__panel[data-active-grove='essay'] {
+  --forest-grove: var(--atlas-essay);
+}
+
+.forest-map__panel[data-active-grove='projects'] {
+  --forest-grove: var(--atlas-projects);
+}
+
+.forest-map__meadow {
+  min-height: 37rem;
+  border: 1px solid var(--atlas-line);
+  border-radius: 3px 0 0 3px;
+  background:
+    linear-gradient(var(--atlas-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--atlas-grid) 1px, transparent 1px),
+    radial-gradient(circle at 13% 84%, color-mix(in srgb, var(--atlas-notes) 13%, transparent), transparent 29%),
+    radial-gradient(circle at 82% 12%, color-mix(in srgb, var(--atlas-essay) 11%, transparent), transparent 28%),
+    radial-gradient(circle at 58% 67%, color-mix(in srgb, var(--atlas-projects) 10%, transparent), transparent 26%),
+    var(--atlas-paper);
+  background-size: 3.2rem 3.2rem, 3.2rem 3.2rem, auto, auto, auto, auto;
+  transition: border-color 240ms ease, background-color 240ms ease;
+}
+
+.forest-map__meadow::before {
+  inset: 0;
+  height: auto;
+  border-radius: 0;
+  background:
+    repeating-linear-gradient(103deg, transparent 0 17px, rgb(23 55 42 / 2.5%) 18px, transparent 19px 33px),
+    radial-gradient(circle at 30% 12%, rgb(255 255 255 / 26%), transparent 30%);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.forest-map__skyline {
+  display: none;
+}
+
+.forest-map__viewport {
+  min-height: 36.1rem;
+  margin: 0;
+  border-radius: 2px 0 0 2px;
+}
+
+.forest-map__topography,
+.forest-map__path {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.forest-map__topography {
+  z-index: 0;
+  overflow: visible;
+}
+
+.forest-map__contours {
+  fill: none;
+  stroke-width: 1.05;
+  vector-effect: non-scaling-stroke;
+}
+
+.forest-map__contours--notes {
+  stroke: color-mix(in srgb, var(--atlas-notes) 35%, transparent);
+}
+
+.forest-map__contours--essay {
+  stroke: color-mix(in srgb, var(--atlas-essay) 37%, transparent);
+}
+
+.forest-map__contours--projects {
+  stroke: color-mix(in srgb, var(--atlas-projects) 32%, transparent);
+}
+
+.forest-map__path {
+  z-index: 1;
+  opacity: 1;
+}
+
+.forest-map__path-halo {
+  stroke: color-mix(in srgb, var(--atlas-trail) 35%, transparent);
+  stroke-width: 14;
+  opacity: 0.22;
+}
+
+.forest-map__path-line,
+.forest-map__path-branch {
+  stroke: var(--atlas-trail);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.forest-map__path-line {
+  stroke-width: 2.4;
+  stroke-dasharray: 7 9;
+  opacity: 0.86;
+}
+
+.forest-map__path-branch {
+  stroke-width: 1.3;
+  stroke-dasharray: 2 7;
+  opacity: 0.5;
+}
+
+.forest-map__overview {
+  z-index: 2;
+  transition:
+    opacity 220ms ease,
+    transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.forest-map__sheet-mark {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.25rem;
+  display: grid;
+  gap: 0.18rem;
+  color: var(--atlas-ink-muted);
+  font-family: var(--ch-mono-font);
+  font-size: 0.57rem;
+  letter-spacing: 0.12em;
+  line-height: 1.3;
+  text-align: right;
+}
+
+.forest-map__compass {
+  position: absolute;
+  top: 4.7rem;
+  right: 1.9rem;
+  display: grid;
+  width: 2.25rem;
+  place-items: center;
+  color: var(--atlas-ink);
+  font-family: var(--ch-mono-font);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.forest-map__compass i {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 2.9rem;
+  margin-top: 0.25rem;
+  background: var(--atlas-ink);
+}
+
+.forest-map__compass i::before,
+.forest-map__compass i::after {
+  position: absolute;
+  left: 50%;
+  border: 0.32rem solid transparent;
+  content: "";
+  transform: translateX(-50%);
+}
+
+.forest-map__compass i::before {
+  top: -0.12rem;
+  border-bottom: 1rem solid var(--atlas-ink);
+  transform: translate(-50%, -65%);
+}
+
+.forest-map__compass i::after {
+  bottom: -0.12rem;
+  border-top: 0.72rem solid color-mix(in srgb, var(--atlas-ink) 30%, transparent);
+  transform: translate(-50%, 65%);
+}
+
+.forest-map__overview-copy {
+  top: 1.35rem;
+  left: 1.35rem;
+  max-width: min(22rem, calc(100% - 10rem));
+  padding: 0.18rem 0 0.12rem 0.82rem;
+  border: 0;
+  border-left: 2px solid var(--atlas-trail);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.forest-map__overview-copy span,
+.forest-map__landmark-label,
+.forest-map__trail-head span,
+.forest-map__grove-caption span {
+  color: var(--atlas-ink-muted);
+  font-family: var(--ch-mono-font);
+  font-size: 0.61rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.forest-map__overview-copy h3 {
+  margin: 0.28rem 0 0.32rem;
+  color: var(--atlas-ink);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 600;
+}
+
+.forest-map__overview-copy p {
+  max-width: 31rem;
+  color: var(--atlas-ink-muted);
+  font-size: 0.83rem;
+  line-height: 1.62;
+}
+
+.forest-map__terrain,
+.forest-map__grove-landmarks {
+  position: absolute;
+  inset: 0;
+}
+
+.forest-map__terrain-zone {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.68;
+}
+
+.forest-map__terrain-zone--notes {
+  left: 2%;
+  bottom: -4%;
+  width: 39%;
+  height: 48%;
+  background:
+    radial-gradient(circle at 18% 44%, color-mix(in srgb, var(--atlas-notes) 46%, transparent) 0 3px, transparent 4px),
+    radial-gradient(circle at 52% 64%, color-mix(in srgb, var(--atlas-notes) 35%, transparent) 0 4px, transparent 5px),
+    radial-gradient(circle at 76% 30%, color-mix(in srgb, var(--atlas-notes) 40%, transparent) 0 3px, transparent 4px);
+  background-size: 25px 31px, 34px 39px, 29px 35px;
+  mask-image: radial-gradient(ellipse, black 25%, transparent 72%);
+}
+
+.forest-map__terrain-zone--essay {
+  top: 4%;
+  right: 3%;
+  width: 38%;
+  height: 39%;
+  background:
+    repeating-linear-gradient(118deg, transparent 0 13px, color-mix(in srgb, var(--atlas-essay) 25%, transparent) 14px, transparent 15px 25px),
+    radial-gradient(ellipse, color-mix(in srgb, var(--atlas-essay) 14%, transparent), transparent 70%);
+  mask-image: radial-gradient(ellipse, black 20%, transparent 72%);
+}
+
+.forest-map__terrain-zone--projects {
+  top: 43%;
+  left: 38%;
+  width: 31%;
+  height: 34%;
+  border: 1px dashed color-mix(in srgb, var(--atlas-projects) 28%, transparent);
+  border-radius: 44% 56% 48% 52%;
+  background:
+    linear-gradient(30deg, transparent 47%, color-mix(in srgb, var(--atlas-projects) 16%, transparent) 48% 51%, transparent 52%),
+    linear-gradient(150deg, transparent 47%, color-mix(in srgb, var(--atlas-projects) 16%, transparent) 48% 51%, transparent 52%);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse, black 30%, transparent 76%);
+}
+
+.forest-map__trailhead {
+  position: absolute;
+  left: 4.1%;
+  bottom: 2.2%;
+  z-index: 3;
+  display: flex;
+  gap: 0.52rem;
+  align-items: center;
+  color: var(--atlas-ink);
+  font-family: var(--ch-academic-font);
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.forest-map__trailhead i {
+  display: block;
+  width: 0.72rem;
+  height: 0.72rem;
+  border: 2px solid var(--atlas-paper);
+  border-radius: 50%;
+  background: var(--atlas-trail);
+  box-shadow: 0 0 0 1px var(--atlas-trail);
+}
+
+.forest-map__trailhead small {
+  color: var(--atlas-ink-muted);
+  font-family: var(--ch-mono-font);
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+}
+
+.forest-map__overview::after {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1rem;
+  width: 6.4rem;
+  padding-top: 0.38rem;
+  border-top: 2px solid var(--atlas-ink);
+  color: var(--atlas-ink-muted);
+  content: "0       1       2 km";
+  font-family: var(--ch-mono-font);
+  font-size: 0.48rem;
+  letter-spacing: 0.06em;
+  text-align: justify;
+}
+
+.forest-map__landmark {
+  left: var(--landmark-x);
+  top: var(--landmark-y);
+  display: flex;
+  width: clamp(10.5rem, 24%, 14rem);
+  min-width: 0;
+  min-height: 3.25rem;
+  gap: 0.58rem;
+  align-items: flex-start;
+  padding: 0.42rem;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--atlas-paper) 68%, transparent);
+  box-shadow: none;
+  color: var(--atlas-ink);
+  transform: translate3d(-50%, -50%, 0);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.forest-map__landmark::after {
+  display: none;
+}
+
+.forest-map__landmark--notes {
+  --landmark-color: var(--atlas-notes);
+}
+
+.forest-map__landmark--essay {
+  --landmark-color: var(--atlas-essay);
+}
+
+.forest-map__landmark--projects {
+  --landmark-color: var(--atlas-projects);
+}
+
+.forest-map__landmark:hover,
+.forest-map__landmark:focus-visible,
+.forest-map__landmark.is-active {
+  border-color: color-mix(in srgb, var(--landmark-color) 42%, var(--atlas-line));
+  background: color-mix(in srgb, var(--atlas-paper-raised) 94%, transparent);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--landmark-color) 10%, transparent),
+    0 10px 24px color-mix(in srgb, var(--atlas-ink) 12%, transparent);
+  transform: translate3d(-50%, calc(-50% - 0.16rem), 0);
+}
+
+.forest-map__landmark:focus-visible {
+  outline: 2px solid var(--atlas-trail);
+  outline-offset: 3px;
+}
+
+.forest-map__landmark-index {
+  display: grid;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid var(--landmark-color);
+  border-radius: 50%;
+  background: var(--atlas-paper);
+  color: var(--landmark-color);
+  font-family: var(--ch-mono-font);
+  font-size: 0.61rem;
+  font-weight: 800;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--landmark-color) 9%, transparent);
+}
+
+.forest-map__landmark-copy {
+  display: grid;
+  min-width: 0;
+  text-align: left;
+}
+
+.forest-map__landmark strong {
+  margin-top: 0.14rem;
+  color: var(--atlas-ink);
+  font-size: 1.2rem;
+  font-weight: 650;
+}
+
+.forest-map__landmark em,
+.forest-map__landmark small {
+  color: var(--atlas-ink-muted);
+  font-family: var(--ch-mono-font);
+  font-style: normal;
+}
+
+.forest-map__landmark em {
+  margin-top: 0.34rem;
+  font-size: 0.57rem;
+  letter-spacing: 0.02em;
+}
+
+.forest-map__landmark small {
+  margin-top: 0.18rem;
+  font-size: 0.5rem;
+  letter-spacing: 0.04em;
+}
+
+.forest-map__back {
+  min-height: 2.75rem;
+  border-color: color-mix(in srgb, var(--forest-grove) 44%, var(--atlas-line));
+  border-radius: 2px;
+  background: var(--atlas-paper-raised);
+  color: var(--atlas-ink);
+  font-family: var(--ch-mono-font);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.forest-map__back:hover,
+.forest-map__back:focus-visible {
+  background: color-mix(in srgb, var(--forest-grove) 12%, var(--atlas-paper-raised));
+}
+
+.forest-map__grove-caption {
+  padding: 0.42rem 0 0.42rem 0.72rem;
+  border: 0;
+  border-left: 2px solid var(--forest-grove);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--atlas-paper) 74%, transparent);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.forest-map__grove-caption h3,
+.forest-map__grove-caption p {
+  color: var(--atlas-ink);
+}
+
+.forest-map__grove-caption p {
+  color: var(--atlas-ink-muted);
+}
+
+.forest-map__tree-art {
+  filter: drop-shadow(0 9px 9px color-mix(in srgb, var(--atlas-ink) 16%, transparent));
+}
+
+.forest-map__tree-label {
+  border-color: color-mix(in srgb, var(--forest-grove) 44%, var(--atlas-line));
+  border-radius: 2px;
+  background: var(--atlas-paper-raised);
+  color: var(--atlas-ink);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--atlas-ink) 16%, transparent);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.forest-map__tree-label strong {
+  color: var(--atlas-ink);
+}
+
+.forest-map__tree-label small {
+  color: var(--atlas-ink-muted);
+}
+
+.forest-map__sidebar {
+  min-height: 37rem;
+  border: 1px solid var(--atlas-line);
+  border-left: 0;
+  border-radius: 0 3px 3px 0;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 2.1rem, var(--atlas-grid) 2.1rem calc(2.1rem + 1px)),
+    linear-gradient(90deg, color-mix(in srgb, var(--atlas-trail) 9%, transparent), transparent 1.8rem),
+    var(--atlas-paper-raised);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.forest-map__trail-head {
+  border-bottom-color: var(--atlas-line);
+}
+
+.forest-map__trail-head h3,
+.forest-map__trail-panel li a strong {
+  color: var(--atlas-ink);
+}
+
+.forest-map__trail-head strong {
+  color: var(--atlas-trail);
+}
+
+.forest-map__trail-panel li a {
+  border-bottom-color: var(--atlas-line);
+}
+
+.forest-map__trail-panel li a:hover,
+.forest-map__trail-panel li a:focus-visible,
+.forest-map__open:hover,
+.forest-map__open:focus-visible {
+  background: color-mix(in srgb, var(--forest-grove) 9%, transparent);
+}
+
+.forest-map__trail-panel li a p,
+.forest-map__trail-panel time {
+  color: var(--atlas-ink-muted);
+}
+
+.forest-map__leaf {
+  background: var(--atlas-trail);
+  color: #fff9ee;
+}
+
+.forest-map__open {
+  border-top-color: var(--atlas-line);
+  color: var(--atlas-ink);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .forest-map__panel {
+    --atlas-paper: #0b1710;
+    --atlas-paper-deep: #07110c;
+    --atlas-paper-raised: #112117;
+    --atlas-ink: #dce8dd;
+    --atlas-ink-muted: #96ab9b;
+    --atlas-line: rgb(191 214 198 / 20%);
+    --atlas-grid: rgb(191 214 198 / 7%);
+    --atlas-trail: #d2a05e;
+    --atlas-notes: #7faf8b;
+    --atlas-essay: #b1bd8d;
+    --atlas-projects: #d0a16b;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 7%) inset,
+      0 28px 76px rgb(0 0 0 / 34%);
+  }
+}
+
+@media (max-width: 1080px) {
+  .forest-map__panel {
+    grid-template-columns: 1fr;
+    gap: 0.42rem;
+  }
+
+  .forest-map__meadow,
+  .forest-map__viewport {
+    min-height: 34rem;
+  }
+
+  .forest-map__meadow,
+  .forest-map__viewport,
+  .forest-map__sidebar {
+    border-radius: 3px;
+  }
+
+  .forest-map__sidebar {
+    min-height: 27rem;
+    border-left: 1px solid var(--atlas-line);
+  }
+}
+
+@media (max-width: 720px) {
+  .forest-map {
+    padding-bottom: 4.25rem;
+  }
+
+  .forest-map__intro {
+    margin-bottom: 1.25rem;
+  }
+
+  .forest-map__panel {
+    gap: 0.35rem;
+    padding: 0.32rem;
+  }
+
+  .forest-map__meadow,
+  .forest-map__viewport {
+    min-height: 31rem;
+  }
+
+  .forest-map__viewport {
+    margin: 0;
+  }
+
+  .forest-map__overview-copy {
+    top: 0.92rem;
+    right: auto;
+    left: 0.85rem;
+    max-width: calc(100% - 7.8rem);
+    padding-left: 0.62rem;
+  }
+
+  .forest-map__overview-copy h3 {
+    font-size: 1.38rem;
+  }
+
+  .forest-map__overview-copy p {
+    display: none;
+  }
+
+  .forest-map__sheet-mark {
+    top: 0.82rem;
+    right: 0.78rem;
+    font-size: 0.48rem;
+  }
+
+  .forest-map__sheet-mark span:last-child {
+    display: none;
+  }
+
+  .forest-map__compass {
+    top: 3.2rem;
+    right: 1.12rem;
+    transform: scale(0.85);
+    transform-origin: top center;
+  }
+
+  .forest-map__terrain-zone--notes {
+    width: 48%;
+  }
+
+  .forest-map__terrain-zone--essay {
+    width: 46%;
+  }
+
+  .forest-map__terrain-zone--projects {
+    left: 34%;
+    width: 42%;
+  }
+
+  .forest-map__landmark {
+    width: 9.2rem;
+    min-height: 3rem;
+    gap: 0.45rem;
+    padding: 0.32rem;
+  }
+
+  .forest-map__landmark--notes {
+    --landmark-x: 29% !important;
+    --landmark-y: 80.5% !important;
+  }
+
+  .forest-map__landmark--essay {
+    --landmark-x: 67% !important;
+    --landmark-y: 31% !important;
+  }
+
+  .forest-map__landmark--projects {
+    --landmark-x: 55% !important;
+    --landmark-y: 55% !important;
+  }
+
+  .forest-map__landmark-index {
+    flex-basis: 1.7rem;
+    width: 1.7rem;
+    height: 1.7rem;
+    font-size: 0.54rem;
+  }
+
+  .forest-map__landmark-label {
+    font-size: 0.48rem;
+  }
+
+  .forest-map__landmark strong {
+    font-size: 1rem;
+  }
+
+  .forest-map__landmark em {
+    margin-top: 0.22rem;
+    font-size: 0.5rem;
+    line-height: 1.25;
+  }
+
+  .forest-map__landmark small {
+    display: none;
+  }
+
+  .forest-map__trailhead {
+    left: 3.5%;
+    bottom: 1.5%;
+    font-size: 0.65rem;
+  }
+
+  .forest-map__overview::after {
+    right: 0.8rem;
+    bottom: 0.75rem;
+    width: 4.8rem;
+  }
+
+  .forest-map__grove-caption {
+    right: 5.7rem;
+    left: 0.7rem;
+    max-width: none;
+  }
+
+  .forest-map__back {
+    top: 0.7rem;
+    right: 0.7rem;
+    min-height: 2.75rem;
+  }
+
+  .forest-map__treefield {
+    inset: 6.1rem 0 0.2rem;
+  }
+
+  .forest-map__sidebar {
+    min-height: 25rem;
   }
 }
 
