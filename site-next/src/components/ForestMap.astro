@@ -7,9 +7,12 @@ interface Props {
 
 interface GroveView {
   collection: string;
+  index: string;
   label: string;
   title: string;
   desc: string;
+  coordinate: string;
+  terrainLabel: string;
   href: string;
   count: number;
   x: number;
@@ -24,27 +27,36 @@ const base = import.meta.env.BASE_URL;
 const groveConfig = [
   {
     collection: 'notes',
+    index: '01',
     label: 'Notes Grove',
     title: '笔记林',
     desc: '课程、研究和技术路线沉积成主干。',
+    coordinate: 'GRID 22 · 68',
+    terrainLabel: '密林 / Rooted',
     href: `${base}notes/`,
     x: 22,
     y: 68,
   },
   {
     collection: 'essay',
+    index: '02',
     label: 'Essay Grove',
     title: '杂谈林',
     desc: '旅行、生活和自我观察保留季节感。',
+    coordinate: 'GRID 72 · 28',
+    terrainLabel: '草甸 / Seasonal',
     href: `${base}essay/`,
     x: 72,
     y: 28,
   },
   {
     collection: 'projects',
+    index: '03',
     label: 'Project Grove',
     title: '项目林',
     desc: '原型、实验和工程实践长出新的枝条。',
+    coordinate: 'GRID 52 · 59',
+    terrainLabel: '林间地 / Making',
     href: `${base}projects/`,
     x: 52,
     y: 59,
@@ -83,28 +95,64 @@ const overviewTrail = stops.recentTrees.slice(0, 6);
       <div class="forest-map__skyline" aria-hidden="true"></div>
 
       <div class="forest-map__viewport" aria-live="polite">
+        <svg class="forest-map__topography" viewBox="0 0 760 420" preserveAspectRatio="none" aria-hidden="true">
+          <g class="forest-map__contours forest-map__contours--notes">
+            <path d="M-38 386 C38 298 126 286 206 326 C284 364 308 448 332 486" />
+            <path d="M-18 350 C58 278 132 274 194 304 C258 334 288 398 304 460" />
+            <path d="M22 326 C82 282 138 282 184 306 C226 330 256 370 270 418" />
+          </g>
+          <g class="forest-map__contours forest-map__contours--essay">
+            <path d="M468 -46 C556 2 646 0 802 84" />
+            <path d="M444 -18 C540 34 628 34 786 116" />
+            <path d="M472 24 C552 62 634 66 756 134" />
+          </g>
+          <g class="forest-map__contours forest-map__contours--projects">
+            <path d="M284 218 C350 154 446 150 516 208 C580 262 564 348 494 380" />
+            <path d="M316 224 C372 178 438 180 486 218 C530 254 520 314 478 340" />
+            <path d="M350 232 C390 204 434 206 462 232 C488 256 482 292 456 310" />
+          </g>
+        </svg>
+
         <svg class="forest-map__path" viewBox="0 0 760 420" preserveAspectRatio="none" aria-hidden="true">
           <path
             class="forest-map__path-halo"
-            d="M62 338 C142 262 214 292 286 222 C370 140 452 172 526 102 C584 48 650 54 704 78"
+            d="M44 382 C82 342 116 330 160 314 C214 294 220 266 286 248 C346 232 372 254 420 226 C472 194 498 142 548 118 C606 90 656 86 712 56"
             fill="none"
           />
           <path
             class="forest-map__path-line"
-            d="M62 338 C142 262 214 292 286 222 C370 140 452 172 526 102 C584 48 650 54 704 78"
+            d="M44 382 C82 342 116 330 160 314 C214 294 220 266 286 248 C346 232 372 254 420 226 C472 194 498 142 548 118 C606 90 656 86 712 56"
             fill="none"
           />
+          <path class="forest-map__path-branch" d="M420 226 C450 262 486 284 538 298" fill="none" />
         </svg>
 
         <div class="forest-map__overview" data-forest-overview>
+          <div class="forest-map__sheet-mark" aria-hidden="true">
+            <span>6CH / FIELD SHEET 01</span>
+            <span>FOREST ARCHIVE · 2026</span>
+          </div>
+
+          <div class="forest-map__compass" aria-hidden="true">
+            <span>N</span>
+            <i></i>
+          </div>
+
           <div class="forest-map__overview-copy">
-            <span>林地索引</span>
-            <h3>三片林地，各有光线</h3>
+            <span>林地索引 · FIELD INDEX</span>
+            <h3>沿着生长留下的路</h3>
             <p>笔记偏向根系，杂谈保存季节，项目像新生的枝条。它们彼此分开，又被同一条林径牵连。</p>
           </div>
 
-          <div class="forest-map__rings" aria-hidden="true">
-            {groves.map((grove) => <span class={`forest-map__ring forest-map__ring--${grove.collection}`}></span>)}
+          <div class="forest-map__terrain" aria-hidden="true">
+            <span class="forest-map__terrain-zone forest-map__terrain-zone--notes"></span>
+            <span class="forest-map__terrain-zone forest-map__terrain-zone--essay"></span>
+            <span class="forest-map__terrain-zone forest-map__terrain-zone--projects"></span>
+          </div>
+
+          <div class="forest-map__trailhead" aria-hidden="true">
+            <i></i>
+            <span>林口<br /><small>YOU ARE HERE</small></span>
           </div>
 
           <div class="forest-map__grove-landmarks" aria-label="内容林地">
@@ -115,11 +163,16 @@ const overviewTrail = stops.recentTrees.slice(0, 6);
                   class={`forest-map__landmark forest-map__landmark--${grove.collection}`}
                   type="button"
                   data-grove-trigger={grove.collection}
-                  style={`left: ${grove.x}%; top: ${grove.y}%;`}
+                  style={`--landmark-x: ${grove.x}%; --landmark-y: ${grove.y}%;`}
+                  aria-label={`进入${grove.title}，${grove.count} 棵树，${grove.desc}`}
                 >
-                  <span>{grove.label}</span>
-                  <strong>{grove.title}</strong>
-                  <em>{grove.count} 棵树</em>
+                  <span class="forest-map__landmark-index" aria-hidden="true">{grove.index}</span>
+                  <span class="forest-map__landmark-copy">
+                    <span class="forest-map__landmark-label">{grove.label}</span>
+                    <strong>{grove.title}</strong>
+                    <em>{grove.count} 棵树 · {grove.terrainLabel}</em>
+                    <small>{grove.coordinate}</small>
+                  </span>
                 </button>
               ))
             }
@@ -127,7 +180,7 @@ const overviewTrail = stops.recentTrees.slice(0, 6);
         </div>
 
         <button class="forest-map__back" type="button" data-forest-back>
-          回到林径
+          <span aria-hidden="true">←</span> 回到林径
         </button>
 
         {
