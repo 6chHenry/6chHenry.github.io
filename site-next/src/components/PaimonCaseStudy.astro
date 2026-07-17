@@ -31,9 +31,9 @@ const copy = {
     pageTitle: '派蒙三千问',
     pageSubtitle: 'Paimon Asks Everything',
     kicker: 'Case Study / Version Intelligence',
-    version: 'MAIN · C55FC57 · 2026.07.15',
+    version: 'MAIN · 61B51F5 · 2026.07.17',
     summary:
-      '一个面向《原神》国际化发行场景的双语版本理解 Agent：先按地区与旅行者身份组织预热，再用受控检索和原生 Web Search 回答玩家，最后把匿名信号整理成可执行的制作动作。',
+      '一个面向《原神》国际化发行场景的双语版本理解 Agent：先按地区与旅行者身份组织预热，再用受控检索和原生 Web Search 回答玩家，最后把匿名信号整理成可执行的制作动作；现在，四条工作流也被统一进一套游戏内情报界面。',
     demo: '在线体验',
     github: 'GitHub',
     exhibit: {
@@ -46,6 +46,14 @@ const copy = {
       title: '它不只回答一个问题，而是连接一次版本发布的两端',
       text:
         '玩家一端需要无剧透地接回复杂世界观，制作组一端需要知道大家究竟在哪里没看懂。PAIMON 把这两件事做成同一条回路：个性化预热建立语境，证据问答解决理解断点，关系图帮助继续探索，最小化匿名事件再汇总为发行简报与制作清单。',
+    },
+    interfaceSystem: {
+      label: 'Interface System',
+      title: '把工具箱收进一套像“游戏里真的会出现”的情报界面',
+      lead:
+        'main@61b51f5 不再让首页、预热、问答和洞察像四个独立工具。可折叠导航、任务编号、至冬观测状态与移动端底栏共享同一套界面语法；深海蓝档案层负责沉浸，象牙白内容层保证长文本与证据仍然清楚。',
+      caption: '游戏内指挥台 / 共享导航、状态栏与版本语境',
+      notes: ['可折叠任务导航', '路由级情报状态', '移动端底栏回退'],
     },
     problem: {
       label: 'Problem',
@@ -109,14 +117,14 @@ const copy = {
           caption: '问派蒙 / 可切换搜索与上下文建议',
         },
         {
-          signal: 'Explore / Graph',
-          title: '把角色与伏笔放回关系里',
-          text: '至冬关系图把角色、组织和概念做成可探索节点；节点详情、关系分析与文本线索共同指向证据等级，而不是只展示漂亮连线。',
-          details: ['多语言节点详情', '双节点关系分析', '文本线索溯源'],
-          asset: 'design-map.png',
-          kind: 'map',
-          alt: '派蒙三千问设计思维导图，连接玩家向导、证据问答、关系图与发行观察。',
-          caption: '系统地图 / 玩家价值与发行价值共享同一证据底座',
+          signal: 'Explore / Atlas',
+          title: '在至冬图鉴里追踪席位、状态与伏笔',
+          text: '图谱被重构为一张可操作的皇家地理志：星图视图强调关系，席位视图强调角色与状态；档案侧栏、关系筛选和文本线索把每次探索重新接回证据。',
+          details: ['星图 / 席位双视图', '角色状态与档案侧栏', '双节点关系追踪'],
+          asset: 'atlas.webp',
+          kind: 'screen',
+          alt: '至冬皇家地理志界面，展示星图与席位视图切换、关系节点、角色状态和冰之女皇档案侧栏。',
+          caption: '至冬皇家地理志 / 从关系星图进入角色档案',
         },
         {
           signal: 'Decide / Release',
@@ -151,7 +159,7 @@ const copy = {
       label: 'Current State',
       title: '已经上线，也把边界写在产品里',
       text:
-        '截至 main@c55fc57，个性化预热、双搜索链路、引用治理、关系图和发行决策台都已进入公开 Demo。已知限制仍包括 Vercel 冷启动、站外趋势层尚未接入、进程内轻量限流，以及社区 Wiki 本身的覆盖边界；页面会明确降级，不把这些限制藏在顺滑文案后面。',
+        '截至 main@61b51f5，个性化预热、双搜索链路、引用治理、发行决策台，以及全新的游戏内指挥台与双视图至冬图鉴都已进入公开 Demo。已知限制仍包括 Vercel 冷启动、站外趋势层尚未接入、进程内轻量限流，以及社区 Wiki 本身的覆盖边界；页面会明确降级，不把这些限制藏在顺滑文案后面。',
     },
     nav: {
       previous: '上一篇',
@@ -163,9 +171,9 @@ const copy = {
     pageTitle: 'Paimon Asks Everything',
     pageSubtitle: 'Paimon Sanqianwen',
     kicker: 'Case Study / Version Intelligence',
-    version: 'MAIN · C55FC57 · 2026.07.15',
+    version: 'MAIN · 61B51F5 · 2026.07.17',
     summary:
-      'A bilingual version-intelligence agent for Genshin publishing: personalize preheat by region and traveler profile, answer through governed retrieval and native Web Search, then turn anonymous signals into reviewable production actions.',
+      'A bilingual version-intelligence agent for Genshin publishing: personalize preheat by region and traveler profile, answer through governed retrieval and native Web Search, then turn anonymous signals into reviewable production actions—all inside one game-native intelligence interface.',
     demo: 'Live Demo',
     github: 'GitHub',
     exhibit: {
@@ -187,6 +195,14 @@ const copy = {
         'Quest text, official previews, wikis, and community threads blur together, so fluent answers can quietly turn speculation into canon.',
         'Counts alone do not tell a release team which timeline to clarify, who is affected, or what can ship in the next two weeks.',
       ],
+    },
+    interfaceSystem: {
+      label: 'Interface System',
+      title: 'Turn a toolkit into an intelligence surface that could live inside the game.',
+      lead:
+        'At main@61b51f5, Home, Preheat, Ask, and Insights no longer feel like separate utilities. A collapsible mission rail, route codes, Snezhnaya archive status, and mobile bottom navigation share one interface grammar: deep-navy archive layers create atmosphere while porcelain content surfaces keep long evidence readable.',
+      caption: 'In-game command deck / Shared navigation, status, and update context',
+      notes: ['Collapsible mission rail', 'Route-level intel status', 'Mobile bottom-nav fallback'],
     },
     metrics: {
       label: 'Live System',
@@ -241,14 +257,14 @@ const copy = {
           caption: 'Ask Paimon / Switchable search with contextual prompts',
         },
         {
-          signal: 'Explore / Graph',
-          title: 'Put characters and clues back into relationships.',
-          text: 'The Snezhnaya graph turns characters, factions, and concepts into explorable nodes. Details, pair analysis, and text trails point back to evidence grades—not decorative lines.',
-          details: ['Bilingual node details', 'Two-node relationship analysis', 'Traceable text clues'],
-          asset: 'design-map.png',
-          kind: 'map',
-          alt: 'PAIMON design map connecting player guidance, evidence Q&A, relationship exploration, and release observation.',
-          caption: 'System map / Player and release value share one evidence base',
+          signal: 'Explore / Atlas',
+          title: 'Track seats, status, and unresolved clues inside the Snezhnaya Atlas.',
+          text: 'The graph is now an operable royal atlas: Constellation view prioritizes relationships, Seats view prioritizes characters and status, while the dossier panel, relation filters, and text trails reconnect exploration to evidence.',
+          details: ['Constellation / Seats views', 'Status-aware dossier panel', 'Two-node relationship tracing'],
+          asset: 'atlas.webp',
+          kind: 'screen',
+          alt: 'Snezhnaya Royal Atlas with Constellation and Seats views, relationship nodes, character status, and a Tsaritsa dossier panel.',
+          caption: 'Snezhnaya Royal Atlas / From relationship map to character dossier',
         },
         {
           signal: 'Decide / Release',
@@ -283,7 +299,7 @@ const copy = {
       label: 'Current State',
       title: 'Live today, with its boundaries visible.',
       text:
-        'As of main@c55fc57, personalized preheat, both search routes, citation governance, the relationship graph, and the release decision center are live in the public demo. Known limits remain: Vercel cold starts, an external-trend layer still awaiting integration, process-local rate limiting, and the coverage ceiling of community wikis. The interface degrades clearly instead of hiding those constraints.',
+        'As of main@61b51f5, personalized preheat, both search routes, citation governance, the release decision center, the game-native command deck, and the dual-view Snezhnaya Atlas are live in the public demo. Known limits remain: Vercel cold starts, an external-trend layer still awaiting integration, process-local rate limiting, and the coverage ceiling of community wikis. The interface degrades clearly instead of hiding those constraints.',
     },
     nav: {
       previous: 'Previous',
@@ -385,6 +401,40 @@ const languages = ['zh', 'en'] as const;
               <h2>{copy[lang].overview.title}</h2>
             </div>
             <p>{copy[lang].overview.text}</p>
+          </section>
+
+          <section id={`interface-system-${lang}`} class="paimon-section paimon-interface-section">
+            <div class="paimon-section__heading">
+              <p class="paimon-label">{copy[lang].interfaceSystem.label}</p>
+              <h2>{copy[lang].interfaceSystem.title}</h2>
+              <p class="paimon-section__lead">{copy[lang].interfaceSystem.lead}</p>
+            </div>
+            <div class="paimon-interface-showcase">
+              <figure class="paimon-interface-visual">
+                <img
+                  src={`${journeyAssetBase}command-deck.webp`}
+                  alt={lang === 'zh'
+                    ? '派蒙三千问游戏内指挥台：首页包含可折叠任务导航、至冬版本倒计时、派蒙小纸条和至冬影像。'
+                    : 'PAIMON in-game command deck with a collapsible mission rail, Snezhnaya countdown, Paimon note, and cinematic update panel.'}
+                  width="1200"
+                  height="833"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption>
+                  <span>MAIN · 61B51F5</span>
+                  <strong>{copy[lang].interfaceSystem.caption}</strong>
+                </figcaption>
+              </figure>
+              <ul class="paimon-interface-notes" aria-label={copy[lang].interfaceSystem.label}>
+                {copy[lang].interfaceSystem.notes.map((note, index) => (
+                  <li>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <strong>{note}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </section>
 
           <section class="paimon-section">
@@ -525,6 +575,7 @@ const languages = ['zh', 'en'] as const;
     --paimon-navy: #07142f;
     --paimon-navy-soft: #12264a;
     --paimon-ink: #0a1a18;
+    --paimon-ice: #9fd9e5;
     --paimon-gold: var(--ch-accent-warm);
     --paimon-line: color-mix(in srgb, var(--paimon-gold) 34%, var(--ch-border-soft));
     width: min(calc(100% - 2.5rem), 80rem);
@@ -886,6 +937,119 @@ const languages = ['zh', 'en'] as const;
     border-top: 1px solid color-mix(in srgb, var(--ch-border-soft) 70%, transparent);
     font-size: clamp(0.98rem, 1.1vw, 1.12rem);
     text-align: left;
+  }
+
+  .paimon-interface-section {
+    width: min(100%, 70rem);
+    margin-inline: auto;
+    padding: clamp(1.2rem, 3vw, 2rem);
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--paimon-gold) 32%, var(--paimon-navy));
+    border-radius: 14px;
+    background:
+      radial-gradient(circle at 88% 8%, color-mix(in srgb, var(--paimon-ice) 18%, transparent), transparent 28%),
+      linear-gradient(145deg, color-mix(in srgb, var(--paimon-navy) 96%, #102b38), var(--paimon-navy));
+    box-shadow: 0 28px 90px color-mix(in srgb, var(--paimon-navy) 20%, transparent);
+    color: #f7ead0;
+  }
+
+  .paimon-interface-section .paimon-section__heading {
+    width: min(100%, 58rem);
+    border-top-color: color-mix(in srgb, #f7ead0 24%, transparent);
+  }
+
+  .paimon-interface-section .paimon-section__heading h2 {
+    color: #fff8e8;
+  }
+
+  .paimon-interface-section .paimon-section__lead {
+    color: color-mix(in srgb, #f7ead0 74%, var(--paimon-ice));
+  }
+
+  .paimon-interface-showcase {
+    display: grid;
+    gap: 0.85rem;
+    width: min(100%, 64rem);
+    margin-inline: auto;
+  }
+
+  .paimon-interface-visual {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--paimon-gold) 44%, transparent);
+    border-radius: 10px;
+    background: #0a2631;
+    box-shadow: 0 20px 50px color-mix(in srgb, #000 30%, transparent);
+  }
+
+  .paimon-interface-visual img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1200 / 833;
+    object-fit: cover;
+  }
+
+  .paimon-interface-visual figcaption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.72rem 0.9rem;
+    border-top: 1px solid color-mix(in srgb, var(--paimon-gold) 32%, transparent);
+    background: color-mix(in srgb, var(--paimon-navy) 88%, #102f3b);
+  }
+
+  .paimon-interface-visual figcaption span {
+    color: var(--paimon-gold);
+    font-family: var(--ch-mono-font);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+
+  .paimon-interface-visual figcaption strong {
+    color: #f7ead0;
+    font-family: var(--ch-academic-font);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .paimon-interface-notes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .paimon-interface-notes li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.7rem 0.85rem;
+    border-right: 1px solid color-mix(in srgb, #f7ead0 18%, transparent);
+    color: #f7ead0;
+  }
+
+  .paimon-interface-notes li:last-child {
+    border-right: 0;
+  }
+
+  .paimon-interface-notes span {
+    color: var(--paimon-gold);
+    font-family: var(--ch-mono-font);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
+  .paimon-interface-notes strong {
+    font-family: var(--ch-academic-font);
+    font-size: 0.78rem;
+    font-weight: 600;
   }
 
   .paimon-problem-grid {
@@ -1459,10 +1623,35 @@ const languages = ['zh', 'en'] as const;
     .paimon-annotations,
     .paimon-problem-grid,
     .paimon-signal-grid,
+    .paimon-interface-notes,
     .paimon-evidence-chain,
     .paimon-reliability ul,
     .paimon-nav {
       grid-template-columns: 1fr;
+    }
+
+    .paimon-interface-section {
+      padding: 0.85rem;
+      border-radius: 10px;
+    }
+
+    .paimon-interface-notes li {
+      border-right: 0;
+      border-bottom: 1px solid color-mix(in srgb, #f7ead0 18%, transparent);
+    }
+
+    .paimon-interface-notes li:last-child {
+      border-bottom: 0;
+    }
+
+    .paimon-interface-visual figcaption {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.28rem;
+    }
+
+    .paimon-interface-visual figcaption strong {
+      text-align: left;
     }
 
     .paimon-signal {
