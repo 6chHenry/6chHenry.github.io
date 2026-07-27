@@ -31,29 +31,29 @@ const copy = {
     pageTitle: '派蒙三千问',
     pageSubtitle: 'Paimon Asks Everything',
     kicker: 'Case Study / Version Intelligence',
-    version: 'MAIN · 61B51F5 · 2026.07.17',
+    version: 'MAIN · EFDABA8 · 2026.07.27',
     summary:
-      '一个面向《原神》国际化发行场景的双语版本理解 Agent：先按地区与旅行者身份组织预热，再用受控检索和原生 Web Search 回答玩家，最后把匿名信号整理成可执行的制作动作；现在，四条工作流也被统一进一套游戏内情报界面。',
+      '一个面向《原神》国际化发行场景的双语版本理解 Agent：先按地区与旅行者身份组织预热，再用受控检索和原生 Web Search 回答玩家，把匿名信号整理成制作动作，最后用增量实验判断“给谁看什么、哪些渠道真正带来变化”。五条工作流被统一进一套游戏内情报界面。',
     demo: '在线体验',
     github: 'GitHub',
     exhibit: {
       eyebrow: 'Live Product / Main',
-      title: '从玩家理解到发行决策的证据闭环',
-      notes: ['08 个地区', '03 类旅行者', '02 条搜索链路'],
+      title: '从玩家理解到增量验证的证据闭环',
+      notes: ['05 站任务线', '02 条搜索链路', '02 类增量实验'],
     },
     overview: {
       label: 'Overview',
       title: '它不只回答一个问题，而是连接一次版本发布的两端',
       text:
-        '玩家一端需要无剧透地接回复杂世界观，制作组一端需要知道大家究竟在哪里没看懂。PAIMON 把这两件事做成同一条回路：个性化预热建立语境，证据问答解决理解断点，关系图帮助继续探索，最小化匿名事件再汇总为发行简报与制作清单。',
+        '玩家一端需要无剧透地接回复杂世界观，制作组一端需要知道大家究竟在哪里没看懂、哪项动作真的带来增量。PAIMON 把这些问题做成同一条回路：个性化预热建立语境，证据问答解决理解断点，关系图帮助继续探索，匿名信号形成发行建议，再由随机实验与 Uplift 模型验证目标人群和渠道贡献。',
     },
     interfaceSystem: {
       label: 'Interface System',
       title: '把工具箱收进一套像“游戏里真的会出现”的情报界面',
       lead:
-        'main@61b51f5 不再让首页、预热、问答和洞察像四个独立工具。可折叠导航、任务编号、至冬观测状态与移动端底栏共享同一套界面语法；深海蓝档案层负责沉浸，象牙白内容层保证长文本与证据仍然清楚。',
+        'main@efdaba8 将首页、预热、问答、洞察和增量实验收进同一条任务导航。可折叠身份栏、路由编号、至冬观测状态、居中的语言控件与移动端底栏共享一套界面语法；深海蓝档案层负责沉浸，象牙白内容层保证长文本、矩阵和置信区间仍然清楚。',
       caption: '游戏内指挥台 / 共享导航、状态栏与版本语境',
-      notes: ['可折叠任务导航', '路由级情报状态', '移动端底栏回退'],
+      notes: ['五站任务导航', '路由级情报状态', '桌面与移动端一致回退'],
     },
     problem: {
       label: 'Problem',
@@ -66,7 +66,7 @@ const copy = {
     },
     metrics: {
       label: 'Live System',
-      title: '把个性化、检索与隐私约束做成明确参数',
+      title: '把个性化、检索与实验边界做成明确参数',
       items: [
         {
           value: '08',
@@ -84,17 +84,17 @@ const copy = {
           text: '自研受控检索与 Anthropic 原生 Web Search 可按次切换并有界回退。',
         },
         {
-          value: '00',
-          label: '默认保存原始问题',
-          text: '只记录最小匿名枚举；用户明确授权后才保留问题文本用于 FAQ 改进。',
+          value: '02',
+          label: '增量实验场景',
+          text: 'PV × 玩家估计分群增量，达人 × 展会拆解独立、协同与联合贡献。',
         },
       ],
     },
     journey: {
       label: 'Product Journey',
-      title: '四站任务线，把“看懂版本”变成可追踪的产品体验',
+      title: '五站任务线，把“看懂版本”推进到“验证增量”',
       lead:
-        '这不是四个彼此独立的 Demo 页面。它们从建立上下文开始，经过查证、探索，再回到制作决策，形成一条双向的信息路线。',
+        '这不是五个彼此独立的 Demo 页面。它们从建立上下文开始，经过查证、探索与制作决策，再用受控实验验证动作是否真的有效，形成一条可回溯的信息路线。',
       items: [
         {
           signal: 'Context / Preheat',
@@ -136,14 +136,24 @@ const copy = {
           alt: '新版发行洞察页面：深蓝任务头与“各国神之心流转”两到四周发布建议卡。',
           caption: '发行洞察 / 从信号到可审核制作动作',
         },
+        {
+          signal: 'Measure / Incrementality',
+          title: '先估增量，再决定给谁看什么',
+          text: '增量实验室把发行建议变成可检验决策：多处理 T-Learner 比较剧情、角色、玩法 PV 与不触达控制，2×2 随机实验再拆分达人、展会与协同贡献；置信区间不越过业务阈值时，系统明确建议不触达。',
+          details: ['分群 CATE 与 95% 置信区间', '1 pp 阈值 + 10% Holdout', '2×2 归因与 Shapley 分摊'],
+          asset: 'release-lab.webp',
+          kind: 'screen',
+          alt: '发行增量实验室页面：PV 与玩家分群决策、预计 D30 留存增量、置信区间及增量矩阵。',
+          caption: '增量实验 / 从发行建议到可验证因果决策',
+        },
       ],
     },
     chain: {
       label: 'Evidence Chain',
       title: '每个结论都要沿原路走回证据',
       lead:
-        '默认路径从用户偏好开始，到证据回答结束；只有最小匿名信号会继续进入发行侧。模型不可用、引用越界或搜索不完整时，系统会显式降级，而不是用更自信的语气遮住失败。',
-      items: ['身份与地区', '主题编排', '受控检索', '原生搜索', '来源治理', '引用校验', '证据回答', '匿名决策信号'],
+        '默认路径从用户偏好开始，到证据回答、制作建议和增量验证结束；只有最小匿名信号与实验分流进入发行侧。模型不可用、引用越界、搜索不完整或实验区间不确定时，系统会显式降级，而不是用更自信的语气遮住失败。',
+      items: ['身份与地区', '主题编排', '受控检索', '来源治理', '引用校验', '匿名决策信号', '随机分流', '增量验证'],
     },
     reliability: {
       label: 'Reliability',
@@ -151,15 +161,15 @@ const copy = {
       items: [
         '官方、可信 Wiki、社区与未知网页分层处理，社区推测不会被包装成官方设定。',
         '无最终正文、来源无关、请求超时或截断时，每次请求最多回退一次，并清理无法映射的引用编号。',
-        '没有模型密钥时仍可运行确定性证据回答；没有 Supabase 时切换到本地事件存储。',
-        'Vitest 固定覆盖剧透 token、双语检索、引用完整性、三类预热视图、图谱证据与发行规则。',
+        '原始问题默认不保存；没有模型密钥时仍可运行确定性证据回答，没有 Supabase 时切换到本地事件存储。',
+        '固定种子合成实验只验证方法链路，不宣称真实业务效果；Vitest 与 Python unittest 同时约束引用治理、特征泄漏、置信区间、Holdout 和 2×2 归因算术。',
       ],
     },
     retrospective: {
       label: 'Current State',
       title: '已经上线，也把边界写在产品里',
       text:
-        '截至 main@61b51f5，个性化预热、双搜索链路、引用治理、发行决策台，以及全新的游戏内指挥台与双视图至冬图鉴都已进入公开 Demo。已知限制仍包括 Vercel 冷启动、站外趋势层尚未接入、进程内轻量限流，以及社区 Wiki 本身的覆盖边界；页面会明确降级，不把这些限制藏在顺滑文案后面。',
+        '截至 main@efdaba8，个性化预热、双搜索链路、引用治理、发行决策台、双视图至冬图鉴与发行增量实验室都已进入公开 Demo。增量实验室目前使用固定种子合成随机数据，只能证明方法和产品闭环可运行；真实留存提升仍需线上随机 Holdout 或地域实验验证。Vercel 冷启动、站外趋势未接入与社区 Wiki 覆盖边界也会被明确展示。',
     },
     nav: {
       previous: '上一篇',
@@ -171,21 +181,21 @@ const copy = {
     pageTitle: 'Paimon Asks Everything',
     pageSubtitle: 'Paimon Sanqianwen',
     kicker: 'Case Study / Version Intelligence',
-    version: 'MAIN · 61B51F5 · 2026.07.17',
+    version: 'MAIN · EFDABA8 · 2026.07.27',
     summary:
-      'A bilingual version-intelligence agent for Genshin publishing: personalize preheat by region and traveler profile, answer through governed retrieval and native Web Search, then turn anonymous signals into reviewable production actions—all inside one game-native intelligence interface.',
+      'A bilingual release-intelligence agent for Genshin publishing: personalize preheat, answer through governed retrieval and native Web Search, turn anonymous signals into reviewable production actions, then test who should see what and which channels create incremental change—all inside one game-native interface.',
     demo: 'Live Demo',
     github: 'GitHub',
     exhibit: {
       eyebrow: 'Live Product / Main',
-      title: 'An evidence loop from player clarity to release decisions',
-      notes: ['08 regions', '03 traveler profiles', '02 search routes'],
+      title: 'An evidence loop from player clarity to incremental validation',
+      notes: ['05 mission stops', '02 search routes', '02 experiment scenarios'],
     },
     overview: {
       label: 'Overview',
       title: 'It connects both ends of a release, not just one question.',
       text:
-        'Players need to re-enter a dense world without being spoiled. Release teams need to know where understanding breaks. PAIMON turns both needs into one loop: personalized preheat establishes context, evidence Q&A resolves confusion, the relationship graph supports exploration, and minimal anonymous events become release briefs and production checklists.',
+        'Players need to re-enter a dense world without being spoiled. Release teams need to know where understanding breaks—and which action actually creates lift. PAIMON connects both ends: personalized preheat establishes context, evidence Q&A resolves confusion, the graph supports exploration, anonymous signals become release recommendations, and controlled experiments validate target audiences and channel contribution.',
     },
     problem: {
       label: 'Problem',
@@ -200,13 +210,13 @@ const copy = {
       label: 'Interface System',
       title: 'Turn a toolkit into an intelligence surface that could live inside the game.',
       lead:
-        'At main@61b51f5, Home, Preheat, Ask, and Insights no longer feel like separate utilities. A collapsible mission rail, route codes, Snezhnaya archive status, and mobile bottom navigation share one interface grammar: deep-navy archive layers create atmosphere while porcelain content surfaces keep long evidence readable.',
+        'At main@efdaba8, Home, Preheat, Ask, Insights, and the Incrementality Lab sit inside one mission rail. Collapsible identity controls, route codes, Snezhnaya archive status, centered language controls, and mobile navigation share one grammar: deep-navy archive layers create atmosphere while porcelain surfaces keep evidence, matrices, and confidence intervals readable.',
       caption: 'In-game command deck / Shared navigation, status, and update context',
-      notes: ['Collapsible mission rail', 'Route-level intel status', 'Mobile bottom-nav fallback'],
+      notes: ['Five-stop mission rail', 'Route-level intel status', 'Consistent desktop/mobile fallback'],
     },
     metrics: {
       label: 'Live System',
-      title: 'Personalization, retrieval, and privacy are explicit parameters.',
+      title: 'Personalization, retrieval, and experiment boundaries are explicit parameters.',
       items: [
         {
           value: '08',
@@ -224,17 +234,17 @@ const copy = {
           text: 'A controlled in-house route and Anthropic native Web Search switch per request with bounded fallback.',
         },
         {
-          value: '00',
-          label: 'Raw questions stored by default',
-          text: 'Only minimal anonymous enums are logged; question text requires explicit opt-in for FAQ improvement.',
+          value: '02',
+          label: 'Incrementality scenarios',
+          text: 'PV × player estimates segment lift; influencer × expo separates direct, interaction, and joint contribution.',
         },
       ],
     },
     journey: {
       label: 'Product Journey',
-      title: 'Four mission stops turn “understand the update” into a traceable experience.',
+      title: 'Five mission stops move from “understand the update” to “validate the lift.”',
       lead:
-        'These are not four disconnected demo pages. They establish context, verify claims, support exploration, and return evidence to production decisions as one two-way information route.',
+        'These are not five disconnected demo pages. They establish context, verify claims, support exploration, form production decisions, and then test whether those actions create incremental value.',
       items: [
         {
           signal: 'Context / Preheat',
@@ -276,14 +286,24 @@ const copy = {
           alt: 'Updated Release Insights page with a deep-navy mission header and a two-to-four-week Heart of Gnosis publishing recommendation.',
           caption: 'Release insights / From signals to reviewable actions',
         },
+        {
+          signal: 'Measure / Incrementality',
+          title: 'Estimate lift before deciding who should see what.',
+          text: 'The lab turns recommendations into testable decisions: a multi-treatment T-Learner compares story, character, and gameplay PVs against no contact, while a 2×2 randomized design separates influencer, expo, and interaction effects. If uncertainty does not clear the business threshold, the decision is explicitly hold.',
+          details: ['Segment CATE with 95% intervals', '1 pp threshold + 10% holdout', '2×2 attribution with Shapley allocation'],
+          asset: 'release-lab.webp',
+          kind: 'screen',
+          alt: 'Release Incrementality Lab with PV-by-player targeting, estimated D30 retention lift, confidence interval, and decision matrix.',
+          caption: 'Incrementality lab / From release advice to testable causal decisions',
+        },
       ],
     },
     chain: {
       label: 'Evidence Chain',
       title: 'Every conclusion has to walk back to evidence.',
       lead:
-        'The default path starts with player context and ends with an evidence answer; only a minimal anonymous signal continues to the release side. When models fail, citations leave the whitelist, or search results are incomplete, the system degrades explicitly instead of hiding failure behind confidence.',
-      items: ['Profile + region', 'Topic orchestration', 'Controlled retrieval', 'Native search', 'Source governance', 'Citation validation', 'Evidence answer', 'Anonymous decision signal'],
+        'The path starts with player context and continues through evidence answers, production recommendations, and incrementality validation; only minimal anonymous signals and randomized assignments reach the release side. Model failure, invalid citations, incomplete search, or uncertain intervals trigger explicit degradation.',
+      items: ['Profile + region', 'Topic orchestration', 'Controlled retrieval', 'Source governance', 'Citation validation', 'Anonymous decision signal', 'Random assignment', 'Incremental validation'],
     },
     reliability: {
       label: 'Reliability',
@@ -291,15 +311,15 @@ const copy = {
       items: [
         'Official, trusted-wiki, community, and unknown-web sources are separated, so community theories do not become official canon.',
         'Missing final text, irrelevant sources, timeouts, and truncation trigger at most one fallback; unmapped citation numbers are removed.',
-        'Without a model key the deterministic evidence answer still runs; without Supabase the event layer falls back to local storage.',
-        'Vitest covers spoiler tokens, bilingual retrieval, citation integrity, three preheat views, graph evidence, and release rules.',
+        'Raw questions are not stored by default; deterministic evidence answers still run without a model key, and the event layer falls back locally without Supabase.',
+        'Fixed-seed synthetic experiments validate the method—not real business lift. Vitest and Python unittest cover citation governance, leakage checks, confidence intervals, holdouts, and 2×2 attribution arithmetic.',
       ],
     },
     retrospective: {
       label: 'Current State',
       title: 'Live today, with its boundaries visible.',
       text:
-        'As of main@61b51f5, personalized preheat, both search routes, citation governance, the release decision center, the game-native command deck, and the dual-view Snezhnaya Atlas are live in the public demo. Known limits remain: Vercel cold starts, an external-trend layer still awaiting integration, process-local rate limiting, and the coverage ceiling of community wikis. The interface degrades clearly instead of hiding those constraints.',
+        'As of main@efdaba8, personalized preheat, both search routes, citation governance, release decisions, the dual-view Snezhnaya Atlas, and the Release Incrementality Lab are live in the public demo. The lab currently uses fixed-seed synthetic randomized data, so it proves the method and product loop—not real retention lift, which still requires online holdouts or geo experiments. Vercel cold starts, missing external trends, and community-wiki coverage limits remain visible.',
     },
     nav: {
       previous: 'Previous',
@@ -414,15 +434,15 @@ const languages = ['zh', 'en'] as const;
                 <img
                   src={`${journeyAssetBase}command-deck.webp`}
                   alt={lang === 'zh'
-                    ? '派蒙三千问当前线上游戏内指挥台：首页包含可折叠任务导航、至冬版本倒计时、派蒙小纸条和至冬影像。'
-                    : 'Current live PAIMON in-game command deck with a collapsible mission rail, Snezhnaya countdown, Paimon note, and cinematic update panel.'}
+                    ? '派蒙三千问当前线上游戏内指挥台：首页包含五站任务导航、至冬版本倒计时、派蒙小纸条和新版轮播影像。'
+                    : 'Current live PAIMON command deck with a five-stop mission rail, Snezhnaya countdown, Paimon note, and updated campaign carousel.'}
                   width="1200"
                   height="833"
                   loading="lazy"
                   decoding="async"
                 />
                 <figcaption>
-                  <span>MAIN · 61B51F5</span>
+                  <span>MAIN · EFDABA8</span>
                   <strong>{copy[lang].interfaceSystem.caption}</strong>
                 </figcaption>
               </figure>
@@ -1202,6 +1222,10 @@ const languages = ['zh', 'en'] as const;
     --journey-accent: #d57568;
   }
 
+  .paimon-journey__item:nth-child(5) {
+    --journey-accent: #b8a45f;
+  }
+
   .paimon-journey__item:nth-child(even) {
     grid-template-columns: minmax(0, 1.34fr) minmax(17rem, 0.76fr);
   }
@@ -1723,6 +1747,10 @@ const languages = ['zh', 'en'] as const;
 
     .paimon-journey__item:nth-child(4) {
       animation-delay: 240ms;
+    }
+
+    .paimon-journey__item:nth-child(5) {
+      animation-delay: 320ms;
     }
   }
 
