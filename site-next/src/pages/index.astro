@@ -44,50 +44,56 @@ const latestNote = sortByRecency(notes)[0];
 const latestEssay = sortByRecency(essays)[0];
 const latestProject = sortByRecency(projects)[0];
 
-const practices = [
+const paths: Array<{
+  index: string;
+  icon: 'leaf' | 'book' | 'pen' | 'code';
+  title: string;
+  description: string;
+  href: string;
+  count?: string;
+  latest?: { date?: string; title: string };
+}> = [
   {
     index: '01',
-    tone: 'learn',
-    icon: 'book' as const,
-    eyebrow: 'Learn · 学习',
-    title: '把理解留下来',
-    description: '不只收藏知识，而是把复杂概念拆开、重组，直到它能被下一次思考继续使用。',
-    href: `${base}notes/`,
-    count: `${notes.length} 篇笔记`,
-    latest: latestNote && {
-      href: buildContentUrl(latestNote.collection, latestNote.id, base),
-      title: latestNote.data.title,
-      date: formatRecencyDate(latestNote),
-    },
+    icon: 'leaf' as const,
+    title: '认识我',
+    description: '我的坐标、兴趣与正在寻找的问题',
+    href: `${base}about/`,
   },
   {
     index: '02',
-    tone: 'make',
-    icon: 'code' as const,
-    eyebrow: 'Make · 创作',
-    title: '把想法做成东西',
-    description: '让研究、代码与界面落在同一个作品里；原型是我思考时最诚实的一版草稿。',
-    href: `${base}projects/`,
-    count: `${projects.length} 个项目`,
-    latest: latestProject && {
-      href: buildContentUrl(latestProject.collection, latestProject.id, base),
-      title: latestProject.data.title,
-      date: formatRecencyDate(latestProject),
+    icon: 'book' as const,
+    title: '翻阅笔记',
+    description: 'AI、数学与工程学习留下的知识年轮',
+    href: `${base}notes/`,
+    count: `${notes.length} 篇笔记`,
+    latest: latestNote && {
+      date: formatRecencyDate(latestNote),
+      title: latestNote.data.title,
     },
   },
   {
     index: '03',
-    tone: 'wander',
     icon: 'pen' as const,
-    eyebrow: 'Wander · 漫游',
-    title: '去别处重新看世界',
-    description: '旅行、电影和日常观察，提醒我在技术之外，继续感受具体的人与真实的生活。',
+    title: '读些杂谈',
+    description: '旅行、电影与生活片段的私人标本',
     href: `${base}essay/`,
     count: `${essays.length} 则杂谈`,
     latest: latestEssay && {
-      href: buildContentUrl(latestEssay.collection, latestEssay.id, base),
-      title: latestEssay.data.title,
       date: formatRecencyDate(latestEssay),
+      title: latestEssay.data.title,
+    },
+  },
+  {
+    index: '04',
+    icon: 'code' as const,
+    title: '看看作品',
+    description: '从模型到界面，把想法做成可体验的作品',
+    href: `${base}projects/`,
+    count: `${projects.length} 个项目`,
+    latest: latestProject && {
+      date: formatRecencyDate(latestProject),
+      title: latestProject.data.title,
     },
   },
 ];
@@ -131,6 +137,40 @@ const practices = [
     </div>
   </section>
 
+  {
+    recent.length > 0 && (
+      <section class="container recent-section">
+        <header class="recent-section__header">
+          <div>
+            <p class="section-kicker">Recent traces</p>
+            <h2 class="section-title">最近留下的痕迹</h2>
+            <p class="section-lead">按时间拾起最近的八次更新，看这片林正在往哪里生长。</p>
+          </div>
+          <p class="recent-section__edition">
+            <span>Latest 08</span> · chronological field notes
+          </p>
+        </header>
+        <ul class="content-list recent-list">
+          {recent.map((item, index) => (
+            <li>
+              <a class="content-row recent-row" href={item.href}>
+                <span class="recent-row__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                <div class="content-row__body">
+                  <div class="recent-row__meta">
+                    <span class={`recent-row__type recent-row__type--${item.collection}`}>{item.collectionLabel}</span>
+                    {item.date && <time class="content-row__date">{item.date}</time>}
+                  </div>
+                  <h2 class="content-row__title">{item.title}</h2>
+                </div>
+                <span class="content-row__arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
   <section class="home-wayfinder" aria-labelledby="home-wayfinder-title">
     <div class="home-wayfinder__shell">
       <header class="home-wayfinder__header">
@@ -142,42 +182,28 @@ const practices = [
       </header>
 
       <nav class="home-wayfinder__grid" aria-label="探索入口">
-        <a class="home-path" href={`${base}about/`}>
-          <span class="home-path__topline">
-            <span class="home-path__index">01</span>
-            <span class="home-path__icon"><ForestIcon name="leaf" /></span>
-          </span>
-          <span class="home-path__title">认识我</span>
-          <span class="home-path__description">我的坐标、兴趣与正在寻找的问题</span>
-          <span class="home-path__arrow" aria-hidden="true">→</span>
-        </a>
-        <a class="home-path" href={`${base}notes/`}>
-          <span class="home-path__topline">
-            <span class="home-path__index">02</span>
-            <span class="home-path__icon"><ForestIcon name="book" /></span>
-          </span>
-          <span class="home-path__title">翻阅笔记</span>
-          <span class="home-path__description">AI、数学与工程学习留下的知识年轮</span>
-          <span class="home-path__arrow" aria-hidden="true">→</span>
-        </a>
-        <a class="home-path" href={`${base}essay/`}>
-          <span class="home-path__topline">
-            <span class="home-path__index">03</span>
-            <span class="home-path__icon"><ForestIcon name="pen" /></span>
-          </span>
-          <span class="home-path__title">读些杂谈</span>
-          <span class="home-path__description">旅行、电影与生活片段的私人标本</span>
-          <span class="home-path__arrow" aria-hidden="true">→</span>
-        </a>
-        <a class="home-path" href={`${base}projects/`}>
-          <span class="home-path__topline">
-            <span class="home-path__index">04</span>
-            <span class="home-path__icon"><ForestIcon name="code" /></span>
-          </span>
-          <span class="home-path__title">看看作品</span>
-          <span class="home-path__description">从模型到界面，把想法做成可体验的作品</span>
-          <span class="home-path__arrow" aria-hidden="true">→</span>
-        </a>
+        {
+          paths.map((path) => (
+            <a class="home-path" href={path.href}>
+              <span class="home-path__topline">
+                <span class="home-path__index">{path.index}</span>
+                <span class="home-path__icon">
+                  <ForestIcon name={path.icon} />
+                </span>
+              </span>
+              <span class="home-path__title">{path.title}</span>
+              <span class="home-path__description">{path.description}</span>
+              {path.count && <span class="home-path__count">{path.count}</span>}
+              {path.latest && (
+                <span class="home-path__latest">
+                  <span class="home-path__latest-label">最近留下{path.latest.date ? ` · ${path.latest.date}` : ''}</span>
+                  <strong>{path.latest.title}</strong>
+                </span>
+              )}
+              <span class="home-path__arrow" aria-hidden="true">→</span>
+            </a>
+          ))
+        }
       </nav>
 
       <footer class="home-wayfinder__footer">
@@ -197,84 +223,6 @@ const practices = [
       </div>
     </div>
   </section>
-
-  <section class="container home-section">
-    <p class="section-kicker">Practice</p>
-    <h2 class="section-title">我反复做的三件事</h2>
-    <p class="section-lead">这个网站大致由三种动作长出来：弄懂一件事，做出一个东西，再去别处看看。</p>
-
-    <div class="practice-grid">
-      {
-        practices.map((item) => (
-          <article class="practice-card" data-practice={item.tone} data-index={item.index}>
-            <div class="practice-card__topline">
-              <span class="practice-card__index">{item.index}</span>
-              <span class="practice-card__icon">
-              <ForestIcon name={item.icon} />
-              </span>
-            </div>
-            <p class="practice-card__eyebrow">{item.eyebrow}</p>
-            <h3>{item.title}</h3>
-            <p class="practice-card__description">{item.description}</p>
-
-            {
-              item.latest && (
-                <div class="practice-card__latest">
-                  <span>
-                    最近留下
-                    {item.latest.date && <time>{item.latest.date}</time>}
-                  </span>
-                  <a href={item.latest.href}>
-                    {item.latest.title}
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              )
-            }
-
-            <footer class="practice-card__footer">
-              <span>{item.count}</span>
-              <a href={item.href}>沿这条路继续 <span aria-hidden="true">→</span></a>
-            </footer>
-          </article>
-        ))
-      }
-    </div>
-  </section>
-
-  {
-    recent.length > 0 && (
-      <section class="container recent-section">
-        <header class="recent-section__header">
-          <div>
-            <p class="section-kicker">Recent traces</p>
-            <h2 class="section-title">最近留下的痕迹</h2>
-            <p class="section-lead">按时间拾起最近的八次更新，看这片林正在往哪里生长。</p>
-          </div>
-          <p class="recent-section__edition"><span>Latest 08</span> · chronological field notes</p>
-        </header>
-        <ul class="content-list recent-list">
-          {
-            recent.map((item, index) => (
-              <li>
-                <a class="content-row recent-row" href={item.href}>
-                  <span class="recent-row__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-                  <div class="content-row__body">
-                    <div class="recent-row__meta">
-                      <span class={`recent-row__type recent-row__type--${item.collection}`}>{item.collectionLabel}</span>
-                      {item.date && <time class="content-row__date">{item.date}</time>}
-                    </div>
-                    <h2 class="content-row__title">{item.title}</h2>
-                  </div>
-                  <span class="content-row__arrow" aria-hidden="true">→</span>
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </section>
-    )
-  }
 
   {
     forestStops.totalCount > 0 && <ForestMap stops={forestStops} />
