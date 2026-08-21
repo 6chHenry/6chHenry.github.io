@@ -60,6 +60,71 @@
   filter: brightness(0.7);
 }
 
+/* ── 时辰天色：黎明 / 黄昏 / 夜（白昼为默认） ── */
+
+[data-daypart='dawn'] .home-sky {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ch-bg-sky) 52%, #ecc9a2) 0%,
+    var(--ch-bg-void) 54%,
+    color-mix(in srgb, var(--ch-bg-hill) 45%, var(--ch-bg-void)) 100%
+  );
+}
+
+[data-daypart='dawn'] .home-light {
+  left: 68%;
+  background: radial-gradient(
+    ellipse 48% 42% at 50% 0%,
+    color-mix(in srgb, #e8a06b 24%, transparent),
+    transparent 70%
+  );
+  opacity: 0.85;
+}
+
+[data-daypart='dusk'] .home-sky {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ch-bg-sky) 42%, #d9a27a) 0%,
+    color-mix(in srgb, var(--ch-bg-void) 86%, #6b4a33) 50%,
+    color-mix(in srgb, var(--ch-bg-hill) 50%, var(--ch-bg-void)) 100%
+  );
+}
+
+[data-daypart='dusk'] .home-light {
+  left: 32%;
+  top: -6%;
+  background: radial-gradient(
+    ellipse 46% 40% at 50% 0%,
+    color-mix(in srgb, #d97b4f 30%, transparent),
+    transparent 70%
+  );
+  opacity: 0.9;
+}
+
+[data-daypart='night'] .home-sky {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ch-bg-void) 76%, #102433) 0%,
+    var(--ch-bg-void) 52%,
+    color-mix(in srgb, var(--ch-bg-hill) 55%, var(--ch-bg-void)) 100%
+  );
+}
+
+[data-daypart='night'] .home-light {
+  left: 64%;
+  background: radial-gradient(
+    ellipse 44% 38% at 50% 0%,
+    color-mix(in srgb, #cfe0ea 13%, transparent),
+    transparent 68%
+  );
+  opacity: 0.8;
+}
+
+[data-daypart='night'] .home-treeline {
+  opacity: 0.5;
+  filter: brightness(0.55);
+}
+
 .home-mist {
   bottom: 0;
   top: 48%;
