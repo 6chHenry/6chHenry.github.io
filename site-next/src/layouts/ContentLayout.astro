@@ -40,6 +40,8 @@ const showAside = !immersive && (headings.length > 0 || characterTreeSvg);
 <BaseLayout title={title} description={description}>
   <ArticleChrome />
 
+  {!immersive && <div class="reading-vine" aria-hidden="true"></div>}
+
   <article class:list={['container content-layout page-shell', { 'content-layout--immersive': immersive }]}>
     <div class="content-main card card--elevated content-article">
       {
@@ -133,6 +135,12 @@ const showAside = !immersive && (headings.length > 0 || characterTreeSvg);
     }
   </article>
 </BaseLayout>
+
+<script>
+  import { initReadingVine } from '../scripts/reading-vine';
+
+  initReadingVine();
+</script>
 
 <style>
   .content-article {

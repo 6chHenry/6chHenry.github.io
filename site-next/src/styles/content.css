@@ -910,3 +910,81 @@
     transition: none;
   }
 }
+
+/* ── Reading vine：随阅读进度生长的藤 ── */
+
+.reading-vine {
+  position: fixed;
+  top: 50%;
+  left: max(0.4rem, calc((100vw - 74rem) / 2 - 2.6rem));
+  z-index: 30;
+  width: 2rem;
+  height: min(66vh, 37rem);
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.reading-vine svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.reading-vine__stem {
+  fill: none;
+  stroke: var(--ch-accent-secondary);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.reading-vine__stem--ghost {
+  opacity: 0.16;
+}
+
+.reading-vine__leaf {
+  fill: color-mix(in srgb, var(--ch-accent-secondary) 78%, var(--ch-accent));
+  stroke: color-mix(in srgb, var(--ch-accent-secondary) 70%, var(--ch-fg));
+  stroke-width: 0.7;
+  transform: scale(0);
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.reading-vine__leaf--alt {
+  fill: color-mix(in srgb, var(--ch-accent-warm) 40%, var(--ch-accent-secondary));
+}
+
+.reading-vine__leaf.is-grown {
+  transform: scale(1);
+}
+
+.reading-vine__bud {
+  fill: var(--ch-accent-warm);
+  opacity: 0;
+  transform: scale(0);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 0.4s ease,
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.reading-vine__bud.is-grown {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (max-width: 1200px) {
+  .reading-vine {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-vine__leaf,
+  .reading-vine__bud {
+    transition: none;
+  }
+}
