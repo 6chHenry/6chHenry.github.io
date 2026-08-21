@@ -107,6 +107,7 @@ const paths: Array<{
     <div class="home-mist" aria-hidden="true"></div>
     <div class="home-light" aria-hidden="true"></div>
     <div class="home-grain" aria-hidden="true"></div>
+    <canvas class="home-fireflies" aria-hidden="true"></canvas>
     <div class="home-photo-collage" aria-hidden="true">
       {
         heroPhotos.map((photo, index) => (
@@ -231,5 +232,8 @@ const paths: Array<{
 
 <script>
   import { initHomeStats } from '../scripts/home';
+  import { initFireflies } from '../scripts/fireflies';
+
   initHomeStats();
+  initFireflies();
 </script>
