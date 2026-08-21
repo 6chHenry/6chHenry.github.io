@@ -1,0 +1,309 @@
+---
+/**
+ * 林间小精灵「苔苔」：全站漂浮的苔藓光茧精。
+ * 交互逻辑见 ../scripts/forest-sprite.ts。
+ */
+---
+
+<div class="forest-sprite">
+  <div class="forest-sprite__shadow" aria-hidden="true"></div>
+  <button type="button" class="forest-sprite__body" aria-label="苔苔 · 林间小精灵（点击聊天，拖拽移动，双击送回角落）">
+    <span class="forest-sprite__tilt" aria-hidden="true">
+      <span class="forest-sprite__float">
+        <svg viewBox="0 0 96 108" width="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="fs-moss" x1="0" y1="0" x2="0.35" y2="1">
+              <stop offset="0%" stop-color="#4c8a63" />
+              <stop offset="100%" stop-color="#2c523c" />
+            </linearGradient>
+          </defs>
+
+          <!-- 光茧 -->
+          <circle class="fs-glow-halo" cx="40" cy="11" r="8.5" fill="var(--ch-accent-warm)" opacity="0.26" />
+          <circle class="fs-glow-core" cx="40" cy="11" r="3.6" fill="var(--ch-accent-warm)" />
+
+          <!-- 头顶新芽 -->
+          <path d="M48 31 C47 25 46 22 42 18" fill="none" stroke="#1b3a2b" stroke-width="2" stroke-linecap="round" />
+          <path d="M42 18 C37 13 30 13 26 18 C31 22 38 22 42 18 Z" fill="#4c8a63" stroke="#1b3a2b" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M43 19 C46 15 51 14 54 17 C50 21 45 21 43 19 Z" fill="#5d9770" stroke="#1b3a2b" stroke-width="1.5" stroke-linejoin="round" />
+
+          <!-- 小脚 -->
+          <ellipse cx="39" cy="99" rx="5.5" ry="3.4" fill="#2c523c" stroke="#1b3a2b" stroke-width="2" />
+          <ellipse cx="57" cy="99" rx="5.5" ry="3.4" fill="#2c523c" stroke="#1b3a2b" stroke-width="2" />
+
+          <!-- 苔藓身子 -->
+          <path
+            d="M48 30 C66 30 79 45 79 64 C79 83 65 97 48 97 C31 97 17 83 17 64 C17 45 30 30 48 30 Z"
+            fill="url(#fs-moss)"
+            stroke="#1b3a2b"
+            stroke-width="2.5"
+            stroke-linejoin="round"
+          />
+
+          <!-- 苔斑与肚皮 -->
+          <circle cx="30" cy="50" r="2.8" fill="#7db891" opacity="0.55" />
+          <circle cx="58" cy="42" r="2.2" fill="#7db891" opacity="0.55" />
+          <circle cx="67" cy="68" r="3" fill="#7db891" opacity="0.5" />
+          <circle cx="36" cy="78" r="2.4" fill="#7db891" opacity="0.5" />
+          <ellipse cx="48" cy="74" rx="15" ry="11" fill="#5d9770" opacity="0.45" />
+
+          <!-- 脸 -->
+          <g class="fs-eyes">
+            <circle cx="39" cy="57" r="4.4" fill="#14281d" />
+            <circle cx="59" cy="57" r="4.4" fill="#14281d" />
+            <circle cx="37.6" cy="55.4" r="1.4" fill="#f4fbf4" opacity="0.92" />
+            <circle cx="57.6" cy="55.4" r="1.4" fill="#f4fbf4" opacity="0.92" />
+          </g>
+          <circle cx="31" cy="64" r="2.8" fill="#d99a6c" opacity="0.4" />
+          <circle cx="67" cy="64" r="2.8" fill="#d99a6c" opacity="0.4" />
+          <path d="M43.5 67 Q48 71 52.5 67" fill="none" stroke="#14281d" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </span>
+    </span>
+  </button>
+  <div class="forest-sprite__bubble" role="status"></div>
+</div>
+
+<style>
+  .forest-sprite {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    width: 4.5rem;
+    height: 5.1rem;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .forest-sprite__shadow {
+    position: absolute;
+    bottom: -0.35rem;
+    left: 22%;
+    width: 56%;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(0 0 0 / 26%), transparent);
+    animation: fs-shadow 3.6s ease-in-out infinite alternate;
+  }
+
+  .forest-sprite__body {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: grab;
+    pointer-events: auto;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .forest-sprite.is-dragging .forest-sprite__body {
+    cursor: grabbing;
+  }
+
+  .forest-sprite__body:focus-visible {
+    outline: 2px dashed var(--ch-accent-warm);
+    outline-offset: 6px;
+    border-radius: 42%;
+  }
+
+  .forest-sprite__tilt,
+  .forest-sprite__float {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .forest-sprite__float {
+    animation: fs-bob 3.6s ease-in-out infinite alternate;
+    transform-origin: 50% 100%;
+  }
+
+  .forest-sprite.is-dragging .forest-sprite__float {
+    animation-play-state: paused;
+  }
+
+  .forest-sprite.is-dragging svg {
+    transform: scale(1.07);
+  }
+
+  svg {
+    display: block;
+    overflow: visible;
+    transition: transform 180ms ease;
+  }
+
+  .fs-glow-halo {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: fs-pulse 2.8s ease-in-out infinite;
+  }
+
+  .fs-glow-core {
+    animation: fs-glow 2.8s ease-in-out infinite;
+  }
+
+  .fs-eyes {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: fs-blink 5.4s infinite;
+    transition: transform 150ms ease;
+  }
+
+  .forest-sprite.is-happy .fs-eyes {
+    animation: none;
+    transform: scaleY(0.15);
+  }
+
+  /* ── 对话气泡 ── */
+
+  .forest-sprite__bubble {
+    position: absolute;
+    bottom: calc(100% + 0.95rem);
+    right: 0;
+    max-width: min(16rem, 72vw);
+    padding: 0.62rem 0.8rem;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 32%, var(--ch-border));
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--ch-surface-solid) 94%, transparent);
+    box-shadow: 0 14px 34px rgb(0 0 0 / 16%);
+    color: var(--ch-fg);
+    font-family: var(--ch-text-font);
+    font-size: 0.84rem;
+    line-height: 1.65;
+    letter-spacing: 0.01em;
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.96);
+    transform-origin: bottom right;
+    pointer-events: none;
+    transition:
+      opacity 200ms ease,
+      transform 240ms cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+
+  .forest-sprite__bubble::after {
+    position: absolute;
+    bottom: -5px;
+    right: 1.4rem;
+    width: 9px;
+    height: 9px;
+    border-right: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 32%, var(--ch-border));
+    border-bottom: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 32%, var(--ch-border));
+    background: color-mix(in srgb, var(--ch-surface-solid) 96%, transparent);
+    content: '';
+    transform: rotate(45deg);
+  }
+
+  .forest-sprite.is-edge-left .forest-sprite__bubble {
+    right: auto;
+    left: 0;
+    transform-origin: bottom left;
+  }
+
+  .forest-sprite.is-edge-left .forest-sprite__bubble::after {
+    right: auto;
+    left: 1.4rem;
+  }
+
+  .forest-sprite__bubble.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  @keyframes fs-bob {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(-5px);
+    }
+  }
+
+  @keyframes fs-shadow {
+    from {
+      opacity: 0.9;
+      transform: scaleX(1);
+    }
+
+    to {
+      opacity: 0.5;
+      transform: scaleX(0.78);
+    }
+  }
+
+  @keyframes fs-pulse {
+    0%,
+    100% {
+      opacity: 0.26;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.1;
+      transform: scale(1.4);
+    }
+  }
+
+  @keyframes fs-glow {
+    0%,
+    100% {
+      opacity: 0.82;
+    }
+
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fs-blink {
+    0%,
+    91%,
+    97%,
+    100% {
+      transform: scaleY(1);
+    }
+
+    94% {
+      transform: scaleY(0.08);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .forest-sprite {
+      width: 3.75rem;
+      height: 4.3rem;
+    }
+
+    .forest-sprite__bubble {
+      max-width: 13rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .forest-sprite__shadow,
+    .forest-sprite__float,
+    .fs-glow-halo,
+    .fs-glow-core,
+    .fs-eyes {
+      animation: none;
+    }
+
+    .forest-sprite__bubble {
+      transition-duration: 1ms;
+    }
+  }
+</style>
+
+<script>
+  import { initForestSprite } from '../scripts/forest-sprite';
+
+  initForestSprite();
+</script>
