@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import TagForestProfile from '../../components/TagForestProfile.astro';
 
 const [notes, essays, projects] = await Promise.all([
   getCollection('notes', ({ data }) => !data.draft),
@@ -72,6 +73,8 @@ function leafSize(total: number, floor: number, ceil: number): string {
         苔藓是一次相遇留下的痕迹。每片叶子上的小点，标着它长在哪片林子里。
       </p>
     </header>
+
+    <TagForestProfile tiers={tiers} />
 
     {
       tiers.map(

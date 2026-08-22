@@ -1,0 +1,517 @@
+---
+/**
+ * 标签林相图：把三个林层的标签画进一张植被剖面示意图。
+ * 纯构建期 SVG —— 布局在 frontmatter 里用估宽算法排布，无客户端 JS。
+ */
+interface Grove {
+  key: string;
+  label: string;
+  n: number;
+}
+
+export interface ProfileTag {
+  tag: string;
+  total: number;
+  groves: Grove[];
+}
+
+export interface ProfileTier {
+  key: string;
+  en: string;
+  label: string;
+  desc: string;
+  items: ProfileTag[];
+}
+
+interface Props {
+  tiers: ProfileTier[];
+}
+
+const { tiers } = Astro.props;
+
+/* ── 估宽：CJK 记 1em，拉丁记 0.56em ── */
+function nameWidth(tag: string, fontSize: number): number {
+  let w = 0;
+  for (const ch of tag) w += ch.charCodeAt(0) > 0x2e7f ? fontSize : fontSize * 0.56;
+  return Math.ceil(w);
+}
+
+interface ChipPlacement {
+  record: ProfileTag | null; // null = 溢出提示牌
+  overflow?: number;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  font: number;
+  tilt: number;
+}
+
+interface TierGeometry {
+  x0: number;
+  x1: number;
+  y: number;
+  rowH: number;
+  maxRows: number;
+  h: number;
+  font: number;
+}
+
+const CANOPY_GEO: TierGeometry = { x0: 152, x1: 938, y: 92, rowH: 44, maxRows: 3, h: 32, font: 15 };
+const SHRUB_GEO: TierGeometry = { x0: 152, x1: 938, y: 258, rowH: 42, maxRows: 3, h: 30, font: 14 };
+const MOSS_GEO: TierGeometry = { x0: 152, x1: 938, y: 404, rowH: 34, maxRows: 5, h: 28, font: 12.5 };
+
+function chipWidth(record: ProfileTag, font: number): number {
+  const dots = record.groves.length;
+  return (
+    14 +
+    nameWidth(record.tag, font) +
+    8 +
+    (dots ? dots * 11 : 0) +
+    6 +
+    String(record.total).length * 8 +
+    18 +
+    /* 露珠角 */ 4
+  );
+}
+
+/** 贪心换行后整行居中；行数超限时收进一块「+N」提示牌 */
+function layout(tier: ProfileTag[], geo: TierGeometry, tiltAmp: number): ChipPlacement[] {
+  const widths = tier.map((r) => chipWidth(r, geo.font));
+  const rows: number[][] = [];
+  let current: number[] = [];
+  let currentW = 0;
+
+  widths.forEach((w, i) => {
+    const nextW = current.length ? currentW + 12 + w : w;
+    if (current.length && nextW > geo.x1 - geo.x0) {
+      rows.push(current);
+      current = [];
+      currentW = 0;
+    }
+    current.push(i);
+    currentW = current.length ? (current.length - 1) * 12 : 0;
+    for (const j of current) currentW += widths[j];
+  });
+  if (current.length) rows.push(current);
+
+  const visibleRows = rows.slice(0, geo.maxRows);
+  const hiddenCount = rows.slice(geo.maxRows).reduce((sum, r) => sum + r.length, 0);
+
+  const out: ChipPlacement[] = [];
+  visibleRows.forEach((row, rowIndex) => {
+    const rowW = row.reduce((sum, j) => sum + widths[j], 0) + (row.length - 1) * 12;
+    let x = geo.x0 + Math.max(0, (geo.x1 - geo.x0 - rowW) / 2);
+    const y = geo.y + rowIndex * geo.rowH;
+    row.forEach((j, i) => {
+      out.push({
+        record: tier[j],
+        x,
+        y,
+        w: widths[j],
+        h: geo.h,
+        font: geo.font,
+        tilt: ((i + rowIndex) % 2 === 0 ? 1 : -1) * tiltAmp,
+      });
+      x += widths[j] + 12;
+    });
+  });
+
+  if (hiddenCount > 0 && out.length) {
+    const last = out[out.length - 1];
+    out.push({
+      record: null,
+      overflow: hiddenCount,
+      x: Math.min(last.x + last.w + 12, geo.x1),
+      y: last.y,
+      w: 96,
+      h: last.h,
+      font: 12,
+      tilt: 0,
+    });
+  }
+  return out;
+}
+
+const base = import.meta.env.BASE_URL;
+const byKey = new Map(tiers.map((t) => [t.key, t]));
+const canopyPlaced = layout(byKey.get('canopy')?.items ?? [], CANOPY_GEO, 0.8);
+const shrubPlaced = layout(byKey.get('shrub')?.items ?? [], SHRUB_GEO, 0.7);
+const mossPlaced = layout(byKey.get('moss')?.items ?? [], MOSS_GEO, 0.5);
+
+const groveColor: Record<string, string> = {
+  notes: 'var(--fp-dot-notes)',
+  essay: 'var(--fp-dot-essay)',
+  projects: 'var(--fp-dot-projects)',
+};
+
+const tierHref: Record<string, string> = {
+  canopy: '#tag-tier-canopy',
+  shrub: '#tag-tier-shrub',
+  moss: '#tag-tier-moss',
+};
+---
+
+<div class="profile-wrap">
+  <p class="profile-caption">
+    <span class="profile-caption__no">图一</span>
+    标签林相图 · Forest Profile —— 悬停任意叶片可直接跳到对应标签；分层标注可点，跳到下方清单。
+  </p>
+
+  <div class="profile-scroll">
+    <svg
+      class="forest-profile"
+      viewBox="0 0 960 712"
+      role="group"
+      aria-label="标签林相图：乔木层、灌木层、苔藓层的标签分布剖面图"
+    >
+      {/* ── 天空 ── */}
+      <circle cx="846" cy="56" r="26" fill="var(--fp-sun)" />
+      <g stroke="var(--fp-ray)" stroke-width="10" opacity="0.55">
+        <path d="M812 78 L688 176" />
+        <path d="M800 108 L700 236" />
+        <path d="M872 92 L836 232" />
+      </g>
+      <g class="fp-birds" stroke="var(--fp-bird)" stroke-width="1.8" fill="none">
+        <path d="M212 66 q7 -7 14 0 M226 66 q7 -7 14 0" />
+        <path d="M262 84 q6 -6 12 0 M274 84 q6 -6 12 0" />
+      </g>
+
+      {/* 图例 */}
+      <g class="fp-legend">
+        <circle cx="652" cy="40" r="3.2" fill="var(--fp-dot-notes)" />
+        <text x="660" y="43">笔记</text>
+        <circle cx="712" cy="40" r="3.2" fill="var(--fp-dot-essay)" />
+        <text x="720" y="43">杂谈</text>
+        <circle cx="772" cy="40" r="3.2" fill="var(--fp-dot-projects)" />
+        <text x="780" y="43">作品</text>
+      </g>
+
+      {/* ── 分层虚线 ── */}
+      <g stroke="var(--fp-line)" stroke-dasharray="3 7" stroke-width="1">
+        <path d="M20 246 H940" />
+        <path d="M20 392 H940" />
+        <path d="M20 588 H940" />
+      </g>
+
+      {/* ── 高大乔木（树冠入云，根扎土里）── */}
+      <g class="fp-tree">
+        <path d="M318 592 C317 500 320 420 316 330" stroke="var(--fp-trunk)" stroke-width="6" fill="none" stroke-linecap="round" />
+        <path d="M317 470 C296 458 282 444 276 424" stroke="var(--fp-trunk)" stroke-width="4.5" fill="none" stroke-linecap="round" />
+        <path d="M317 430 C338 420 350 406 354 388" stroke="var(--fp-trunk)" stroke-width="4.5" fill="none" stroke-linecap="round" />
+        <g fill="var(--fp-crown)" opacity="0.92">
+          <circle cx="310" cy="196" r="74" />
+          <circle cx="228" cy="242" r="44" />
+          <circle cx="392" cy="236" r="47" />
+          <circle cx="266" cy="158" r="40" fill="var(--fp-crown-soft)" />
+          <circle cx="360" cy="164" r="34" fill="var(--fp-crown-soft)" />
+        </g>
+      </g>
+      <g class="fp-tree">
+        <path d="M648 592 C650 512 645 452 649 372" stroke="var(--fp-trunk)" stroke-width="5" fill="none" stroke-linecap="round" />
+        <g fill="var(--fp-crown)" opacity="0.88">
+          <circle cx="646" cy="304" r="56" />
+          <circle cx="586" cy="338" r="33" fill="var(--fp-crown-soft)" />
+          <circle cx="700" cy="330" r="31" fill="var(--fp-crown-soft)" />
+        </g>
+      </g>
+
+      {/* ── 灌木丛 ── */}
+      <g fill="var(--fp-shrub)" opacity="0.9">
+        <ellipse cx="188" cy="560" rx="46" ry="30" />
+        <ellipse cx="222" cy="572" rx="30" ry="20" fill="var(--fp-shrub-soft)" />
+        <ellipse cx="470" cy="568" rx="40" ry="26" />
+        <ellipse cx="500" cy="576" rx="26" ry="17" fill="var(--fp-shrub-soft)" />
+        <ellipse cx="806" cy="562" rx="44" ry="29" />
+        <ellipse cx="840" cy="574" rx="28" ry="19" fill="var(--fp-shrub-soft)" />
+      </g>
+
+      {/* ── 地面与苔藓细节 ── */}
+      <rect x="20" y="584" width="920" height="10" rx="5" fill="var(--fp-ground)" />
+      <g fill="var(--fp-ground)">
+        <ellipse cx="120" cy="584" rx="34" ry="7" />
+        <ellipse cx="560" cy="584" rx="40" ry="8" />
+        <ellipse cx="880" cy="584" rx="30" ry="6" />
+      </g>
+      <g class="fp-flora">
+        <path d="M148 584 v-14" stroke="var(--fp-trunk)" stroke-width="3.4" stroke-linecap="round" />
+        <path d="M138 570 a11 8 0 0 1 21 0 Z" fill="var(--fp-mushroom)" />
+        <path d="M905 584 v-10" stroke="var(--fp-trunk)" stroke-width="3" stroke-linecap="round" />
+        <path d="M897 574 a9 6.4 0 0 1 17 0 Z" fill="var(--fp-mushroom)" />
+        <g stroke="var(--fp-fern)" stroke-width="1.8" fill="none" stroke-linecap="round">
+          <path d="M536 584 q-2 -18 8 -26" />
+          <path d="M541 584 q6 -14 16 -18" />
+          <path d="M531 584 q-8 -12 -16 -14" />
+        </g>
+      </g>
+
+      {/* ── 土壤与根须 ── */}
+      <rect x="0" y="598" width="960" height="114" fill="var(--fp-soil)" />
+      <g stroke="var(--fp-root)" stroke-width="1.6" fill="none" stroke-linecap="round">
+        <path d="M318 606 q-10 26 -26 38 M318 606 q12 22 8 44 M318 606 q-24 14 -40 12" />
+        <path d="M648 606 q8 20 22 30 M648 606 q-6 26 -18 36" />
+      </g>
+      <circle cx="356" cy="666" r="4" fill="var(--fp-seed)" />
+      <text class="fp-soil-note" x="480" y="671">根须在土里把这一切悄悄连在一起</text>
+
+      {/* ── 左侧分层标尺 ── */}
+      {
+        [
+          { tier: byKey.get('canopy'), y: 104, note: '离地最高处' },
+          { tier: byKey.get('shrub'), y: 270, note: '齐腰的高度' },
+          { tier: byKey.get('moss'), y: 416, note: '贴地的湿度' },
+        ].map(
+          ({ tier, y, note }) =>
+            tier && (
+              <a class="fp-layer-label" href={tierHref[tier.key]}>
+                <text class="fp-layer-en" x="26" y={y}>
+                  {tier.en.toUpperCase()}
+                </text>
+                <text class="fp-layer-name" x="24" y={y + 26}>
+                  {tier.label}
+                </text>
+                <text class="fp-layer-note" x="24" y={y + 46}>
+                  {note}
+                </text>
+                <text class="fp-layer-count" x="24" y={y + 66}>
+                  {tier.items.length} 枚 ↓
+                </text>
+              </a>
+            ),
+        )
+      }
+
+      {/* ── 叶片标签 ── */}
+      {
+        [...canopyPlaced, ...shrubPlaced, ...mossPlaced].map((chip) => {
+          if (!chip.record) {
+            return (
+              <a class="fp-chip fp-chip--more" href="#tag-tier-moss">
+                <g transform={`rotate(${chip.tilt}, ${chip.x + chip.w / 2}, ${chip.y + chip.h / 2})`}>
+                  <rect x={chip.x} y={chip.y} width={chip.w} height={chip.h} rx={(chip.h / 2) - 2} />
+                  <text class="fp-chip-name" x={chip.x + 14} y={chip.y + chip.h / 2 + 1}>
+                    +{chip.overflow} 枚 ↓
+                  </text>
+                </g>
+              </a>
+            );
+          }
+          const { record } = chip;
+          const nameX = chip.x + 14;
+          const dotsX = nameX + nameWidth(record.tag, chip.font) + 9;
+          const countX = dotsX + record.groves.length * 11 + 4;
+          const cy = chip.y + chip.h / 2;
+          return (
+            <a class="fp-chip" href={`${base}tags/${encodeURIComponent(record.tag)}/`}>
+              <g transform={`rotate(${chip.tilt}, ${chip.x + chip.w / 2}, ${cy})`}>
+                <rect
+                  x={chip.x}
+                  y={chip.y}
+                  width={chip.w}
+                  height={chip.h}
+                  rx={(chip.h / 2) - 2}
+                  aria-hidden="true"
+                />
+                <circle class="fp-chip-dew" cx={chip.x + chip.w - 9} cy={chip.y + chip.h - 6} r="2.6" aria-hidden="true" />
+                <text class="fp-chip-name" x={nameX} y={cy + 1} style={`font-size:${chip.font}px`}>
+                  #{record.tag}
+                </text>
+                {record.groves.map((grove, gi) => (
+                  <circle
+                    class="fp-chip-grove"
+                    cx={dotsX + gi * 11}
+                    cy={cy - 1}
+                    r="2.7"
+                    fill={groveColor[grove.key]}
+                    aria-hidden="true"
+                  >
+                    <title>{grove.label}</title>
+                  </circle>
+                ))}
+                <text class="fp-chip-count" x={countX} y={cy + 1}>
+                  {record.total}
+                </text>
+                <title>{`${record.tag} · ${record.total} 篇`}</title>
+              </g>
+            </a>
+          );
+        })
+      }
+    </svg>
+  </div>
+</div>
+
+<style>
+  .profile-wrap {
+    margin: 0.4rem 0 1rem;
+  }
+
+  .profile-caption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.55rem;
+    align-items: baseline;
+    margin: 0 0 0.7rem;
+    color: var(--ch-fg-muted);
+    font-size: 0.82rem;
+  }
+
+  .profile-caption__no {
+    padding: 0.1rem 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-warm) 40%, transparent);
+    border-radius: 999px;
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-mono-font);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+  }
+
+  /* 窄屏横向滚动，图保持完整 */
+  .profile-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--ch-glass-border);
+    border-radius: var(--ch-radius-sm);
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--ch-bg-sky) 30%, transparent), transparent 30%),
+      var(--ch-glass-bg);
+    scrollbar-width: thin;
+  }
+
+  .forest-profile {
+    display: block;
+    width: 100%;
+    min-width: 780px;
+    height: auto;
+
+    /* 林相图调色板：全部由站点 token 派生，两种主题自动成立 */
+    --fp-sun: var(--ch-accent-warm);
+    --fp-ray: color-mix(in srgb, var(--ch-accent-warm) 22%, transparent);
+    --fp-bird: color-mix(in srgb, var(--ch-fg-muted) 80%, transparent);
+    --fp-line: color-mix(in srgb, var(--ch-border) 90%, transparent);
+    --fp-trunk: color-mix(in srgb, var(--ch-accent-secondary) 55%, var(--ch-fg));
+    --fp-crown: color-mix(in srgb, var(--ch-accent-tertiary) 34%, transparent);
+    --fp-crown-soft: color-mix(in srgb, var(--ch-accent-light) 40%, transparent);
+    --fp-shrub: color-mix(in srgb, var(--ch-accent-secondary) 26%, transparent);
+    --fp-shrub-soft: color-mix(in srgb, var(--ch-accent-light) 32%, transparent);
+    --fp-ground: color-mix(in srgb, var(--ch-accent-secondary) 42%, var(--ch-surface-solid));
+    --fp-mushroom: color-mix(in srgb, var(--ch-accent-warm) 78%, transparent);
+    --fp-fern: color-mix(in srgb, var(--ch-accent-secondary) 70%, transparent);
+    --fp-soil: color-mix(in srgb, var(--ch-fg) 8%, transparent);
+    --fp-root: color-mix(in srgb, var(--ch-fg) 28%, transparent);
+    --fp-seed: color-mix(in srgb, var(--ch-accent-warm) 85%, transparent);
+    --fp-dot-notes: var(--ch-accent-tertiary);
+    --fp-dot-essay: var(--ch-accent-warm);
+    --fp-dot-projects: color-mix(in srgb, var(--ch-fg) 62%, transparent);
+  }
+
+  .forest-profile text {
+    font-family: var(--ch-text-font);
+    fill: var(--ch-fg);
+  }
+
+  .forest-profile .fp-legend text {
+    font-family: var(--ch-mono-font);
+    font-size: 11px;
+    fill: var(--ch-fg-muted);
+  }
+
+  .forest-profile .fp-soil-note {
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    fill: var(--ch-fg-muted);
+    opacity: 0.85;
+    text-anchor: middle;
+  }
+
+  /* 分层标尺 */
+  .fp-layer-label {
+    cursor: pointer;
+  }
+
+  .forest-profile .fp-layer-en {
+    font-family: var(--ch-mono-font);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    fill: var(--ch-accent-tertiary);
+  }
+
+  .forest-profile .fp-layer-name {
+    font-size: 17px;
+    fill: var(--ch-accent);
+    font-weight: 600;
+  }
+
+  .forest-profile .fp-layer-note,
+  .forest-profile .fp-layer-count {
+    font-size: 11px;
+    fill: var(--ch-fg-muted);
+  }
+
+  .forest-profile .fp-layer-count {
+    font-family: var(--ch-mono-font);
+    fill: var(--ch-accent-warm);
+  }
+
+  .fp-layer-label:hover .fp-layer-name {
+    fill: var(--ch-accent-secondary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* 叶片标签 */
+  .fp-chip {
+    cursor: pointer;
+  }
+
+  .forest-profile .fp-chip rect {
+    fill: color-mix(in srgb, var(--ch-surface-solid) 82%, transparent);
+    stroke: color-mix(in srgb, var(--ch-accent-secondary) 30%, var(--ch-glass-border));
+    transition:
+      fill var(--ch-transition-fast),
+      stroke var(--ch-transition-fast);
+  }
+
+  .forest-profile .fp-chip .fp-chip-dew {
+    fill: color-mix(in srgb, var(--ch-accent-tertiary) 55%, transparent);
+    transition: fill var(--ch-transition-fast);
+  }
+
+  .forest-profile .fp-chip .fp-chip-name {
+    transition: fill var(--ch-transition-fast);
+  }
+
+  .forest-profile .fp-chip .fp-chip-count {
+    font-family: var(--ch-mono-font);
+    font-size: 10px;
+    fill: var(--ch-accent-warm);
+  }
+
+  .forest-profile .fp-chip--more rect {
+    fill: color-mix(in srgb, var(--ch-accent-dim) 70%, transparent);
+    stroke-dasharray: 3 4;
+  }
+
+  .forest-profile .fp-chip--more .fp-chip-name {
+    font-size: 12px;
+    fill: var(--ch-accent-warm);
+  }
+
+  .fp-chip:hover rect,
+  .fp-chip:focus-visible rect {
+    fill: var(--ch-glass-bg-hover);
+    stroke: color-mix(in srgb, var(--ch-accent-secondary) 55%, var(--ch-glass-border));
+  }
+
+  .fp-chip:hover .fp-chip-name,
+  .fp-chip:focus-visible .fp-chip-name {
+    fill: var(--ch-accent);
+  }
+
+  .fp-chip:hover .fp-chip-dew {
+    fill: var(--ch-accent-warm);
+  }
+
+  .fp-chip:focus-visible {
+    outline: none;
+  }
+</style>
