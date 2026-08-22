@@ -64,6 +64,31 @@
   <div class="forest-sprite__bubble" role="status"></div>
 </div>
 
+<!-- 首帧前就位：解析到此处立即恢复上次被拖拽的位置，避免先出现在左上角再跳走 -->
+<script is:inline>
+  (() => {
+    const el = document.querySelector('.forest-sprite');
+    if (!el) return;
+    let saved = null;
+    try {
+      const raw = localStorage.getItem('forest-sprite:v1');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (typeof parsed.xPct === 'number' && typeof parsed.yPct === 'number') saved = parsed;
+      }
+    } catch {}
+    const w = el.offsetWidth || 72;
+    const h = el.offsetHeight || 82;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    /* 边界规则与 forest-sprite.ts 的 clamp 保持一致 */
+    const x = saved ? Math.min(Math.max(saved.xPct * vw, 10), Math.max(10, vw - w - 10)) : vw - w - 26;
+    const y = saved ? Math.min(Math.max(saved.yPct * vh, 74), Math.max(74, vh - h - 10)) : vh - h - 26;
+    el.style.transform = `translate(${x}px, ${y}px)`;
+    el.setAttribute('data-placed', '');
+  })();
+</script>
+
 <style>
   .forest-sprite {
     position: fixed;
@@ -121,6 +146,25 @@
   .forest-sprite__float {
     animation: fs-bob 3.6s ease-in-out infinite alternate;
     transform-origin: 50% 100%;
+  }
+
+  /* 就位后的轻柔落定：每次翻页都稳稳出现在原地 */
+  .forest-sprite[data-placed] .forest-sprite__float {
+    animation:
+      fs-arrive 0.7s cubic-bezier(0.34, 1.4, 0.64, 1) both,
+      fs-bob 3.6s ease-in-out 0.7s infinite alternate;
+  }
+
+  @keyframes fs-arrive {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.86);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   .forest-sprite.is-dragging .forest-sprite__float {
@@ -446,6 +490,7 @@
   @media (prefers-reduced-motion: reduce) {
     .forest-sprite__shadow,
     .forest-sprite__float,
+    .forest-sprite[data-placed] .forest-sprite__float,
     .fs-glow-halo,
     .fs-glow-core,
     .fs-eyes,

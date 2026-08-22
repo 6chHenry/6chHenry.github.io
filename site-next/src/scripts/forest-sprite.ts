@@ -262,12 +262,13 @@ export function initForestSprite(): void {
     root.classList.remove('is-dragging');
 
     if (moved) {
+      /* 存 target（松手后的静止点）而非还在插值途中的 pos，避免存下半途坐标 */
       try {
         localStorage.setItem(
           POS_KEY,
           JSON.stringify({
-            xPct: pos.x / Math.max(1, window.innerWidth),
-            yPct: pos.y / Math.max(1, window.innerHeight),
+            xPct: target.x / Math.max(1, window.innerWidth),
+            yPct: target.y / Math.max(1, window.innerHeight),
           }),
         );
       } catch {
