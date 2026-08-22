@@ -65,10 +65,29 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
       <p class="section-lead">不完全是目录，更像几只抽屉：电影票根、旅行照片、读书回声和某些突然亮起的念头。</p>
     </header>
 
+    <div class="essay-drawers-sentinel" aria-hidden="true"></div>
+    <nav class="essay-drawers" data-drawer-nav aria-label="杂谈分类快速跳转">
+      <div class="essay-drawers__rail">
+        <span class="essay-drawers__bead" aria-hidden="true"></span>
+        {
+          groupedEntries.map((group) => (
+            <a class="essay-drawers__tab" href={`#essay-section-${group.key}`} data-drawer-tab={group.key}>
+              <span class="essay-drawers__tab-title">{group.title}</span>
+              <span class="essay-drawers__tab-count">{group.entries.length}</span>
+            </a>
+          ))
+        }
+      </div>
+    </nav>
+
     <div class="essay-groups">
       {
         groupedEntries.map((group) => (
-          <section class:list={['essay-group', `essay-group--${group.key.toLowerCase()}`]} aria-labelledby={`essay-group-${group.key}`}>
+          <section
+            id={`essay-section-${group.key}`}
+            class:list={['essay-group', `essay-group--${group.key.toLowerCase()}`]}
+            aria-labelledby={`essay-group-${group.key}`}
+          >
             <header class="essay-group__header">
               <div>
                 <p class="section-kicker">{group.key}</p>
@@ -216,6 +235,133 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
     padding-bottom: 4rem;
   }
 
+  /* ── 抽屉索引牌：页首的快速跳转，吸顶成毛玻璃标签条 ── */
+
+  .essay-drawers-sentinel {
+    height: 1px;
+  }
+
+  .essay-drawers {
+    position: sticky;
+    top: var(--ch-header-height);
+    z-index: 20;
+    margin: 1.7rem 0 2.8rem;
+    padding: 0.6rem 0;
+    transition:
+      background var(--ch-transition),
+      box-shadow var(--ch-transition),
+      border-color var(--ch-transition);
+    border-bottom: 1px solid transparent;
+  }
+
+  .essay-drawers.is-stuck {
+    border-bottom-color: var(--ch-border-soft);
+    background: color-mix(in srgb, var(--ch-surface-solid) 80%, transparent);
+    backdrop-filter: blur(14px) saturate(1.12);
+    -webkit-backdrop-filter: blur(14px) saturate(1.12);
+    box-shadow: 0 12px 30px color-mix(in srgb, var(--ch-fg) 8%, transparent);
+  }
+
+  .essay-drawers__rail {
+    position: relative;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.15rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .essay-drawers__rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 金色指示珠：滑到当前所在的抽屉标签后面 */
+  .essay-drawers__bead {
+    position: absolute;
+    top: 0.15rem;
+    bottom: 0.15rem;
+    left: 0;
+    z-index: 0;
+    width: 0;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-warm) 42%, var(--ch-border));
+    border-radius: 4px;
+    background:
+      linear-gradient(160deg, color-mix(in srgb, var(--ch-accent-warm) 16%, transparent), transparent 60%),
+      color-mix(in srgb, var(--ch-surface-solid) 82%, transparent);
+    box-shadow: 0 5px 14px color-mix(in srgb, var(--ch-accent-warm) 16%, transparent);
+    transition:
+      transform 380ms cubic-bezier(0.3, 1.1, 0.3, 1),
+      width 380ms cubic-bezier(0.3, 1.1, 0.3, 1);
+    will-change: transform, width;
+    pointer-events: none;
+  }
+
+  .essay-drawers__tab {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0.5rem 0.78rem;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 20%, var(--ch-border-soft));
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--ch-surface-solid) 55%, transparent);
+    color: var(--ch-fg-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      color var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      transform var(--ch-transition-fast);
+  }
+
+  /* 索引牌顶部的一道黄铜压条 */
+  .essay-drawers__tab::before {
+    position: absolute;
+    top: -1px;
+    right: 14%;
+    left: 14%;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ch-accent-warm) 50%, transparent), transparent);
+    content: '';
+    opacity: 0.55;
+  }
+
+  .essay-drawers__tab:hover,
+  .essay-drawers__tab:focus-visible {
+    border-color: color-mix(in srgb, var(--ch-accent-warm) 42%, var(--ch-border));
+    color: var(--ch-fg);
+    transform: translateY(-2px);
+  }
+
+  .essay-drawers__tab:focus-visible {
+    outline: 2px dashed color-mix(in srgb, var(--ch-accent-warm) 70%, transparent);
+    outline-offset: 3px;
+  }
+
+  .essay-drawers__tab[aria-current='true'] {
+    color: var(--ch-fg);
+  }
+
+  .essay-drawers__tab[aria-current='true']:hover {
+    transform: translateY(-2px);
+  }
+
+  .essay-drawers__tab-title {
+    font-family: var(--ch-text-font);
+    font-size: 0.86rem;
+    letter-spacing: 0.06em;
+  }
+
+  .essay-drawers__tab-count {
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-mono-font);
+    font-size: 0.62rem;
+    opacity: 0.85;
+  }
+
   .essay-page__header {
     max-width: 46rem;
   }
@@ -231,6 +377,7 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
     grid-template-columns: minmax(11rem, 0.28fr) minmax(0, 1fr);
     gap: 1.35rem;
     align-items: start;
+    scroll-margin-top: calc(var(--ch-header-height) + 4.8rem);
   }
 
   .essay-group__header {
@@ -1044,8 +1191,17 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
     .essay-card,
     .essay-card__poster img,
     .essay-card__photo img,
-    .travel-eye__photo {
+    .travel-eye__photo,
+    .essay-drawers,
+    .essay-drawers__tab,
+    .essay-drawers__bead {
       transition: none;
     }
   }
 </style>
+
+<script>
+  import { initEssayDrawerNav } from '../../scripts/essay-nav';
+
+  initEssayDrawerNav();
+</script>
