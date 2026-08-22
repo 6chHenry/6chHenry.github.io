@@ -2,41 +2,287 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import NotesNavItem from '../../components/NotesNavItem.astro';
-import { buildContentUrl, formatRecencyDate } from '../../utils/content';
-import { notesNav, buildNavTree, buildNoteEntryMap } from '../../utils/notes-nav';
+import { buildContentUrl, formatRecencyDate, getEntryTimestamp, sortByRecency } from '../../utils/content';
+import {
+  buildNavPanelId,
+  buildNoteEntryMap,
+  notesNav,
+  resolveNoteEntry,
+  walkNavNodes,
+  type NavTreeItem,
+  type NotesNavNode,
+} from '../../utils/notes-nav';
 
 const base = import.meta.env.BASE_URL;
+const DAY = 86_400_000;
+
 const entries = await getCollection('notes', ({ data }) => !data.draft);
 const entryById = buildNoteEntryMap(entries);
-const navTree = buildNavTree(notesNav, entryById, (entry) => ({
-  href: buildContentUrl('notes', entry.id, base),
-  title: entry.data.title,
-  description: entry.data.description ?? '',
-  date: formatRecencyDate(entry),
-}));
+
+/* ── 苗圃数据：每块「苗畦」统计篇数、最近浇水时间与三株最嫩的新叶 ── */
+
+type GrowthStage = 'fresh' | 'growing' | 'dormant';
+
+interface BedPeek {
+  title: string;
+  href: string;
+  date?: string;
+}
+
+interface Bed {
+  slugPath: string[];
+  title: string;
+  kind: 'folder' | 'loose';
+  count: number;
+  latestTs: number;
+  watered?: string;
+  stage: GrowthStage;
+  peek: BedPeek[];
+  treeItems: NavTreeItem[];
+}
+
+function stageOf(latestTs: number, now: number): GrowthStage {
+  if (!latestTs) return 'dormant';
+  const age = now - latestTs;
+  if (age <= 60 * DAY) return 'fresh';
+  if (age <= 400 * DAY) return 'growing';
+  return 'dormant';
+}
+
+function formatWatered(ts: number, now: number): string {
+  const days = Math.max(0, Math.floor((now - ts) / DAY));
+  if (days <= 0) return '今天浇过水';
+  if (days < 30) return `${days} 天前浇水`;
+  if (days < 365) return `${Math.round(days / 30.44)} 个月前浇水`;
+  const years = Math.floor(days / 365);
+  return years === 1 ? '1 年前浇水' : `${years} 年前浇水`;
+}
+
+const now = Date.now();
+
+const topLevelTree = (() => {
+  const linkFor = (entry: (typeof entries)[number]) => ({
+    href: buildContentUrl('notes', entry.id, base),
+    title: entry.data.title,
+    description: entry.data.description ?? '',
+    date: formatRecencyDate(entry),
+  });
+  const build = (nodes: NotesNavNode[]): NavTreeItem[] =>
+    nodes.map((node) => {
+      if (node.children.length > 0) {
+        return {
+          kind: 'folder' as const,
+          title: node.title,
+          slugPath: node.slugPath,
+          count: undefined,
+          children: build(node.children),
+        };
+      }
+      const entry = resolveNoteEntry(node.docsPath, entryById);
+      return entry
+        ? { kind: 'note' as const, title: node.title, slugPath: node.slugPath, note: linkFor(entry) }
+        : null;
+    }).filter((item): item is NavTreeItem => item !== null);
+  return build(notesNav);
+})();
+
+const beds: Bed[] = [];
+const looseLeaves: NavTreeItem[] = [];
+const looseEntries: (typeof entries)[number][] = [];
+
+for (const node of notesNav) {
+  if (node.children.length === 0) {
+    const entry = resolveNoteEntry(node.docsPath, entryById);
+    if (!entry) continue;
+    const item = topLevelTree.find(
+      (candidate) => candidate.kind === 'note' && candidate.slugPath.join('/') === node.slugPath.join('/'),
+    );
+    if (item) looseLeaves.push(item);
+    looseEntries.push(entry);
+    continue;
+  }
+
+  const collected = new Map<string, (typeof entries)[number]>();
+  walkNavNodes([node], (leaf) => {
+    if (leaf.children.length > 0) return;
+    const entry = resolveNoteEntry(leaf.docsPath, entryById);
+    if (entry) collected.set(entry.id, entry);
+  });
+
+  const sorted = [...collected.values()].sort((a, b) => getEntryTimestamp(b) - getEntryTimestamp(a));
+  const latestTs = sorted.length ? getEntryTimestamp(sorted[0]) : 0;
+  const treeItem = topLevelTree.find(
+    (candidate) => candidate.kind === 'folder' && candidate.slugPath.join('/') === node.slugPath.join('/'),
+  );
+
+  beds.push({
+    slugPath: node.slugPath,
+    title: node.title,
+    kind: 'folder',
+    count: sorted.length,
+    latestTs,
+    watered: latestTs ? formatWatered(latestTs, now) : undefined,
+    stage: stageOf(latestTs, now),
+    peek: sorted.slice(0, 3).map((entry) => ({
+      title: entry.data.title,
+      href: buildContentUrl('notes', entry.id, base),
+      date: formatRecencyDate(entry),
+    })),
+    treeItems: treeItem?.kind === 'folder' ? (treeItem.children ?? []) : [],
+  });
+}
+
+if (looseLeaves.length > 0) {
+  const latestTs = looseEntries.length ? Math.max(...looseEntries.map((entry) => getEntryTimestamp(entry))) : 0;
+  const sortedLoose = [...looseEntries].sort((a, b) => getEntryTimestamp(b) - getEntryTimestamp(a));
+
+  beds.push({
+    slugPath: ['scattered'],
+    title: '散落的种子',
+    kind: 'loose',
+    count: looseLeaves.length,
+    latestTs,
+    watered: latestTs ? formatWatered(latestTs, now) : undefined,
+    stage: stageOf(latestTs, now),
+    peek: sortedLoose.slice(0, 3).map((entry) => ({
+      title: entry.data.title,
+      href: buildContentUrl('notes', entry.id, base),
+      date: formatRecencyDate(entry),
+    })),
+    treeItems: looseLeaves,
+  });
+}
+
+beds.sort((a, b) => b.latestTs - a.latestTs);
+
+/* 最近浇水的新芽：全站最近更新的四篇 */
+const freshPicks = sortByRecency(entries)
+  .filter((entry) => getEntryTimestamp(entry) > 0)
+  .slice(0, 4)
+  .map((entry) => ({
+    href: buildContentUrl('notes', entry.id, base),
+    title: entry.data.title,
+    description: entry.data.description ?? '',
+    watered: formatWatered(getEntryTimestamp(entry), now),
+    date: formatRecencyDate(entry),
+  }));
 ---
 
 <BaseLayout title="笔记 | 6ch. · 林间笔记" description="6ch. 的学习笔记">
-  <section class="container page-shell">
+  <section class="container page-shell notes-garden">
     <header class="page-header">
       <p class="section-kicker">Notes</p>
-      <h1>笔记</h1>
-      <p class="section-lead">点击文件夹展开或收起，再点笔记进入阅读。</p>
+      <h1>苗圃</h1>
+      <p class="section-lead">
+        笔记按畦栽种：门口是刚浇过水的新芽，往里每一畦都标着最近一次照料的时间。点开一畦，就能看到里面全部的枝条。
+      </p>
     </header>
 
-    <ul class="content-list notes-nav-tree">
-      {navTree.map((item) => (
-        <NotesNavItem item={item} />
-      ))}
+    {
+      freshPicks.length > 0 && (
+        <div class="notes-fresh">
+          <p class="notes-fresh__label" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none">
+              <path d="M8 14V7.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+              <path d="M8 7.4C8 4.9 6.2 3.2 3.2 3.2c0 2.9 1.9 4.6 4.8 4.2Z" fill="currentColor" opacity=".85" />
+              <path d="M8 7.4c0-2.1 1.5-3.4 4.4-3.4 0 2.5-1.8 3.7-4.4 3.4Z" fill="currentColor" opacity=".55" />
+            </svg>
+            最近浇水
+          </p>
+          <ul class="notes-fresh__grid">
+            {freshPicks.map((pick) => (
+              <li>
+                <a class="notes-fresh-card" href={pick.href}>
+                  <strong>{pick.title}</strong>
+                  {pick.description && <span>{pick.description}</span>}
+                  <small>
+                    <time>{pick.watered}</time>
+                    {pick.date && <em>· {pick.date}</em>}
+                  </small>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+
+    <ul class="notes-beds">
+      {
+        beds.map((bed) => {
+          const panelId = buildNavPanelId(bed.slugPath);
+          return (
+            <li class:list={['notes-bed', `notes-bed--${bed.stage}`, `notes-bed--${bed.kind}`]}>
+              <button
+                type="button"
+                class="notes-bed__head"
+                aria-expanded="false"
+                aria-controls={panelId}
+                data-panel-id={panelId}
+              >
+                <span class="notes-bed__glyph" aria-hidden="true">
+                  {bed.stage === 'fresh' && (
+                    <svg viewBox="0 0 18 18" width="17" height="17" fill="none">
+                      <path d="M9 15V8.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M9 8.6C9 5.9 7 4 3.7 4c0 3.1 2.1 5 5.3 4.6Z" fill="currentColor" />
+                      <path d="M9 8.6c0-2.3 1.7-3.7 4.9-3.7 0 2.7-2 4-4.9 3.7Z" fill="currentColor" opacity=".55" />
+                    </svg>
+                  )}
+                  {bed.stage === 'growing' && (
+                    <svg viewBox="0 0 18 18" width="17" height="17" fill="none">
+                      <path d="M4 14C4 8 8 4 14.5 3.5 15 10 10.5 14.5 4 14Z" fill="currentColor" />
+                      <path d="M4 14C6.5 11 9.5 8 13 5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".45" />
+                    </svg>
+                  )}
+                  {bed.stage === 'dormant' && (
+                    <svg viewBox="0 0 18 18" width="17" height="17" fill="none">
+                      <path d="M4 15C5.5 10.5 9 6.5 14 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                      <circle cx="6.2" cy="11.2" r="1.5" fill="currentColor" opacity=".5" />
+                      <circle cx="10.4" cy="7.4" r="1.2" fill="currentColor" opacity=".35" />
+                    </svg>
+                  )}
+                </span>
+                <span class="notes-bed__name">{bed.title}</span>
+                <span class="notes-bed__meta">
+                  <span class="notes-bed__count">{bed.count} 篇</span>
+                  {bed.watered && <span class="notes-bed__watered">{bed.watered}</span>}
+                </span>
+                <span class="notes-bed__chevron" aria-hidden="true">›</span>
+              </button>
+
+              {bed.peek.length > 0 && (
+                <ol class="notes-bed__peek">
+                  {bed.peek.map((leaf) => (
+                    <li>
+                      <a href={leaf.href}>
+                        <span class="notes-bed__peek-title">{leaf.title}</span>
+                        {leaf.date && <time>{leaf.date}</time>}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              )}
+
+              <ul id={panelId} class="notes-nav-panel content-list">
+                {bed.treeItems.map((child) => (
+                  <NotesNavItem item={child} depth={0} />
+                ))}
+              </ul>
+            </li>
+          );
+        })
+      }
     </ul>
 
     <script is:inline>
       (function () {
-        function setExpanded(toggle, open) {
-          var panelId = toggle.getAttribute('aria-controls');
+        function setExpanded(head, open) {
+          var panelId = head.getAttribute('aria-controls');
           var panel = panelId ? document.getElementById(panelId) : null;
-          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-          toggle.classList.toggle('is-open', open);
+          var bed = head.closest('.notes-bed');
+          head.setAttribute('aria-expanded', open ? 'true' : 'false');
+          head.classList.toggle('is-open', open);
+          if (bed) bed.classList.toggle('is-open', open);
           if (panel) panel.classList.toggle('is-open', open);
         }
 
@@ -46,34 +292,34 @@ const navTree = buildNavTree(notesNav, entryById, (entry) => ({
           var slugParts = hash.slice(7).split('--').filter(Boolean);
           for (var i = 1; i <= slugParts.length; i += 1) {
             var panelId = 'notes-panel-' + slugParts.slice(0, i).join('--');
-            var toggle = root.querySelector('[data-panel-id="' + panelId + '"]');
-            if (toggle) setExpanded(toggle, true);
+            var head = root.querySelector('[data-panel-id="' + panelId + '"]');
+            if (head) setExpanded(head, true);
           }
         }
 
-        function initNotesTree() {
-          document.querySelectorAll('.notes-nav-tree').forEach(function (tree) {
-            if (tree.dataset.treeBound === 'true') return;
-            tree.dataset.treeBound = 'true';
+        function initBeds() {
+          document.querySelectorAll('.notes-beds').forEach(function (root) {
+            if (root.dataset.bedsBound === 'true') return;
+            root.dataset.bedsBound = 'true';
 
-            tree.addEventListener('click', function (event) {
-              var toggle = event.target.closest('.notes-nav-item__toggle');
-              if (!toggle || !tree.contains(toggle)) return;
+            root.addEventListener('click', function (event) {
+              var head = event.target.closest('.notes-bed__head');
+              if (!head || !root.contains(head)) return;
               event.preventDefault();
-              setExpanded(toggle, toggle.getAttribute('aria-expanded') !== 'true');
+              setExpanded(head, head.getAttribute('aria-expanded') !== 'true');
             });
 
-            openPanelsFromHash(tree);
+            openPanelsFromHash(root);
           });
         }
 
         if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', initNotesTree);
+          document.addEventListener('DOMContentLoaded', initBeds);
         } else {
-          initNotesTree();
+          initBeds();
         }
 
-        window.addEventListener('hashchange', initNotesTree);
+        window.addEventListener('hashchange', initBeds);
       })();
     </script>
   </section>
