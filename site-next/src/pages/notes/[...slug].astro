@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import ContentLayout from '../../layouts/ContentLayout.astro';
 import { buildContentUrl, normalizeSlug, sortByRecency } from '../../utils/content';
+import { buildCategoryUrl, docsPathToNoteId, notesNav, normalizeNoteId, walkNavNodes } from '../../utils/notes-nav';
 import { buildEntryCharacterTree } from '../../utils/character-tree';
 import type { GetStaticPaths } from 'astro';
 
@@ -24,6 +25,17 @@ const entries = sortByRecency(await getCollection('notes', ({ data }) => !data.d
 const currentIndex = entries.findIndex((item) => item.id === entry.id);
 const previousEntry = currentIndex >= 0 ? entries[currentIndex + 1] : undefined;
 const nextEntry = currentIndex > 0 ? entries[currentIndex - 1] : undefined;
+
+/* 面包屑：沿 notes-nav 树找回所属的每一层苗畦 */
+let breadcrumbs: Array<{ label: string; href: string }> = [];
+walkNavNodes(notesNav, (node, trail) => {
+  if (node.docsPath && docsPathToNoteId(node.docsPath) === normalizeNoteId(entry.id)) {
+    breadcrumbs = trail.slice(0, -1).map((ancestor) => ({
+      label: ancestor.title,
+      href: buildCategoryUrl(ancestor.slugPath),
+    }));
+  }
+});
 ---
 
 <ContentLayout
@@ -31,6 +43,7 @@ const nextEntry = currentIndex > 0 ? entries[currentIndex - 1] : undefined;
   description={entry.data.description}
   date={entry.data.date}
   tags={entry.data.tags}
+  breadcrumbs={breadcrumbs}
   headings={filteredHeadings.map((h) => ({ depth: h.depth, slug: h.slug, text: h.text }))}
   characterTreeSvg={characterTreeSvg}
   previous={previousEntry && {

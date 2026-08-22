@@ -10,6 +10,11 @@ interface ArticleNavLink {
   description?: string;
 }
 
+interface ArticleCrumb {
+  label: string;
+  href?: string;
+}
+
 interface Props {
   title: string;
   description?: string;
@@ -20,6 +25,7 @@ interface Props {
   previous?: ArticleNavLink;
   next?: ArticleNavLink;
   immersive?: boolean;
+  breadcrumbs?: ArticleCrumb[];
 }
 
 const {
@@ -32,6 +38,7 @@ const {
   previous,
   next,
   immersive = false,
+  breadcrumbs = [],
 } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const showAside = !immersive && (headings.length > 0 || characterTreeSvg);
@@ -45,13 +52,31 @@ const showAside = !immersive && (headings.length > 0 || characterTreeSvg);
   <article class:list={['container content-layout page-shell', { 'content-layout--immersive': immersive }]}>
     <div class="content-main card card--elevated content-article">
       {
-        !immersive && (
-          <header class="page-header">
-            <h1>{title}</h1>
-            {description && <p>{description}</p>}
-          </header>
-        )
-      }
+        !immersive && breadcrumbs.length > 0 && (
+          <nav class="breadcrumb" aria-label="所在位置">
+              <a href={`${base}notes/`}>笔记</a>
+              {breadcrumbs.map((crumb) => (
+                <>
+                  <span class="breadcrumb__sep" aria-hidden="true">
+                    /
+                  </span>
+                  {crumb.href ? <a href={crumb.href}>{crumb.label}</a> : <span>{crumb.label}</span>}
+                </>
+              ))}
+              <span class="breadcrumb__sep" aria-hidden="true">/</span>
+              <span aria-current="page">{title}</span>
+            </nav>
+          )
+        }
+
+        {
+          !immersive && (
+            <header class="page-header">
+              <h1>{title}</h1>
+              {description && <p>{description}</p>}
+            </header>
+          )
+        }
 
       {
         !immersive && (
