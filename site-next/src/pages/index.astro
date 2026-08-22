@@ -50,6 +50,7 @@ const paths: Array<{
   title: string;
   description: string;
   href: string;
+  lift: string;
   count?: string;
   latest?: { date?: string; title: string };
 }> = [
@@ -59,6 +60,7 @@ const paths: Array<{
     title: '认识我',
     description: '我的坐标、兴趣与正在寻找的问题',
     href: `${base}about/`,
+    lift: '10.625rem',
   },
   {
     index: '02',
@@ -66,6 +68,7 @@ const paths: Array<{
     title: '翻阅笔记',
     description: 'AI、数学与工程学习留下的知识年轮',
     href: `${base}notes/`,
+    lift: '7.75rem',
     count: `${notes.length} 篇笔记`,
     latest: latestNote && {
       date: formatRecencyDate(latestNote),
@@ -78,6 +81,7 @@ const paths: Array<{
     title: '读些杂谈',
     description: '旅行、电影与生活片段的私人标本',
     href: `${base}essay/`,
+    lift: '4.875rem',
     count: `${essays.length} 则杂谈`,
     latest: latestEssay && {
       date: formatRecencyDate(latestEssay),
@@ -90,6 +94,7 @@ const paths: Array<{
     title: '看看作品',
     description: '从模型到界面，把想法做成可体验的作品',
     href: `${base}projects/`,
+    lift: '2.25rem',
     count: `${projects.length} 个项目`,
     latest: latestProject && {
       date: formatRecencyDate(latestProject),
@@ -139,6 +144,68 @@ const paths: Array<{
     </div>
   </section>
 
+  <section class="home-trail" aria-labelledby="home-trail-title">
+    <header class="home-trail__header">
+      <p class="section-kicker">Trailhead · 林地入口</p>
+      <h2 id="home-trail-title">选一条路，往林子里走</h2>
+      <p class="home-trail__lead">这不是一张站点地图，而是四条进入我的路径。</p>
+    </header>
+
+    <nav class="home-trail__nav" aria-label="探索入口">
+      <svg class="home-trail__path" viewBox="0 0 1200 416" preserveAspectRatio="none" aria-hidden="true">
+        <path
+          class="home-trail__path-halo"
+          d="M24 210 C80 206 84 200 150 196 C250 192 350 158 450 150 C550 142 650 110 750 104 C850 99 952 74 1050 62 C1100 55 1130 44 1172 30"
+          fill="none"
+        />
+        <path
+          class="home-trail__path-line"
+          d="M24 210 C80 206 84 200 150 196 C250 192 350 158 450 150 C550 142 650 110 750 104 C850 99 952 74 1050 62 C1100 55 1130 44 1172 30"
+          fill="none"
+        />
+        <circle class="home-trail__start" cx="24" cy="210" r="5" />
+        <g class="home-trail__sprout">
+          <path d="M1172 30 C1166 20 1158 16 1150 18" />
+          <path d="M1150 18 C1144 12 1136 13 1132 19 C1138 23 1145 22 1150 18 Z" />
+          <circle cx="1172" cy="30" r="3.4" />
+        </g>
+      </svg>
+      <ol class="home-trail__stops">
+        {
+          paths.map((path) => (
+            <li>
+              <a class="home-trail__stop" href={path.href} style={`--trail-lift: ${path.lift};`}>
+                <span class="home-trail__marker" aria-hidden="true">
+                  <ForestIcon name={path.icon} />
+                </span>
+                <span class="home-trail__name">{path.title}</span>
+                <span class="home-trail__desc">{path.description}</span>
+                {path.count && <span class="home-trail__count">{path.count}</span>}
+                {path.latest && <span class="home-trail__latest">最近 · {path.latest.title}</span>}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <footer class="home-trail__footer">
+      <p><span>Archive note</span> · 内容仍在生长，路径会随我一起改变。</p>
+      <button type="button" class="home-trail__stats" id="home-stats-toggle" aria-expanded="false" aria-controls="statistics">
+        <ForestIcon name="tree" />
+        <span>查看这片林的年轮</span>
+      </button>
+    </footer>
+
+    <div id="statistics" class="home-stats" role="region" aria-label="站点统计">
+      <div class="home-stats__inner">
+        <ul>
+          <li>从第一颗种子到现在 <span id="web-time"></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   {
     recent.length > 0 && (
       <section class="container recent-section">
@@ -172,59 +239,6 @@ const paths: Array<{
       </section>
     )
   }
-
-  <section class="home-wayfinder" aria-labelledby="home-wayfinder-title">
-    <div class="home-wayfinder__shell">
-      <header class="home-wayfinder__header">
-        <p class="home-wayfinder__kicker">Trailhead · 林地入口</p>
-        <div>
-          <h2 id="home-wayfinder-title">选一条路，往林子里走</h2>
-          <p>这不是一张站点地图，而是四条进入我的路径。</p>
-        </div>
-      </header>
-
-      <nav class="home-wayfinder__grid" aria-label="探索入口">
-        {
-          paths.map((path) => (
-            <a class="home-path" href={path.href}>
-              <span class="home-path__topline">
-                <span class="home-path__index">{path.index}</span>
-                <span class="home-path__icon">
-                  <ForestIcon name={path.icon} />
-                </span>
-              </span>
-              <span class="home-path__title">{path.title}</span>
-              <span class="home-path__description">{path.description}</span>
-              {path.count && <span class="home-path__count">{path.count}</span>}
-              {path.latest && (
-                <span class="home-path__latest">
-                  <span class="home-path__latest-label">最近留下{path.latest.date ? ` · ${path.latest.date}` : ''}</span>
-                  <strong>{path.latest.title}</strong>
-                </span>
-              )}
-              <span class="home-path__arrow" aria-hidden="true">→</span>
-            </a>
-          ))
-        }
-      </nav>
-
-      <footer class="home-wayfinder__footer">
-        <p><span>Archive note</span> · 内容仍在生长，路径会随我一起改变。</p>
-        <button type="button" class="home-wayfinder__stats" id="home-stats-toggle" aria-expanded="false" aria-controls="statistics">
-          <ForestIcon name="tree" />
-          <span>查看这片林的年轮</span>
-        </button>
-      </footer>
-
-      <div id="statistics" class="home-stats" role="region" aria-label="站点统计">
-        <div class="home-stats__inner">
-          <ul>
-            <li>从第一颗种子到现在 <span id="web-time"></span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
 
   {
     forestStops.totalCount > 0 && <ForestMap stops={forestStops} />
