@@ -55,6 +55,28 @@ function getEntryHref(entry: (typeof entries)[number]) {
 function getEntryExcerpt(entry: (typeof entries)[number]) {
   return entry.data.description ?? buildEssayExcerpt(entry.body, entry.data.title);
 }
+
+/* 树洞树：八棵共用的墨线树干（不用 defs，避免多实例 id 冲突）。
+   洞口中心约在 x 50% / y 52%，信笺与光晕按此定位。 */
+const hollowTreeSvg = `<svg class="hollow-svg" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path d="M10 -4 C16 8 12 20 18 32" stroke="var(--hollow-leaf)" stroke-width="2" opacity=".5"/>
+  <path d="M108 -6 C102 6 106 16 100 26" stroke="var(--hollow-leaf)" stroke-width="2" opacity=".4"/>
+  <g>
+    <path d="M36 148 C34 118 40 92 38 64 C37 44 42 28 47 12 L74 12 C80 30 84 48 82 70 C80 96 86 122 84 148 Z"
+      fill="var(--hollow-bark)" stroke="var(--hollow-ink)" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M46 132 C45 108 49 88 47 66" stroke="var(--hollow-ink)" stroke-width="1.6" opacity=".45"/>
+    <path d="M67 138 C69 112 65 92 68 70" stroke="var(--hollow-ink)" stroke-width="1.6" opacity=".45"/>
+    <path d="M55 40 C57 32 56 24 58 16" stroke="var(--hollow-ink)" stroke-width="1.4" opacity=".4"/>
+    <circle cx="72" cy="50" r="3" stroke="var(--hollow-ink)" stroke-width="1.4" opacity=".5"/>
+    <path d="M30 148 C36 142 39 135 40 127" stroke="var(--hollow-ink)" stroke-width="3" opacity=".85"/>
+    <path d="M90 148 C84 142 81 134 80 125" stroke="var(--hollow-ink)" stroke-width="3" opacity=".85"/>
+  </g>
+  <g class="hollow-mouth">
+    <ellipse class="hollow-glow" cx="61" cy="78" rx="14" ry="11" fill="var(--ch-accent-warm)"/>
+    <path d="M46 76 C44 64 52 56 61 56 C71 56 79 64 77 77 C76 89 69 96 60 96 C51 96 47 88 46 76 Z"
+      fill="rgb(24 17 10 / 93%)" stroke="color-mix(in srgb, var(--ch-accent-warm) 42%, transparent)" stroke-width="2"/>
+  </g>
+</svg>`;
 ---
 
 <BaseLayout title="杂谈 | 6ch. · 林间笔记" description="6ch. 的随笔、影评与旅行札记">
@@ -88,23 +110,30 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
       </div>
     </nav>
 
-    {/* 收纳形态：野外采集柜——八只标本木盒，纸片是各抽屉里最新的文章 */}
-    <div class="essay-trays" data-essay-trays hidden>
+    {/* 收纳形态：树洞信笺——随笔投进树洞，散页悬停时会被收进洞里 */}
+    <div class="essay-hollows" data-essay-trays hidden>
       {
         groupedEntries.map((group, trayIndex) => {
-          const shown = group.entries.slice(0, 4);
-          const overflow = group.entries.length - shown.length;
+          const latest = group.entries[0];
           return (
-            <a class="essay-tray" href={`#essay-section-${group.key}`} style={`--tray-i: ${trayIndex};`}>
-              <span class="essay-tray__slips" aria-hidden="true">
-                {shown.map((entry, i) => (
-                  <span class:list={['essay-tray__slip', i === 0 && 'essay-tray__slip--front']} style={`--slip-i: ${i};`}>
-                    {i === 0 && <i>{entry.data.title}</i>}
-                  </span>
-                ))}
-                {overflow > 0 && <span class="essay-tray__more">+{overflow}</span>}
+            <a
+              class:list={['essay-hollow', `essay-hollow--v${trayIndex % 3}`]}
+              href={`#essay-section-${group.key}`}
+              style={`--tray-i: ${trayIndex}; --tint: ${(trayIndex % 3) * 6 - 6}deg;`}
+            >
+              <span class="essay-hollow__scene" aria-hidden="true">
+                <span class="essay-hollow__tree" set:html={hollowTreeSvg} />
+                <span class="essay-hollow__moss" />
+                <span class="essay-hollow__tucked">
+                  {latest && <i>{latest.data.title}</i>}
+                  <i />
+                  <i />
+                </span>
+                <i class="essay-hollow__loose essay-hollow__loose--a" />
+                <i class="essay-hollow__loose essay-hollow__loose--b" />
+                <span class="essay-hollow__detail" />
               </span>
-              <span class="essay-tray__plate">
+              <span class="essay-hollow__tag">
                 <strong>{group.title}</strong>
                 <span>{group.entries.length} 篇</span>
               </span>
@@ -368,215 +397,367 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
     font-weight: 700;
   }
 
-  /* ── 收纳形态：野外采集柜——八只标本木盒 ── */
+  /* 收纳形态样式：树洞信笺 */
 
-  .essay-groups[hidden],
-  .essay-trays[hidden],
-  [data-drawer-nav][hidden],
-  .essay-drawers-sentinel[hidden] {
-    display: none !important;
+.essay-groups[hidden],
+.essay-hollows[hidden],
+[data-drawer-nav][hidden],
+.essay-drawers-sentinel[hidden] {
+  display: none !important;
+}
+
+.essay-hollows {
+  --hollows-floor: color-mix(in srgb, var(--ch-accent-ink) 13%, var(--ch-bg-mist));
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1.9rem 1.5rem 1.3rem;
+  border: 1px solid color-mix(in srgb, var(--ch-accent-ink) 28%, var(--ch-border));
+  border-radius: 16px;
+  background:
+    radial-gradient(130% 100% at 50% -12%, transparent 42%, color-mix(in srgb, var(--ch-accent-ink) 13%, transparent)),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ch-fg) 3%, transparent) 0 3px, transparent 3px 92px),
+    linear-gradient(180deg, color-mix(in srgb, var(--ch-bg-sky) 52%, transparent) 0%, var(--hollows-floor) 58%),
+    var(--ch-surface-elevated);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 28%, transparent),
+    inset 0 -20px 36px color-mix(in srgb, var(--ch-accent-ink) 15%, transparent),
+    0 18px 44px color-mix(in srgb, var(--ch-fg) 10%, transparent);
+  overflow: hidden;
+  animation: essay-trays-in 0.55s ease both;
+}
+
+@keyframes essay-trays-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.essay-hollow {
+  --hollow-leaf: color-mix(in srgb, var(--ch-accent-tertiary) 68%, transparent);
+  --hollow-ink: color-mix(in srgb, var(--ch-fg) 72%, var(--ch-accent-ink));
+  --hollow-bark: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--ch-accent-warm) 30%, var(--ch-bg-hill)) 84%,
+    var(--ch-surface-solid)
+  );
+  position: relative;
+  display: block;
+  padding: 0.3rem 0.4rem 2.7rem;
+  border-radius: 10px;
+  color: inherit;
+  text-decoration: none;
+  filter: hue-rotate(var(--tint, 0deg));
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: hollow-pop 0.5s cubic-bezier(0.34, 1.45, 0.64, 1) both;
+  animation-delay: calc(var(--tray-i) * 70ms);
+}
+
+@keyframes hollow-pop {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.95);
+  }
+}
+
+.essay-hollow:hover,
+.essay-hollow:focus-visible {
+  transform: translateY(-4px);
+}
+
+.essay-hollow:focus-visible {
+  outline: 2px dashed color-mix(in srgb, var(--ch-accent-warm) 78%, transparent);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+.essay-hollow__scene {
+  position: relative;
+  display: block;
+  transform-origin: 50% 96%;
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.essay-hollow:hover .essay-hollow__scene,
+.essay-hollow:focus-visible .essay-hollow__scene {
+  transform: rotate(-1.1deg);
+}
+
+.hollow-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.hollow-glow {
+  opacity: 0.14;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 380ms ease,
+    transform 460ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.essay-hollow:hover .hollow-glow,
+.essay-hollow:focus-visible .hollow-glow {
+  opacity: 0.34;
+  transform: scale(1.22);
+}
+
+.essay-hollow__moss {
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  right: 5%;
+  height: 10%;
+  background: radial-gradient(
+    50% 100% at 50% 50%,
+    color-mix(in srgb, var(--ch-accent-secondary) 28%, transparent),
+    transparent 74%
+  );
+  filter: blur(2px);
+}
+
+.essay-hollow__tucked {
+  position: absolute;
+  left: 51%;
+  top: 52%;
+  width: 17%;
+  height: 25%;
+  transform: translateX(-50%);
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.essay-hollow:hover .essay-hollow__tucked,
+.essay-hollow:focus-visible .essay-hollow__tucked {
+  transform: translateX(-50%) translateY(6%) scale(0.97);
+}
+
+.essay-hollow__tucked i {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  display: block;
+  width: 100%;
+  height: 92%;
+  border-radius: 1.5px;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0 7px,
+      color-mix(in srgb, var(--ch-fg-muted) 30%, transparent) 7px 8px
+    )
+    no-repeat 8% 30% / 84% 46%,
+    color-mix(in srgb, var(--ch-bg-mist) 92%, white);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 38%);
+  transform-origin: 50% 100%;
+}
+
+.essay-hollow__tucked i:nth-child(1) {
+  transform: translateX(-50%) rotate(-4deg);
+  z-index: 3;
+}
+
+.essay-hollow__tucked i:nth-child(2) {
+  transform: translateX(-60%) rotate(8deg) scale(0.93);
+  opacity: 0.85;
+}
+
+.essay-hollow__tucked i:nth-child(3) {
+  transform: translateX(-40%) rotate(-12deg) scale(0.89);
+  opacity: 0.72;
+}
+
+.essay-hollow__loose {
+  position: absolute;
+  width: 15%;
+  height: 19%;
+  border-radius: 1.5px;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0 6px,
+      color-mix(in srgb, var(--ch-fg-muted) 26%, transparent) 6px 7px
+    )
+    no-repeat 12% 26% / 76% 52%,
+    color-mix(in srgb, var(--ch-bg-mist) 94%, white);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 24%);
+  transition:
+    left 640ms cubic-bezier(0.3, 0.9, 0.3, 1),
+    bottom 640ms cubic-bezier(0.3, 0.9, 0.3, 1),
+    transform 640ms cubic-bezier(0.3, 0.9, 0.3, 1),
+    opacity 460ms ease;
+}
+
+.essay-hollow__loose--a {
+  left: 10%;
+  bottom: 4%;
+  transform: rotate(-14deg);
+}
+
+.essay-hollow__loose--b {
+  right: 9%;
+  bottom: 8%;
+  height: 16%;
+  transform: rotate(12deg);
+}
+
+.essay-hollow:hover .essay-hollow__loose--a,
+.essay-hollow:focus-visible .essay-hollow__loose--a {
+  left: 44%;
+  bottom: 42%;
+  opacity: 0;
+  transform: rotate(74deg) scale(0.42);
+  transition-delay: 60ms;
+}
+
+.essay-hollow:hover .essay-hollow__loose--b,
+.essay-hollow:focus-visible .essay-hollow__loose--b {
+  left: 52%;
+  bottom: 40%;
+  opacity: 0;
+  transform: rotate(-68deg) scale(0.38);
+  transition-delay: 190ms;
+}
+
+.essay-hollow__tag {
+  position: absolute;
+  top: 12%;
+  right: 1%;
+  z-index: 2;
+  display: grid;
+  gap: 0.04rem;
+  justify-items: center;
+  padding: 0.32rem 0.5rem 0.3rem;
+  border: 1px solid color-mix(in srgb, var(--hollow-ink) 40%, var(--ch-border-soft));
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--ch-bg-mist) 92%, white);
+  box-shadow: 0 3px 8px rgb(0 0 0 / 18%);
+  transform: rotate(4deg);
+  transform-origin: 50% -0.6rem;
+}
+
+.essay-hollow__tag::before {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  width: 1px;
+  height: 0.62rem;
+  background: repeating-linear-gradient(to bottom, var(--hollow-ink) 0 2px, transparent 2px 4px);
+  content: '';
+  opacity: 0.7;
+}
+
+.essay-hollow__tag strong {
+  color: var(--ch-fg);
+  font-family: var(--ch-display-font);
+  font-size: 0.84rem;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+}
+
+.essay-hollow__tag span {
+  color: var(--ch-accent-warm);
+  font-family: var(--ch-mono-font);
+  font-size: 0.56rem;
+}
+
+.essay-hollow:hover .essay-hollow__tag,
+.essay-hollow:focus-visible .essay-hollow__tag {
+  animation: hollow-tag-sway 1.5s ease-in-out;
+}
+
+@keyframes hollow-tag-sway {
+  0%,
+  100% {
+    transform: rotate(4deg);
   }
 
-  .essay-trays {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.15rem;
-    padding: 1.7rem 1.5rem 1.55rem;
-    border: 1px solid color-mix(in srgb, #5d442e 42%, var(--ch-border));
-    border-radius: 14px;
-    background:
-      repeating-linear-gradient(90deg, rgb(0 0 0 / 5%) 0 2px, transparent 2px 96px),
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, #8a6a45 32%, var(--ch-surface-elevated)),
-        color-mix(in srgb, #6f5238 40%, var(--ch-bg-hill))
-      ),
-      var(--ch-surface-elevated);
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 22%),
-      inset 0 -3px 8px rgb(0 0 0 / 16%),
-      0 18px 44px color-mix(in srgb, var(--ch-fg) 10%, transparent);
-    animation: essay-trays-in 0.55s ease both;
+  30% {
+    transform: rotate(10deg);
   }
 
-  @keyframes essay-trays-in {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
-    }
+  65% {
+    transform: rotate(-1deg);
   }
+}
 
-  .essay-tray {
-    --wood: color-mix(in srgb, #9a7b52 52%, var(--ch-accent-warm));
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    padding: 0.85rem 0.8rem 0.75rem;
-    border: 1px solid rgb(61 42 25 / 50%);
-    border-radius: 8px;
-    background:
-      linear-gradient(180deg, rgb(255 255 255 / 16%), rgb(0 0 0 / 9%) 55%, rgb(255 255 255 / 6%)),
-      repeating-linear-gradient(93deg, transparent 0 14px, rgb(0 0 0 / 6%) 14px 16px),
-      var(--wood);
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 28%),
-      0 10px 22px rgb(31 20 9 / 24%);
-    color: inherit;
-    text-decoration: none;
-    transition:
-      transform 320ms cubic-bezier(0.34, 1.45, 0.64, 1),
-      box-shadow 320ms ease;
-    animation: essay-tray-pop 0.5s cubic-bezier(0.34, 1.45, 0.64, 1) both;
-    animation-delay: calc(var(--tray-i) * 65ms);
-  }
+.essay-hollow__detail {
+  position: absolute;
+  bottom: 2%;
+  left: 16%;
+  width: 14%;
+  height: 7%;
+}
 
-  @keyframes essay-tray-pop {
-    from {
-      opacity: 0;
-      transform: translateY(14px) scale(0.94);
-    }
-  }
+.essay-hollow__detail::before,
+.essay-hollow__detail::after {
+  position: absolute;
+  bottom: 0;
+  content: '';
+}
 
-  .essay-tray:hover,
-  .essay-tray:focus-visible {
-    transform: translateY(-5px) rotate(-0.6deg);
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 30%),
-      0 20px 36px rgb(31 20 9 / 32%);
-  }
+.essay-hollow--v0 .essay-hollow__detail::before {
+  left: 0;
+  width: 0.34rem;
+  height: 0.34rem;
+  border-radius: 50% 50% 40% 40%;
+  background: color-mix(in srgb, #b06a3f 76%, var(--ch-fg));
+}
 
-  .essay-tray:focus-visible {
-    outline: 2px dashed color-mix(in srgb, var(--ch-accent-warm) 80%, transparent);
-    outline-offset: 3px;
-  }
+.essay-hollow--v0 .essay-hollow__detail::after {
+  left: 0.5rem;
+  bottom: -0.05rem;
+  width: 0.24rem;
+  height: 0.24rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, #b06a3f 60%, var(--ch-fg));
+  opacity: 0.85;
+}
 
-  /* 盒内深腔，纸片标本插在里面 */
-  .essay-tray__slips {
-    --rise: 0px;
-    position: relative;
-    display: block;
-    min-height: 6.4rem;
-    padding: 0.5rem 0.5rem 0.2rem;
-    overflow: hidden;
-    border-radius: 5px;
-    background: linear-gradient(180deg, rgb(43 28 14 / 48%), rgb(43 28 14 / 30%) 130%);
-    box-shadow: inset 0 3px 8px rgb(0 0 0 / 34%);
-  }
+.essay-hollow--v1 .essay-hollow__detail {
+  left: auto;
+  right: 14%;
+}
 
-  .essay-tray:hover .essay-tray__slips,
-  .essay-tray:focus-visible .essay-tray__slips {
-    --rise: 6px;
-  }
+.essay-hollow--v1 .essay-hollow__detail::before {
+  left: 0;
+  bottom: 0;
+  width: 0.42rem;
+  height: 0.5rem;
+  border-radius: 80% 20% 80% 20%;
+  background: color-mix(in srgb, var(--ch-accent-tertiary) 80%, var(--ch-fg));
+  transform: rotate(-18deg);
+}
 
-  .essay-tray__slip {
-    position: absolute;
-    bottom: 0.35rem;
-    left: 50%;
-    width: 58%;
-    height: 4.7rem;
-    border-radius: 2px;
-    background:
-      repeating-linear-gradient(
-        180deg,
-        transparent 0 9px,
-        color-mix(in srgb, var(--ch-fg-muted) 30%, transparent) 9px 10px
-      )
-      no-repeat 0.25rem 1.55rem / calc(100% - 0.5rem) 2.4rem,
-      color-mix(in srgb, var(--ch-bg-mist) 90%, white);
-    box-shadow: 0 2px 5px rgb(0 0 0 / 28%);
-    opacity: calc(1 - var(--slip-i) * 0.13);
-    transform:
-      translateX(calc(-50% + (var(--slip-i) - 1.5) * 13%))
-      rotate(calc((var(--slip-i) - 1.5) * 3.4deg))
-      translateY(calc(var(--slip-i) * -1.5px - var(--rise)));
-    transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
+.essay-hollow--v1 .essay-hollow__detail::after {
+  left: 0.4rem;
+  width: 0.36rem;
+  height: 0.42rem;
+  border-radius: 20% 80% 20% 80%;
+  background: color-mix(in srgb, var(--ch-accent-tertiary) 66%, var(--ch-fg));
+  transform: rotate(22deg);
+}
 
-  .essay-tray__slip--front {
-    z-index: 3;
-  }
+.essay-hollow--v2 .essay-hollow__detail::before {
+  left: 0.1rem;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ch-fg-muted) 55%, var(--ch-border));
+}
 
-  .essay-tray__slip i {
-    position: absolute;
-    inset: 0.3rem 0.3rem auto;
-    display: block;
-    max-height: 1.5em;
-    overflow: hidden;
-    color: var(--ch-fg);
-    font-family: var(--ch-text-font);
-    font-size: 0.62rem;
-    font-style: normal;
-    line-height: 1.5;
-  }
-
-  .essay-tray__more {
-    position: absolute;
-    right: 0.4rem;
-    bottom: 0.4rem;
-    z-index: 4;
-    padding: 0.14rem 0.42rem;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--ch-accent-warm) 82%, black);
-    color: #fff8ec;
-    font-family: var(--ch-mono-font);
-    font-size: 0.6rem;
-    font-weight: 700;
-  }
-
-  /* 铜牌 */
-  .essay-tray__plate {
-    position: relative;
-    display: grid;
-    gap: 0.08rem;
-    justify-items: center;
-    margin-top: 0.68rem;
-    padding: 0.5rem 0.4rem 0.46rem;
-    overflow: hidden;
-    border: 1px solid rgb(255 255 255 / 22%);
-    border-radius: 4px;
-    background: linear-gradient(
-      160deg,
-      color-mix(in srgb, var(--ch-accent-warm) 78%, #7a5a2b),
-      color-mix(in srgb, var(--ch-accent-warm) 52%, #4d3a1d)
-    );
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 40%),
-      0 2px 6px rgb(0 0 0 / 3 0%);
-  }
-
-  .essay-tray__plate::after {
-    position: absolute;
-    inset: 0;
-    content: '';
-    background: linear-gradient(105deg, transparent 30%, rgb(255 250 235 / 38%) 50%, transparent 70%);
-    transform: translateX(-120%);
-  }
-
-  .essay-tray:hover .essay-tray__plate::after,
-  .essay-tray:focus-visible .essay-tray__plate::after {
-    animation: essay-plate-shine 0.75s ease-out;
-  }
-
-  @keyframes essay-plate-shine {
-    to {
-      transform: translateX(120%);
-    }
-  }
-
-  .essay-tray__plate strong {
-    color: #fdf6e3;
-    font-family: var(--ch-display-font);
-    font-size: 0.98rem;
-    font-weight: 650;
-    letter-spacing: 0.14em;
-  }
-
-  .essay-tray__plate span {
-    color: rgb(255 246 225 / 82%);
-    font-family: var(--ch-mono-font);
-    font-size: 0.6rem;
-    letter-spacing: 0.06em;
-  }
+.essay-hollow--v2 .essay-hollow__detail::after {
+  left: 0.55rem;
+  bottom: 0.02rem;
+  width: 0.44rem;
+  height: 0.44rem;
+  border-radius: 50% 50% 40% 40%;
+  background: color-mix(in srgb, #b06a3f 66%, var(--ch-fg));
+}
 
   .essay-drawers__tab {
     position: relative;
@@ -1415,7 +1596,7 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
   }
 
   @media (max-width: 1080px) {
-    .essay-trays {
+    .essay-hollows {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
@@ -1426,7 +1607,7 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
       margin-top: 0.4rem;
     }
 
-    .essay-trays {
+    .essay-hollows {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.85rem;
       padding: 1.15rem 1rem 1.1rem;
@@ -1495,9 +1676,11 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
     .essay-drawers,
     .essay-drawers__tab,
     .essay-viewbar__thumb,
-    .essay-tray,
-    .essay-tray__slip,
-    .essay-trays {
+    .essay-hollow,
+    .essay-hollow__loose,
+    .essay-hollow__tucked i,
+    .hollow-glow,
+    .essay-hollows {
       transition: none;
       animation-duration: 1ms;
     }
