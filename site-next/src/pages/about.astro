@@ -3,6 +3,46 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ForestIcon from '../components/ForestIcon.astro';
 
 const base = import.meta.env.BASE_URL;
+
+/* 林间告示牌：此刻的状态（手写，随时更新） */
+const nowBoard = [
+  { k: '在读', v: 'SAI 二年级' },
+  { k: '在学', v: '强化学习与大模型' },
+  { k: '在听', v: 'Eason 的老歌' },
+  { k: '在写', v: '杂谈与读书笔记' },
+];
+
+/* 小径卡的手绘小图标 */
+const trailIcons: Record<string, string> = {
+  music:
+    '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+  book:
+    '<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',
+  route:
+    '<circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M6.5 17.5C11 13 13 11 17.5 6.5" stroke-dasharray="3 3"/>',
+};
+
+/* 三条爱好小径，通向杂谈里对应的林区 */
+const trails = [
+  {
+    href: `${base}essay/#essay-section-Music`,
+    title: '音乐小径',
+    desc: 'Eason，和一段一段的听歌整理。',
+    icon: 'music',
+  },
+  {
+    href: `${base}essay/#essay-section-Reading`,
+    title: '阅读小径',
+    desc: '读完一本书之后，留给作品的回信。',
+    icon: 'book',
+  },
+  {
+    href: `${base}essay/#essay-section-Travel`,
+    title: '旅行小径',
+    desc: '路线、城市，以及照片留下的旁证。',
+    icon: 'route',
+  },
+];
 ---
 
 <BaseLayout title="关于我 | 6ch. · 林间笔记" description="关于 6ch. — 上海交通大学人工智能学院本科生">
@@ -14,6 +54,18 @@ const base = import.meta.env.BASE_URL;
 
     <div class="about-layout">
       <article class="about-panel card card--elevated">
+        <div class="about-now" aria-label="近况告示牌">
+          <span class="about-now__title">林间告示牌</span>
+          {
+            nowBoard.map((item) => (
+              <span class="about-now__item">
+                <em>{item.k}</em>
+                {item.v}
+              </span>
+            ))
+          }
+        </div>
+
         <div class="about-panel__toolbar">
           <button
             type="button"
@@ -44,7 +96,11 @@ const base = import.meta.env.BASE_URL;
             或者直接在下方留言，我会尽快回复。如果你也在上海，欢迎联系我 — 我们可以一起聊天、学习，或者交流共同的兴趣爱好。
           </p>
           <p>我平时喜欢听音乐 (Eason!)、阅读、打羽毛球，也会在日记中记录一些相关内容，分享个人感受。</p>
-          <p>至于我的名字「6ch.」嘛，解释起来太困难了，就当是我随便取的好啦！</p>
+          <p>
+            至于我的名字「6ch.」嘛——解释起来太困难了。
+            <button type="button" class="name-riddle-btn" id="name-riddle-btn">真的想知道？</button>
+            <span class="name-riddle" id="name-riddle" aria-live="polite"></span>
+          </p>
         </div>
 
         <div class="about-panel__content prose about-panel__content--en" id="about-en" hidden>
@@ -70,6 +126,31 @@ const base = import.meta.env.BASE_URL;
             it and share my personal feelings.
           </p>
           <p>As for my name "6ch.", it's a long long story.</p>
+        </div>
+
+        <div class="about-trails" aria-label="爱好小径">
+          {
+            trails.map((trail) => (
+              <a class="trail-card" href={trail.href}>
+                <span class="trail-card__icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    set:html={trailIcons[trail.icon]}
+                  />
+                </span>
+                <span class="trail-card__body">
+                  <strong>{trail.title}</strong>
+                  <small>{trail.desc}</small>
+                </span>
+                <span class="trail-card__arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
         </div>
       </article>
 
@@ -103,6 +184,32 @@ const base = import.meta.env.BASE_URL;
       toggle.setAttribute('aria-expanded', String(showEnglish));
     });
   }
+
+  // 「6ch.」名字彩蛋：逐条翻牌，最后一条才是真相
+  const riddleBtn = document.getElementById('name-riddle-btn') as HTMLButtonElement | null;
+  const riddleOut = document.getElementById('name-riddle');
+
+  if (riddleBtn && riddleOut) {
+    const hints = [
+      '它和「六」有点关系，但不是六个 c 和 h。',
+      '念起来像一个缩写……其实也不算。',
+      '好吧，坦白说——',
+      '就当是我随便取的好啦！',
+    ];
+    let step = -1;
+    riddleBtn.addEventListener('click', () => {
+      step += 1;
+      riddleOut.classList.remove('is-shown');
+      window.setTimeout(() => {
+        riddleOut.textContent = hints[step];
+        riddleOut.classList.add('is-shown');
+        if (step >= hints.length - 1) {
+          riddleBtn.textContent = '就说到这';
+          riddleBtn.disabled = true;
+        }
+      }, 160);
+    });
+  }
 </script>
 
 <style>
@@ -120,6 +227,178 @@ const base = import.meta.env.BASE_URL;
   .about-panel {
     padding: 2rem 2.35rem;
     min-height: 22rem;
+  }
+
+  /* ── 林间告示牌 ── */
+  .about-now {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 0.6rem;
+    align-items: center;
+    margin-bottom: 1.4rem;
+    padding: 0.75rem 0.95rem;
+    border: 1px dashed color-mix(in srgb, var(--ch-accent-warm) 38%, transparent);
+    border-radius: var(--ch-radius-sm);
+    background: color-mix(in srgb, var(--ch-accent-warm) 6%, transparent);
+  }
+
+  .about-now__title {
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-mono-font);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+  }
+
+  .about-now__item {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: baseline;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ch-surface-solid) 72%, transparent);
+    color: var(--ch-fg);
+    font-size: 0.8rem;
+  }
+
+  .about-now__item em {
+    color: var(--ch-accent-secondary);
+    font-style: normal;
+    font-family: var(--ch-mono-font);
+    font-size: 0.68rem;
+  }
+
+  /* ── 「6ch.」名字彩蛋 ── */
+  .name-riddle-btn {
+    padding: 0.14rem 0.7rem;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 36%, transparent);
+    border-radius: 999px;
+    background: var(--ch-accent-dim);
+    color: var(--ch-accent-secondary);
+    font: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition:
+      background var(--ch-transition-fast),
+      color var(--ch-transition-fast),
+      border-color var(--ch-transition-fast);
+  }
+
+  .name-riddle-btn:hover:not(:disabled),
+  .name-riddle-btn:focus-visible {
+    background: color-mix(in srgb, var(--ch-accent-dim) 80%, var(--ch-accent-secondary));
+    color: var(--ch-accent-ink);
+  }
+
+  .name-riddle-btn:disabled {
+    cursor: default;
+    opacity: 0.65;
+  }
+
+  .name-riddle {
+    display: inline-block;
+    margin-left: 0.45rem;
+    color: var(--ch-accent);
+    opacity: 0;
+    transform: translateY(3px);
+    transition:
+      opacity var(--ch-transition-fast),
+      transform var(--ch-transition-fast);
+  }
+
+  .name-riddle.is-shown {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── 爱好小径 ── */
+  .about-trails {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+    padding-top: 1.35rem;
+    border-top: 1px dashed var(--ch-border-soft);
+  }
+
+  .trail-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.7rem;
+    align-items: center;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid var(--ch-glass-border);
+    border-radius: var(--ch-radius-sm);
+    background:
+      radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--ch-accent-warm) 7%, transparent), transparent 40%),
+      color-mix(in srgb, var(--ch-surface-solid) 55%, transparent);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      transform var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      background var(--ch-transition-fast);
+  }
+
+  .trail-card:hover,
+  .trail-card:focus-visible {
+    border-color: color-mix(in srgb, var(--ch-accent-secondary) 40%, var(--ch-glass-border));
+    background: var(--ch-glass-bg-hover);
+    color: inherit;
+    transform: translateY(-2px);
+  }
+
+  .trail-card__icon {
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border: 1px dashed color-mix(in srgb, var(--ch-accent-secondary) 40%, transparent);
+    border-radius: 999px;
+    color: var(--ch-accent-secondary);
+  }
+
+  .trail-card__icon svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .trail-card__body {
+    min-width: 0;
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .trail-card__body strong {
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: 0.98rem;
+    transition: color var(--ch-transition-fast);
+  }
+
+  .trail-card:hover .trail-card__body strong,
+  .trail-card:focus-visible .trail-card__body strong {
+    color: var(--ch-accent);
+  }
+
+  .trail-card__body small {
+    color: var(--ch-fg-muted);
+    font-size: 0.76rem;
+    line-height: 1.45;
+  }
+
+  .trail-card__arrow {
+    color: var(--ch-accent-tertiary);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition:
+      opacity var(--ch-transition-fast),
+      transform var(--ch-transition-fast);
+  }
+
+  .trail-card:hover .trail-card__arrow,
+  .trail-card:focus-visible .trail-card__arrow {
+    opacity: 1;
+    transform: translateX(0);
   }
 
   .about-panel__toolbar {
@@ -195,6 +474,10 @@ const base = import.meta.env.BASE_URL;
 
     .about-panel {
       padding: 1.65rem 1.5rem;
+    }
+
+    .about-trails {
+      grid-template-columns: 1fr;
     }
   }
 </style>
