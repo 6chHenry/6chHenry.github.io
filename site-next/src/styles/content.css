@@ -891,10 +891,10 @@
 }
 
 .notes-beds {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
-  gap: 1rem;
-  align-items: start;
+  /* 瀑布流多列：每畦独占一列内的位置，展开时只把本列往下推，
+     不会像按行网格那样在同行卡片下留出大片空白 */
+  columns: 21rem 2;
+  column-gap: 1rem;
   margin: 0;
   padding: 0 0 4rem;
   list-style: none;
@@ -903,6 +903,9 @@
 .notes-bed {
   --bed-accent: var(--ch-accent-secondary);
   position: relative;
+  margin-bottom: 1rem;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
   border: 1px solid color-mix(in srgb, var(--bed-accent) 24%, var(--ch-glass-border));
   border-radius: var(--ch-radius-sm);
   background:
