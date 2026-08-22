@@ -36,11 +36,10 @@ export function initReadingVine(): void {
 
   LEAF_SPOTS.forEach((spot, index) => {
     const point = stem.getPointAtLength(stemLength * spot);
-    const ahead = stem.getPointAtLength(Math.min(stemLength, stemLength * spot + 2));
-    const tangent = (Math.atan2(ahead.y - point.y, ahead.x - point.x) * 180) / Math.PI;
-    /* 叶子朝切线两侧张开，交替左右 */
-    const angle = tangent + (index % 2 === 0 ? -58 : 58);
-    const scale = 0.85 + ((index * 37) % 30) / 100;
+    /* 叶子随机长在茎的左侧或右侧，张角和大小都带抖动，避免对称感 */
+    const side = Math.random() < 0.5 ? -1 : 1;
+    const angle = side * (26 + Math.random() * 24);
+    const scale = 0.78 + Math.random() * 0.38;
 
     const wrapper = el('g', {
       transform: `translate(${point.x.toFixed(1)} ${point.y.toFixed(1)}) rotate(${angle.toFixed(1)}) scale(${scale.toFixed(2)})`,
