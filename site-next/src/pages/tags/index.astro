@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { collectTags } from '../../utils/content';
 
 const [notes, essays, projects] = await Promise.all([
   getCollection('notes', ({ data }) => !data.draft),
@@ -10,104 +9,305 @@ const [notes, essays, projects] = await Promise.all([
 ]);
 
 const allEntries = [...notes, ...essays, ...projects];
-const tags = [...collectTags(allEntries).entries()].sort((a, b) => b[1] - a[1]);
 const base = import.meta.env.BASE_URL;
 
-/* 权重归一化：最常用的标签长得最茂盛，冷门的缩成苔点 */
-const maxCount = Math.max(...tags.map(([, count]) => count), 1);
-const weightOf = (count: number) => (0.25 + (0.75 * (count - 1)) / Math.max(maxCount - 1, 1)).toFixed(2);
+/* 每个标签记录它在哪几片林子里生长（笔记 / 杂谈 / 作品） */
+interface TagRecord {
+  tag: string;
+  total: number;
+  groves: Array<{ key: string; label: string; n: number }>;
+}
+
+const groveMeta = [
+  { key: 'notes', label: '笔记' },
+  { key: 'essay', label: '杂谈' },
+  { key: 'projects', label: '作品' },
+] as const;
+
+const collected = new Map<string, Record<string, number>>();
+for (const entry of allEntries) {
+  for (const tag of entry.data.tags ?? []) {
+    const rec = collected.get(tag) ?? {};
+    rec[entry.collection] = (rec[entry.collection] ?? 0) + 1;
+    collected.set(tag, rec);
+  }
+}
+
+const records: TagRecord[] = [...collected.entries()]
+  .map(([tag, rec]) => ({
+    tag,
+    total: Object.values(rec).reduce((sum, n) => sum + n, 0),
+    groves: groveMeta
+      .filter((g) => rec[g.key])
+      .map((g) => ({ key: g.key, label: `${g.label} ×${rec[g.key]}`, n: rec[g.key] })),
+  }))
+  .sort((a, b) => b.total - a.total);
+
+/* 森林分层：乔木（高频主题）/ 灌木（多面路径）/ 苔藓（一次相遇）。
+   逐层排除，保证一个标签只出现在一层 */
+const maxCount = Math.max(...records.map((r) => r.total), 1);
+let pool = [...records];
+const tiers = [
+  { key: 'canopy', en: 'Canopy', label: '乔木层', desc: '反复回到的主题', test: (n: number) => n >= Math.ceil(maxCount * 0.38) },
+  { key: 'shrub', en: 'Shrub', label: '灌木层', desc: '时常路过的岔径', test: (n: number) => n >= 2 },
+  { key: 'moss', en: 'Moss', label: '苔藓层', desc: '一次相遇留下的痕迹', test: () => true },
+].map(({ key, en, label, desc, test }) => {
+  const items = pool.filter((r) => test(r.total));
+  pool = pool.filter((r) => !test(r.total));
+  return { key, en, label, desc, items };
+});
+
+function leafSize(total: number, floor: number, ceil: number): string {
+  return `${floor + ((total - 1) / Math.max(maxCount - 1, 1)) * (ceil - floor)}rem`;
+}
 ---
 
 <BaseLayout title="标签 | 6ch. · 林间笔记" description="按标签浏览内容">
-  <section class="container page-shell">
+  <section class="container page-shell tags-page">
     <header class="page-header">
       <p class="section-kicker">Tags</p>
       <h1>标签</h1>
-      <p class="section-lead">同一株气味下的所有去处。字越大的路径，踩过的人（和我自己）越多。</p>
+      <p class="section-lead">
+        同一株气味下的所有去处，像林子一样分了三层：乔木是常回来的主题，灌木是绕过的岔径，
+        苔藓是一次相遇留下的痕迹。每片叶子上的小点，标着它长在哪片林子里。
+      </p>
     </header>
 
-    <ul class="tag-cloud">
-      {
-        tags.map(([tag, count]) => (
-          <li style={`--tag-weight: ${weightOf(count)}`}>
-            <a href={`${base}tags/${encodeURIComponent(tag)}/`} title={`${count} 篇`}>
-              <span class="tag-cloud__name">#{tag}</span>
-              <span class="tag-cloud__count">{count}</span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+    {
+      tiers.map(
+        (tier) =>
+          tier.items.length > 0 && (
+            <section class="tag-tier" aria-labelledby={`tag-tier-${tier.key}`}>
+              <header class="tag-tier__head">
+                <div>
+                  <p class="tag-tier__kicker">{tier.en}</p>
+                  <h2 id={`tag-tier-${tier.key}`}>{tier.label}</h2>
+                  <p class="tag-tier__desc">{tier.desc}</p>
+                </div>
+                <span class="tag-tier__count">{tier.items.length} 枚</span>
+              </header>
+
+              <ul class="tag-tier__cloud">
+                {tier.items.map((record, i) => (
+                  <li>
+                    <a
+                      class="tag-leaf"
+                      href={`${base}tags/${encodeURIComponent(record.tag)}/`}
+                      style={`--leaf-size: ${leafSize(record.total, tier.key === 'canopy' ? 1.14 : tier.key === 'shrub' ? 0.96 : 0.86, tier.key === 'canopy' ? 1.72 : tier.key === 'shrub' ? 1.06 : 0.86)}rem; --tilt: ${(i % 2 === 0 ? 0.45 : -0.4).toFixed(2)}deg`}
+                    >
+                      <span class="tag-leaf__name">#{record.tag}</span>
+                      <span class="tag-leaf__meta">
+                        {record.groves.map((grove) => (
+                          <i class={`grove-dot grove-dot--${grove.key}`} title={grove.label} />
+                        ))}
+                        <em>{record.total}</em>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ),
+      )
+    }
   </section>
 </BaseLayout>
 
 <style>
-  .tag-cloud {
+  .tags-page {
+    padding-bottom: 4rem;
+  }
+
+  /* ── 林层小节 ── */
+
+  .tag-tier {
+    margin-top: 2.4rem;
+  }
+
+  .tag-tier__head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.05rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 30%, transparent);
+  }
+
+  .tag-tier__kicker {
+    margin: 0 0 0.3rem;
+    font-family: var(--ch-mono-font);
+    font-size: 0.64rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ch-accent-tertiary);
+  }
+
+  .tag-tier__head h2 {
+    margin: 0 0 0.28rem;
+    font-family: var(--ch-display-font);
+    font-size: 1.42rem;
+    line-height: 1.15;
+    color: var(--ch-accent);
+  }
+
+  .tag-tier__desc {
+    margin: 0;
+    color: var(--ch-fg-muted);
+    font-size: 0.86rem;
+  }
+
+  .tag-tier__count {
+    flex: 0 0 auto;
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-mono-font);
+    font-size: 0.74rem;
+  }
+
+  /* ── 叶片标签 ── */
+
+  .tag-tier__cloud {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.4rem 1.1rem;
-    max-width: 52rem;
+    align-items: center;
+    gap: 0.55rem 0.7rem;
     margin: 0;
-    padding: 0.5rem 0 4rem;
+    padding: 0;
     list-style: none;
   }
 
-  .tag-cloud li {
+  .tag-tier__cloud li {
     margin: 0;
     padding: 0;
+    transform: rotate(var(--tilt));
   }
 
-  .tag-cloud a {
+  .tag-leaf {
     position: relative;
     display: inline-flex;
-    gap: 0.3rem;
+    gap: 0.55rem;
     align-items: baseline;
-    padding: 0.16rem 0.05rem;
-    border-bottom: 1px dashed transparent;
+    padding: 0.36rem 0.85rem 0.4rem 0.68rem;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 24%, var(--ch-glass-border));
+    /* 对角不对称圆角：一片叶子的形状 */
+    border-radius: 1rem 0.3rem 1rem 0.3rem;
+    background: linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--ch-accent-dim) 80%, transparent),
+      color-mix(in srgb, var(--ch-surface-solid) 55%, transparent)
+    );
+    box-shadow: inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
     color: inherit;
     text-decoration: none;
     transition:
-      color var(--ch-transition-fast),
-      border-color var(--ch-transition-fast);
+      transform var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      background var(--ch-transition-fast),
+      box-shadow var(--ch-transition-fast);
   }
 
-  /* 字号与颜色都由 --tag-weight 驱动：常用标签更醒目 */
-  .tag-cloud__name {
+  /* 叶尖的一滴露 */
+  .tag-leaf::before {
+    content: '';
+    position: absolute;
+    right: 0.4rem;
+    bottom: 0.3rem;
+    width: 0.3rem;
+    height: 0.3rem;
+    border-radius: 999px 999px 999px 0;
+    background: color-mix(in srgb, var(--ch-accent-tertiary) 55%, transparent);
+    transition: background var(--ch-transition-fast);
+  }
+
+  .tag-leaf:hover,
+  .tag-leaf:focus-visible {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--ch-accent-secondary) 48%, var(--ch-glass-border));
+    background: var(--ch-glass-bg-hover);
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--ch-accent-secondary) 14%, transparent);
+  }
+
+  .tag-tier__cloud li:hover,
+  .tag-tier__cloud li:focus-within {
+    transform: rotate(0deg);
+  }
+
+  .tag-leaf:focus-visible {
+    outline: 2px dashed color-mix(in srgb, var(--ch-accent-warm) 70%, transparent);
+    outline-offset: 3px;
+  }
+
+  .tag-leaf:hover::before,
+  .tag-leaf:focus-visible::before {
+    background: var(--ch-accent-warm);
+  }
+
+  .tag-leaf__name {
     font-family: var(--ch-text-font);
-    font-size: calc(0.95rem + 0.72rem * var(--tag-weight));
-    line-height: 1.45;
-    color: color-mix(
-      in srgb,
-      var(--ch-accent) calc(28% + 62% * var(--tag-weight)),
-      var(--ch-fg-muted)
-    );
+    font-size: var(--leaf-size, 1rem);
+    line-height: 1.4;
+    color: var(--ch-fg);
+    transition: color var(--ch-transition-fast);
   }
 
-  .tag-cloud__count {
+  .tag-leaf:hover .tag-leaf__name,
+  .tag-leaf:focus-visible .tag-leaf__name {
+    color: var(--ch-accent);
+  }
+
+  .tag-leaf__meta {
+    display: inline-flex;
+    gap: 0.24rem;
+    align-items: center;
+  }
+
+  .tag-leaf__meta em {
     color: var(--ch-accent-warm);
     font-family: var(--ch-mono-font);
-    font-size: calc(0.6rem + 0.22rem * var(--tag-weight));
-    opacity: 0.8;
+    font-style: normal;
+    font-size: calc(var(--leaf-size, 1rem) * 0.52);
+    opacity: 0.85;
   }
 
-  .tag-cloud a:hover,
-  .tag-cloud a:focus-visible {
-    border-bottom-color: color-mix(in srgb, var(--ch-accent-secondary) 55%, transparent);
+  /* 这片叶子长在哪几片林子 */
+  .grove-dot {
+    width: 0.34rem;
+    height: 0.34rem;
+    border-radius: 999px;
+    cursor: help;
   }
 
-  .tag-cloud a:hover .tag-cloud__name,
-  .tag-cloud a:focus-visible .tag-cloud__name {
-    color: var(--ch-accent-secondary);
+  .grove-dot--notes {
+    background: var(--ch-accent-tertiary);
+  }
+
+  .grove-dot--essay {
+    background: var(--ch-accent-warm);
+  }
+
+  .grove-dot--projects {
+    background: color-mix(in srgb, var(--ch-fg) 62%, transparent);
   }
 
   @media (max-width: 640px) {
-    .tag-cloud {
-      gap: 0.35rem 0.9rem;
+    .tag-tier__cloud {
+      gap: 0.45rem 0.55rem;
     }
 
-    .tag-cloud__name {
-      font-size: calc(0.9rem + 0.5rem * var(--tag-weight));
+    .tag-leaf {
+      padding-inline: 0.55rem 0.72rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tag-tier__cloud li,
+    .tag-leaf {
+      transition: none;
+    }
+
+    .tag-tier__cloud li:hover,
+    .tag-tier__cloud li:focus-within {
+      transform: none;
     }
   }
 </style>
