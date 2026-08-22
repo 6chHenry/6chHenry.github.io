@@ -60,69 +60,171 @@
   filter: brightness(0.7);
 }
 
-/* ── 时辰天色：黎明 / 黄昏 / 夜（白昼为默认） ── */
+/* ── 时辰天色：黎明 / 黄昏 / 夜（白昼为默认；夜是整场翻转的月夜） ── */
 
+.home-stars {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 58%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1200ms ease;
+  background-image:
+    radial-gradient(1.5px 1.5px at 18% 28%, rgb(255 255 255 / 95%), transparent 60%),
+    radial-gradient(1px 1px at 42% 12%, rgb(255 255 255 / 80%), transparent 55%),
+    radial-gradient(1.8px 1.8px at 63% 34%, rgb(214 228 244 / 90%), transparent 60%),
+    radial-gradient(1px 1px at 81% 18%, rgb(255 255 255 / 75%), transparent 55%),
+    radial-gradient(1.4px 1.4px at 92% 44%, rgb(255 255 255 / 85%), transparent 60%),
+    radial-gradient(1px 1px at 7% 52%, rgb(214 228 244 / 70%), transparent 55%);
+  background-size: 520px 340px;
+}
+
+.home-stars::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background-image:
+    radial-gradient(1.2px 1.2px at 30% 40%, rgb(255 255 255 / 85%), transparent 55%),
+    radial-gradient(1px 1px at 55% 22%, rgb(255 244 214 / 90%), transparent 55%),
+    radial-gradient(1.6px 1.6px at 74% 48%, rgb(255 255 255 / 80%), transparent 60%),
+    radial-gradient(1px 1px at 90% 30%, rgb(255 244 214 / 70%), transparent 55%),
+    radial-gradient(1.3px 1.3px at 10% 16%, rgb(255 255 255 / 78%), transparent 55%);
+  background-size: 380px 260px;
+  animation: home-twinkle 4.5s ease-in-out infinite;
+}
+
+@keyframes home-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* 黎明：蜜桃色晨光从左侧爬上来 */
 [data-daypart='dawn'] .home-sky {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--ch-bg-sky) 52%, #ecc9a2) 0%,
-    var(--ch-bg-void) 54%,
-    color-mix(in srgb, var(--ch-bg-hill) 45%, var(--ch-bg-void)) 100%
+    #f4cba4 0%,
+    #eec39f 20%,
+    color-mix(in srgb, var(--ch-bg-void) 72%, #eed3ae) 54%,
+    var(--ch-bg-void) 84%
   );
 }
 
 [data-daypart='dawn'] .home-light {
-  left: 68%;
+  left: -12%;
+  width: 96%;
   background: radial-gradient(
-    ellipse 48% 42% at 50% 0%,
-    color-mix(in srgb, #e8a06b 24%, transparent),
-    transparent 70%
+    ellipse 46% 42% at 50% 0%,
+    rgb(232 148 96 / 36%),
+    transparent 68%
   );
-  opacity: 0.85;
+  opacity: 0.95;
 }
 
+/* 黄昏：琥珀色的低阳悬在右边 */
 [data-daypart='dusk'] .home-sky {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--ch-bg-sky) 42%, #d9a27a) 0%,
-    color-mix(in srgb, var(--ch-bg-void) 86%, #6b4a33) 50%,
-    color-mix(in srgb, var(--ch-bg-hill) 50%, var(--ch-bg-void)) 100%
+    #e89a6b 0%,
+    #d98a67 20%,
+    #b56a58 38%,
+    color-mix(in srgb, var(--ch-bg-void) 74%, #8a4f43) 62%,
+    var(--ch-bg-void) 88%
   );
 }
 
 [data-daypart='dusk'] .home-light {
-  left: 32%;
-  top: -6%;
+  left: 46%;
+  top: -4%;
+  width: 108%;
   background: radial-gradient(
-    ellipse 46% 40% at 50% 0%,
-    color-mix(in srgb, #d97b4f 30%, transparent),
-    transparent 70%
+    ellipse 42% 40% at 50% 0%,
+    rgb(217 108 64 / 40%),
+    transparent 66%
+  );
+  opacity: 1;
+}
+
+/* 夜：深靛蓝的星空，月亮换下太阳，Hero 文字翻成月色 */
+[data-daypart='night'] .home-sky {
+  background: linear-gradient(
+    180deg,
+    #0b1930 0%,
+    #12253d 26%,
+    #1b3049 46%,
+    color-mix(in srgb, var(--ch-bg-void) 62%, #1b3049) 72%,
+    var(--ch-bg-void) 94%
+  );
+}
+
+[data-daypart='night'] .home-stars {
+  opacity: 0.9;
+}
+
+[data-daypart='night'] .home-light {
+  left: 56%;
+  width: 88%;
+  background: radial-gradient(
+    ellipse 34% 30% at 62% 6%,
+    rgb(207 224 234 / 26%),
+    transparent 62%
   );
   opacity: 0.9;
 }
 
-[data-daypart='night'] .home-sky {
+[data-daypart='night'] .home-mist {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--ch-bg-void) 76%, #102433) 0%,
-    var(--ch-bg-void) 52%,
-    color-mix(in srgb, var(--ch-bg-hill) 55%, var(--ch-bg-void)) 100%
+    transparent 0%,
+    rgb(11 25 48 / 40%) 38%,
+    var(--ch-bg-void) 100%
   );
 }
 
-[data-daypart='night'] .home-light {
-  left: 64%;
-  background: radial-gradient(
-    ellipse 44% 38% at 50% 0%,
-    color-mix(in srgb, #cfe0ea 13%, transparent),
-    transparent 68%
-  );
-  opacity: 0.8;
+[data-daypart='night'] .home-hills {
+  filter: brightness(0.45) saturate(0.75);
 }
 
 [data-daypart='night'] .home-treeline {
-  opacity: 0.5;
-  filter: brightness(0.55);
+  opacity: 0.55;
+  filter: brightness(0.5);
+}
+
+[data-daypart='night'] .home-photo {
+  opacity: 0.15;
+  mix-blend-mode: screen;
+  filter: brightness(0.72);
+}
+
+[data-daypart='night'] .home-title,
+[data-daypart='night'] .home-title span {
+  color: #dde8f2;
+  text-shadow: 0 18px 44px rgb(4 10 22 / 45%);
+}
+
+[data-daypart='night'] .home-eyebrow {
+  color: #9ecfbb;
+}
+
+[data-daypart='night'] .home-tagline {
+  color: var(--ch-accent-warm);
+}
+
+[data-daypart='night'] .home-subtitle {
+  color: rgb(214 228 236 / 78%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-stars::after {
+    animation: none;
+  }
 }
 
 .home-mist {
