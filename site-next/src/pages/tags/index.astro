@@ -12,6 +12,10 @@ const [notes, essays, projects] = await Promise.all([
 const allEntries = [...notes, ...essays, ...projects];
 const tags = [...collectTags(allEntries).entries()].sort((a, b) => b[1] - a[1]);
 const base = import.meta.env.BASE_URL;
+
+/* 权重归一化：最常用的标签长得最茂盛，冷门的缩成苔点 */
+const maxCount = Math.max(...tags.map(([, count]) => count), 1);
+const weightOf = (count: number) => (0.25 + (0.75 * (count - 1)) / Math.max(maxCount - 1, 1)).toFixed(2);
 ---
 
 <BaseLayout title="标签 | 6ch. · 林间笔记" description="按标签浏览内容">
@@ -19,22 +23,16 @@ const base = import.meta.env.BASE_URL;
     <header class="page-header">
       <p class="section-kicker">Tags</p>
       <h1>标签</h1>
-      <p class="section-lead">按主题穿行 — 同一标签下的内容，往往共享相似的气味。</p>
+      <p class="section-lead">同一株气味下的所有去处。字越大的路径，踩过的人（和我自己）越多。</p>
     </header>
 
-    <ul class="content-list tag-index">
+    <ul class="tag-cloud">
       {
         tags.map(([tag, count]) => (
-          <li>
-            <a class="content-row" href={`${base}tags/${encodeURIComponent(tag)}/`}>
-              <span class="content-row__marker" aria-hidden="true"></span>
-              <div class="content-row__body">
-                <h2 class="content-row__title">#{tag}</h2>
-              </div>
-              <div class="content-row__aside">
-                <span class="content-row__badge">{count}</span>
-                <span class="content-row__arrow" aria-hidden="true">→</span>
-              </div>
+          <li style={`--tag-weight: ${weightOf(count)}`}>
+            <a href={`${base}tags/${encodeURIComponent(tag)}/`} title={`${count} 篇`}>
+              <span class="tag-cloud__name">#{tag}</span>
+              <span class="tag-cloud__count">{count}</span>
             </a>
           </li>
         ))
@@ -42,3 +40,74 @@ const base = import.meta.env.BASE_URL;
     </ul>
   </section>
 </BaseLayout>
+
+<style>
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem 1.1rem;
+    max-width: 52rem;
+    margin: 0;
+    padding: 0.5rem 0 4rem;
+    list-style: none;
+  }
+
+  .tag-cloud li {
+    margin: 0;
+    padding: 0;
+  }
+
+  .tag-cloud a {
+    position: relative;
+    display: inline-flex;
+    gap: 0.3rem;
+    align-items: baseline;
+    padding: 0.16rem 0.05rem;
+    border-bottom: 1px dashed transparent;
+    color: inherit;
+    text-decoration: none;
+    transition:
+      color var(--ch-transition-fast),
+      border-color var(--ch-transition-fast);
+  }
+
+  /* 字号与颜色都由 --tag-weight 驱动：常用标签更醒目 */
+  .tag-cloud__name {
+    font-family: var(--ch-text-font);
+    font-size: calc(0.95rem + 0.72rem * var(--tag-weight));
+    line-height: 1.45;
+    color: color-mix(
+      in srgb,
+      var(--ch-accent) calc(28% + 62% * var(--tag-weight)),
+      var(--ch-fg-muted)
+    );
+  }
+
+  .tag-cloud__count {
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-mono-font);
+    font-size: calc(0.6rem + 0.22rem * var(--tag-weight));
+    opacity: 0.8;
+  }
+
+  .tag-cloud a:hover,
+  .tag-cloud a:focus-visible {
+    border-bottom-color: color-mix(in srgb, var(--ch-accent-secondary) 55%, transparent);
+  }
+
+  .tag-cloud a:hover .tag-cloud__name,
+  .tag-cloud a:focus-visible .tag-cloud__name {
+    color: var(--ch-accent-secondary);
+  }
+
+  @media (max-width: 640px) {
+    .tag-cloud {
+      gap: 0.35rem 0.9rem;
+    }
+
+    .tag-cloud__name {
+      font-size: calc(0.9rem + 0.5rem * var(--tag-weight));
+    }
+  }
+</style>
