@@ -485,25 +485,27 @@
 
 .home-trail__path-halo {
   stroke: var(--ch-accent-warm);
-  stroke-width: 14;
-  opacity: 0.14;
+  stroke-width: 12;
+  opacity: 0.09;
   stroke-linecap: round;
   filter: blur(1px);
 }
 
+/* 圆珠点线：一串脚印，与痕迹列表的类型圆点同一种语言 */
 .home-trail__path-line {
-  stroke: color-mix(in srgb, var(--ch-accent-warm) 82%, var(--ch-accent-secondary));
-  stroke-width: 2.2;
-  stroke-dasharray: 1 10;
+  stroke: color-mix(in srgb, var(--ch-accent-warm) 78%, var(--ch-accent-tertiary));
+  stroke-width: 2.6;
+  stroke-dasharray: 0.1 9;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
+/* 林口：一枚环形的地图原点标记 */
 .home-trail__start {
-  fill: var(--ch-accent-warm);
-  stroke: var(--ch-surface-solid);
-  stroke-width: 2;
+  fill: var(--ch-surface-solid);
+  stroke: var(--ch-accent-warm);
+  stroke-width: 2.6;
 }
 
 .home-trail__sprout path {
@@ -544,49 +546,73 @@
   text-align: center;
 }
 
-/* 点击热区只有圆形路标本体（外圈留出舒适的手指/鼠标余量） */
+/* 点击热区只有徽章本体（外圈留出舒适的手指/鼠标余量） */
 .home-trail__marker-link {
   display: grid;
-  width: 4.25rem;
-  height: 4.25rem;
-  margin-top: calc(var(--trail-lift, 2.25rem) - 0.5rem);
+  width: 4.4rem;
+  height: 4.4rem;
+  margin-top: calc(var(--trail-lift, 2.25rem) - 0.55rem);
   place-items: center;
   border-radius: 50%;
   cursor: pointer;
 }
 
-.home-trail__marker {
+/* 编号徽章：古地图图例式的双圈雕版印章，而非按钮 */
+.home-trail__mark {
+  position: relative;
   display: grid;
-  width: 3.25rem;
-  height: 3.25rem;
+  width: 3.4rem;
+  height: 3.4rem;
   place-items: center;
-  border: 1.5px solid color-mix(in srgb, var(--ch-accent-secondary) 42%, var(--ch-border));
+  border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 36%, var(--ch-border));
   border-radius: 50%;
-  background: color-mix(in srgb, var(--ch-surface-solid) 88%, transparent);
-  box-shadow:
-    0 10px 26px color-mix(in srgb, var(--ch-accent) 14%, transparent),
-    inset 0 1px 0 color-mix(in srgb, white 42%, transparent);
+  background:
+    radial-gradient(circle at 34% 28%, color-mix(in srgb, white 40%, transparent), transparent 52%),
+    color-mix(in srgb, var(--ch-surface-solid) 74%, transparent);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--ch-accent) 10%, transparent);
   color: var(--ch-accent-secondary);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition:
-    transform var(--ch-transition),
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color var(--ch-transition-fast),
-    box-shadow var(--ch-transition-fast),
+    box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1),
     color var(--ch-transition-fast);
 }
 
-.home-trail__marker .forest-icon {
-  width: 1.15rem;
-  height: 1.15rem;
+.home-trail__mark::before {
+  position: absolute;
+  inset: 4px;
+  border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 20%, transparent);
+  border-radius: 50%;
+  content: '';
+  transition:
+    border-color var(--ch-transition-fast),
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.home-trail__marker-link:hover .home-trail__marker,
-.home-trail__marker-link:focus-visible .home-trail__marker {
-  border-color: color-mix(in srgb, var(--ch-accent-warm) 60%, var(--ch-border));
+.home-trail__num {
+  font-family: var(--ch-display-font);
+  font-size: 1.32rem;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.home-trail__marker-link:hover .home-trail__mark,
+.home-trail__marker-link:focus-visible .home-trail__mark {
+  border-color: color-mix(in srgb, var(--ch-accent-warm) 58%, var(--ch-border));
   box-shadow:
-    0 0 0 5px color-mix(in srgb, var(--ch-accent-warm) 14%, transparent),
-    0 16px 34px color-mix(in srgb, var(--ch-accent-warm) 20%, transparent);
+    0 14px 30px color-mix(in srgb, var(--ch-accent-warm) 15%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--ch-accent-warm) 8%, transparent);
   color: var(--ch-accent-warm);
-  transform: translateY(-4px) rotate(-6deg);
+  transform: translateY(-3px);
+}
+
+.home-trail__marker-link:hover .home-trail__mark::before,
+.home-trail__marker-link:focus-visible .home-trail__mark::before {
+  border-color: color-mix(in srgb, var(--ch-accent-warm) 34%, transparent);
+  transform: scale(0.94);
 }
 
 .home-trail__marker-link:focus-visible {
@@ -595,11 +621,38 @@
 }
 
 .home-trail__name {
-  margin-top: 0.85rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.9rem;
+  padding-bottom: 3px;
   font-family: var(--ch-display-font);
-  font-size: 1.28rem;
+  font-size: 1.26rem;
   font-weight: 600;
   line-height: 1.15;
+  letter-spacing: 0.02em;
+  transition: color var(--ch-transition-fast);
+}
+
+/* 悬停时名字下方扫过一条金色细线，呼应痕迹列表的书签丝带 */
+.home-trail__name::after {
+  position: absolute;
+  right: 10%;
+  bottom: 0;
+  left: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ch-accent-warm), transparent);
+  content: '';
+  transform: scaleX(0);
+  transition: transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-trail__name .forest-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  color: var(--ch-fg-muted);
+  opacity: 0.85;
   transition: color var(--ch-transition-fast);
 }
 
@@ -608,16 +661,32 @@
   color: var(--ch-accent);
 }
 
+.home-trail__stop:has(.home-trail__marker-link:hover) .home-trail__name::after,
+.home-trail__stop:has(.home-trail__marker-link:focus-visible) .home-trail__name::after {
+  transform: scaleX(1);
+}
+
+.home-trail__stop:has(.home-trail__marker-link:hover) .home-trail__name .forest-icon,
+.home-trail__stop:has(.home-trail__marker-link:focus-visible) .home-trail__name .forest-icon {
+  color: var(--ch-accent-warm);
+}
+
 .home-trail__desc {
   max-width: 13rem;
-  margin-top: 0.4rem;
+  margin-top: 0.45rem;
   color: var(--ch-fg-muted);
-  font-size: 0.78rem;
-  line-height: 1.55;
+  font-size: 0.79rem;
+  line-height: 1.7;
+}
+
+.home-trail__meta {
+  display: grid;
+  gap: 0.18rem;
+  justify-items: center;
+  margin-top: 0.55rem;
 }
 
 .home-trail__count {
-  margin-top: 0.55rem;
   color: var(--ch-fg-muted);
   font-family: var(--ch-mono-font);
   font-size: 0.64rem;
@@ -626,7 +695,6 @@
 
 .home-trail__latest {
   max-width: 11.5rem;
-  margin-top: 0.3rem;
   overflow: hidden;
   color: var(--ch-fg-muted);
   font-family: var(--ch-text-font);
@@ -635,12 +703,6 @@
   white-space: nowrap;
   transition: color var(--ch-transition-fast);
 }
-
-.home-trail__stop:has(.home-trail__marker-link:hover) .home-trail__latest,
-.home-trail__stop:has(.home-trail__marker-link:focus-visible) .home-trail__latest {
-  color: var(--ch-accent-warm);
-}
-
 .home-trail__footer {
   display: flex;
   flex-wrap: wrap;
@@ -716,41 +778,54 @@
     display: none;
   }
 
+  /* 与「最近痕迹」一致的行式日志布局 */
   .home-trail__stops {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.8rem;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px dashed color-mix(in srgb, var(--ch-accent-secondary) 30%, transparent);
   }
 
   .home-trail__stop {
-    align-items: flex-start;
-    padding: 1.1rem 1.15rem 1.2rem;
-    border: 1px solid var(--ch-border-soft);
-    border-radius: 14px;
-    background: color-mix(in srgb, var(--ch-surface-solid) 46%, transparent);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'mark name'
+      'mark desc'
+      'mark meta';
+    align-items: start;
+    column-gap: 1.05rem;
+    padding: 1rem 0.5rem 1.05rem 0.75rem;
+    border-bottom: 1px dashed color-mix(in srgb, var(--ch-accent-secondary) 26%, transparent);
     text-align: left;
   }
 
-  .home-trail__stop:has(.home-trail__marker-link:hover),
-  .home-trail__stop:has(.home-trail__marker-link:focus-visible) {
-    border-color: color-mix(in srgb, var(--ch-accent-warm) 38%, var(--ch-border));
-    background: color-mix(in srgb, var(--ch-surface-solid) 72%, transparent);
+  .home-trail__stop:last-child {
+    border-bottom: 0;
   }
 
   .home-trail__marker-link {
-    width: 3.75rem;
-    height: 3.75rem;
-    margin-top: 0;
-    align-self: flex-start;
+    grid-area: mark;
+    width: 3.9rem;
+    height: 3.9rem;
+    margin-top: 0.15rem;
   }
 
   .home-trail__name {
-    margin-top: 0.75rem;
+    grid-area: name;
+    justify-self: start;
+    margin-top: 0.2rem;
   }
-}
 
-@media (max-width: 560px) {
-  .home-trail__stops {
-    grid-template-columns: 1fr;
+  .home-trail__desc {
+    grid-area: desc;
+    max-width: none;
+    margin-top: 0.25rem;
+  }
+
+  .home-trail__meta {
+    grid-area: meta;
+    justify-items: start;
+    margin-top: 0.45rem;
   }
 }
 

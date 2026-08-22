@@ -176,14 +176,21 @@ const paths: Array<{
             <li>
               <div class="home-trail__stop" style={`--trail-lift: ${path.lift};`}>
                 <a class="home-trail__marker-link" href={path.href} aria-label={`${path.title} · ${path.description}`}>
-                  <span class="home-trail__marker">
-                    <ForestIcon name={path.icon} />
+                  <span class="home-trail__mark">
+                    <span class="home-trail__num" aria-hidden="true">{path.index}</span>
                   </span>
                 </a>
-                <span class="home-trail__name">{path.title}</span>
+                <span class="home-trail__name">
+                  <ForestIcon name={path.icon} />
+                  {path.title}
+                </span>
                 <span class="home-trail__desc">{path.description}</span>
-                {path.count && <span class="home-trail__count">{path.count}</span>}
-                {path.latest && <span class="home-trail__latest">最近 · {path.latest.title}</span>}
+                {(path.count || path.latest) && (
+                  <span class="home-trail__meta">
+                    {path.count && <span class="home-trail__count">{path.count}</span>}
+                    {path.latest && <span class="home-trail__latest">最近 · {path.latest.title}</span>}
+                  </span>
+                )}
               </div>
             </li>
           ))
