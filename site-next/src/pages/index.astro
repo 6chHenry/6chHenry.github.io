@@ -210,34 +210,31 @@ const paths: Array<{
 
   {
     recent.length > 0 && (
-      <section class="container recent-section">
-        <header class="recent-section__header">
+      <section class="trace-section" aria-labelledby="trace-section-title">
+        <header class="trace-section__header">
           <div>
             <p class="section-kicker">Recent traces</p>
-            <h2 class="section-title">最近留下的痕迹</h2>
+            <h2 class="section-title" id="trace-section-title">最近留下的痕迹</h2>
             <p class="section-lead">按时间拾起最近的八次更新，看这片林正在往哪里生长。</p>
           </div>
-          <p class="recent-section__edition">
-            <span>Latest 08</span> · chronological field notes
+          <p class="trace-section__count">
+            <span>{String(recent.length).padStart(2, '0')}</span> 条新痕迹
           </p>
         </header>
-        <ul class="content-list recent-list">
-          {recent.map((item, index) => (
+        <ol class="trace-list">
+          {recent.map((item) => (
             <li>
-              <a class="content-row recent-row" href={item.href}>
-                <span class="recent-row__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-                <div class="content-row__body">
-                  <div class="recent-row__meta">
-                    <span class={`recent-row__type recent-row__type--${item.collection}`}>{item.collectionLabel}</span>
-                    {item.date && <time class="content-row__date">{item.date}</time>}
-                  </div>
-                  <h2 class="content-row__title">{item.title}</h2>
-                </div>
-                <span class="content-row__arrow" aria-hidden="true">→</span>
+              <a class="trace-row" href={item.href}>
+                <span class={`trace-row__type trace-row__type--${item.collection}`}>{item.collectionLabel}</span>
+                <span class="trace-row__body">
+                  <strong class="trace-row__title">{item.title}</strong>
+                </span>
+                {item.date && <time class="trace-row__date">{item.date}</time>}
+                <span class="trace-row__arrow" aria-hidden="true">→</span>
               </a>
             </li>
           ))}
-        </ul>
+        </ol>
       </section>
     )
   }
