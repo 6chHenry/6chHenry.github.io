@@ -4,11 +4,50 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const base = import.meta.env.BASE_URL;
 ---
 
-<BaseLayout title="页面未找到" description="请求的页面不存在">
-  <section class="container page-shell not-found">
+<BaseLayout title="迷路的林间 | 6ch." description="请求的页面不存在">
+  <section class="container not-found">
+    <svg class="lost-scene" viewBox="0 0 480 300" fill="none" aria-hidden="true">
+      <!-- 远山与雾 -->
+      <path d="M0 238 C70 214 120 232 190 220 C260 208 330 230 480 216 L480 300 L0 300 Z" fill="var(--nf-mist)" />
+      <!-- 两侧的树 -->
+      <g class="lost-tree lost-tree--l">
+        <path d="M52 252 L52 196" stroke="var(--nf-trunk)" stroke-width="5" stroke-linecap="round" />
+        <circle cx="50" cy="172" r="30" fill="var(--nf-canopy)" opacity=".85" />
+        <circle cx="26" cy="192" r="17" fill="var(--nf-canopy)" opacity=".65" />
+        <circle cx="76" cy="188" r="18" fill="var(--nf-canopy)" opacity=".7" />
+      </g>
+      <g class="lost-tree lost-tree--r">
+        <path d="M430 256 L430 206" stroke="var(--nf-trunk)" stroke-width="4.5" stroke-linecap="round" />
+        <circle cx="428" cy="182" r="26" fill="var(--nf-canopy)" opacity=".8" />
+        <circle cx="452" cy="200" r="15" fill="var(--nf-canopy)" opacity=".62" />
+      </g>
+      <!-- 蜿蜒的小路，消失在林深处 -->
+      <path
+        class="lost-path"
+        d="M240 292 C226 268 268 250 246 232 C228 217 262 204 250 192"
+        stroke="var(--nf-path)"
+        stroke-width="7"
+        stroke-linecap="round"
+        stroke-dasharray="1 14"
+      />
+      <!-- 路口的歪脖子木牌 -->
+      <g class="lost-sign">
+        <path d="M282 288 L282 254" stroke="var(--nf-trunk)" stroke-width="4" stroke-linecap="round" />
+        <rect x="252" y="242" width="58" height="20" rx="4" fill="var(--nf-board)" />
+        <text x="281" y="256.5" text-anchor="middle" font-size="11" fill="var(--nf-board-ink)">→?</text>
+      </g>
+      <!-- 萤火虫 -->
+      <circle class="firefly f1" cx="150" cy="150" r="3" fill="var(--nf-firefly)" />
+      <circle class="firefly f2" cx="340" cy="130" r="2.5" fill="var(--nf-firefly)" />
+      <circle class="firefly f3" cx="210" cy="110" r="2" fill="var(--nf-firefly)" />
+    </svg>
+
     <h1>404</h1>
-    <p>这片林里没有你要找的路。</p>
-    <a class="pill" href={base}>返回主页</a>
+    <p class="not-found__copy">这片林里没有你要找的路。萤火虫说，你可能走岔了。</p>
+    <div class="not-found__actions">
+      <a class="pill" href={base}>返回主页</a>
+      <a class="pill pill--ghost" href={`${base}search/`}>去搜一搜</a>
+    </div>
   </section>
 </BaseLayout>
 
@@ -24,19 +63,107 @@ const base = import.meta.env.BASE_URL;
 
 <style>
   .not-found {
+    max-width: 34rem;
+    margin-inline: auto;
     text-align: center;
-    padding: 4rem 1.5rem 6rem;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  .lost-scene {
+    display: block;
+    width: min(100%, 30rem);
+    height: auto;
+    margin: 0 auto 1rem;
+  }
+
+  /* 场景配色全部走 token，两种主题都成立 */
+  .not-found {
+    --nf-mist: color-mix(in srgb, var(--ch-accent-dim) 55%, transparent);
+    --nf-trunk: var(--ch-accent-secondary);
+    --nf-canopy: var(--ch-accent-tertiary);
+    --nf-path: color-mix(in srgb, var(--ch-fg) 55%, transparent);
+    --nf-board: #b68a3d;
+    --nf-board-ink: #fffdf6;
+    --nf-firefly: var(--ch-accent-warm);
+  }
+
+  [data-theme='dark'] .not-found {
+    --nf-board: var(--ch-accent-warm);
+    --nf-board-ink: #101e16;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .not-found {
+      --nf-board: var(--ch-accent-warm);
+      --nf-board-ink: #101e16;
+    }
+  }
+
+  .lost-path {
+    animation: nf-walk 26s linear infinite;
+  }
+
+  @keyframes nf-walk {
+    to {
+      stroke-dashoffset: -150;
+    }
+  }
+
+  .firefly {
+    filter: drop-shadow(0 0 6px var(--nf-firefly));
+    animation: nf-drift 7s ease-in-out infinite alternate;
+  }
+
+  .firefly.f2 {
+    animation-duration: 9s;
+    animation-delay: -3s;
+  }
+
+  .firefly.f3 {
+    animation-duration: 11s;
+    animation-delay: -5s;
+  }
+
+  @keyframes nf-drift {
+    from {
+      transform: translate(0, 0);
+      opacity: 0.35;
+    }
+    to {
+      transform: translate(14px, -18px);
+      opacity: 1;
+    }
   }
 
   .not-found h1 {
     font-family: var(--ch-display-font);
-    font-size: clamp(3rem, 8vw, 4.5rem);
+    font-size: clamp(3rem, 10vw, 4.5rem);
+    letter-spacing: 0.04em;
     margin: 0 0 0.75rem;
     color: var(--ch-accent-secondary);
   }
 
-  .not-found p {
+  .not-found__copy {
     color: var(--ch-fg-muted);
-    margin: 0 0 1.5rem;
+    margin: 0 0 1.6rem;
+    line-height: 1.8;
+  }
+
+  .not-found__actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .pill--ghost {
+    background: transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lost-path,
+    .firefly {
+      animation: none;
+    }
   }
 </style>
