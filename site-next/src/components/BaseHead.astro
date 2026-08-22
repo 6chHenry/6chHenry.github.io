@@ -22,8 +22,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <link rel="icon" href={`${import.meta.env.BASE_URL}img/avatar1.jpg`} />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- Noto Serif SC 自托管（scripts/fetch-noto-serif-sc.mjs 抓取切片到 public/fonts），
+     与站点同源、不依赖 Google Fonts 的连通性 -->
+<link rel="stylesheet" href={`${import.meta.env.BASE_URL}fonts/noto-serif-sc.css`} />
 <link
-  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
   rel="stylesheet"
 />
 <link

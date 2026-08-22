@@ -31,9 +31,9 @@
   --ch-radius-sm: 10px;
   --ch-radius-lg: 24px;
 
-  /* 标题里的 CJK 以文楷优先：它由国内可达的 jsdelivr 镜像分发且覆盖完整，
-     避免 Noto（Google Fonts 切片）加载不齐时同一行字混入两种字体 */
-  --ch-display-font: "Cormorant Garamond", "LXGW WenKai Screen", "Noto Serif SC", serif;
+  /* 标题 CJK 首选宋体（Noto Serif SC，自托管于 public/fonts，见 BaseHead）；
+     文楷只作兜底。此前混用 Google Fonts 切片导致同行字两种字体的问题已由自托管解决 */
+  --ch-display-font: "Cormorant Garamond", "Noto Serif SC", "LXGW WenKai Screen", serif;
   --ch-text-font: "LXGW WenKai Screen", "Noto Serif SC", serif;
   --ch-academic-font: "IBM Plex Sans", "Noto Serif SC", sans-serif;
   --ch-mono-font: "JetBrains Mono", "Fira Code", monospace;
