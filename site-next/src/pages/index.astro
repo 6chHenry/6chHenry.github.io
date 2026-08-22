@@ -44,6 +44,74 @@ const latestNote = sortByRecency(notes)[0];
 const latestEssay = sortByRecency(essays)[0];
 const latestProject = sortByRecency(projects)[0];
 
+/* 四棵路标树：灯笼松（引路）→ 老橡树（知识年轮）→ 花树（季节）→ 新苗（新枝）。
+   树干 pathLength=1 供描线生长动画，树冠 --leaf-i 控制绽放次序。 */
+const treeSvgs: Record<string, string> = {
+  lantern: `<svg class="trail-tree" viewBox="0 0 90 110" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g class="tt-canopy">
+      <path style="--leaf-i:0" d="M45 14 L60 40 L53 40 L65 58 L55 58 L69 79 L21 79 L35 58 L25 58 L37 40 L30 40 Z" fill="var(--tree-leaf)" fill-opacity=".88" stroke="var(--tree-ink)" stroke-width="2" stroke-linejoin="round"/>
+      <path style="--leaf-i:1" d="M45 32 L54 47 L36 47 Z" fill="var(--tree-leaf-soft)" opacity=".8"/>
+    </g>
+    <g class="tt-trunk">
+      <path pathLength="1" d="M45 78 L45 104" stroke="var(--tree-ink)" stroke-width="3"/>
+    </g>
+    <g>
+      <path d="M37 52 C31 55 30 60 30 65" stroke="var(--tree-ink)" stroke-width="1.6"/>
+      <circle cx="30" cy="70" r="8" fill="var(--tree-glow)" opacity=".26"/>
+      <path style="--leaf-i:2" d="M27 66 a3 3 0 0 1 6 0 v5 a3 3 0 0 1 -6 0 Z" fill="var(--tree-glow)" stroke="var(--tree-ink)" stroke-width="1.4"/>
+    </g>
+  </svg>`,
+  oak: `<svg class="trail-tree" viewBox="0 0 90 110" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g class="tt-trunk">
+      <path pathLength="1" d="M45 104 C44 90 47 76 44 62 C42 52 43 46 45 40" stroke="var(--tree-ink)" stroke-width="3.4"/>
+      <path pathLength="1" d="M38 104 C40 97 42 92 43 87" stroke="var(--tree-ink)" stroke-width="2.2"/>
+      <path pathLength="1" d="M52 104 C50 96 48 91 46 86" stroke="var(--tree-ink)" stroke-width="2.2"/>
+      <path pathLength="1" d="M44 60 C37 55 31 54 26 49" stroke="var(--tree-ink)" stroke-width="2.2"/>
+      <path pathLength="1" d="M45 52 C52 47 57 46 62 42" stroke="var(--tree-ink)" stroke-width="2.2"/>
+    </g>
+    <g class="tt-canopy">
+      <circle style="--leaf-i:0" cx="45" cy="32" r="19" fill="var(--tree-leaf)" fill-opacity=".9" stroke="var(--tree-ink)" stroke-width="2"/>
+      <circle style="--leaf-i:1" cx="27" cy="41" r="11" fill="var(--tree-leaf)" fill-opacity=".78" stroke="var(--tree-ink)" stroke-width="1.8"/>
+      <circle style="--leaf-i:2" cx="62" cy="39" r="12" fill="var(--tree-leaf-soft)" opacity=".85" stroke="var(--tree-ink)" stroke-width="1.8"/>
+      <circle style="--leaf-i:3" cx="38" cy="23" r="8" fill="var(--tree-leaf-soft)" opacity=".7" stroke="var(--tree-ink)" stroke-width="1.6"/>
+    </g>
+  </svg>`,
+  blossom: `<svg class="trail-tree" viewBox="0 0 90 110" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g class="tt-trunk">
+      <path pathLength="1" d="M43 104 C47 90 39 76 45 62 C49 52 47 44 49 36" stroke="var(--tree-ink)" stroke-width="2.4"/>
+      <path pathLength="1" d="M45 68 C52 64 57 59 59 52" stroke="var(--tree-ink)" stroke-width="2"/>
+      <path pathLength="1" d="M44 60 C38 56 34 50 33 44" stroke="var(--tree-ink)" stroke-width="2"/>
+    </g>
+    <g class="tt-canopy">
+      <circle style="--leaf-i:0" cx="50" cy="30" r="10.5" fill="var(--tree-leaf-soft)" opacity=".85" stroke="var(--tree-ink)" stroke-width="1.8"/>
+      <circle style="--leaf-i:1" cx="37" cy="39" r="7.5" fill="var(--tree-leaf-soft)" opacity=".75" stroke="var(--tree-ink)" stroke-width="1.6"/>
+      <circle style="--leaf-i:2" cx="58" cy="41" r="7" fill="var(--tree-leaf)" fill-opacity=".72" stroke="var(--tree-ink)" stroke-width="1.6"/>
+      <g style="--leaf-i:3">
+        <circle cx="50" cy="22" r="2.2" fill="var(--tree-glow)"/>
+        <circle cx="42" cy="32" r="2" fill="var(--tree-glow)"/>
+        <circle cx="57" cy="33" r="2" fill="var(--tree-glow)"/>
+        <circle cx="33" cy="43" r="1.9" fill="var(--tree-glow)"/>
+      </g>
+    </g>
+  </svg>`,
+  sapling: `<svg class="trail-tree" viewBox="0 0 90 110" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g class="tt-trunk">
+      <path pathLength="1" d="M45 104 C45 93 44 84 45 74" stroke="var(--tree-ink)" stroke-width="2.4"/>
+      <path pathLength="1" d="M45 74 C45 66 50 61 56 59" stroke="var(--tree-ink)" stroke-width="2"/>
+      <path pathLength="1" d="M45 77 C40 71 38 65 40 58" stroke="var(--tree-ink)" stroke-width="2"/>
+      <path pathLength="1" d="M39 104 C38 99 35 96 31 95" stroke="var(--tree-ink)" stroke-width="1.8"/>
+      <path pathLength="1" d="M51 104 C52 99 55 96 59 95" stroke="var(--tree-ink)" stroke-width="1.8"/>
+    </g>
+    <g class="tt-canopy">
+      <path style="--leaf-i:0" d="M56 59 C62 54 68 55 71 60 C65 64 58 63 56 59 Z" fill="var(--tree-leaf-soft)" opacity=".92" stroke="var(--tree-ink)" stroke-width="1.6"/>
+      <path style="--leaf-i:1" d="M40 58 C35 53 29 53 26 58 C31 62 37 61 40 58 Z" fill="var(--tree-leaf-soft)" opacity=".9" stroke="var(--tree-ink)" stroke-width="1.6"/>
+      <path style="--leaf-i:2" d="M45 89 C41 86 40 81 42 77 C46 80 47 85 45 89 Z" fill="var(--tree-leaf)" fill-opacity=".85" stroke="var(--tree-ink)" stroke-width="1.5"/>
+      <path style="--leaf-i:3" d="M45 82 C49 79 50 74 48 70 C44 73 43 78 45 82 Z" fill="var(--tree-leaf)" fill-opacity=".85" stroke="var(--tree-ink)" stroke-width="1.5"/>
+      <circle style="--leaf-i:4" cx="45" cy="73" r="2.6" fill="var(--tree-glow)"/>
+    </g>
+  </svg>`,
+};
+
 const paths: Array<{
   index: string;
   icon: 'leaf' | 'book' | 'pen' | 'code';
@@ -51,6 +119,8 @@ const paths: Array<{
   description: string;
   href: string;
   lift: string;
+  tree: keyof typeof treeSvgs;
+  sway: string;
   count?: string;
   latest?: { date?: string; title: string };
 }> = [
@@ -61,6 +131,8 @@ const paths: Array<{
     description: '我的坐标、兴趣与正在寻找的问题',
     href: `${base}about/`,
     lift: '10.625rem',
+    tree: 'lantern',
+    sway: '5.6s',
   },
   {
     index: '02',
@@ -69,6 +141,8 @@ const paths: Array<{
     description: 'AI、数学与工程学习留下的知识年轮',
     href: `${base}notes/`,
     lift: '7.75rem',
+    tree: 'oak',
+    sway: '4.6s',
     count: `${notes.length} 篇笔记`,
     latest: latestNote && {
       date: formatRecencyDate(latestNote),
@@ -82,6 +156,8 @@ const paths: Array<{
     description: '旅行、电影与生活片段的私人标本',
     href: `${base}essay/`,
     lift: '4.875rem',
+    tree: 'blossom',
+    sway: '4.1s',
     count: `${essays.length} 则杂谈`,
     latest: latestEssay && {
       date: formatRecencyDate(latestEssay),
@@ -95,6 +171,8 @@ const paths: Array<{
     description: '从模型到界面，把想法做成可体验的作品',
     href: `${base}projects/`,
     lift: '2.25rem',
+    tree: 'sapling',
+    sway: '3.7s',
     count: `${projects.length} 个项目`,
     latest: latestProject && {
       date: formatRecencyDate(latestProject),
@@ -172,13 +250,22 @@ const paths: Array<{
       </svg>
       <ol class="home-trail__stops">
         {
-          paths.map((path) => (
+          paths.map((path, i) => (
             <li>
-              <div class="home-trail__stop" style={`--trail-lift: ${path.lift};`}>
-                <a class="home-trail__marker-link" href={path.href} aria-label={`${path.title} · ${path.description}`}>
-                  <span class="home-trail__mark">
-                    <span class="home-trail__num" aria-hidden="true">{path.index}</span>
+              <div class="home-trail__stop" style={`--trail-lift: ${path.lift}; --tree-i: ${i};`}>
+                <a
+                  class="home-trail__tree-link"
+                  href={path.href}
+                  aria-label={`${path.title} · ${path.description}`}
+                >
+                  <span class="home-trail__lean">
+                    <span class="home-trail__sway" style={`--sway-d: ${path.sway};`}>
+                      <span class="home-trail__tree" set:html={treeSvgs[path.tree]} />
+                    </span>
                   </span>
+                  <i class="tree-leaf-fall tree-leaf-fall--a" aria-hidden="true" />
+                  <i class="tree-leaf-fall tree-leaf-fall--b" aria-hidden="true" />
+                  <i class="tree-spark" aria-hidden="true" />
                 </a>
                 <span class="home-trail__name">
                   <ForestIcon name={path.icon} />
@@ -252,11 +339,12 @@ const paths: Array<{
 </BaseLayout>
 
 <script>
-  import { initHomeStats } from '../scripts/home';
+  import { initHomeStats, initTrailReveal } from '../scripts/home';
   import { initFireflies } from '../scripts/fireflies';
   import { initDaypartSky } from '../scripts/daypart';
 
   initHomeStats();
   initFireflies();
   initDaypartSky();
+  initTrailReveal();
 </script>

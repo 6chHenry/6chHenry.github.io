@@ -481,6 +481,12 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
+  clip-path: inset(-6% 102% -6% -2%);
+  transition: clip-path 1.6s cubic-bezier(0.3, 0.6, 0.2, 1) 0.15s;
+}
+
+.home-trail__nav.is-grown .home-trail__path {
+  clip-path: inset(-6% -2% -6% -2%);
 }
 
 .home-trail__path-halo {
@@ -546,86 +552,249 @@
   text-align: center;
 }
 
-/* 点击热区只有徽章本体（外圈留出舒适的手指/鼠标余量） */
-.home-trail__marker-link {
-  display: grid;
-  width: 4.4rem;
-  height: 4.4rem;
-  margin-top: calc(var(--trail-lift, 2.25rem) - 0.55rem);
-  place-items: center;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-/* 编号徽章：古地图图例式的双圈雕版印章，而非按钮 */
-.home-trail__mark {
+/* 树链接：热区是整棵树（含树冠），文字区不可点 */
+.home-trail__tree-link {
   position: relative;
-  display: grid;
-  width: 3.4rem;
-  height: 3.4rem;
-  place-items: center;
-  border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 36%, var(--ch-border));
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 34% 28%, color-mix(in srgb, white 40%, transparent), transparent 52%),
-    color-mix(in srgb, var(--ch-surface-solid) 74%, transparent);
-  box-shadow: 0 8px 22px color-mix(in srgb, var(--ch-accent) 10%, transparent);
-  color: var(--ch-accent-secondary);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition:
-    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color var(--ch-transition-fast),
-    box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1),
-    color var(--ch-transition-fast);
+  display: block;
+  width: 5.7rem;
+  margin-top: calc(var(--trail-lift, 2.25rem) - 1.1rem);
+  cursor: pointer;
+  border-radius: 14px;
 }
 
-.home-trail__mark::before {
-  position: absolute;
-  inset: 4px;
-  border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 20%, transparent);
-  border-radius: 50%;
-  content: '';
-  transition:
-    border-color var(--ch-transition-fast),
-    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.home-trail__num {
-  font-family: var(--ch-display-font);
-  font-size: 1.32rem;
-  font-style: italic;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-}
-
-.home-trail__marker-link:hover .home-trail__mark,
-.home-trail__marker-link:focus-visible .home-trail__mark {
-  border-color: color-mix(in srgb, var(--ch-accent-warm) 58%, var(--ch-border));
-  box-shadow:
-    0 14px 30px color-mix(in srgb, var(--ch-accent-warm) 15%, transparent),
-    0 0 0 4px color-mix(in srgb, var(--ch-accent-warm) 8%, transparent);
-  color: var(--ch-accent-warm);
-  transform: translateY(-3px);
-}
-
-.home-trail__marker-link:hover .home-trail__mark::before,
-.home-trail__marker-link:focus-visible .home-trail__mark::before {
-  border-color: color-mix(in srgb, var(--ch-accent-warm) 34%, transparent);
-  transform: scale(0.94);
-}
-
-.home-trail__marker-link:focus-visible {
+.home-trail__tree-link:focus-visible {
   outline: 2px dashed color-mix(in srgb, var(--ch-accent-warm) 70%, transparent);
-  outline-offset: 3px;
+  outline-offset: 4px;
 }
+
+.home-trail__tree {
+  --tree-ink: color-mix(in srgb, var(--ch-fg) 70%, var(--ch-accent-ink));
+  --tree-leaf: color-mix(in srgb, var(--ch-accent-secondary) 88%, var(--ch-fg));
+  --tree-leaf-soft: color-mix(in srgb, var(--ch-accent-tertiary) 82%, transparent);
+  --tree-glow: var(--ch-accent-warm);
+  display: block;
+  opacity: 0;
+  transform: translateY(12px) scale(0.9);
+  transform-origin: 50% 100%;
+}
+
+.trail-tree {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.home-trail__lean,
+.home-trail__sway {
+  display: block;
+  transform-origin: 50% 100%;
+}
+
+/* 悬停：一阵风把树吹得轻倾 */
+.home-trail__lean {
+  transition: transform 520ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.home-trail__tree-link:hover .home-trail__lean,
+.home-trail__tree-link:focus-visible .home-trail__lean {
+  transform: rotate(-2.4deg) translateY(-2px);
+}
+
+.home-trail__tree-link:active .home-trail__lean {
+  transform: rotate(-1deg) scale(0.965);
+  transition-duration: 150ms;
+}
+
+/* ── 入场编排：点径擦亮 → 树干描线生长 → 树冠绽放 → 随风摇 ── */
+
+.home-trail__nav.is-grown .home-trail__tree {
+  animation: tree-rise 0.9s cubic-bezier(0.34, 1.45, 0.64, 1) both;
+  animation-delay: calc(0.4s + var(--tree-i, 0) * 0.17s);
+}
+
+.home-trail__tree .tt-trunk path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.home-trail__nav.is-grown .home-trail__tree .tt-trunk path {
+  animation: trunk-draw 0.75s ease-out both;
+  animation-delay: calc(0.5s + var(--tree-i, 0) * 0.17s);
+}
+
+.home-trail__tree .tt-canopy > * {
+  transform: scale(0);
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.home-trail__nav.is-grown .home-trail__tree .tt-canopy > * {
+  animation: leaf-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(0.9s + var(--tree-i, 0) * 0.17s + var(--leaf-i, 0) * 0.07s);
+}
+
+.home-trail__nav.is-grown .home-trail__sway {
+  animation: tree-sway var(--sway-d, 4.8s) ease-in-out infinite alternate;
+  animation-delay: calc(1.4s + var(--tree-i, 0) * 0.37s);
+}
+
+@keyframes tree-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes trunk-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes leaf-pop {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes tree-sway {
+  from {
+    transform: rotate(-1.3deg);
+  }
+
+  to {
+    transform: rotate(1.3deg);
+  }
+}
+
+/* 悬停的小生态：落叶与根部的萤光 */
+.tree-leaf-fall {
+  position: absolute;
+  top: 6%;
+  width: 7px;
+  height: 9px;
+  border-radius: 62% 38% 62% 38%;
+  background: var(--tree-leaf, var(--ch-accent-secondary));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tree-leaf-fall--a {
+  left: 28%;
+}
+
+.tree-leaf-fall--b {
+  left: 60%;
+  background: var(--tree-leaf-soft, var(--ch-accent-tertiary));
+}
+
+.home-trail__tree-link:hover .tree-leaf-fall--a,
+.home-trail__tree-link:focus-visible .tree-leaf-fall--a {
+  animation: leaf-fall 1.5s ease-in infinite;
+}
+
+.home-trail__tree-link:hover .tree-leaf-fall--b,
+.home-trail__tree-link:focus-visible .tree-leaf-fall--b {
+  animation: leaf-fall 1.9s ease-in 0.7s infinite;
+}
+
+@keyframes leaf-fall {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  12% {
+    opacity: 0.95;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-16px, 56px) rotate(210deg);
+  }
+}
+
+.tree-spark {
+  position: absolute;
+  bottom: 4%;
+  left: 47%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--tree-glow, var(--ch-accent-warm));
+  box-shadow: 0 0 9px 2px color-mix(in srgb, var(--ch-accent-warm) 45%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.home-trail__tree-link:hover .tree-spark,
+.home-trail__tree-link:focus-visible .tree-spark {
+  animation: spark-rise 1.7s ease-out infinite;
+}
+
+@keyframes spark-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.7);
+  }
+
+  25% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-42px) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-trail__tree {
+    opacity: 1;
+    transform: none;
+  }
+
+  .home-trail__tree .tt-trunk path {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+
+  .home-trail__tree .tt-canopy > * {
+    transform: none;
+    animation: none;
+  }
+
+  .home-trail__sway,
+  .home-trail__lean,
+  .tree-leaf-fall,
+  .tree-spark {
+    animation: none !important;
+    transition: none;
+  }
+}
+
+/* ── 站点文字：与田野日志同一套排版语言 ── */
 
 .home-trail__name {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  margin-top: 0.9rem;
+  margin-top: 0.7rem;
   padding-bottom: 3px;
   font-family: var(--ch-display-font);
   font-size: 1.26rem;
@@ -635,7 +804,6 @@
   transition: color var(--ch-transition-fast);
 }
 
-/* 悬停时名字下方扫过一条金色细线，呼应痕迹列表的书签丝带 */
 .home-trail__name::after {
   position: absolute;
   right: 10%;
@@ -656,18 +824,18 @@
   transition: color var(--ch-transition-fast);
 }
 
-.home-trail__stop:has(.home-trail__marker-link:hover) .home-trail__name,
-.home-trail__stop:has(.home-trail__marker-link:focus-visible) .home-trail__name {
+.home-trail__stop:has(.home-trail__tree-link:hover) .home-trail__name,
+.home-trail__stop:has(.home-trail__tree-link:focus-visible) .home-trail__name {
   color: var(--ch-accent);
 }
 
-.home-trail__stop:has(.home-trail__marker-link:hover) .home-trail__name::after,
-.home-trail__stop:has(.home-trail__marker-link:focus-visible) .home-trail__name::after {
+.home-trail__stop:has(.home-trail__tree-link:hover) .home-trail__name::after,
+.home-trail__stop:has(.home-trail__tree-link:focus-visible) .home-trail__name::after {
   transform: scaleX(1);
 }
 
-.home-trail__stop:has(.home-trail__marker-link:hover) .home-trail__name .forest-icon,
-.home-trail__stop:has(.home-trail__marker-link:focus-visible) .home-trail__name .forest-icon {
+.home-trail__stop:has(.home-trail__tree-link:hover) .home-trail__name .forest-icon,
+.home-trail__stop:has(.home-trail__tree-link:focus-visible) .home-trail__name .forest-icon {
   color: var(--ch-accent-warm);
 }
 
@@ -677,6 +845,7 @@
   color: var(--ch-fg-muted);
   font-size: 0.79rem;
   line-height: 1.7;
+  transition: color var(--ch-transition-fast);
 }
 
 .home-trail__meta {
@@ -702,6 +871,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   transition: color var(--ch-transition-fast);
+}
+
+.home-trail__stop:has(.home-trail__tree-link:hover) .home-trail__latest,
+.home-trail__stop:has(.home-trail__tree-link:focus-visible) .home-trail__latest {
+  color: var(--ch-accent-warm);
 }
 .home-trail__footer {
   display: flex;
@@ -803,11 +977,19 @@
     border-bottom: 0;
   }
 
-  .home-trail__marker-link {
+  .home-trail__tree-link {
     grid-area: mark;
-    width: 3.9rem;
-    height: 3.9rem;
-    margin-top: 0.15rem;
+    width: 3.1rem;
+    margin-top: 0.2rem;
+  }
+
+  .home-trail__sway {
+    animation: none;
+  }
+
+  .tree-leaf-fall,
+  .tree-spark {
+    display: none;
   }
 
   .home-trail__name {

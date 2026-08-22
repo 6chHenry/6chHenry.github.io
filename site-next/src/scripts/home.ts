@@ -1,3 +1,20 @@
+/** 小径入场：滚入视野时触发点径擦亮与树木生长编排 */
+export function initTrailReveal() {
+  const nav = document.querySelector('.home-trail__nav');
+  if (!nav) return;
+
+  const observer = new IntersectionObserver(
+    ([entry], obs) => {
+      if (entry.isIntersecting) {
+        nav.classList.add('is-grown');
+        obs.disconnect();
+      }
+    },
+    { threshold: 0.2 },
+  );
+  observer.observe(nav);
+}
+
 export function initHomeStats() {
   const hero = document.querySelector('.home-hero');
   if (!hero) return;
