@@ -47,15 +47,83 @@ const sprouts = [
   { date: '09/2024', body: 'Excited to start my ME B.Eng. at SJTU ME.' },
 ];
 
-/* 生长之树各部位的跳转目标 */
-const treeParts = [
-  { id: 'g-root', x: 96, y: 452, label: '根系 · 教育' },
-  { id: 'g-trunk', x: 84, y: 268, label: '枝干 · 方向' },
-  { id: 'g-leaf', x: 536, y: 178, label: '叶片 · 项目' },
-  { id: 'g-flower', x: 508, y: 76, label: '花苞 · 论文' },
-  { id: 'g-ring', x: 492, y: 408, label: '年轮 · 荣誉' },
-  { id: 'g-news', x: 92, y: 66, label: '抽芽 · 动态' },
+/* ── 生长之树：确定性伪随机，构建期生成枝叶，每次构建形态一致 ── */
+function mulberry32(seed: number): () => number {
+  return function () {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const rnd = mulberry32(20260422);
+
+interface FoliageDot {
+  cx: number;
+  cy: number;
+  r: number;
+  o: number;
+  fill: string;
+}
+
+const foliageAnchors: Array<[number, number, number]> = [
+  [292, 186, 1],
+  [322, 208, 0.85],
+  [458, 196, 0.95],
+  [430, 178, 0.9],
+  [388, 102, 0.85],
+  [360, 150, 1],
+  [408, 148, 0.9],
 ];
+const crownTones = ['var(--gt-crown)', 'var(--gt-crown-soft)', 'var(--gt-crown-deep)'];
+const foliage: FoliageDot[] = [];
+for (const [ax, ay, scale] of foliageAnchors) {
+  const count = 12 + Math.floor(rnd() * 4);
+  for (let i = 0; i < count; i += 1) {
+    const angle = rnd() * Math.PI * 2;
+    const dist = (14 + rnd() * 40) * scale;
+    foliage.push({
+      cx: Math.round((ax + Math.cos(angle) * dist * 1.3) * 10) / 10,
+      cy: Math.round((ay + Math.sin(angle) * dist * 0.74 - 6) * 10) / 10,
+      r: Math.round((2.6 + rnd() * 5.4) * 10) / 10,
+      o: Math.round((0.28 + rnd() * 0.4) * 100) / 100,
+      fill: crownTones[Math.floor(rnd() * crownTones.length)],
+    });
+  }
+}
+foliage.sort((a, b) => a.cy - b.cy);
+
+const fallingLeaves = [
+  { x: 496, y: 236, rot: 24, s: 1 },
+  { x: 272, y: 258, rot: -30, s: 0.85 },
+];
+
+interface Callout {
+  id: string;
+  ax: number; // 锚点（树上）
+  ay: number;
+  lx: number; // 文字端
+  ly: number;
+  anchor: 'start' | 'end';
+}
+
+const callouts: Callout[] = [
+  { id: 'g-news', ax: 196, ay: 80, lx: 100, ly: 54, anchor: 'end' },
+  { id: 'g-trunk', ax: 378, ay: 290, lx: 96, ly: 300, anchor: 'end' },
+  { id: 'g-leaf', ax: 452, ay: 196, lx: 652, ly: 150, anchor: 'start' },
+  { id: 'g-flower', ax: 398, ay: 92, lx: 606, ly: 72, anchor: 'start' },
+  { id: 'g-ring', ax: 406, ay: 394, lx: 640, ly: 424, anchor: 'start' },
+  { id: 'g-root', ax: 372, ay: 430, lx: 100, ly: 464, anchor: 'end' },
+];
+
+const calloutTexts: Record<string, string> = {
+  'g-news': '抽芽 · 动态',
+  'g-trunk': '枝干 · 方向',
+  'g-leaf': '叶片 · 项目',
+  'g-flower': '花苞 · 论文',
+  'g-ring': '年轮 · 荣誉',
+  'g-root': '根系 · 教育',
+};
 ---
 
 <BaseLayout title="学术花园 | KeWei Liu" description="KeWei Liu 学术主页的林间读法——同一份履历，长成一棵树。">
@@ -75,63 +143,113 @@ const treeParts = [
 
     {/* ── 生长之树导览图 ── */}
     <div class="tree-wrap">
-      <svg class="grow-tree" viewBox="0 0 760 520" role="group" aria-label="生长之树导览图：点击各部位跳转到对应小节">
-        {/* 天空 */}
-        <circle cx="688" cy="52" r="20" fill="var(--gt-sun)" />
-        <g stroke="var(--gt-bird)" stroke-width="1.8" fill="none">
-          <path d="M150 62 q7 -7 14 0 M164 62 q7 -7 14 0" />
+      <svg class="grow-tree" viewBox="0 0 760 540" role="group" aria-label="生长之树导览图：点击各部位跳转到对应小节">
+        {/* 天空与光 */}
+        <defs>
+          <radialGradient id="gt-sun-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="var(--gt-sun)" stop-opacity=".34" />
+            <stop offset="100%" stop-color="var(--gt-sun)" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="664" cy="58" r="38" fill="url(#gt-sun-glow)" />
+        <circle cx="664" cy="58" r="13" fill="var(--gt-sun)" />
+        <g class="gt-birds" stroke="var(--gt-bird)" stroke-width="1.6" fill="none" stroke-linecap="round">
+          <path d="M196 74 q7 -6 13 0 M208 73 q7 -6 13 0" />
+          <path d="M246 94 q6 -5 11 0 M256 93 q6 -5 11 0" />
         </g>
 
-        {/* 地面与土壤 */}
-        <rect x="24" y="382" width="712" height="8" rx="4" fill="var(--gt-ground)" />
-        <rect x="0" y="394" width="760" height="126" fill="var(--gt-soil)" />
-
-        {/* 根系 */}
-        <g class="gt-zone gt-zone--root">
-          <g stroke="var(--gt-root)" stroke-width="2" fill="none" stroke-linecap="round">
-            <path d="M376 396 q-12 26 -30 38 M376 396 q10 22 8 46 M376 396 q-26 16 -44 14 M376 396 q22 18 34 40" />
-          </g>
+        {/* 地面 */}
+        <ellipse cx="380" cy="398" rx="96" ry="7" fill="var(--ch-fg)" opacity="0.05" />
+        <path d="M56 392 H704" stroke="var(--gt-ground)" stroke-width="2.6" stroke-linecap="round" />
+        <g stroke="var(--gt-grass)" stroke-width="1.4" stroke-linecap="round">
+          <path d="M120 390 q1 -9 -3 -13" />
+          <path d="M212 390 q-1 -8 3 -12" />
+          <path d="M300 390 q1 -10 -2 -15" />
+          <path d="M488 390 q-1 -9 3 -13" />
+          <path d="M600 390 q1 -8 -2 -12" />
+          <path d="M672 390 q-1 -9 2 -13" />
         </g>
 
-        {/* 树干与枝 */}
-        <path d="M378 386 C376 320 380 250 372 168" stroke="var(--gt-trunk)" stroke-width="7" fill="none" stroke-linecap="round" />
-        <path d="M376 288 C352 272 334 258 322 236" stroke="var(--gt-trunk)" stroke-width="4" fill="none" stroke-linecap="round" />
-        <path d="M375 250 C398 240 414 228 424 210" stroke="var(--gt-trunk)" stroke-width="4" fill="none" stroke-linecap="round" />
-
-        {/* 树冠 */}
-        <g fill="var(--gt-crown)">
-          <circle cx="360" cy="176" r="64" />
-          <circle cx="292" cy="216" r="38" />
-          <circle cx="432" cy="204" r="41" />
-          <circle cx="330" cy="140" r="34" fill="var(--gt-crown-soft)" />
-          <circle cx="410" cy="148" r="29" fill="var(--gt-crown-soft)" />
+        {/* 根系（土面以下，细而克制） */}
+        <g class="gt-roots" stroke="var(--gt-root)" fill="none" stroke-linecap="round">
+          <path d="M372 396 C364 420 350 436 330 450" stroke-width="2.6" />
+          <path d="M380 396 C382 424 380 444 374 462" stroke-width="2.2" />
+          <path d="M386 396 C396 418 410 432 428 444" stroke-width="2.4" />
+          <path d="M366 408 q-16 -2 -28 4 M388 418 q14 -4 26 0" stroke-width="1.4" />
         </g>
 
-        {/* 花苞（论文） */}
-        <g fill="var(--gt-bud)">
-          <circle cx="322" cy="112" r="6" />
-          <circle cx="446" cy="132" r="5.4" />
-          <circle cx="386" cy="86" r="5" />
+        {/* 树干与枝桠：渐细的笔墨线条 */}
+        <g stroke="var(--gt-trunk)" fill="none" stroke-linecap="round">
+          <path d="M380 392 C376 340 374 300 377 258 C379 226 383 196 391 166" stroke-width="7" />
+          <path d="M378 264 C362 250 344 238 326 224 C312 213 298 202 288 194" stroke-width="4.6" />
+          <path d="M300 218 C291 207 285 196 281 183" stroke-width="2.6" />
+          <path d="M379 252 C399 242 421 231 443 217 C451 212 458 207 464 203" stroke-width="4.4" />
+          <path d="M431 220 C441 209 447 197 450 185" stroke-width="2.5" />
+          <path d="M383 196 C385 168 390 142 397 118" stroke-width="3.2" />
+        </g>
+
+        {/* 树冠底雾：几团极淡的体量 */}
+        <g>
+          <circle cx="296" cy="190" r="30" fill="var(--gt-crown)" opacity="0.35" />
+          <circle cx="456" cy="194" r="28" fill="var(--gt-crown)" opacity="0.32" />
+          <circle cx="386" cy="108" r="24" fill="var(--gt-crown)" opacity="0.3" />
+          <circle cx="368" cy="158" r="36" fill="var(--gt-crown-deep)" opacity="0.22" />
+          <circle cx="428" cy="164" r="27" fill="var(--gt-crown-deep)" opacity="0.18" />
+        </g>
+
+        {/* 叶点：层层叠出蓬松的冠 */}
+        {
+          foliage.map((dot) => (
+            <circle cx={dot.cx} cy={dot.cy} r={dot.r} fill={dot.fill} opacity={dot.o} />
+          ))
+        }
+
+        {/* 飘落的叶子 */}
+        {
+          fallingLeaves.map((leaf) => (
+            <path
+              transform={`translate(${leaf.x} ${leaf.y}) rotate(${leaf.rot}) scale(${leaf.s})`}
+              d="M0 0 C4 -3 8 -3 11 0 C8 4 4 4 0 0 Z"
+              fill="var(--gt-crown-deep)"
+              opacity="0.55"
+            />
+          ))
+        }
+
+        {/* 花苞（论文）：金点带光晕 */}
+        <g>
+          <circle cx="322" cy="122" r="9" fill="var(--gt-bud)" opacity="0.22" />
+          <circle cx="322" cy="122" r="3.4" fill="var(--gt-bud)" />
+          <circle cx="470" cy="152" r="8" fill="var(--gt-bud)" opacity="0.2" />
+          <circle cx="470" cy="152" r="3" fill="var(--gt-bud)" />
+          <circle cx="398" cy="88" r="8.4" fill="var(--gt-bud)" opacity="0.22" />
+          <circle cx="398" cy="88" r="3.2" fill="var(--gt-bud)" />
+          <circle cx="512" cy="178" r="7.4" fill="var(--gt-bud)" opacity="0.18" />
+          <circle cx="512" cy="178" r="2.8" fill="var(--gt-bud)" />
         </g>
 
         {/* 年轮（荣誉） */}
-        <g stroke="var(--gt-ring)" fill="none" stroke-width="1.6">
-          <ellipse cx="378" cy="390" rx="26" ry="9" />
-          <ellipse cx="378" cy="390" rx="42" ry="15" opacity=".75" />
-          <ellipse cx="378" cy="390" rx="58" ry="21" opacity=".5" />
+        <g stroke="var(--gt-ring)" fill="none">
+          <ellipse cx="380" cy="394" rx="20" ry="7" stroke-width="1.3" />
+          <ellipse cx="380" cy="394" rx="33" ry="11.5" stroke-width="1.2" opacity="0.7" />
+          <ellipse cx="380" cy="394" rx="46" ry="16" stroke-width="1.1" opacity="0.45" />
         </g>
 
-        {/* 抽芽小鸟（动态） */}
-        <g stroke="var(--gt-sprout)" stroke-width="1.8" fill="none">
-          <path d="M128 96 q8 -8 16 0 M144 96 q8 -8 16 0" />
-          <path d="M136 104 v10 M136 114 c-4 4 -8 4 -10 2" stroke-linecap="round" />
-        </g>
-
-        {/* 可点标签 */}
+        {/* 图注标签：引线 + 端点，图鉴式标注 */}
         {
-          treeParts.map((part) => (
-            <a class="gt-label" href={`#${part.id}`}>
-              <text x={part.x} y={part.y}>{part.label}</text>
+          callouts.map((callout) => (
+            <a class="gt-label" href={`#${callout.id}`}>
+              <g>
+                <circle class="gt-label__pin" cx={callout.ax} cy={callout.ay} r="2.8" />
+                <line class="gt-label__line" x1={callout.ax} y1={callout.ay} x2={callout.lx + (callout.anchor === 'start' ? -6 : 6)} y2={callout.ly - 4} />
+                <text
+                  x={callout.lx}
+                  y={callout.ly}
+                  text-anchor={callout.anchor}
+                >
+                  {calloutTexts[callout.id]}
+                </text>
+              </g>
             </a>
           ))
         }
@@ -297,31 +415,45 @@ const treeParts = [
 
   .grow-tree {
     display: block;
-    width: min(100%, 44rem);
+    width: min(100%, 46rem);
     margin: 0 auto;
     height: auto;
 
+    /* 林相调色板：全部由站点 token 派生 */
     --gt-sun: var(--ch-accent-warm);
     --gt-bird: color-mix(in srgb, var(--ch-fg-muted) 85%, transparent);
-    --gt-ground: color-mix(in srgb, var(--ch-accent-secondary) 42%, var(--ch-surface-solid));
-    --gt-soil: color-mix(in srgb, var(--ch-fg) 8%, transparent);
-    --gt-root: color-mix(in srgb, var(--ch-fg) 30%, transparent);
-    --gt-trunk: color-mix(in srgb, var(--ch-accent-secondary) 55%, var(--ch-fg));
-    --gt-crown: color-mix(in srgb, var(--ch-accent-tertiary) 32%, transparent);
-    --gt-crown-soft: color-mix(in srgb, var(--ch-accent-light) 38%, transparent);
-    --gt-bud: color-mix(in srgb, var(--ch-accent-warm) 85%, transparent);
-    --gt-ring: color-mix(in srgb, var(--ch-accent-secondary) 45%, transparent);
-    --gt-sprout: var(--ch-accent-secondary);
+    --gt-ground: color-mix(in srgb, var(--ch-accent-secondary) 48%, transparent);
+    --gt-grass: color-mix(in srgb, var(--ch-accent-secondary) 55%, transparent);
+    --gt-root: color-mix(in srgb, var(--ch-fg) 32%, transparent);
+    --gt-trunk: color-mix(in srgb, var(--ch-accent-secondary) 42%, var(--ch-fg));
+    --gt-crown: color-mix(in srgb, var(--ch-accent-tertiary) 36%, transparent);
+    --gt-crown-soft: color-mix(in srgb, var(--ch-accent-light) 42%, transparent);
+    --gt-crown-deep: color-mix(in srgb, var(--ch-accent-secondary) 34%, transparent);
+    --gt-bud: var(--ch-accent-warm);
+    --gt-ring: color-mix(in srgb, var(--ch-accent-secondary) 40%, transparent);
+    --gt-label-line: color-mix(in srgb, var(--ch-fg-muted) 55%, transparent);
   }
 
   .grow-tree text {
     font-family: var(--ch-text-font);
-    font-size: 15px;
+    font-size: 13.5px;
+    letter-spacing: 0.06em;
     fill: var(--ch-fg-muted);
   }
 
   .gt-label {
     cursor: pointer;
+  }
+
+  .grow-tree .gt-label__pin {
+    fill: var(--ch-accent-warm);
+  }
+
+  .grow-tree .gt-label__line {
+    stroke: var(--gt-label-line);
+    stroke-width: 1;
+    stroke-dasharray: none;
+    transition: stroke var(--ch-transition-fast);
   }
 
   .gt-label text {
@@ -331,12 +463,11 @@ const treeParts = [
   .gt-label:hover text,
   .gt-label:focus-visible text {
     fill: var(--ch-accent);
-    text-decoration: underline;
-    text-underline-offset: 4px;
   }
 
-  .gt-zone:hover ~ * {
-    /* 占位：区域高亮交给标签 hover 即可 */
+  .gt-label:hover .gt-label__line,
+  .gt-label:focus-visible .gt-label__line {
+    stroke: var(--ch-accent-secondary);
   }
 
   /* ── 小节卡片 ── */
