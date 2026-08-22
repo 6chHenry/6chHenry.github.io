@@ -320,8 +320,9 @@
     position: absolute;
     bottom: calc(100% + 0.95rem);
     right: 0;
-    max-width: min(19rem, 78vw);
-    padding: 0.62rem 0.8rem;
+    /* 显式宽度：绝对定位下 auto 宽度会塌缩到父容器（4.5rem），必须写死 */
+    width: min(19rem, 78vw);
+    padding: 0.58rem 0.85rem;
     border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 32%, var(--ch-border));
     border-radius: 10px;
     background: color-mix(in srgb, var(--ch-surface-solid) 94%, transparent);
@@ -437,7 +438,7 @@
     }
 
     .forest-sprite__bubble {
-      max-width: 14rem;
+      width: min(14rem, 78vw);
       font-size: 0.8rem;
     }
   }
