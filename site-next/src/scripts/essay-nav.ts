@@ -82,4 +82,23 @@ export function initEssayDrawerNav(): void {
   window.addEventListener('resize', () => {
     rail.scrollTo({ left: Math.max(0, current.offsetLeft - 24), behavior: 'auto' });
   });
+
+  /* 从别的页面带着 #essay-section-* 锚点进来时（如关于页的爱好小径），
+     原生平滑滚动常被首屏布局位移打断而停在页顶——这里显式补一跳 */
+  if (window.location.hash.startsWith('#essay-section-')) {
+    const jumpToHash = () => {
+      const id = decodeURIComponent(window.location.hash.slice(1));
+      const section = document.getElementById(id);
+      if (!section) return false;
+      const top = section.getBoundingClientRect().top + window.scrollY - nav.offsetHeight - 14;
+      window.scrollTo({ top: Math.max(0, top), behavior: reduced() ? 'auto' : 'smooth' });
+      setActive(tabs.find((tab) => tab.hash === `#${id}`) ?? tabs[0]);
+      return true;
+    };
+
+    requestAnimationFrame(() => requestAnimationFrame(jumpToHash));
+    window.addEventListener('load', () => {
+      window.setTimeout(jumpToHash, 80);
+    });
+  }
 }
