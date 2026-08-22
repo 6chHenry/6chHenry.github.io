@@ -153,6 +153,9 @@ export function initForestSprite(): void {
   let moved = false;
   let lastTapAt = 0;
   let hideTimer = 0;
+  let talkFxTimer = 0;
+  let skitTimer = 0;
+  let skitEndTimer = 0;
   let lastLine = '';
 
   const apply = () => {
@@ -226,6 +229,9 @@ export function initForestSprite(): void {
     } else {
       say(pick('general'));
     }
+    root.classList.add('is-talking');
+    window.clearTimeout(talkFxTimer);
+    talkFxTimer = window.setTimeout(() => root.classList.remove('is-talking'), 640);
   };
 
   /* ── 拖拽 ── */
@@ -319,6 +325,65 @@ export function initForestSprite(): void {
   }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   window.addEventListener('resize', () => moveTo(pos));
+
+  /* ── 目光跟随与悬停倾身：视线和小身子都朝鼠标偏一点 ── */
+
+  button.addEventListener('pointermove', (event) => {
+    if (dragging || reducedMotion()) return;
+    const rect = button.getBoundingClientRect();
+    const dx = event.clientX - (rect.left + rect.width / 2);
+    const dy = event.clientY - (rect.top + rect.height / 2);
+    const dist = Math.hypot(dx, dy) || 1;
+    const reach = Math.min(1, dist / 120);
+    root.style.setProperty('--eye-x', `${((dx / dist) * 2 * reach).toFixed(2)}px`);
+    root.style.setProperty('--eye-y', `${((dy / dist) * 1.6 * reach).toFixed(2)}px`);
+    root.style.setProperty('--lean', `${Math.max(-7, Math.min(7, dx * 0.06)).toFixed(2)}deg`);
+  });
+
+  button.addEventListener('pointerleave', () => {
+    root.style.removeProperty('--eye-x');
+    root.style.removeProperty('--eye-y');
+    root.style.removeProperty('--lean');
+  });
+
+  /* ── 闲置小剧场：东张西望 / 扭一扭 / 打瞌睡 / 蹦一下 ── */
+
+  const IDLE_SKITS: Array<[string, number]> = [
+    ['look', 1700],
+    ['wiggle', 1000],
+    ['doze', 2200],
+    ['hop', 800],
+  ];
+  let lastSkit = '';
+
+  const scheduleSkit = () => {
+    window.clearTimeout(skitTimer);
+    skitTimer = window.setTimeout(playSkit, 9000 + Math.random() * 9000);
+  };
+
+  const playSkit = () => {
+    const busy =
+      dragging ||
+      document.hidden ||
+      reducedMotion() ||
+      root.classList.contains('is-talking') ||
+      root.classList.contains('is-happy');
+    if (busy) {
+      scheduleSkit();
+      return;
+    }
+    const pool = IDLE_SKITS.filter(([name]) => name !== lastSkit);
+    const [name, duration] = pool[Math.floor(Math.random() * pool.length)];
+    lastSkit = name;
+    root.classList.add(`is-${name}`);
+    window.clearTimeout(skitEndTimer);
+    skitEndTimer = window.setTimeout(() => {
+      root.classList.remove(`is-${name}`);
+      scheduleSkit();
+    }, duration);
+  };
+
+  scheduleSkit();
 
   apply();
 }

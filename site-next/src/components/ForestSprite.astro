@@ -51,8 +51,8 @@
           <g class="fs-eyes">
             <circle cx="39" cy="57" r="4.4" fill="#14281d" />
             <circle cx="59" cy="57" r="4.4" fill="#14281d" />
-            <circle cx="37.6" cy="55.4" r="1.4" fill="#f4fbf4" opacity="0.92" />
-            <circle cx="57.6" cy="55.4" r="1.4" fill="#f4fbf4" opacity="0.92" />
+            <circle class="fs-pupil" cx="37.6" cy="55.4" r="1.4" fill="#f4fbf4" opacity="0.92" />
+            <circle class="fs-pupil" cx="57.6" cy="55.4" r="1.4" fill="#f4fbf4" opacity="0.92" />
           </g>
           <circle cx="31" cy="64" r="2.8" fill="#d99a6c" opacity="0.4" />
           <circle cx="67" cy="64" r="2.8" fill="#d99a6c" opacity="0.4" />
@@ -127,14 +127,20 @@
     animation-play-state: paused;
   }
 
-  .forest-sprite.is-dragging svg {
+  .forest-sprite.is-dragging .forest-sprite__body svg {
     transform: scale(1.07);
   }
 
   svg {
     display: block;
     overflow: visible;
+    transform-origin: 50% 92%;
     transition: transform 180ms ease;
+  }
+
+  /* 悬停：小身子朝鼠标方向倾一点、微微放大 */
+  .forest-sprite__body:hover svg {
+    transform: rotate(var(--lean, 0deg)) scale(1.05);
   }
 
   .fs-glow-halo {
@@ -159,13 +165,162 @@
     transform: scaleY(0.15);
   }
 
+  /* ── 动效系统：瞳孔 / 点击 / 闲置小剧场 ── */
+
+  .fs-pupil {
+    transform: translate(var(--eye-x, 0px), var(--eye-y, 0px));
+    transition: transform 140ms ease-out;
+  }
+
+  .forest-sprite.is-talking svg {
+    animation: fs-bounce 620ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .forest-sprite.is-talking .fs-glow-halo {
+    animation: fs-flash 620ms ease-out;
+  }
+
+  .forest-sprite.is-look .fs-pupil {
+    animation: fs-look 1.7s ease-in-out;
+  }
+
+  .forest-sprite.is-wiggle svg {
+    animation: fs-wiggle 1s ease-in-out;
+  }
+
+  .forest-sprite.is-doze .fs-eyes {
+    animation: fs-doze 2.2s ease-in-out;
+  }
+
+  .forest-sprite.is-doze svg {
+    animation: fs-droop 2.2s ease-in-out;
+  }
+
+  .forest-sprite.is-hop svg {
+    animation: fs-hop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes fs-bounce {
+    0% {
+      transform: scale(1);
+    }
+
+    30% {
+      transform: scale(1.1, 0.86);
+    }
+
+    60% {
+      transform: scale(0.95, 1.07);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fs-flash {
+    0% {
+      opacity: 0.26;
+      transform: scale(1);
+    }
+
+    40% {
+      opacity: 0.6;
+      transform: scale(1.55);
+    }
+
+    100% {
+      opacity: 0.26;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fs-look {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+
+    30%,
+    45% {
+      transform: translate(-1.9px, 0.4px);
+    }
+
+    70%,
+    82% {
+      transform: translate(1.9px, 0.2px);
+    }
+  }
+
+  @keyframes fs-wiggle {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+
+    22% {
+      transform: rotate(-3.4deg);
+    }
+
+    50% {
+      transform: rotate(3deg);
+    }
+
+    76% {
+      transform: rotate(-1.8deg);
+    }
+  }
+
+  @keyframes fs-doze {
+    0%,
+    100% {
+      transform: scaleY(1);
+    }
+
+    38%,
+    62% {
+      transform: scaleY(0.14);
+    }
+  }
+
+  @keyframes fs-droop {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+
+    40%,
+    60% {
+      transform: translateY(1.5px) rotate(2.4deg);
+    }
+  }
+
+  @keyframes fs-hop {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+    }
+
+    18% {
+      transform: translateY(1px) scale(1.08, 0.9);
+    }
+
+    52% {
+      transform: translateY(-7px) scale(0.96, 1.06);
+    }
+
+    86% {
+      transform: translateY(0) scale(1.04, 0.96);
+    }
+  }
+
   /* ── 对话气泡 ── */
 
   .forest-sprite__bubble {
     position: absolute;
     bottom: calc(100% + 0.95rem);
     right: 0;
-    max-width: min(16rem, 72vw);
+    max-width: min(19rem, 78vw);
     padding: 0.62rem 0.8rem;
     border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 32%, var(--ch-border));
     border-radius: 10px;
@@ -282,7 +437,7 @@
     }
 
     .forest-sprite__bubble {
-      max-width: 13rem;
+      max-width: 14rem;
       font-size: 0.8rem;
     }
   }
@@ -292,12 +447,22 @@
     .forest-sprite__float,
     .fs-glow-halo,
     .fs-glow-core,
-    .fs-eyes {
+    .fs-eyes,
+    .fs-pupil,
+    .forest-sprite.is-talking svg,
+    .forest-sprite.is-talking .fs-glow-halo,
+    .forest-sprite.is-look .fs-pupil,
+    .forest-sprite.is-wiggle svg,
+    .forest-sprite.is-doze .fs-eyes,
+    .forest-sprite.is-doze svg,
+    .forest-sprite.is-hop svg {
       animation: none;
     }
 
-    .forest-sprite__bubble {
-      transition-duration: 1ms;
+    .fs-pupil,
+    .forest-sprite__bubble,
+    svg {
+      transition: none;
     }
   }
 </style>
