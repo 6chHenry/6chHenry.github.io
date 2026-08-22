@@ -1,0 +1,659 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL;
+
+/* 与正式版同一份事实，换一种讲法 */
+const roots = [
+  { title: 'School of Artificial Intelligence, SJTU', date: 'Apr. 2025 -- Present', note: '本科转入人工智能学院' },
+  { title: 'Zhiyuan Honor Program, SJTU', date: 'Feb. 2025 -- Present', note: '致远荣誉计划' },
+];
+
+const branches = [
+  {
+    title: 'Computer Vision',
+    body: '喜欢计算机视觉，因为它让机器第一次「看见」图像和视频。',
+  },
+  {
+    title: 'Embodied AI',
+    body: '也想为机器人造一颗会感知的小脑。',
+  },
+];
+
+const leaves = [
+  { title: 'LLM Acceleration', period: '2026 春' },
+  { title: '语音变声变速', period: '2025 秋' },
+  { title: '自动驾驶行为仿真', period: '2025 夏' },
+];
+
+const buds = [
+  { title: '论文 · Publications', body: '花期未至——有些花还在酝酿，等一场春天。' },
+  { title: '经历 · Experience', body: '根还在往深处走，先不急着开花。' },
+  { title: '风闻 · Media', body: '风还没有把消息吹到这片林子里。' },
+];
+
+const rings = [
+  '2026 · 美赛 H 奖',
+  '2025 · 本科生国家奖学金',
+  '2025 · 致远荣誉奖学金',
+  '2025 · 本科生 C 等奖学金',
+  '2025 · 全国大学生数学建模竞赛全国二等奖',
+];
+
+const sprouts = [
+  { date: '04/2025', body: 'I was admitted to SAI.' },
+  { date: '03/2025', body: 'I became a member of A+ Club of SJTU ME.' },
+  { date: '02/2025', body: 'I became a member of Zhiyuan Honor Program, SJTU.' },
+  { date: '09/2024', body: 'Excited to start my ME B.Eng. at SJTU ME.' },
+];
+
+/* 生长之树各部位的跳转目标 */
+const treeParts = [
+  { id: 'g-root', x: 96, y: 452, label: '根系 · 教育' },
+  { id: 'g-trunk', x: 84, y: 268, label: '枝干 · 方向' },
+  { id: 'g-leaf', x: 536, y: 178, label: '叶片 · 项目' },
+  { id: 'g-flower', x: 508, y: 76, label: '花苞 · 论文' },
+  { id: 'g-ring', x: 492, y: 408, label: '年轮 · 荣誉' },
+  { id: 'g-news', x: 92, y: 66, label: '抽芽 · 动态' },
+];
+---
+
+<BaseLayout title="学术花园 | KeWei Liu" description="KeWei Liu 学术主页的林间读法——同一份履历，长成一棵树。">
+  <section class="container page-shell garden-page">
+    <header class="page-header">
+      <p class="section-kicker">Academy Garden</p>
+      <h1>学术花园</h1>
+      <p class="section-lead">
+        这里是学术主页的林间读法：同一份履历，长成一棵树——根是来处，干是方向，
+        叶是做过的事，花苞还没开，年轮一圈圈记着认真。想看正式版本，请去<a href={`${base}academy/`}>学术主页</a>。
+      </p>
+      <div class="garden-actions">
+        <a class="pill" href={`${base}academy/`}>正式版</a>
+        <a class="pill pill--glass" href={`${base}about/`}>关于我</a>
+      </div>
+    </header>
+
+    {/* ── 生长之树导览图 ── */}
+    <div class="tree-wrap">
+      <svg class="grow-tree" viewBox="0 0 760 520" role="group" aria-label="生长之树导览图：点击各部位跳转到对应小节">
+        {/* 天空 */}
+        <circle cx="688" cy="52" r="20" fill="var(--gt-sun)" />
+        <g stroke="var(--gt-bird)" stroke-width="1.8" fill="none">
+          <path d="M150 62 q7 -7 14 0 M164 62 q7 -7 14 0" />
+        </g>
+
+        {/* 地面与土壤 */}
+        <rect x="24" y="382" width="712" height="8" rx="4" fill="var(--gt-ground)" />
+        <rect x="0" y="394" width="760" height="126" fill="var(--gt-soil)" />
+
+        {/* 根系 */}
+        <g class="gt-zone gt-zone--root">
+          <g stroke="var(--gt-root)" stroke-width="2" fill="none" stroke-linecap="round">
+            <path d="M376 396 q-12 26 -30 38 M376 396 q10 22 8 46 M376 396 q-26 16 -44 14 M376 396 q22 18 34 40" />
+          </g>
+        </g>
+
+        {/* 树干与枝 */}
+        <path d="M378 386 C376 320 380 250 372 168" stroke="var(--gt-trunk)" stroke-width="7" fill="none" stroke-linecap="round" />
+        <path d="M376 288 C352 272 334 258 322 236" stroke="var(--gt-trunk)" stroke-width="4" fill="none" stroke-linecap="round" />
+        <path d="M375 250 C398 240 414 228 424 210" stroke="var(--gt-trunk)" stroke-width="4" fill="none" stroke-linecap="round" />
+
+        {/* 树冠 */}
+        <g fill="var(--gt-crown)">
+          <circle cx="360" cy="176" r="64" />
+          <circle cx="292" cy="216" r="38" />
+          <circle cx="432" cy="204" r="41" />
+          <circle cx="330" cy="140" r="34" fill="var(--gt-crown-soft)" />
+          <circle cx="410" cy="148" r="29" fill="var(--gt-crown-soft)" />
+        </g>
+
+        {/* 花苞（论文） */}
+        <g fill="var(--gt-bud)">
+          <circle cx="322" cy="112" r="6" />
+          <circle cx="446" cy="132" r="5.4" />
+          <circle cx="386" cy="86" r="5" />
+        </g>
+
+        {/* 年轮（荣誉） */}
+        <g stroke="var(--gt-ring)" fill="none" stroke-width="1.6">
+          <ellipse cx="378" cy="390" rx="26" ry="9" />
+          <ellipse cx="378" cy="390" rx="42" ry="15" opacity=".75" />
+          <ellipse cx="378" cy="390" rx="58" ry="21" opacity=".5" />
+        </g>
+
+        {/* 抽芽小鸟（动态） */}
+        <g stroke="var(--gt-sprout)" stroke-width="1.8" fill="none">
+          <path d="M128 96 q8 -8 16 0 M144 96 q8 -8 16 0" />
+          <path d="M136 104 v10 M136 114 c-4 4 -8 4 -10 2" stroke-linecap="round" />
+        </g>
+
+        {/* 可点标签 */}
+        {
+          treeParts.map((part) => (
+            <a class="gt-label" href={`#${part.id}`}>
+              <text x={part.x} y={part.y}>{part.label}</text>
+            </a>
+          ))
+        }
+      </svg>
+    </div>
+
+    {/* ── 小节 ── */}
+    <div class="garden-sections">
+      <section id="g-root" class="garden-card">
+        <header>
+          <p class="garden-kicker">Roots</p>
+          <h2>根系 · 来处</h2>
+          <p class="garden-desc">往下扎的每一层，都是往上长的底气。</p>
+        </header>
+        <ul class="root-list">
+          {
+            roots.map((item) => (
+              <li>
+                <strong>{item.title}</strong>
+                <span>{item.date}</span>
+                <em>{item.note}</em>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section id="g-trunk" class="garden-card">
+        <header>
+          <p class="garden-kicker">Trunk</p>
+          <h2>枝干 · 方向</h2>
+          <p class="garden-desc">主干往上，分成两枝。</p>
+        </header>
+        <div class="branch-grid">
+          {
+            branches.map((item) => (
+              <article>
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+              </article>
+            ))
+          }
+        </div>
+        <p class="garden-note">
+          另外对 Causal Discovery in Robotics 心里长草，欢迎来信一起把杂草养成花。
+        </p>
+      </section>
+
+      <section id="g-leaf" class="garden-card">
+        <header>
+          <p class="garden-kicker">Leaves</p>
+          <h2>叶片 · 做过的事</h2>
+          <p class="garden-desc">一叶一个夏天。</p>
+        </header>
+        <ul class="leaf-list">
+          {
+            leaves.map((item) => (
+              <li>
+                <span class="leaf-dot" aria-hidden="true" />
+                <strong>{item.title}</strong>
+                <span>{item.period}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section id="g-flower" class="garden-card">
+        <header>
+          <p class="garden-kicker">Buds</p>
+          <h2>花苞 · 还没开</h2>
+          <p class="garden-desc">不着急，慢慢来。</p>
+        </header>
+        <div class="bud-grid">
+          {
+            buds.map((item) => (
+              <article>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+                  <path d="M12 22v-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                  <circle cx="12" cy="10" r="4.2" fill="var(--ch-accent-warm)" opacity=".55" />
+                  <path d="M12 5.8c1.6-1.8 3.8-2.2 5.6-1.4-.8 2-2.6 3.4-5.6 3.2Z" fill="var(--ch-accent-warm)" opacity=".75" />
+                </svg>
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section id="g-ring" class="garden-card">
+        <header>
+          <p class="garden-kicker">Rings</p>
+          <h2>年轮 · 认真过</h2>
+          <p class="garden-desc">一圈一圈，都是长过的痕迹。</p>
+        </header>
+        <ul class="ring-list">
+          {
+            rings.map((item, i) => (
+              <li style={`--ring-i: ${i}`}>
+                <span class="ring-mark" aria-hidden="true" />
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section id="g-news" class="garden-card">
+        <header>
+          <p class="garden-kicker">Sprouts</p>
+          <h2>抽芽记录 · News</h2>
+          <p class="garden-desc">最新的是最顶上那颗新芽。</p>
+        </header>
+        <ol class="sprout-list">
+          {
+            sprouts.map((item) => (
+              <li>
+                <time>{item.date}</time>
+                <p>{item.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+    </div>
+
+    <footer class="garden-footer">
+      <p>想聊学术，或者只是路过打个招呼 ——</p>
+      <div>
+        <a class="pill" href="mailto:HenryLiu13550060700@sjtu.edu.cn">Work Email</a>
+        <a class="pill pill--glass" href="https://github.com/6chHenry" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </footer>
+  </section>
+</BaseLayout>
+
+<style>
+  .garden-page {
+    max-width: 62rem;
+    padding-bottom: 4rem;
+  }
+
+  .garden-actions {
+    display: flex;
+    gap: 0.7rem;
+    margin-top: 1.1rem;
+  }
+
+  /* ── 生长之树 ── */
+  .tree-wrap {
+    margin: 0.4rem 0 2rem;
+    padding: 1rem 0.6rem;
+    border: 1px solid var(--ch-glass-border);
+    border-radius: var(--ch-radius);
+    background:
+      radial-gradient(circle at 88% 8%, color-mix(in srgb, var(--ch-accent-warm) 10%, transparent), transparent 30%),
+      var(--ch-glass-bg);
+    backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.12);
+    -webkit-backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.12);
+    overflow-x: auto;
+  }
+
+  .grow-tree {
+    display: block;
+    width: min(100%, 44rem);
+    margin: 0 auto;
+    height: auto;
+
+    --gt-sun: var(--ch-accent-warm);
+    --gt-bird: color-mix(in srgb, var(--ch-fg-muted) 85%, transparent);
+    --gt-ground: color-mix(in srgb, var(--ch-accent-secondary) 42%, var(--ch-surface-solid));
+    --gt-soil: color-mix(in srgb, var(--ch-fg) 8%, transparent);
+    --gt-root: color-mix(in srgb, var(--ch-fg) 30%, transparent);
+    --gt-trunk: color-mix(in srgb, var(--ch-accent-secondary) 55%, var(--ch-fg));
+    --gt-crown: color-mix(in srgb, var(--ch-accent-tertiary) 32%, transparent);
+    --gt-crown-soft: color-mix(in srgb, var(--ch-accent-light) 38%, transparent);
+    --gt-bud: color-mix(in srgb, var(--ch-accent-warm) 85%, transparent);
+    --gt-ring: color-mix(in srgb, var(--ch-accent-secondary) 45%, transparent);
+    --gt-sprout: var(--ch-accent-secondary);
+  }
+
+  .grow-tree text {
+    font-family: var(--ch-text-font);
+    font-size: 15px;
+    fill: var(--ch-fg-muted);
+  }
+
+  .gt-label {
+    cursor: pointer;
+  }
+
+  .gt-label text {
+    transition: fill var(--ch-transition-fast);
+  }
+
+  .gt-label:hover text,
+  .gt-label:focus-visible text {
+    fill: var(--ch-accent);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .gt-zone:hover ~ * {
+    /* 占位：区域高亮交给标签 hover 即可 */
+  }
+
+  /* ── 小节卡片 ── */
+  .garden-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .garden-card {
+    scroll-margin-top: calc(var(--ch-header-height) + 1.5rem);
+    padding: 1.5rem 1.65rem;
+    border: 1px solid var(--ch-glass-border);
+    border-radius: var(--ch-radius);
+    background: var(--ch-glass-bg);
+    backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.12);
+    -webkit-backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.12);
+  }
+
+  .garden-kicker {
+    display: inline-block;
+    margin-bottom: 0.35rem;
+    font-family: var(--ch-mono-font);
+    font-size: 0.64rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ch-accent-tertiary);
+  }
+
+  .garden-card h2 {
+    margin: 0 0 0.3rem;
+    font-family: var(--ch-display-font);
+    font-size: 1.42rem;
+    color: var(--ch-accent);
+  }
+
+  .garden-desc {
+    margin: 0 0 1.05rem;
+    color: var(--ch-fg-muted);
+    font-size: 0.88rem;
+  }
+
+  /* 根系 */
+  .root-list {
+    display: grid;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .root-list li {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 0.3rem 0.9rem;
+    padding: 0.75rem 0.95rem;
+    border-left: 3px solid color-mix(in srgb, var(--ch-accent-secondary) 55%, transparent);
+    border-radius: 0 var(--ch-radius-sm) var(--ch-radius-sm) 0;
+    background: linear-gradient(90deg, var(--ch-accent-dim), transparent);
+  }
+
+  .root-list strong {
+    font-family: var(--ch-text-font);
+    font-size: 0.98rem;
+    color: var(--ch-fg);
+  }
+
+  .root-list span {
+    font-family: var(--ch-mono-font);
+    font-size: 0.74rem;
+    color: var(--ch-accent-tertiary);
+  }
+
+  .root-list em {
+    grid-column: 1 / -1;
+    color: var(--ch-fg-muted);
+    font-size: 0.82rem;
+    font-style: normal;
+  }
+
+  /* 枝干 */
+  .branch-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .branch-grid article {
+    padding: 0.95rem 1.05rem;
+    border: 1px dashed color-mix(in srgb, var(--ch-accent-secondary) 30%, transparent);
+    border-radius: var(--ch-radius-sm);
+    background: color-mix(in srgb, var(--ch-surface-solid) 48%, transparent);
+  }
+
+  .branch-grid h3 {
+    margin: 0 0 0.35rem;
+    color: var(--ch-accent-secondary);
+    font-size: 1rem;
+  }
+
+  .branch-grid p {
+    margin: 0;
+    color: var(--ch-fg-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .garden-note {
+    margin: 0.9rem 0 0;
+    padding: 0.6rem 0.85rem;
+    border-radius: var(--ch-radius-sm);
+    background: color-mix(in srgb, var(--ch-accent-warm) 8%, transparent);
+    color: var(--ch-fg);
+    font-size: 0.86rem;
+  }
+
+  /* 叶片 */
+  .leaf-list {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .leaf-list li {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 0.6rem;
+    align-items: center;
+    padding: 0.55rem 0.75rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ch-accent-dim) 55%, transparent);
+  }
+
+  .leaf-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 0 999px 0 999px;
+    background: var(--ch-accent-tertiary);
+    opacity: 0.75;
+  }
+
+  .leaf-list strong {
+    color: var(--ch-fg);
+    font-size: 0.94rem;
+  }
+
+  .leaf-list span {
+    justify-self: end;
+    font-family: var(--ch-mono-font);
+    font-size: 0.72rem;
+    color: var(--ch-fg-muted);
+  }
+
+  /* 花苞 */
+  .bud-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .bud-grid article {
+    position: relative;
+    padding: 1rem 1.05rem;
+    border: 1px dashed color-mix(in srgb, var(--ch-accent-warm) 36%, transparent);
+    border-radius: var(--ch-radius-sm);
+    background: color-mix(in srgb, var(--ch-accent-warm) 5%, transparent);
+  }
+
+  .bud-grid h3 {
+    margin: 0.5rem 0 0.3rem;
+    color: var(--ch-fg);
+    font-size: 0.98rem;
+  }
+
+  .bud-grid p {
+    margin: 0;
+    color: var(--ch-fg-muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  /* 年轮 */
+  .ring-list {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ring-list li {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    padding-left: calc(0.4rem + var(--ring-i) * 1.1rem);
+    color: var(--ch-fg);
+    font-size: 0.92rem;
+  }
+
+  .ring-mark {
+    flex: 0 0 auto;
+    width: 0.85rem;
+    height: 0.85rem;
+    align-self: center;
+    border: 1.6px solid color-mix(in srgb, var(--ch-accent-secondary) 55%, transparent);
+    border-radius: 999px;
+  }
+
+  /* 抽芽时间线 */
+  .sprout-list {
+    position: relative;
+    margin: 0;
+    padding: 0.2rem 0 0.2rem 2rem;
+    list-style: none;
+  }
+
+  .sprout-list::before {
+    content: '';
+    position: absolute;
+    top: 0.4rem;
+    bottom: 0.4rem;
+    left: 0.55rem;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--ch-accent-warm) 70%, transparent),
+      color-mix(in srgb, var(--ch-accent-secondary) 45%, transparent)
+    );
+    transform-origin: top center;
+    animation: sprout-grow 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes sprout-grow {
+    from {
+      transform: scaleY(0);
+    }
+  }
+
+  .sprout-list li {
+    position: relative;
+    padding: 0 0 0.95rem;
+  }
+
+  .sprout-list li::before {
+    content: '';
+    position: absolute;
+    top: 0.3rem;
+    left: -1.68rem;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 999px 999px 999px 0;
+    background: var(--ch-accent-secondary);
+    opacity: 0.7;
+  }
+
+  .sprout-list li:first-child::before {
+    background: var(--ch-accent-warm);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--ch-accent-warm) 18%, transparent);
+  }
+
+  .sprout-list time {
+    display: block;
+    font-family: var(--ch-mono-font);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: var(--ch-accent-tertiary);
+  }
+
+  .sprout-list p {
+    margin: 0.2rem 0 0;
+    color: var(--ch-fg);
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  /* 页脚 */
+  .garden-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.2rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1.3rem;
+    border-top: 1px dashed var(--ch-border-soft);
+  }
+
+  .garden-footer p {
+    margin: 0;
+    color: var(--ch-fg-muted);
+  }
+
+  .garden-footer div {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  @media (max-width: 720px) {
+    .branch-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .bud-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ring-list li {
+      padding-left: 0.4rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sprout-list::before {
+      animation: none;
+    }
+  }
+</style>
