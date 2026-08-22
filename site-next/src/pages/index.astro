@@ -174,15 +174,17 @@ const paths: Array<{
         {
           paths.map((path) => (
             <li>
-              <a class="home-trail__stop" href={path.href} style={`--trail-lift: ${path.lift};`}>
-                <span class="home-trail__marker" aria-hidden="true">
-                  <ForestIcon name={path.icon} />
-                </span>
+              <div class="home-trail__stop" style={`--trail-lift: ${path.lift};`}>
+                <a class="home-trail__marker-link" href={path.href} aria-label={`${path.title} · ${path.description}`}>
+                  <span class="home-trail__marker">
+                    <ForestIcon name={path.icon} />
+                  </span>
+                </a>
                 <span class="home-trail__name">{path.title}</span>
                 <span class="home-trail__desc">{path.description}</span>
                 {path.count && <span class="home-trail__count">{path.count}</span>}
                 {path.latest && <span class="home-trail__latest">最近 · {path.latest.title}</span>}
-              </a>
+              </div>
             </li>
           ))
         }
