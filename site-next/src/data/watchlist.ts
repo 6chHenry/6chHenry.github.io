@@ -31,4 +31,10 @@ export const watchlist2026: WatchedFilm[] = [
     posterAlt: '电影《三国第一部：争洛阳》海报',
     description: '东汉末年，宦官、外戚与士族在洛阳角力。曹操、袁绍等青年豪杰被卷入汉室倾颓的权力风暴，在乱世开端寻找各自的破局之路。',
   },
+  {
+    title: '欢迎来龙餐馆',
+    poster: 'images/watchlist/dragon-restaurant.webp',
+    posterAlt: '电影《欢迎来龙餐馆》海报',
+    description: '徐福为还债远赴中东，与马俊生把龙餐馆经营得声名鹊起——白天炒饭、黑夜成酒吧。战火骤然降临时，只求自保的他转而以餐馆庇护战争遗孤，用一餐餐热饭完成自我救赎。',
+  },
 ];
