@@ -7,7 +7,7 @@ cover: /assets/gallery/photography/nanchang.assets/tengwang_pavilion.jpg
 coverDesc: 滕王阁临江而立，飞檐翘角直指苍穹——落霞与孤鹜齐飞，秋水共长天一色。
 images:
   - /assets/gallery/photography/nanchang.assets/nanchang_bridge.jpg
-  - /assets/gallery/photography/nanchang.assets/nanchang_icom.jpg
+  - /assets/gallery/photography/nanchang.assets/nanchang_icon.jpg
 imageDescs:
   - 赣江上的大桥横跨两岸，南昌的现代与历史在江面交汇。
   - 南昌的城市地标在夜色中亮起，这座英雄城的红色基因为它刻下了独特印记。
