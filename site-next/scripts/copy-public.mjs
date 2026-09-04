@@ -66,6 +66,24 @@ function copyAssetDirs() {
   }
 }
 
+/* 笔记里散置的图片（不在 .assets 文件夹内的）也按同一路径约定复制，
+   供 `/assets/notes/<相对路径>` 形式的引用使用 */
+const NOTE_IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp']);
+
+function copyLooseNoteImages() {
+  const sourceRoot = path.join(DOCS, 'notes');
+  if (!fs.existsSync(sourceRoot)) return;
+  for (const entry of fs.readdirSync(sourceRoot, { withFileTypes: true, recursive: true })) {
+    if (!entry.isFile()) continue;
+    const parentName = path.basename(entry.parentPath ?? entry.path);
+    if (parentName.endsWith('.assets')) continue;
+    if (!NOTE_IMAGE_EXTENSIONS.has(path.extname(entry.name).toLowerCase())) continue;
+    const from = path.join(entry.parentPath ?? entry.path, entry.name);
+    const rel = path.relative(sourceRoot, from);
+    copyFile(from, path.join(PUBLIC, 'assets', 'notes', rel));
+  }
+}
+
 function main() {
   copyDir(path.join(ROOT, 'overrides/img'), path.join(PUBLIC, 'img'));
   copyDir(path.join(ROOT, 'docs/audio'), path.join(PUBLIC, 'audio'));
@@ -73,6 +91,7 @@ function main() {
   copyFile(path.join(ROOT, 'site-next/icon.png'), path.join(PUBLIC, 'academy.assets/academy-avatar.png'));
   copyDir(path.join(ROOT, 'assets'), path.join(PUBLIC, 'assets'));
   copyAssetDirs();
+  copyLooseNoteImages();
   copyFile(path.join(ROOT, 'docs/academy.md'), path.join(PUBLIC, 'academy-legacy.md'));
   console.log('Public assets copied to site-next/public');
 }
