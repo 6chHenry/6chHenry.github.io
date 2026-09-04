@@ -53,7 +53,7 @@ const TRAVEL_POSTERS: Record<string, TravelPosterData> = {
   },
   'Travel/2026暑假四城游': {
     galleryHref: 'gallery/four-cities/',
-    galleryTitle: '2026暑假四城游',
+    galleryTitle: '山之东西',
     cities: '太原·大同·青岛·烟台',
     photos: [
       'assets/gallery/photography/summer-2026-four-cities.assets/taiyuan_04.jpg',
@@ -96,7 +96,7 @@ const TRAVEL_GALLERY_LINKS: Record<string, TravelGalleryLink> = {
     note: '把声音、速度和密集街区，折回一组城市切片。',
   },
   'Travel/2026暑假四城游': {
-    title: '2026暑假四城游',
+    title: '山之东西',
     href: 'gallery/four-cities/',
     cover: 'assets/gallery/photography/summer-2026-four-cities.assets/qingdao_05.jpg',
     coverAlt: '崂山之巅俯瞰海湾与索道',
