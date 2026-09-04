@@ -84,6 +84,22 @@ function copyLooseNoteImages() {
   }
 }
 
+/* 笔记附件（notebook / pdf / 脚本）随页面一起发布，恢复 MkDocs 时代的下载链接。
+   按扩展名白名单复制，避免把 data/、runs/ 等大体积工作文件带进站点 */
+const NOTE_ATTACHMENT_EXTENSIONS = new Set(['.ipynb', '.pdf', '.py']);
+
+function copyNoteAttachments() {
+  const sourceRoot = path.join(DOCS, 'notes');
+  if (!fs.existsSync(sourceRoot)) return;
+  for (const entry of fs.readdirSync(sourceRoot, { withFileTypes: true, recursive: true })) {
+    if (!entry.isFile()) continue;
+    if (!NOTE_ATTACHMENT_EXTENSIONS.has(path.extname(entry.name).toLowerCase())) continue;
+    const from = path.join(entry.parentPath ?? entry.path, entry.name);
+    const rel = path.relative(sourceRoot, from);
+    copyFile(from, path.join(PUBLIC, 'notes', rel));
+  }
+}
+
 function main() {
   copyDir(path.join(ROOT, 'overrides/img'), path.join(PUBLIC, 'img'));
   copyDir(path.join(ROOT, 'docs/audio'), path.join(PUBLIC, 'audio'));
@@ -92,6 +108,7 @@ function main() {
   copyDir(path.join(ROOT, 'assets'), path.join(PUBLIC, 'assets'));
   copyAssetDirs();
   copyLooseNoteImages();
+  copyNoteAttachments();
   copyFile(path.join(ROOT, 'docs/academy.md'), path.join(PUBLIC, 'academy-legacy.md'));
   console.log('Public assets copied to site-next/public');
 }
