@@ -141,6 +141,16 @@ const pad = (n: number) => String(n).padStart(2, '0');
       </dl>
     </header>
 
+    <figure class="fc-poem" aria-label="藏头藏尾诗：每句首尾连读为太原、大同、青岛、烟台">
+      <div class="fc-poem__lines">
+        <p class="fc-poem__line" style={`--line-accent: #8a6a34`}><b>太</b>行西望晋之<b>原</b>，</p>
+        <p class="fc-poem__line" style={`--line-accent: #96522c`}><b>大</b>佛低眉古今<b>同</b>。</p>
+        <p class="fc-poem__line" style={`--line-accent: #1a6b8f`}><b>青</b>山尽处见浮<b>岛</b>，</p>
+        <p class="fc-poem__line" style={`--line-accent: #c2571d`}><b>烟</b>霞烧海照楼<b>台</b>。</p>
+      </div>
+      <figcaption class="fc-poem__cap">藏头藏尾 · 太原大同青岛烟台</figcaption>
+    </figure>
+
     <figure class="fc-cover">
       <button
         type="button"
@@ -442,6 +452,40 @@ const pad = (n: number) => String(n).padStart(2, '0');
     font-size: 1.5rem;
     font-weight: 600;
     letter-spacing: 0.02em;
+  }
+
+  /* ---- 藏头藏尾诗 ---- */
+  .fc-poem {
+    max-width: 26rem;
+    margin: 0 auto 2.75rem;
+    padding: 1.75rem 1rem 1.4rem;
+    border-top: 1px solid var(--fc-rule);
+    border-bottom: 1px solid var(--fc-rule);
+    text-align: center;
+  }
+
+  .fc-poem__line {
+    margin: 0;
+    font-family: var(--ch-display-font);
+    font-size: 1.12rem;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    line-height: 2.15;
+    color: var(--ch-fg);
+  }
+
+  .fc-poem__line b {
+    font-weight: 700;
+    color: var(--line-accent);
+  }
+
+  .fc-poem__cap {
+    margin-top: 1.15rem;
+    font-family: var(--ch-mono-font);
+    font-size: 0.56rem;
+    letter-spacing: 0.22em;
+    color: var(--ch-fg-muted);
+    opacity: 0.65;
   }
 
   /* ---- 封面 ---- */
