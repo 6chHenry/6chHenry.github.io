@@ -35,6 +35,14 @@ export const watchlist2026: WatchedFilm[] = [
     title: '欢迎来龙餐馆',
     poster: 'images/watchlist/dragon-restaurant.webp',
     posterAlt: '电影《欢迎来龙餐馆》海报',
+    reviewId: 'Movies/欢迎来龙餐馆',
     description: '徐福为还债远赴中东，与马俊生把龙餐馆经营得声名鹊起——白天炒饭、黑夜成酒吧。战火骤然降临时，只求自保的他转而以餐馆庇护战争遗孤，用一餐餐热饭完成自我救赎。',
+  },
+  {
+    title: '肖申克的救赎',
+    poster: 'images/watchlist/shawshank-redemption.webp',
+    posterAlt: '电影《肖申克的救赎》海报',
+    reviewId: 'Movies/肖申克的救赎',
+    description: '银行家安迪蒙冤入狱，在肖申克的高墙内用一把小石锤和十九年凿出通往自由的隧道。关于希望、体制与友谊，1994 年上映，长居各大影史榜首。',
   },
 ];
