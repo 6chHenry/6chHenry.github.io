@@ -6,7 +6,7 @@ import { buildContentUrl, formatRecencyDate, sortByRecency } from '../../utils/c
 import type { GetStaticPaths } from 'astro';
 
 export const getStaticPaths = (async () => {
-  const collections = ['notes', 'essay', 'projects'] as const;
+  const collections = ['notes', 'essay', 'projects', 'gallery'] as const;
   const tagMap = new Map<string, true>();
 
   for (const name of collections) {
@@ -27,7 +27,7 @@ export const getStaticPaths = (async () => {
 const { tag } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
-const collections = ['notes', 'essay', 'projects'] as const;
+const collections = ['notes', 'essay', 'projects', 'gallery'] as const;
 const matched = sortByRecency(
   (
     await Promise.all(
