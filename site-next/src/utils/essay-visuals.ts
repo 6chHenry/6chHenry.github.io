@@ -143,6 +143,7 @@ const MOVIE_POSTER_FALLBACK: Record<string, string> = {
   'Movies/给阿嬷的情书': 'https://q7.itc.cn/images01/20260521/590898ac3d1847699593879e85b52ef2.jpeg',
   'Movies/绿色大门': 'https://upload.wikimedia.org/wikipedia/en/1/1f/Blue_Gate_Crossing_film.jpg',
   'Movies/欢迎来龙餐馆': '/images/watchlist/dragon-restaurant.webp',
+  'Movies/肖申克的救赎': '/images/watchlist/shawshank-redemption.webp',
 };
 
 export function getMoviePosterFromBody(body = '', entryId = ''): string | undefined {
