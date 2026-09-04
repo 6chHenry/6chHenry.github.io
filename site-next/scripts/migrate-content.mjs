@@ -238,6 +238,18 @@ function toContentPath(sourceFile, sourceRoot) {
   return rel.replace(/\\/g, '/').replace(/\.md$/, '');
 }
 
+/* MkDocs 会把指向附件的相对链接重写为站点 URL；这里补上同样的行为，
+   使 `./xx.ipynb` 这类链接在目录式页面 URL 下仍能命中随站发布的附件。
+   只处理目标文件真实存在的情况，其余原样保留。 */
+function rewriteNoteAttachmentLinks(body, sourceFile, sourceRoot) {
+  return body.replace(/\]\((\.{1,2}\/)?([^)#\s]+\.(?:ipynb|pdf|py))\)/g, (match, prefix, filename) => {
+    const target = prefix ? path.join(path.dirname(sourceFile), prefix, filename) : path.join(path.dirname(sourceFile), filename);
+    if (!fs.existsSync(target)) return match;
+    const rel = path.relative(sourceRoot, target).replace(/\\/g, '/');
+    return `](/notes/${rel})`;
+  });
+}
+
 function migrateFile(sourceFile, sourceRoot, sourceDirName, collection, previousUpdatedAtByPath) {
   const rel = path.relative(sourceRoot, sourceFile);
   if (SKIP_FILES.has(path.basename(sourceFile))) return null;
@@ -300,7 +312,11 @@ function migrateFile(sourceFile, sourceRoot, sourceDirName, collection, previous
     if (oldData.summary) newData.summary = oldData.summary;
   }
 
-  const transformed = transformBody(body, collection, relPath.replace(/\\/g, '/'));
+  let publishBody = body;
+  if (collection === 'notes') {
+    publishBody = rewriteNoteAttachmentLinks(body, sourceFile, sourceRoot);
+  }
+  const transformed = transformBody(publishBody, collection, relPath.replace(/\\/g, '/'));
   const destDir = path.join(CONTENT, collection, path.dirname(relPath));
   ensureDir(destDir);
   if (fs.existsSync(destFile)) {
