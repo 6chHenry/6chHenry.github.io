@@ -281,6 +281,10 @@ function migrateFile(sourceFile, sourceRoot, sourceDirName, collection, previous
     if (oldData.imageDescs && Array.isArray(oldData.imageDescs)) {
       newData.imageDescs = oldData.imageDescs;
     }
+    if (oldData.coverChapter) newData.coverChapter = oldData.coverChapter;
+    if (oldData.imageChapters && Array.isArray(oldData.imageChapters)) {
+      newData.imageChapters = oldData.imageChapters;
+    }
     if (oldData.category) newData.category = oldData.category;
   }
 

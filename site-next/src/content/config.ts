@@ -50,6 +50,11 @@ const gallery = defineCollection({
     coverDesc: z.string().optional(),
     images: z.array(z.string()).default([]),
     imageDescs: z.array(z.string()).default([]),
+    // Chapter key per image, for trips that span several stops.
+    // `imageChapters` is parallel to `images`; `coverChapter` covers `cover`.
+    // Presentation metadata for each chapter lives in the gallery page.
+    coverChapter: z.string().optional(),
+    imageChapters: z.array(z.string()).default([]),
     category: z.enum(['illustration', 'photography', 'design', 'ui-ux', 'other']).default('other'),
   }),
 });

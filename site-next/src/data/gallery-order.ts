@@ -17,4 +17,6 @@ export const GALLERY_CITY_ORDER: string[] = [
   'photography/wuhan.md',
   'photography/lushan.md',
   'photography/nanchang.md',
+  // Summer 2026 Four Cities Journey
+  'photography/summer-2026-four-cities.md',
 ];

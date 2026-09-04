@@ -1,0 +1,920 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GalleryLightbox from '../../components/GalleryLightbox.astro';
+import GalleryImage from '../../components/GalleryImage.astro';
+import { resolveGalleryImages } from '../../utils/gallery-images';
+
+const base = import.meta.env.BASE_URL;
+
+const entries = await getCollection('gallery', ({ data }) => !data.draft);
+const entry = entries.find((e) => e.id.replace(/\.md$/, '') === 'photography/summer-2026-four-cities');
+if (!entry) throw new Error('Missing gallery entry: photography/summer-2026-four-cities');
+
+/* 章节元数据（展示层）：顺序即行程顺序 */
+const chapterMeta = [
+  {
+    key: 'taiyuan',
+    title: '太原',
+    en: 'Taiyuan',
+    accent: '#8a6a34',
+    span: '8.7 — 8.8',
+    desc: '晋祠的盘龙柱、公园的飞檐、老站的钟声。太原把几千年的古意安安静静地摆在生活旁边，走两步就撞见一段历史。',
+  },
+  {
+    key: 'datong',
+    title: '大同',
+    en: 'Datong',
+    accent: '#96522c',
+    span: '8.9 — 8.10',
+    desc: '云冈的大佛、应县的木塔、华严寺的彩塑。北魏到辽金的一千年，都刻在这些石头与木头里，抬头就是。',
+  },
+  {
+    key: 'qingdao',
+    title: '青岛',
+    en: 'Qingdao',
+    accent: '#1a5276',
+    span: '8.11 — 8.12',
+    desc: '圣弥厄尔教堂的双塔、崂山的花岗岩海岸。红瓦屋顶修在山海之间，一半是欧陆旧梦，一半是夏天。',
+  },
+  {
+    key: 'yantai',
+    title: '烟台',
+    en: 'Yantai',
+    accent: '#c2571d',
+    span: '8.13 — 8.14',
+    desc: '落日、浅浪、火烧云。烟台把一天里最好的光都留给了海边，也让这趟旅程停在最暖的地方。',
+  },
+] as const;
+
+/* 照片流：封面单独做 hero，不进章节网格；章节从第一张 images 开始 */
+const sources = [entry.data.cover, ...entry.data.images];
+const descs = [entry.data.coverDesc ?? '', ...(entry.data.imageDescs ?? [])];
+const keys = [entry.data.coverChapter ?? '', ...(entry.data.imageChapters ?? [])];
+const assets = resolveGalleryImages(sources, base);
+
+type Photo = {
+  asset: (typeof assets)[number];
+  desc: string;
+  alt: string;
+  index: number;
+};
+
+const byChapter = new Map<string, Photo[]>();
+sources.slice(1).forEach((_, k) => {
+  const i = k + 1; // 在完整照片流（含封面）中的下标，供灯箱定位
+  const key = keys[i] || 'other';
+  const chapter = chapterMeta.find((c) => c.key === key);
+  const name = chapter?.title ?? '沿途';
+  const photo: Photo = {
+    asset: assets[i],
+    desc: descs[i] ?? '',
+    alt: `${name}：${descs[i] ?? ''}`.slice(0, 80) || name,
+    index: i,
+  };
+  const list = byChapter.get(key);
+  if (list) list.push(photo);
+  else byChapter.set(key, [photo]);
+});
+
+const chapters = chapterMeta
+  .map((meta) => ({ ...meta, photos: byChapter.get(meta.key) ?? [] }))
+  .filter((c) => c.photos.length > 0);
+
+const totalPhotos = sources.length;
+const tripAccent = '#96522c';
+const dateLabel = entry.data.date
+  ? new Date(entry.data.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })
+  : '';
+
+const lightboxMeta = JSON.stringify({
+  images: assets,
+  imageDescs: descs,
+  title: entry.data.title,
+  description: entry.data.description ?? '',
+  category: 'photography',
+  date: dateLabel,
+  detailUrl: `${base}gallery/photography/summer-2026-four-cities/`,
+});
+
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<BaseLayout
+  title={`${entry.data.title} · 晋鲁行记 | 6ch.`}
+  description={entry.data.description ?? '太原、大同、青岛、烟台——八天，四座城市，一段从晋祠古殿与云冈石窟出发、终于海滨落日的夏天。'}
+>
+  <section class="container page-shell fc" style={`--trip-accent: ${tripAccent}`}>
+    <a class="fc-back" href={`${base}gallery/`}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+      返回画廊
+    </a>
+
+    <header class="fc-hero">
+      <p class="fc-hero__kicker">Shanxi → Shandong · 2026.08.07 — 08.14</p>
+      <h1 class="fc-hero__title">2026暑假四城游</h1>
+      <p class="fc-hero__en">晋鲁行记 · Four Cities, One Summer</p>
+      <p class="fc-hero__lead">
+        太原、大同、青岛、烟台——八天，四座城市。山西的这一段是石头与木头：
+        晋祠的盘龙柱缠着柱身盘旋而上，云冈的大佛垂目看了一千五百年，
+        应县木塔不用一根钉子却站了快一千年。翻到山东，夏天忽然就开阔了。
+      </p>
+      <dl class="fc-hero__stats">
+        <div class="fc-stat">
+          <dt>城市</dt>
+          <dd>{chapters.length}</dd>
+        </div>
+        <div class="fc-stat">
+          <dt>照片</dt>
+          <dd>{totalPhotos}</dd>
+        </div>
+        <div class="fc-stat">
+          <dt>天数</dt>
+          <dd>8</dd>
+        </div>
+        <div class="fc-stat">
+          <dt>里程</dt>
+          <dd>晋 · 鲁</dd>
+        </div>
+      </dl>
+    </header>
+
+    <figure class="fc-cover">
+      <button
+        type="button"
+        class="fc-cover__btn"
+        data-gallery-meta={lightboxMeta}
+        data-gallery-index={0}
+        aria-label="放大封面：从崂山之巅俯瞰海湾"
+      >
+        <GalleryImage
+          asset={assets[0]}
+          alt={descs[0] || entry.data.title}
+          sizes="(max-width: 900px) 100vw, 74rem"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <span class="fc-cover__scrim" aria-hidden="true"></span>
+        <span class="fc-cover__zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="16.5" y1="16.5" x2="21" y2="21" />
+            <line x1="11" y1="8" x2="11" y2="14" />
+            <line x1="8" y1="11" x2="14" y2="11" />
+          </svg>
+        </span>
+      </button>
+      <figcaption class="fc-cover__cap">
+        <span class="fc-cover__cap-num">封面</span>
+        {descs[0]}
+      </figcaption>
+    </figure>
+
+    <nav class="fc-route" aria-label="行程导航">
+      <span class="fc-route__label">行程</span>
+      <ol class="fc-route__list">
+        {
+          chapters.map((chapter, i) => (
+            <li class="fc-route__item">
+              {i > 0 && <span class="fc-route__link-line" aria-hidden="true" />}
+              <a
+                class:list={['fc-route__stop', { 'is-active': i === 0 }]}
+                href={`#fc-${chapter.key}`}
+                data-route-target={`fc-${chapter.key}`}
+                style={`--stop-accent: ${chapter.accent}`}
+              >
+                <span class="fc-route__dot" aria-hidden="true" />
+                <span class="fc-route__text">
+                  <span class="fc-route__name">{chapter.title}</span>
+                  <span class="fc-route__span">{chapter.span}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    {
+      chapters.map((chapter, ci) => (
+        <section
+          id={`fc-${chapter.key}`}
+          class="fc-chapter"
+          style={`--chapter-accent: ${chapter.accent}`}
+          data-chapter={chapter.key}
+        >
+          <header class="fc-chapter__header">
+            <span class="fc-chapter__index">{pad(ci + 1)}</span>
+            <div class="fc-chapter__names">
+              <h2 class="fc-chapter__title">{chapter.title}</h2>
+              <span class="fc-chapter__en">{chapter.en}</span>
+            </div>
+            <span class="fc-chapter__span">{chapter.span}</span>
+          </header>
+
+          <p class="fc-chapter__desc">{chapter.desc}</p>
+
+          <div class="fc-chapter__grid">
+            {
+              chapter.photos.map((photo) => (
+                <figure class="fc-photo">
+                  <button
+                    type="button"
+                    class="fc-photo__btn"
+                    data-gallery-meta={lightboxMeta}
+                    data-gallery-index={photo.index}
+                    aria-label={`放大第 ${pad(photo.index + 1)} 张：${photo.desc}`}
+                  >
+                    <GalleryImage
+                      asset={photo.asset}
+                      alt={photo.desc || chapter.title}
+                      sizes="(max-width: 620px) 100vw, (max-width: 1000px) 50vw, 33vw"
+                      loading="lazy"
+                    />
+                    <span class="fc-photo__num" aria-hidden="true">{pad(photo.index + 1)}</span>
+                  </button>
+                  <figcaption class="fc-photo__cap">
+                    <span class="fc-photo__cap-num">{pad(photo.index + 1)}</span>
+                    <span class="fc-photo__cap-text">{photo.desc}</span>
+                  </figcaption>
+                </figure>
+              ))
+            }
+          </div>
+        </section>
+      ))
+    }
+
+    <footer class="fc-foot">
+      <p class="fc-foot__line">
+        文字版的行记还在写，<a href={`${base}essay/Travel/2026暑假四城游/`}>《2026暑假四城游》</a>
+        <span class="fc-foot__dot">·</span>
+        <a href={`${base}gallery/`}>回到画廊</a>
+      </p>
+    </footer>
+  </section>
+
+  <GalleryLightbox />
+</BaseLayout>
+
+<script>
+  import { initGalleryLightbox } from '../../scripts/gallery';
+
+  initGalleryLightbox();
+
+  /* 章节进场：确定性滚动检测（比 IntersectionObserver 更稳，
+     快速滚动也不会漏帧；脚本失效时 is-armed 不会被加上，照片照常显示） */
+  const grids = document.querySelectorAll<HTMLElement>('.fc-chapter__grid');
+  grids.forEach((grid) => grid.classList.add('is-armed'));
+
+  const figures: HTMLElement[] = [];
+  grids.forEach((grid) => {
+    Array.from(grid.children).forEach((child, i) => {
+      const el = child as HTMLElement;
+      el.dataset.revealDelay = String(Math.min(i, 3) * 70);
+      figures.push(el);
+    });
+  });
+
+  let ticking = false;
+  const reveal = () => {
+    ticking = false;
+    const limit = window.innerHeight * 1.1;
+    for (const fig of figures) {
+      if (fig.classList.contains('is-visible')) continue;
+      if (fig.getBoundingClientRect().top < limit) {
+        const delay = Number(fig.dataset.revealDelay ?? 0);
+        window.setTimeout(() => fig.classList.add('is-visible'), delay);
+      }
+    }
+  };
+
+  const requestReveal = () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(reveal);
+  };
+
+  window.addEventListener('scroll', requestReveal, { passive: true });
+  window.addEventListener('resize', requestReveal, { passive: true });
+  reveal();
+
+  /* 行程导航跟随滚动高亮 */
+  const stops = Array.from(document.querySelectorAll<HTMLElement>('.fc-route__stop'));
+  const sections = Array.from(document.querySelectorAll<HTMLElement>('.fc-chapter'));
+
+  const setActive = (key: string) => {
+    stops.forEach((stop) => stop.classList.toggle('is-active', stop.dataset.routeTarget === `fc-${key}`));
+  };
+
+  if (sections.length > 0 && 'IntersectionObserver' in window) {
+    const spy = new IntersectionObserver(
+      (records) => {
+        const visible = records
+          .filter((r) => r.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive((visible.target as HTMLElement).dataset.chapter ?? '');
+      },
+      { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.25, 0.5] },
+    );
+    sections.forEach((section) => spy.observe(section));
+  }
+
+  /* 点击行程导航时，补偿 sticky 导航与页头的高度 */
+  stops.forEach((stop) => {
+    stop.addEventListener('click', (event) => {
+      const id = stop.dataset.routeTarget;
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (!target) return;
+      event.preventDefault();
+      const nav = document.querySelector<HTMLElement>('.fc-route');
+      const offset = (nav?.offsetHeight ?? 0) + 96;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+      history.replaceState(null, '', `#${id}`);
+    });
+  });
+</script>
+
+<style>
+  .fc {
+    --fc-rule: color-mix(in srgb, var(--ch-border) 70%, transparent);
+  }
+
+  /* ---- 返回 ---- */
+  .fc-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 1.75rem;
+    font-family: var(--ch-academic-font);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    color: var(--ch-fg-muted);
+    text-decoration: none;
+    transition: color var(--ch-transition);
+  }
+
+  .fc-back svg {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  .fc-back:hover {
+    color: var(--ch-accent);
+  }
+
+  /* ---- Hero ---- */
+  .fc-hero {
+    max-width: 44rem;
+    margin: 0 0 2.75rem;
+  }
+
+  .fc-hero__kicker {
+    margin: 0 0 1.1rem;
+    font-family: var(--ch-mono-font);
+    font-size: 0.63rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--trip-accent);
+    opacity: 0.85;
+  }
+
+  .fc-hero__title {
+    margin: 0;
+    font-family: var(--ch-display-font);
+    font-size: clamp(2.6rem, 6vw, 4rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: 0.04em;
+  }
+
+  .fc-hero__en {
+    margin: 0.5rem 0 0;
+    font-family: var(--ch-display-font);
+    font-size: 1rem;
+    font-style: italic;
+    letter-spacing: 0.08em;
+    color: var(--ch-fg-muted);
+    opacity: 0.75;
+  }
+
+  .fc-hero__lead {
+    margin: 1.5rem 0 0;
+    font-size: 0.96rem;
+    line-height: 2;
+    color: var(--ch-fg-muted);
+  }
+
+  .fc-hero__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 2rem 0 0;
+    border-top: 1px solid var(--fc-rule);
+  }
+
+  .fc-stat {
+    flex: 1 1 6rem;
+    padding: 0.9rem 1rem 0.9rem 0;
+  }
+
+  .fc-stat + .fc-stat {
+    padding-left: 1rem;
+    border-left: 1px solid var(--fc-rule);
+  }
+
+  .fc-stat dt {
+    font-family: var(--ch-mono-font);
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ch-fg-muted);
+    opacity: 0.7;
+  }
+
+  .fc-stat dd {
+    margin: 0.3rem 0 0;
+    font-family: var(--ch-display-font);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---- 封面 ---- */
+  .fc-cover {
+    margin: 0 0 2.5rem;
+  }
+
+  .fc-cover__btn {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ch-radius);
+    overflow: hidden;
+    background: var(--ch-surface-elevated);
+    cursor: zoom-in;
+    box-shadow: var(--ch-shadow);
+  }
+
+  .fc-cover__btn img {
+    display: block;
+    width: 100%;
+    height: clamp(15rem, 42vw, 30rem);
+    object-fit: cover;
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .fc-cover__btn:hover img {
+    transform: scale(1.03);
+  }
+
+  .fc-cover__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10, 24, 16, 0.32), transparent 46%);
+    opacity: 0.9;
+    pointer-events: none;
+  }
+
+  .fc-cover__zoom {
+    position: absolute;
+    right: 0.9rem;
+    bottom: 0.9rem;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    color: #f5fbf3;
+    background: rgba(14, 30, 20, 0.42);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity var(--ch-transition), transform var(--ch-transition);
+    pointer-events: none;
+  }
+
+  .fc-cover__zoom svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  .fc-cover__btn:hover .fc-cover__zoom,
+  .fc-cover__btn:focus-visible .fc-cover__zoom {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .fc-cover__cap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    margin-top: 0.9rem;
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: var(--ch-fg-muted);
+  }
+
+  .fc-cover__cap-num {
+    flex: none;
+    font-family: var(--ch-mono-font);
+    font-size: 0.56rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--trip-accent);
+    padding: 0.1rem 0.45rem;
+    border: 1px solid color-mix(in srgb, var(--trip-accent) 30%, transparent);
+    border-radius: 999px;
+  }
+
+  /* ---- 行程导航 ---- */
+  .fc-route {
+    position: sticky;
+    top: calc(var(--ch-header-height) + 0.5rem);
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    margin: 0 0 3rem;
+    padding: 0.7rem 1.1rem;
+    border: 1px solid var(--ch-glass-border);
+    border-radius: 999px;
+    background: var(--ch-glass-bg);
+    backdrop-filter: blur(var(--ch-glass-blur));
+    box-shadow: 0 6px 24px -18px rgba(20, 36, 26, 0.5);
+  }
+
+  .fc-route__label {
+    flex: none;
+    font-family: var(--ch-mono-font);
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ch-fg-muted);
+    opacity: 0.6;
+  }
+
+  .fc-route__list {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .fc-route__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fc-route__item {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .fc-route__link-line {
+    flex: 1;
+    min-width: 0.75rem;
+    height: 1px;
+    margin: 0 0.35rem;
+    background: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--ch-fg-muted) 30%, transparent),
+      color-mix(in srgb, var(--ch-fg-muted) 12%, transparent)
+    );
+  }
+
+  .fc-route__stop {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex: none;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--ch-fg-muted);
+    transition: background var(--ch-transition), color var(--ch-transition);
+  }
+
+  .fc-route__dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    flex: none;
+    border-radius: 50%;
+    background: var(--stop-accent);
+    opacity: 0.4;
+    transition: opacity var(--ch-transition), box-shadow var(--ch-transition);
+  }
+
+  .fc-route__text {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .fc-route__name {
+    font-family: var(--ch-display-font);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .fc-route__span {
+    font-family: var(--ch-mono-font);
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
+    opacity: 0.62;
+    white-space: nowrap;
+  }
+
+  .fc-route__stop:hover {
+    background: color-mix(in srgb, var(--stop-accent) 8%, transparent);
+    color: var(--ch-fg);
+  }
+
+  .fc-route__stop.is-active {
+    background: color-mix(in srgb, var(--stop-accent) 12%, transparent);
+    color: var(--ch-fg);
+  }
+
+  .fc-route__stop.is-active .fc-route__dot {
+    opacity: 1;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--stop-accent) 22%, transparent);
+  }
+
+  /* ---- 章节 ---- */
+  .fc-chapter {
+    margin: 0 0 4.5rem;
+    scroll-margin-top: 8rem;
+  }
+
+  .fc-chapter__header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--fc-rule);
+  }
+
+  .fc-chapter__index {
+    font-family: var(--ch-mono-font);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    color: var(--chapter-accent);
+    opacity: 0.85;
+  }
+
+  .fc-chapter__names {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .fc-chapter__title {
+    margin: 0;
+    font-family: var(--ch-display-font);
+    font-size: clamp(1.7rem, 3.4vw, 2.3rem);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+  }
+
+  .fc-chapter__en {
+    font-family: var(--ch-display-font);
+    font-size: 0.9rem;
+    font-style: italic;
+    letter-spacing: 0.1em;
+    color: var(--ch-fg-muted);
+    opacity: 0.7;
+  }
+
+  .fc-chapter__span {
+    flex: none;
+    font-family: var(--ch-mono-font);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--ch-fg-muted);
+    opacity: 0.75;
+  }
+
+  .fc-chapter__desc {
+    max-width: 40rem;
+    margin: 1.1rem 0 2rem;
+    font-size: 0.9rem;
+    line-height: 1.95;
+    color: var(--ch-fg-muted);
+  }
+
+  /* ---- 照片网格（多列瀑布流，容纳不同比例的竖横构图） ---- */
+  .fc-chapter__grid {
+    columns: 3;
+    column-gap: 1.35rem;
+  }
+
+  .fc-chapter__grid.is-armed .fc-photo {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  .fc-photo {
+    break-inside: avoid;
+    margin: 0 0 1.35rem;
+    transition:
+      opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .fc-chapter__grid.is-armed .fc-photo.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .fc-photo__btn {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ch-radius-sm);
+    overflow: hidden;
+    background: var(--ch-surface-elevated);
+    cursor: zoom-in;
+    box-shadow:
+      0 1px 2px rgba(20, 36, 26, 0.05),
+      0 14px 30px -22px rgba(20, 36, 26, 0.55);
+    transition: box-shadow 0.45s ease;
+  }
+
+  .fc-photo__btn img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .fc-photo__btn:hover {
+    box-shadow:
+      0 2px 6px rgba(20, 36, 26, 0.07),
+      0 22px 44px -24px color-mix(in srgb, var(--chapter-accent) 55%, rgba(20, 36, 26, 0.5));
+  }
+
+  .fc-photo__btn:hover img,
+  .fc-photo__btn:focus-visible img {
+    transform: scale(1.035);
+  }
+
+  .fc-photo__num {
+    position: absolute;
+    top: 0.55rem;
+    left: 0.55rem;
+    padding: 0.12rem 0.42rem;
+    border-radius: 999px;
+    font-family: var(--ch-mono-font);
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    color: #f6fbf4;
+    background: rgba(12, 28, 19, 0.5);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity var(--ch-transition);
+    pointer-events: none;
+  }
+
+  .fc-photo__btn:hover .fc-photo__num,
+  .fc-photo__btn:focus-visible .fc-photo__num {
+    opacity: 1;
+  }
+
+  .fc-photo__cap {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.7rem;
+    padding-left: 0.15rem;
+    transition: border-color var(--ch-transition), padding-left var(--ch-transition);
+    border-left: 2px solid transparent;
+  }
+
+  .fc-photo:hover .fc-photo__cap {
+    border-left-color: color-mix(in srgb, var(--chapter-accent) 65%, transparent);
+    padding-left: 0.6rem;
+  }
+
+  .fc-photo__cap-num {
+    flex: none;
+    padding-top: 0.16rem;
+    font-family: var(--ch-mono-font);
+    font-size: 0.56rem;
+    letter-spacing: 0.08em;
+    color: var(--chapter-accent);
+    opacity: 0.7;
+  }
+
+  .fc-photo__cap-text {
+    font-size: 0.78rem;
+    line-height: 1.85;
+    color: var(--ch-fg-muted);
+  }
+
+  /* ---- 页脚 ---- */
+  .fc-foot {
+    margin-top: 1rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--fc-rule);
+  }
+
+  .fc-foot__line {
+    margin: 0;
+    font-size: 0.86rem;
+    color: var(--ch-fg-muted);
+  }
+
+  .fc-foot__line a {
+    color: var(--ch-accent-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 35%, transparent);
+    padding-bottom: 1px;
+    transition: border-color var(--ch-transition);
+  }
+
+  .fc-foot__line a:hover {
+    border-bottom-color: var(--ch-accent-secondary);
+  }
+
+  .fc-foot__dot {
+    margin: 0 0.5rem;
+    opacity: 0.5;
+  }
+
+  /* ---- 响应式 ---- */
+  @media (max-width: 1000px) {
+    .fc-chapter__grid {
+      columns: 2;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .fc-route {
+      gap: 0.75rem;
+      padding: 0.6rem 0.85rem;
+    }
+
+    .fc-route__label {
+      display: none;
+    }
+
+    .fc-route__span {
+      display: none;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .fc-chapter__grid {
+      columns: 1;
+    }
+
+    .fc-hero__stats {
+      gap: 0;
+    }
+
+    .fc-stat {
+      flex: 1 1 40%;
+    }
+
+    .fc-chapter__header {
+      flex-wrap: wrap;
+      gap: 0.5rem 0.85rem;
+    }
+
+    .fc-chapter__span {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fc-photo,
+    .fc-photo__btn img,
+    .fc-cover__btn img {
+      transition: none;
+    }
+
+    .fc-chapter__grid.is-armed .fc-photo {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

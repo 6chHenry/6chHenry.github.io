@@ -51,6 +51,19 @@ const TRAVEL_POSTERS: Record<string, TravelPosterData> = {
       'assets/gallery/photography/macau.assets/Londonese.JPG',
     ],
   },
+  'Travel/2026暑假四城游': {
+    galleryHref: 'gallery/four-cities/',
+    galleryTitle: '2026暑假四城游',
+    cities: '太原·大同·青岛·烟台',
+    photos: [
+      'assets/gallery/photography/summer-2026-four-cities.assets/taiyuan_04.jpg',
+      'assets/gallery/photography/summer-2026-four-cities.assets/datong_02.jpg',
+      'assets/gallery/photography/summer-2026-four-cities.assets/datong_07.jpg',
+      'assets/gallery/photography/summer-2026-four-cities.assets/qingdao_05.jpg',
+      'assets/gallery/photography/summer-2026-four-cities.assets/qingdao_04.jpg',
+      'assets/gallery/photography/summer-2026-four-cities.assets/yantai_03.jpg',
+    ],
+  },
 };
 
 const TRAVEL_GALLERY_LINKS: Record<string, TravelGalleryLink> = {
@@ -82,6 +95,13 @@ const TRAVEL_GALLERY_LINKS: Record<string, TravelGalleryLink> = {
     coverAlt: '香港地铁标识',
     note: '把声音、速度和密集街区，折回一组城市切片。',
   },
+  'Travel/2026暑假四城游': {
+    title: '2026暑假四城游',
+    href: 'gallery/four-cities/',
+    cover: 'assets/gallery/photography/summer-2026-four-cities.assets/qingdao_05.jpg',
+    coverAlt: '崂山之巅俯瞰海湾与索道',
+    note: '太原、大同、青岛、烟台，从石窟与木塔一路走到海风与落日。',
+  },
 };
 
 function trimBase(base: string): string {
@@ -105,7 +125,7 @@ export function getTravelPoster(entryId: string, base = import.meta.env.BASE_URL
 }
 
 export function getTravelGalleryLink(entryId: string, base = import.meta.env.BASE_URL): TravelGalleryLink | undefined {
-  const item = TRAVEL_GALLERY_LINKS[entryId];
+  const item = TRAVEL_GALLERY_LINKS[entryId.replace(/\.md$/, '')];
   if (!item) return undefined;
 
   return {
@@ -122,6 +142,7 @@ const MOVIE_POSTER_FALLBACK: Record<string, string> = {
   'Movies/河狸变身计划': 'https://upload.wikimedia.org/wikipedia/en/6/6c/Hoppers_film_poster.jpg',
   'Movies/给阿嬷的情书': 'https://q7.itc.cn/images01/20260521/590898ac3d1847699593879e85b52ef2.jpeg',
   'Movies/绿色大门': 'https://upload.wikimedia.org/wikipedia/en/1/1f/Blue_Gate_Crossing_film.jpg',
+  'Movies/欢迎来龙餐馆': '/images/watchlist/dragon-restaurant.webp',
 };
 
 export function getMoviePosterFromBody(body = '', entryId = ''): string | undefined {
