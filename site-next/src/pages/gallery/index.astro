@@ -8,9 +8,8 @@ import { buildContentUrl, formatDate, sortByRecency } from '../../utils/content'
 
 const hiddenCities = new Set(['osaka', 'kyoto', 'nara', 'uji', 'kobe', 'himeji', 'guangzhou', 'hong-kong', 'macau', 'wuhan', 'lushan', 'nanchang']);
 const base = import.meta.env.BASE_URL;
-const entries = sortByRecency(
-  await getCollection('gallery', ({ data }) => !data.draft),
-).filter((entry) => {
+const allEntries = await getCollection('gallery', ({ data }) => !data.draft);
+const entries = sortByRecency(allEntries).filter((entry) => {
   const parts = entry.id.split('/');
   const slug = (parts[parts.length - 1] || '').replace(/\.md$/, '');
   if (parts[0] === 'photography' && hiddenCities.has(slug)) return false;
@@ -32,10 +31,22 @@ const immersivePages: Record<string, string> = {
 const entryHref = (id: string) =>
   immersivePages[id] ? `${base}${immersivePages[id]}` : buildContentUrl('gallery', id, base);
 
-const entryBySlug = new Map(entries.map((entry) => [getEntrySlug(entry.id), entry]));
+/* 多城旅程由多个城市条目组成，照片数要逐城累加；单城旅程就是它自己 */
+const TRIP_CITIES: Record<string, string[]> = {
+  'hubei-jiangxi': ['wuhan', 'lushan', 'nanchang'],
+  geermu: ['geermu'],
+  'greater-bay-area': ['guangzhou', 'macau', 'hong-kong'],
+  japan: ['osaka', 'nara', 'uji', 'kyoto', 'kobe', 'himeji'],
+  'summer-2026-four-cities': ['summer-2026-four-cities'],
+};
+
+const entryBySlug = new Map(allEntries.map((entry) => [getEntrySlug(entry.id), entry]));
 const countImages = (slug: string) => {
-  const entry = entryBySlug.get(slug);
-  return entry ? entry.data.images.length + 1 : 0;
+  const members = TRIP_CITIES[slug] ?? [slug];
+  return members.reduce((sum, member) => {
+    const entry = entryBySlug.get(member);
+    return sum + (entry ? entry.data.images.length + 1 : 0);
+  }, 0);
 };
 
 const categories = ['illustration', 'photography', 'design', 'ui-ux', 'other'] as const;
