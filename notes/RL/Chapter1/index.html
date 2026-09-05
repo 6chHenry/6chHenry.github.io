@@ -1,0 +1,306 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v5.18.1"><meta name="theme-color" content="#1b4332"><title>《强化学习的数学原理》第1课-基本概念知识点整理</title><meta name="description" content="6ch. 的个人网站 — 在林间的思考与记录"><link rel="canonical" href="https://6chhenry.github.io/notes/RL/Chapter1/"><link rel="icon" href="/img/avatar1.jpg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><!-- Noto Serif SC 自托管（scripts/fetch-noto-serif-sc.mjs 抓取切片到 public/fonts），
+     与站点同源、不依赖 Google Fonts 的连通性 --><link rel="stylesheet" href="/fonts/noto-serif-sc.css"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet"><link href="https://gcore.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" rel="stylesheet"><script>
+  (function () {
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = stored ?? (prefersDark ? 'dark' : 'light');
+    document.documentElement.dataset.theme = theme;
+  })();
+</script><link rel="stylesheet" href="/_astro/_slug_.GasV-BYA.css">
+<style>.content-article[data-astro-cid-scuu7fyy]{padding:2rem 2.15rem 2.5rem;background:var(--ch-glass-bg);border:1px solid var(--ch-glass-border);backdrop-filter:blur(var(--ch-glass-blur)) saturate(1.12);-webkit-backdrop-filter:blur(var(--ch-glass-blur)) saturate(1.12);box-shadow:none}.content-layout--immersive[data-astro-cid-scuu7fyy]{grid-template-columns:minmax(0,1fr);width:min(calc(100% - 2rem),76rem)}.content-layout--immersive[data-astro-cid-scuu7fyy] .content-article[data-astro-cid-scuu7fyy]{overflow:hidden;padding:0;border-color:color-mix(in srgb,var(--ch-border) 70%,transparent);background:var(--ch-surface-solid)}.content-layout--immersive[data-astro-cid-scuu7fyy] .article-nav[data-astro-cid-scuu7fyy]{margin:2.5rem 2.5rem 0;padding-bottom:2.5rem}@media(max-width:640px){.content-article[data-astro-cid-scuu7fyy]{padding:1.35rem 1.15rem 1.75rem}.content-layout--immersive[data-astro-cid-scuu7fyy]{width:100%;padding-top:0}.content-layout--immersive[data-astro-cid-scuu7fyy] .content-article[data-astro-cid-scuu7fyy]{padding:0;border-inline:0;border-radius:0}.content-layout--immersive[data-astro-cid-scuu7fyy] .article-nav[data-astro-cid-scuu7fyy]{margin-inline:1.15rem;padding-bottom:1.75rem}}
+</style></head> <body class data-astro-cid-37fxchfa> <a class="skip-link" href="#main-content" data-astro-cid-37fxchfa>跳到主要内容</a> <div class="site-backdrop" aria-hidden="true" data-astro-cid-37fxchfa> <div class="site-backdrop__sky" data-astro-cid-37fxchfa></div> <div class="site-backdrop__mist" data-astro-cid-37fxchfa></div> </div> <header class="site-header" data-astro-cid-3ef6ksr2> <div class="container site-header__inner" data-astro-cid-3ef6ksr2> <a class="site-logo" href="/" data-astro-cid-3ef6ksr2> <span class="site-logo__icon" aria-hidden="true" data-astro-cid-3ef6ksr2> <svg class="forest-icon" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M12 2c-1 3-3 4.5-3 7.5a3 3 0 0 0 6 0C15 6.5 13 5 12 2zm-2.5 9.5h5v2.5h-1.5v3H13v3h-2v-3h-1.5v-3H9.5v-2.5z" data-astro-cid-edk4eyhc></path> </svg>  </span> <span class="site-logo__text" data-astro-cid-3ef6ksr2> <span class="site-logo__name" data-astro-cid-3ef6ksr2>6ch.</span> <span class="site-logo__tag" data-astro-cid-3ef6ksr2>林间笔记</span> </span> </a> <nav class="site-nav" id="site-nav" aria-label="主导航" data-astro-cid-3ef6ksr2> <a href="/" class="site-nav__link" data-astro-cid-3ef6ksr2> 主页 </a><a href="/notes/" class="site-nav__link is-active" data-astro-cid-3ef6ksr2> 笔记 </a><a href="/essay/" class="site-nav__link" data-astro-cid-3ef6ksr2> 杂谈 </a><a href="/projects/" class="site-nav__link" data-astro-cid-3ef6ksr2> 项目 </a><a href="/gallery/" class="site-nav__link" data-astro-cid-3ef6ksr2> 画廊 </a><a href="/academy/" class="site-nav__link" data-astro-cid-3ef6ksr2> 学术 </a><a href="/tags/" class="site-nav__link" data-astro-cid-3ef6ksr2> 标签 </a><a href="/about/" class="site-nav__link" data-astro-cid-3ef6ksr2> 关于 </a> </nav> <div class="site-header__actions" data-astro-cid-3ef6ksr2> <button type="button" class="icon-btn" id="search-open" aria-label="搜索" data-astro-cid-3ef6ksr2> <svg class="forest-icon" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C8.01 14 6 11.99 6 9.5S8.01 5 9.5 5 13 7.01 13 9.5 11.99 14 9.5 14z" data-astro-cid-edk4eyhc></path> </svg>  </button> <button type="button" class="theme-switch" id="theme-toggle" role="switch" aria-checked="false" aria-label="切换昼夜模式" data-astro-cid-3ef6ksr2> <span class="theme-switch__track" aria-hidden="true" data-astro-cid-3ef6ksr2> <span class="theme-switch__stars" data-astro-cid-3ef6ksr2></span> <span class="theme-switch__knob" data-astro-cid-3ef6ksr2> <span class="theme-switch__icon theme-switch__icon--sun" data-astro-cid-3ef6ksr2><svg class="forest-icon" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5 1.09 2.26L15.36 3l.82 2.18L18.36 6l-2.18.82L15.36 9l-2.27-1.09L12 9l-1.09-2.27L8.64 6l2.18-.82L11.64 3 12 2zM4 13l2.26 1.09L7 16.36l-.82-2.18L4 13.36l2.18-.82L7 10.64 6.26 12 4 13zm16 0-2.26-1.09L17 10.64l.82 2.18L20 13.36l-2.18.82L17 16.36l1.09-2.26L20 13zM7 20.64l-.82-2.18L4 17.64l2.18-.82L7 14.64l1.09 2.26L10.36 18l-2.18.82L7 20.64zm10 0-1.09-2.26L13.64 18l2.18-.82L17 14.64l1.09 2.26L20.36 18l-2.18.82L17 20.64z" data-astro-cid-edk4eyhc></path> </svg> </span> <span class="theme-switch__icon theme-switch__icon--moon" data-astro-cid-3ef6ksr2><svg class="forest-icon" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M12.1 22a9.8 9.8 0 0 1-6.71-2.67A9.87 9.87 0 0 1 2.67 12.6 9.9 9.9 0 0 1 12.1 2a1 1 0 0 1 .87.5 1 1 0 0 1 .08.95A7.04 7.04 0 0 0 12 9a7 7 0 0 0 7 7 7.04 7.04 0 0 0 5.55-2.05 1 1 0 0 1 1.03-.17 1 1 0 0 1 .59.92 9.86 9.86 0 0 1-2.67 6.71A9.8 9.8 0 0 1 12.1 22z" data-astro-cid-edk4eyhc></path> </svg> </span> </span> </span> </button> <!-- 首帧前同步开关位置，避免夜间模式下导航时先画成昼间再跳回 --> <script>
+        (() => {
+          const toggle = document.getElementById('theme-toggle');
+          if (toggle) {
+            toggle.setAttribute('aria-checked', document.documentElement.dataset.theme === 'dark' ? 'true' : 'false');
+          }
+        })();
+      </script> <a class="icon-btn" href="https://github.com/6chHenry" target="_blank" rel="noopener" aria-label="GitHub" data-astro-cid-3ef6ksr2> <svg viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-3ef6ksr2><path d="M12 .5a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.04-3.3.72-4-1.6-4-1.6-.54-1.38-1.33-1.75-1.33-1.75-1.09-.75.08-.73.08-.73 1.2.08 1.83 1.24 1.83 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.61-2.8 5.63-5.48 5.93.43.37.81 1.1.81 2.22 0 1.6-.01 2.89-.01 3.28 0 .32.21.7.82.58A12 12 0 0 0 12 .5z" data-astro-cid-3ef6ksr2></path></svg> </a> <button type="button" class="icon-btn icon-btn--menu" id="nav-toggle" aria-label="打开菜单" aria-expanded="false" aria-controls="site-nav" data-astro-cid-3ef6ksr2> <svg class="forest-icon nav-icon nav-icon--open" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M4 7h16v2H4V7zm0 5h16v2H4v-2zm0 5h16v2H4v-2z" data-astro-cid-edk4eyhc></path> </svg>  <svg class="forest-icon nav-icon nav-icon--close" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M6.4 6.4L12 11.99l5.6-5.59 1.41 1.41L13.41 13.4l5.6 5.59-1.41 1.41L12 14.82l-5.59 5.58-1.41-1.41 5.58-5.59-5.58-5.6 1.41-1.41z" data-astro-cid-edk4eyhc></path> </svg>  </button> </div> </div> </header>  <script type="module">function d(){const e=document.getElementById("theme-toggle");if(!e)return;const n=()=>{const a=document.documentElement.dataset.theme==="dark";e.setAttribute("aria-checked",a?"true":"false")};n(),e.addEventListener("click",()=>{const c=(document.documentElement.dataset.theme==="dark"?"dark":"light")==="dark"?"light":"dark";document.documentElement.dataset.theme=c,localStorage.setItem("theme",c),n()})}d();const t=document.getElementById("nav-toggle"),o=document.getElementById("site-nav");t?.addEventListener("click",()=>{const e=document.body.classList.toggle("nav-open");t.setAttribute("aria-expanded",e?"true":"false"),t.setAttribute("aria-label",e?"关闭菜单":"打开菜单")});o?.querySelectorAll("a").forEach(e=>{e.addEventListener("click",()=>{document.body.classList.remove("nav-open"),t?.setAttribute("aria-expanded","false")})});</script> <main id="main-content" data-astro-cid-37fxchfa>  <div class="reading-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="阅读进度" data-reading-progress-root hidden> <span class="reading-progress__bar" data-reading-progress></span> <span class="reading-progress__label" data-reading-progress-label>0%</span> </div> <button class="back-to-top" type="button" data-back-to-top aria-label="返回顶部" hidden> <svg class="back-to-top__ring" viewBox="0 0 44 44" aria-hidden="true"> <circle class="back-to-top__track" cx="22" cy="22" r="18"></circle> <circle class="back-to-top__fill" cx="22" cy="22" r="18" data-back-to-top-ring></circle> </svg> <span class="back-to-top__icon" aria-hidden="true"> <svg viewBox="0 0 24 24" width="18" height="18"> <path fill="currentColor" d="M12 8.35l-5.88 5.9 1.41 1.42L12 11.2l4.47 4.47 1.41-1.42L12 8.35zm0-5.35L4 12l1.41 1.41L12 6.83l6.59 6.58L20 12 12 3z"></path> </svg> </span> </button> <div class="reading-vine" aria-hidden="true" data-astro-cid-scuu7fyy></div><article class="container content-layout page-shell" data-astro-cid-scuu7fyy> <div class="content-main card card--elevated content-article" data-astro-cid-scuu7fyy> <nav class="breadcrumb" aria-label="所在位置" data-astro-cid-scuu7fyy> <a href="/notes/" data-astro-cid-scuu7fyy>笔记</a>  <span class="breadcrumb__sep" aria-hidden="true" data-astro-cid-scuu7fyy>
+/
+</span> <a href="/notes/category/rl/" data-astro-cid-scuu7fyy>RL</a> <span class="breadcrumb__sep" aria-hidden="true" data-astro-cid-scuu7fyy>/</span> <span aria-current="page" data-astro-cid-scuu7fyy>《强化学习的数学原理》第1课-基本概念知识点整理</span> </nav> <header class="page-header" data-astro-cid-scuu7fyy> <h1 data-astro-cid-scuu7fyy>《强化学习的数学原理》第1课-基本概念知识点整理</h1>  </header> <div class="content-meta" data-astro-cid-scuu7fyy>  <ul class="tag-list" data-astro-cid-scuu7fyy> <li data-astro-cid-scuu7fyy> <a href="/tags/RL/" data-astro-cid-scuu7fyy>#RL</a> </li> </ul> </div> <div class="prose" data-pagefind-body data-astro-cid-scuu7fyy>  <h1 id="强化学习的数学原理第1课-基本概念知识点整理">《强化学习的数学原理》第1课-基本概念知识点整理</h1>
+<h2 id="核心实例网格世界grid-world">核心实例：网格世界（grid-world）</h2>
+<ol>
+<li>世界构成：由网格组成，包含3类网格
+<ul>
+<li>可进入区域（白色）：机器人可正常移动进入</li>
+<li>禁止区域（黄色）：课程中定义为「可进入但会受惩罚」（比「物理不可进入」更通用，可能出现“冒险走禁区域抄近路”的有趣行为）</li>
+<li>目标区域（target area）：机器人需抵达的最终目标</li>
+<li>边界：机器人无法超越，撞边界后会弹回原状态</li>
+</ul>
+</li>
+<li>机器人规则：仅能在相邻网格（上下左右）移动，不可斜向移动</li>
+<li>核心任务：找到从起点到目标区域的「优质路径」，直观判断标准包括：
+<ul>
+<li>避免进入禁止区域</li>
+<li>减少无意义拐弯（如反复往返）</li>
+<li>不尝试超越边界</li>
+</ul>
+</li>
+</ol>
+<h2 id="三强化学习核心基础概念">三、强化学习核心基础概念</h2>
+<h3 id="一状态state与状态空间state-space">（一）状态（State）与状态空间（State Space）</h3>
+<ol>
+<li>状态（State）
+<ul>
+<li>定义：描述智能体（agent）相对于环境的状态（status）</li>
+<li>网格世界实例：即机器人的「位置」，用s₁、s₂…s₉表示（每个符号对应二维平面的(x,y)坐标）</li>
+<li>扩展场景：复杂问题中，状态还可能包含速度、加速度等额外信息</li>
+</ul>
+</li>
+<li>状态空间（State Space）
+<ul>
+<li>定义：所有可能状态的集合（本质是数学中的“集合”，非复杂线性空间）</li>
+<li>表示符号：用花体「𝓢」表示，形式为𝓢 = {s₁, s₂, …, sₙ}（n为状态总数，可从上下文推断范围）</li>
+</ul>
+</li>
+</ol>
+<h3 id="二动作action与动作空间action-space">（二）动作（Action）与动作空间（Action Space）</h3>
+<ol>
+<li>动作（Action）
+<ul>
+<li>定义：智能体在某一状态下可采取的具体行为</li>
+<li>网格世界实例：共5种动作，分别为a₁（向上）、a₂（向右）、a₃（向下）、a₄（向左）、a₅（原地不动）</li>
+</ul>
+</li>
+<li>动作空间（Action Space）
+<ul>
+<li>定义：某一状态下所有可能动作的集合</li>
+<li>表示符号：用花体「𝓐」表示，形式为𝓐(sᵢ)（括号标注sᵢ，强调「动作空间与状态相关」，不同状态的可执行动作可能不同）</li>
+</ul>
+</li>
+</ol>
+<h3 id="三状态转移state-transition">（三）状态转移（State Transition）</h3>
+<ol>
+<li>定义：智能体在某一状态下采取某一动作后，从当前状态移动到下一状态的过程</li>
+<li>网格世界实例：
+<ul>
+<li>例1：在s₁状态采取a₂（向右）动作，下一状态为s₂</li>
+<li>例2：在s₁状态采取a₁（向上）动作，因撞边界弹回，下一状态仍为s₁</li>
+<li>例3：在s₅（禁区域相邻）采取a₂（向右）动作，下一状态为s₆（禁区域，会受惩罚）</li>
+</ul>
+</li>
+<li>表示方式：简单场景可用「表格」表示（行=状态，列=动作，单元格=下一状态），但仅适用于「确定性转移」（无随机因素）</li>
+</ol>
+<h3 id="四状态转移概率state-transition-probability">（四）状态转移概率（State Transition Probability）</h3>
+<ol>
+<li>定义：用「条件概率」描述状态转移的可能性，可处理「随机性转移」（比表格更通用）</li>
+<li>表示符号：p(s’ | s, a)，含义为“在状态s下采取动作a，转移到状态s’的概率”</li>
+<li>实例：
+<ul>
+<li>确定性转移：p(s₂ | s₁, a₂) = 1（s₁采取a₂必到s₂），p(sᵢ | s₁, a₂) = 0（i≠2时概率为0）</li>
+<li>随机性转移（如考虑风的影响）：p(s₂ | s₁, a₂) = 0.5，p(s₅ | s₁, a₂) = 0.5（s₁采取a₂，50%到s₂、50%到s₅）</li>
+</ul>
+</li>
+</ol>
+<h3 id="五策略policy">（五）策略（Policy）</h3>
+<ol>
+<li>定义：指导智能体“在某一状态下应采取何种动作”的规则，是强化学习的核心独有概念</li>
+<li>直观表示：用箭头标注每个状态的推荐动作（如s₁箭头向右，表示推荐a₂动作），基于策略可生成「路径（path）」或「轨迹（trajectory）」（如从起点按策略动作依次转移到目标的过程）</li>
+<li>数学表示：用「条件概率」π(a | s)描述，含义为“在状态s下采取动作a的概率”，满足「某一状态下所有动作概率和为1」</li>
+<li>分类：
+<ul>
+<li>确定性策略：某一动作概率为1，其余为0（如π(a₂ | s₁) = 1，π(a₁,a₃,a₄,a₅ | s₁) = 0）</li>
+<li>随机性策略：多个动作有非零概率（如π(a₂ | s₁) = 0.5，π(a₃ | s₁) = 0.5，其余为0）</li>
+</ul>
+</li>
+<li>工程实现：
+<ul>
+<li>表示：用数组/矩阵存储（行=状态，列=动作，单元格=动作概率）</li>
+<li>执行（随机性策略）：从[0,1]均匀随机采样x，按概率区间选择动作（如x∈[0,0.5]选a₂，x∈[0.5,1]选a₃）</li>
+</ul>
+</li>
+</ol>
+<h3 id="六reward奖励">（六）Reward（奖励）</h3>
+<ol>
+<li>
+<p><strong>定义与本质</strong></p>
+<ul>
+<li>本质：智能体（agent）在某一状态采取动作后获得的「实数标量」，是人机交互的核心接口（引导智能体行为）</li>
+<li>含义：正数表示「鼓励该行为」，负数表示「惩罚该行为」，0表示「无惩罚（一定程度上隐含鼓励）」</li>
+<li>灵活性：可通过数学转换调整正负含义（如用正数表惩罚、负数表鼓励），核心是智能体目标与奖励方向一致（最大化鼓励/最小化惩罚）</li>
+</ul>
+</li>
+<li>
+<p><strong>网格世界实例设计</strong></p>
+<ul>
+<li>边界惩罚：试图超越边界（如s1采取a1向上），奖励<code>r_bound = -1</code></li>
+<li>禁区域惩罚：进入禁止区域（如s5采取a2向右到s6），奖励<code>r_forbid = -1</code></li>
+<li>目标奖励：进入目标区域（如到s9），奖励<code>r_target = +1</code></li>
+<li>其他行为：正常移动（如s1采取a2向右到s2）、原地不动，奖励均为0</li>
+</ul>
+</li>
+<li>
+<p><strong>关键注意点</strong></p>
+<ul>
+<li>依赖对象：Reward仅依赖「当前状态+当前动作」，与「下一个状态」无关
+<ul>
+<li>实例：s1采取a1（撞边界，下状态s1，奖励-1）与s1采取a5（原地不动，下状态s1，奖励0），下状态相同但奖励不同，因动作含义不同</li>
+</ul>
+</li>
+<li>表示方式：
+<ul>
+<li>表格形式：行=状态，列=动作，单元格=奖励，仅适用于「确定性奖励」（某状态-动作对应固定奖励）</li>
+<li>概率形式：用条件概率<code>p(r | s, a)</code>描述，可处理「随机性奖励」（如努力学习可能获得不同正奖励），例：<code>p(r=-1 | s1, a1) = 1</code>（确定性）、<code>p(r=2 | s, a)=0.6, p(r=1 | s, a)=0.4</code>（随机性）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="六trajectory轨迹">（六）Trajectory（轨迹）</h3>
+<ol>
+<li><strong>定义</strong>：智能体与环境交互形成的「状态-动作-奖励」序列链，即<code>s₀ →(a₀,r₀) s₁ →(a₁,r₁) s₂ →…→sₙ</code></li>
+<li><strong>网格世界实例</strong>：从s1出发，s1（a2,0）→s2（a3,0）→s5（a3,0）→s8（a2,1）→s9，形成完整轨迹</li>
+<li><strong>属性</strong>：轨迹长度可有限（如到目标后停止）或无限（如目标区域持续执行策略）</li>
+</ol>
+<h3 id="七return回报">（七）Return（回报）</h3>
+<ol>
+<li>
+<p><strong>定义</strong>：某条轨迹上所有奖励的「总和」，是评估轨迹/对应策略好坏的核心指标</p>
+<ul>
+<li>公式（有限轨迹）：<code>Return = r₀ + r₁ + r₂ + … + rₙ</code></li>
+</ul>
+</li>
+<li>
+<p><strong>网格世界实例对比</strong></p>
+<ul>
+<li>优质轨迹（避禁区域）：s1→s2→s5→s8→s9，奖励序列[0,0,0,1]，Return=1</li>
+<li>较差轨迹（进禁区域）：s1→s4→s5→s6（禁区域，-1）→s9，奖励序列[0,0,-1,1]，Return=0</li>
+<li>结论：Return越大，轨迹/策略越优，实现「直观判断→数学量化」的转换</li>
+</ul>
+</li>
+<li>
+<p><strong>Discounted Return（折扣回报）</strong></p>
+</li>
+<li>
+<p><strong>核心问题</strong>：无限轨迹（如目标区域持续获得+1奖励）的普通Return会「发散到无穷」，无法量化评估</p>
+</li>
+<li>
+<p><strong>定义</strong>：引入折扣率<code>γ</code>（<code>0 ≤ γ ≤ 1</code>），对未来奖励按「时间步次方」衰减，公式为：</p>
+<ul>
+<li><code>Discounted Return = r₀ + γr₁ + γ²r₂ + γ³r₃ + …</code></li>
+</ul>
+</li>
+<li>
+<p><strong>折扣率<code>γ</code>的作用</strong></p>
+<ul>
+<li>收敛性：当<code>γ &#x3C; 1</code>时，无限奖励序列和收敛为有限值（等比数列求和：<code>S = r₀ + γr₁ + … = r₀ + γ*(r₁ + γr₂ + …)</code>，若后续奖励恒定为r，总和为<code>r/(1-γ)</code>）</li>
+<li>行为引导：
+<ul>
+<li><code>γ→0</code>：智能体「近视」，仅关注当前/近期奖励（如<code>γ=0.1</code>，未来3步奖励衰减至0.001，影响可忽略）</li>
+<li><code>γ→1</code>：智能体「远视」，重视长远奖励（如<code>γ=0.99</code>，未来30步奖励仍有<code>0.99³⁰≈0.74</code>，影响显著）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>网格世界实例计算</strong>：目标区域持续获得+1奖励，轨迹后半段为s9（a5,1）→s9（a5,1）→…，折扣回报为：</p>
+<ul>
+<li>假设前3步奖励为0，从第4步开始为1：<code>0 + 0 + 0 + γ³*1 + γ⁴*1 + … = γ³/(1-γ)</code>（<code>γ &#x3C; 1</code>时收敛）</li>
+</ul>
+</li>
+</ol>
+<h3 id="八episode回合">（八）Episode（回合）</h3>
+<ul>
+<li>定义：有「终止状态（terminal state）」的有限轨迹，即智能体从初始状态出发，到终止状态后停止，形成一个回合（如游戏通关、机器人到达目标后停止）</li>
+<li>对应任务：Episodic Tasks（回合制任务），例：网格世界到达目标后停止</li>
+</ul>
+<ol>
+<li>
+<p><strong>Continuing Tasks（持续型任务）</strong></p>
+<ul>
+<li>定义：无终止状态，智能体与环境交互「永久持续」的任务（现实中无绝对永久，需近似），例：机器人长期巡逻、持续优化的推荐系统</li>
+</ul>
+</li>
+<li>
+<p><strong>两种任务的统一方法</strong></p>
+<ul>
+<li>方法1：将终止状态设为「吸收状态（absorbing state）」
+<ul>
+<li>规则：进入吸收状态后，无论采取何种动作，均停留在该状态，且后续奖励全为0（如目标区域仅允许原地不动，奖励0）</li>
+</ul>
+</li>
+<li>方法2：将终止状态视为「普通状态」
+<ul>
+<li>规则：目标区域有正常策略（如策略优则持续停留获+1，策略差则可能跳出），无需特殊处理，更具一般性（课程采用此方法）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="核心框架markov-decision-processmdp马尔可夫决策过程">核心框架：Markov Decision Process（MDP，马尔可夫决策过程）</h2>
+<h3 id="一mdp的核心要素">（一）MDP的核心要素</h3>
+<p>MDP是强化学习的统一数学框架，包含5个核心要素，记为<code>MDP = (𝓢, 𝓐, 𝓡, p, π)</code>，各要素含义如下：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>要素符号</th><th>要素名称</th><th>定义与说明</th></tr></thead><tbody><tr><td>𝓢</td><td>状态空间</td><td>所有可能状态的集合，如网格世界中𝓢 = {s₁, s₂, …, s₉}</td></tr><tr><td>𝓐</td><td>动作空间</td><td>每个状态对应的可执行动作集合，与状态相关，记为𝓐(s)，如𝓐(s₁) = {a₁,a₂,a₃,a₄,a₅}</td></tr><tr><td>𝓡</td><td>奖励空间</td><td>所有可能奖励的集合，如网格世界中𝓡 = {-1, 0, +1}</td></tr><tr><td>p</td><td>概率分布</td><td>包含状态转移概率`p(s’</td></tr><tr><td>π</td><td>策略</td><td>状态到动作的映射，用`π(a</td></tr></tbody></table>
+<h3 id="二mdp的核心性质markov-property马尔可夫性质">（二）MDP的核心性质：Markov Property（马尔可夫性质）</h3>
+<ol>
+<li><strong>定义</strong>：「无记忆性」——智能体下一个状态的概率仅依赖「当前状态+当前动作」，与「历史状态/动作」无关，公式表达为：
+<ul>
+<li>状态转移：<code>p(sₜ₊₁ | sₜ, aₜ) = p(sₜ₊₁ | s₀,a₀,s₁,a₁,…,sₜ,aₜ)</code></li>
+<li>奖励：<code>p(rₜ | sₜ, aₜ) = p(rₜ | s₀,a₀,s₁,a₁,…,sₜ,aₜ)</code></li>
+</ul>
+</li>
+<li><strong>含义</strong>：简化问题复杂度，无需存储历史交互信息，仅需关注当前状态与动作即可预测未来</li>
+</ol>
+<h3 id="三mdp与markov-process马尔可夫过程的关系">（三）MDP与Markov Process（马尔可夫过程）的关系</h3>
+<ul>
+<li>Markov Process（MP）：仅包含「状态空间𝓢」和「状态转移概率p」，无动作与策略，是无决策的状态演化过程</li>
+<li>MDP与MP的转化：当MDP中的策略π固定时，策略与环境融合，动作选择由π确定，MDP退化为MP（即固定策略下的状态转移过程）</li>
+<li>实例：网格世界中固定策略π（s1→a2, s2→a3,…），状态转移仅依赖当前状态与π，形成MP</li>
+</ul>  </div> <nav class="article-nav" aria-label="文章导航" data-astro-cid-scuu7fyy> <a class="article-nav__link article-nav__link--prev" href="/notes/RL/Overall Map/" data-astro-cid-scuu7fyy> <span class="article-nav__eyebrow" data-astro-cid-scuu7fyy>上一篇</span> <strong data-astro-cid-scuu7fyy>Overall Map</strong>  </a> <a class="article-nav__link article-nav__link--next" href="/notes/RL/Chapter2StateValue/" data-astro-cid-scuu7fyy> <span class="article-nav__eyebrow" data-astro-cid-scuu7fyy>下一篇</span> <strong data-astro-cid-scuu7fyy>《强化学习的数学原理》第2课-贝尔曼公式（知识点整理</strong>  </a> </nav> </div> <aside class="content-aside" data-astro-cid-scuu7fyy> <div class="content-toc" data-astro-cid-scuu7fyy> <p class="content-toc__title" data-astro-cid-scuu7fyy>目录</p> <nav aria-label="Table of contents" data-astro-cid-scuu7fyy> <ul data-astro-cid-scuu7fyy> <li style="margin-left: 0rem" data-astro-cid-scuu7fyy> <a href="#强化学习的数学原理第1课-基本概念知识点整理" data-astro-cid-scuu7fyy>《强化学习的数学原理》第1课-基本概念知识点整理</a> </li><li style="margin-left: 0rem" data-astro-cid-scuu7fyy> <a href="#核心实例网格世界grid-world" data-astro-cid-scuu7fyy>核心实例：网格世界（grid-world）</a> </li><li style="margin-left: 0rem" data-astro-cid-scuu7fyy> <a href="#三强化学习核心基础概念" data-astro-cid-scuu7fyy>三、强化学习核心基础概念</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#一状态state与状态空间state-space" data-astro-cid-scuu7fyy>（一）状态（State）与状态空间（State Space）</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#二动作action与动作空间action-space" data-astro-cid-scuu7fyy>（二）动作（Action）与动作空间（Action Space）</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#三状态转移state-transition" data-astro-cid-scuu7fyy>（三）状态转移（State Transition）</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#四状态转移概率state-transition-probability" data-astro-cid-scuu7fyy>（四）状态转移概率（State Transition Probability）</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#五策略policy" data-astro-cid-scuu7fyy>（五）策略（Policy）</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#六reward奖励" data-astro-cid-scuu7fyy>（六）Reward（奖励）</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#六trajectory轨迹" data-astro-cid-scuu7fyy>（六）Trajectory（轨迹）</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#七return回报" data-astro-cid-scuu7fyy>（七）Return（回报）</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#八episode回合" data-astro-cid-scuu7fyy>（八）Episode（回合）</a> </li><li style="margin-left: 0rem" data-astro-cid-scuu7fyy> <a href="#核心框架markov-decision-processmdp马尔可夫决策过程" data-astro-cid-scuu7fyy>核心框架：Markov Decision Process（MDP，马尔可夫决策过程）</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#一mdp的核心要素" data-astro-cid-scuu7fyy>（一）MDP的核心要素</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#二mdp的核心性质markov-property马尔可夫性质" data-astro-cid-scuu7fyy>（二）MDP的核心性质：Markov Property（马尔可夫性质）</a> </li><li style="margin-left: 0.85rem" data-astro-cid-scuu7fyy> <a href="#三mdp与markov-process马尔可夫过程的关系" data-astro-cid-scuu7fyy>（三）MDP与Markov Process（马尔可夫过程）的关系</a> </li> </ul> </nav> </div> <div class="character-tree" aria-hidden="true" title="《强化学习的数学原理》第1课-基本概念知识点整理 · 汉字树"> <p class="character-tree__title">汉字树</p> <div class="character-tree__canvas"> <svg class="character-tree__svg" viewBox="0 0 120 160" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="tree-RL-Chapter1-md"><path d="M60.0 6.0 L72.0 34.0 L66.0 34.0 L80.0 58.0 L73.0 58.0 L86.0 82.0 L78.0 82.0 L90.0 106.0 L68.0 106.0 L68.0 154.0 L52.0 154.0 L52.0 106.0 L30.0 106.0 L42.0 82.0 L34.0 82.0 L47.0 58.0 L40.0 58.0 L54.0 34.0 L48.0 34.0 Z" /></clipPath></defs><g clip-path="url(#tree-RL-Chapter1-md)"><text x="64.3" y="62.2" fill="var(--ch-accent-secondary)" font-size="12.0" opacity="0.68" transform="rotate(-2.4 64.3 62.2)" font-family="var(--ch-text-font)">还</text><text x="72.2" y="100.2" fill="var(--ch-accent)" font-size="11.3" opacity="0.67" transform="rotate(0.3 72.2 100.2)" font-family="var(--ch-text-font)">息</text><text x="44.3" y="89.9" fill="var(--ch-accent)" font-size="10.7" opacity="0.91" transform="rotate(-4.2 44.3 89.9)" font-family="var(--ch-text-font)">通</text><text x="55.6" y="98.8" fill="var(--ch-accent)" font-size="11.5" opacity="0.77" transform="rotate(-0.2 55.6 98.8)" font-family="var(--ch-text-font)">择</text><text x="56.0" y="83.0" fill="var(--ch-accent-tertiary)" font-size="15.5" opacity="0.70" transform="rotate(4.6 56.0 83.0)" font-family="var(--ch-text-font)">口</text><text x="53.8" y="65.1" fill="var(--ch-accent)" font-size="15.4" opacity="0.73" transform="rotate(-3.2 53.8 65.1)" font-family="var(--ch-text-font)">互</text><text x="52.6" y="108.6" fill="var(--ch-accent)" font-size="14.0" opacity="0.58" transform="rotate(4.6 52.6 108.6)" font-family="var(--ch-text-font)">述</text><text x="53.2" y="27.6" fill="var(--ch-accent)" font-size="13.9" opacity="0.68" transform="rotate(-3.2 53.2 27.6)" font-family="var(--ch-text-font)">示</text><text x="44.8" y="80.3" fill="var(--ch-accent-tertiary)" font-size="14.0" opacity="0.89" transform="rotate(-4.3 44.8 80.3)" font-family="var(--ch-text-font)">通</text><text x="54.1" y="145.1" fill="var(--ch-accent)" font-size="11.9" opacity="0.64" transform="rotate(-1.6 54.1 145.1)" font-family="var(--ch-text-font)">一</text><text x="80.2" y="90.9" fill="var(--ch-accent)" font-size="12.4" opacity="0.76" transform="rotate(-0.4 80.2 90.9)" font-family="var(--ch-text-font)">励</text><text x="52.6" y="72.8" fill="var(--ch-accent-tertiary)" font-size="14.5" opacity="0.83" transform="rotate(-3.7 52.6 72.8)" font-family="var(--ch-text-font)">进</text><text x="61.8" y="110.4" fill="var(--ch-accent)" font-size="10.8" opacity="0.80" transform="rotate(-2.5 61.8 110.4)" font-family="var(--ch-text-font)">外</text><text x="70.2" y="83.7" fill="var(--ch-accent-tertiary)" font-size="12.6" opacity="0.62" transform="rotate(1.8 70.2 83.7)" font-family="var(--ch-text-font)">终</text><text x="63.7" y="89.7" fill="var(--ch-accent-secondary)" font-size="15.1" opacity="0.56" transform="rotate(-3.0 63.7 89.7)" font-family="var(--ch-text-font)">点</text><text x="79.2" y="74.7" fill="var(--ch-accent-secondary)" font-size="14.4" opacity="0.88" transform="rotate(-2.0 79.2 74.7)" font-family="var(--ch-text-font)">由</text><text x="80.8" y="80.2" fill="var(--ch-accent-secondary)" font-size="14.1" opacity="0.71" transform="rotate(-3.6 80.8 80.2)" font-family="var(--ch-text-font)">现</text><text x="46.1" y="73.9" fill="var(--ch-accent-tertiary)" font-size="10.6" opacity="0.61" transform="rotate(-0.4 46.1 73.9)" font-family="var(--ch-text-font)">罚</text><text x="34.4" y="99.0" fill="var(--ch-accent)" font-size="11.0" opacity="0.67" transform="rotate(-3.3 34.4 99.0)" font-family="var(--ch-text-font)">期</text><text x="53.4" y="38.9" fill="var(--ch-accent)" font-size="11.0" opacity="0.74" transform="rotate(3.9 53.4 38.9)" font-family="var(--ch-text-font)">略</text><text x="45.6" y="55.7" fill="var(--ch-accent-secondary)" font-size="10.6" opacity="0.81" transform="rotate(0.9 45.6 55.7)" font-family="var(--ch-text-font)">始</text><text x="63.4" y="144.0" fill="var(--ch-accent-secondary)" font-size="16.0" opacity="0.72" transform="rotate(3.8 63.4 144.0)" font-family="var(--ch-text-font)">迹</text><text x="61.8" y="53.5" fill="var(--ch-accent-tertiary)" font-size="14.8" opacity="0.76" transform="rotate(3.3 61.8 53.5)" font-family="var(--ch-text-font)">观</text><text x="55.2" y="125.4" fill="var(--ch-accent-tertiary)" font-size="13.9" opacity="0.85" transform="rotate(-3.8 55.2 125.4)" font-family="var(--ch-text-font)">学</text><text x="45.2" y="65.0" fill="var(--ch-accent-tertiary)" font-size="14.1" opacity="0.75" transform="rotate(4.6 45.2 65.0)" font-family="var(--ch-text-font)">从</text><text x="73.1" y="62.1" fill="var(--ch-accent-tertiary)" font-size="10.7" opacity="0.58" transform="rotate(3.3 73.1 62.1)" font-family="var(--ch-text-font)">定</text><text x="72.8" y="92.6" fill="var(--ch-accent)" font-size="10.8" opacity="0.56" transform="rotate(2.1 72.8 92.6)" font-family="var(--ch-text-font)">前</text><text x="63.7" y="119.0" fill="var(--ch-accent)" font-size="12.2" opacity="0.89" transform="rotate(4.0 63.7 119.0)" font-family="var(--ch-text-font)">前</text><text x="61.1" y="44.8" fill="var(--ch-accent)" font-size="14.2" opacity="0.66" transform="rotate(4.5 61.1 44.8)" font-family="var(--ch-text-font)">布</text><text x="46.6" y="98.8" fill="var(--ch-accent)" font-size="13.5" opacity="0.53" transform="rotate(1.6 46.6 98.8)" font-family="var(--ch-text-font)">例</text><text x="53.9" y="118.6" fill="var(--ch-accent)" font-size="10.9" opacity="0.53" transform="rotate(2.2 53.9 118.6)" font-family="var(--ch-text-font)">中</text><text x="52.9" y="92.5" fill="var(--ch-accent-tertiary)" font-size="11.2" opacity="0.76" transform="rotate(1.2 52.9 92.5)" font-family="var(--ch-text-font)">游</text><text x="61.6" y="71.1" fill="var(--ch-accent)" font-size="12.7" opacity="0.77" transform="rotate(3.6 61.6 71.1)" font-family="var(--ch-text-font)">般</text><text x="54.2" y="56.8" fill="var(--ch-accent)" font-size="11.5" opacity="0.60" transform="rotate(4.8 54.2 56.8)" font-family="var(--ch-text-font)">智</text><text x="62.7" y="26.5" fill="var(--ch-accent-tertiary)" font-size="14.1" opacity="0.92" transform="rotate(0.5 62.7 26.5)" font-family="var(--ch-text-font)">获</text><text x="64.2" y="83.7" fill="var(--ch-accent-tertiary)" font-size="15.8" opacity="0.73" transform="rotate(-4.9 64.2 83.7)" font-family="var(--ch-text-font)">名</text><text x="70.8" y="56.7" fill="var(--ch-accent)" font-size="14.6" opacity="0.84" transform="rotate(1.0 70.8 56.7)" font-family="var(--ch-text-font)">该</text><text x="63.8" y="100.4" fill="var(--ch-accent)" font-size="13.2" opacity="0.60" transform="rotate(-1.9 63.8 100.4)" font-family="var(--ch-text-font)">有</text><text x="72.2" y="44.6" fill="var(--ch-accent-secondary)" font-size="12.1" opacity="0.57" transform="rotate(-4.0 72.2 44.6)" font-family="var(--ch-text-font)">影</text><text x="63.6" y="127.5" fill="var(--ch-accent-tertiary)" font-size="12.8" opacity="0.82" transform="rotate(-1.4 63.6 127.5)" font-family="var(--ch-text-font)">相</text><text x="62.5" y="136.4" fill="var(--ch-accent)" font-size="14.3" opacity="0.82" transform="rotate(2.9 62.5 136.4)" font-family="var(--ch-text-font)">方</text><text x="72.3" y="73.7" fill="var(--ch-accent-tertiary)" font-size="15.7" opacity="0.67" transform="rotate(-4.2 72.3 73.7)" font-family="var(--ch-text-font)">存</text><text x="63.0" y="36.8" fill="var(--ch-accent-tertiary)" font-size="12.2" opacity="0.69" transform="rotate(-2.9 63.0 36.8)" font-family="var(--ch-text-font)">长</text><text x="53.4" y="47.4" fill="var(--ch-accent-secondary)" font-size="15.5" opacity="0.67" transform="rotate(-0.6 53.4 47.4)" font-family="var(--ch-text-font)">下</text><text x="80.2" y="99.0" fill="var(--ch-accent-tertiary)" font-size="12.8" opacity="0.69" transform="rotate(-0.8 80.2 99.0)" font-family="var(--ch-text-font)">识</text><text x="55.4" y="17.2" fill="var(--ch-accent)" font-size="10.9" opacity="0.85" transform="rotate(0.7 55.4 17.2)" font-family="var(--ch-text-font)">散</text><text x="64.7" y="18.9" fill="var(--ch-accent-tertiary)" font-size="15.9" opacity="0.86" transform="rotate(-5.0 64.7 18.9)" font-family="var(--ch-text-font)">冒</text><text x="52.3" y="134.4" fill="var(--ch-accent)" font-size="11.3" opacity="0.84" transform="rotate(3.5 52.3 134.4)" font-family="var(--ch-text-font)">零</text></g></svg> </div> </div> </aside> </article>  </main> <footer class="site-footer" data-astro-cid-sz7xmlte> <div class="container site-footer__inner" data-astro-cid-sz7xmlte> <div class="site-footer__brand" data-astro-cid-sz7xmlte> <svg class="forest-icon site-footer__leaf" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M17 3C10 3 6 8 6 13c0 3.3 2.7 6 6 6 5 0 9-4 9-9 0-3.8-2.5-7-4-7zm-1.2 2.2c.8 1.5 1.2 3.2 1.2 4.8 0 4.4-3.6 8-8 8-1.6 0-3.1-.5-4.3-1.3 2.2-.8 4.5-2.6 6.1-4.9 1.4-2 1.8-4.2 2-6.6h3z" data-astro-cid-edk4eyhc></path> </svg>  <div data-astro-cid-sz7xmlte> <p class="site-footer__name" data-astro-cid-sz7xmlte>6ch. · 林间笔记</p> <p class="site-footer__copy" data-astro-cid-sz7xmlte>Copyright © 2024–2026</p> </div> </div> <nav class="site-footer__links" aria-label="页脚链接" data-astro-cid-sz7xmlte> <a href="/about/" data-astro-cid-sz7xmlte>关于</a> <a href="/search/" data-astro-cid-sz7xmlte>搜索</a> <a href="mailto:2313287840@qq.com" data-astro-cid-sz7xmlte>邮件</a> <a href="https://github.com/6chHenry" target="_blank" rel="noopener" data-astro-cid-sz7xmlte>GitHub</a> </nav> </div> </footer>  <div id="search-modal" class="search-modal" hidden data-astro-cid-qk3db3zz> <div class="search-modal__backdrop" data-search-close data-astro-cid-qk3db3zz></div> <div class="search-modal__panel card card--elevated" role="dialog" aria-modal="true" aria-label="站内搜索" data-astro-cid-qk3db3zz> <div class="search-modal__header" data-astro-cid-qk3db3zz> <div data-astro-cid-qk3db3zz> <p class="search-modal__kicker" data-astro-cid-qk3db3zz>Search the grove</p> <h2 data-astro-cid-qk3db3zz>站内搜索</h2> </div> <button type="button" class="search-modal__close" data-search-close aria-label="关闭搜索" data-astro-cid-qk3db3zz> <svg class="forest-icon" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-edk4eyhc> <path d="M6.4 6.4L12 11.99l5.6-5.59 1.41 1.41L13.41 13.4l5.6 5.59-1.41 1.41L12 14.82l-5.59 5.58-1.41-1.41 5.58-5.59-5.58-5.6 1.41-1.41z" data-astro-cid-edk4eyhc></path> </svg>  </button> </div> <div id="pagefind-search" data-astro-cid-qk3db3zz></div> </div> </div>  <script type="module" src="/_astro/SearchModal.astro_astro_type_script_index_0_lang.DYGaEzWO.js"></script> <div class="forest-sprite" data-astro-cid-xesddyln> <div class="forest-sprite__shadow" aria-hidden="true" data-astro-cid-xesddyln></div> <button type="button" class="forest-sprite__body" aria-label="苔苔 · 林间小精灵（点击聊天，拖拽移动，双击送回角落）" data-astro-cid-xesddyln> <span class="forest-sprite__tilt" aria-hidden="true" data-astro-cid-xesddyln> <span class="forest-sprite__float" data-astro-cid-xesddyln> <svg viewBox="0 0 96 108" width="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-astro-cid-xesddyln> <defs data-astro-cid-xesddyln> <linearGradient id="fs-moss" x1="0" y1="0" x2="0.35" y2="1" data-astro-cid-xesddyln> <stop offset="0%" stop-color="#4c8a63" data-astro-cid-xesddyln></stop> <stop offset="100%" stop-color="#2c523c" data-astro-cid-xesddyln></stop> </linearGradient> </defs> <!-- 光茧 --> <circle class="fs-glow-halo" cx="40" cy="11" r="8.5" fill="var(--ch-accent-warm)" opacity="0.26" data-astro-cid-xesddyln></circle> <circle class="fs-glow-core" cx="40" cy="11" r="3.6" fill="var(--ch-accent-warm)" data-astro-cid-xesddyln></circle> <!-- 头顶新芽 --> <path d="M48 31 C47 25 46 22 42 18" fill="none" stroke="#1b3a2b" stroke-width="2" stroke-linecap="round" data-astro-cid-xesddyln></path> <path d="M42 18 C37 13 30 13 26 18 C31 22 38 22 42 18 Z" fill="#4c8a63" stroke="#1b3a2b" stroke-width="1.5" stroke-linejoin="round" data-astro-cid-xesddyln></path> <path d="M43 19 C46 15 51 14 54 17 C50 21 45 21 43 19 Z" fill="#5d9770" stroke="#1b3a2b" stroke-width="1.5" stroke-linejoin="round" data-astro-cid-xesddyln></path> <!-- 小脚 --> <ellipse cx="39" cy="99" rx="5.5" ry="3.4" fill="#2c523c" stroke="#1b3a2b" stroke-width="2" data-astro-cid-xesddyln></ellipse> <ellipse cx="57" cy="99" rx="5.5" ry="3.4" fill="#2c523c" stroke="#1b3a2b" stroke-width="2" data-astro-cid-xesddyln></ellipse> <!-- 苔藓身子 --> <path d="M48 30 C66 30 79 45 79 64 C79 83 65 97 48 97 C31 97 17 83 17 64 C17 45 30 30 48 30 Z" fill="url(#fs-moss)" stroke="#1b3a2b" stroke-width="2.5" stroke-linejoin="round" data-astro-cid-xesddyln></path> <!-- 苔斑与肚皮 --> <circle cx="30" cy="50" r="2.8" fill="#7db891" opacity="0.55" data-astro-cid-xesddyln></circle> <circle cx="58" cy="42" r="2.2" fill="#7db891" opacity="0.55" data-astro-cid-xesddyln></circle> <circle cx="67" cy="68" r="3" fill="#7db891" opacity="0.5" data-astro-cid-xesddyln></circle> <circle cx="36" cy="78" r="2.4" fill="#7db891" opacity="0.5" data-astro-cid-xesddyln></circle> <ellipse cx="48" cy="74" rx="15" ry="11" fill="#5d9770" opacity="0.45" data-astro-cid-xesddyln></ellipse> <!-- 脸 --> <g class="fs-eyes" data-astro-cid-xesddyln> <circle cx="39" cy="57" r="4.4" fill="#14281d" data-astro-cid-xesddyln></circle> <circle cx="59" cy="57" r="4.4" fill="#14281d" data-astro-cid-xesddyln></circle> <circle class="fs-pupil" cx="37.6" cy="55.4" r="1.4" fill="#f4fbf4" opacity="0.92" data-astro-cid-xesddyln></circle> <circle class="fs-pupil" cx="57.6" cy="55.4" r="1.4" fill="#f4fbf4" opacity="0.92" data-astro-cid-xesddyln></circle> </g> <circle cx="31" cy="64" r="2.8" fill="#d99a6c" opacity="0.4" data-astro-cid-xesddyln></circle> <circle cx="67" cy="64" r="2.8" fill="#d99a6c" opacity="0.4" data-astro-cid-xesddyln></circle> <path d="M43.5 67 Q48 71 52.5 67" fill="none" stroke="#14281d" stroke-width="2" stroke-linecap="round" data-astro-cid-xesddyln></path> </svg> </span> </span> </button> <div class="forest-sprite__bubble" role="status" data-astro-cid-xesddyln></div> </div> <!-- 首帧前就位：解析到此处立即恢复上次被拖拽的位置，避免先出现在左上角再跳走 --> <script>
+  (() => {
+    const el = document.querySelector('.forest-sprite');
+    if (!el) return;
+    let saved = null;
+    try {
+      const raw = localStorage.getItem('forest-sprite:v1');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (typeof parsed.xPct === 'number' && typeof parsed.yPct === 'number') saved = parsed;
+      }
+    } catch {}
+    const w = el.offsetWidth || 72;
+    const h = el.offsetHeight || 82;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    /* 边界规则与 forest-sprite.ts 的 clamp 保持一致 */
+    const x = saved ? Math.min(Math.max(saved.xPct * vw, 10), Math.max(10, vw - w - 10)) : vw - w - 26;
+    const y = saved ? Math.min(Math.max(saved.yPct * vh, 74), Math.max(74, vh - h - 10)) : vh - h - 26;
+    el.style.transform = `translate(${x}px, ${y}px)`;
+    el.setAttribute('data-placed', '');
+  })();
+</script>  <script type="module" src="/_astro/ForestSprite.astro_astro_type_script_index_0_lang.2Fjyqh7p.js"></script>  <script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.Cgz5KPuw.js"></script></body></html> <script type="module">const x="http://www.w3.org/2000/svg";const _="M20 10 C32 92 8 168 19 252 C30 332 10 408 21 488 C28 546 16 578 19 606",E=[.06,.17,.29,.41,.53,.65,.77,.88],A="M0 0 C-6.5 -4 -8.5 -13 0 -21 C8.5 -13 6.5 -4 0 0 Z";function F(){const c=document.querySelector(".reading-vine");if(!c||c.childElementCount>0)return;const o=(t,s)=>{const e=document.createElementNS(x,t);for(const[f,d]of Object.entries(s))e.setAttribute(f,String(d));return e},i=o("svg",{viewBox:"0 0 40 620",preserveAspectRatio:"xMidYMid meet"});o("path",{d:_,class:"reading-vine__stem reading-vine__stem--ghost"});const n=o("path",{d:_,class:"reading-vine__stem"});i.append(n);const g=[],a=n.getTotalLength();n.style.strokeDasharray=`${a}`,n.style.strokeDashoffset=`${a}`,E.forEach((t,s)=>{const e=n.getPointAtLength(a*t),d=(Math.random()<.5?-1:1)*(26+Math.random()*24),v=.78+Math.random()*.38,u=o("g",{transform:`translate(${e.x.toFixed(1)} ${e.y.toFixed(1)}) rotate(${d.toFixed(1)}) scale(${v.toFixed(2)})`}),l=o("path",{d:A,class:`reading-vine__leaf${s%3===1?" reading-vine__leaf--alt":""}`});l.dataset.showAt=(t+.02).toFixed(3),u.append(l),i.append(u),g.push({node:l,showAt:t+.02})});const h=n.getPointAtLength(a),p=o("circle",{cx:h.x.toFixed(1),cy:h.y.toFixed(1),r:3.4,class:"reading-vine__bud"});i.append(p),c.append(i);let r=!1;const m=()=>{r=!1;const t=document.documentElement.scrollHeight-window.innerHeight,s=t>0?Math.min(1,Math.max(0,window.scrollY/t)):0;n.style.strokeDashoffset=`${a*(1-s)}`;for(const e of g)e.node.classList.toggle("is-grown",s>=e.showAt);p.classList.toggle("is-grown",s>=.985)},w=()=>{r||(r=!0,requestAnimationFrame(m))};window.addEventListener("scroll",w,{passive:!0}),m()}F();</script> 
