@@ -21,6 +21,10 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: deploy-site-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -100,3 +104,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./deploy
           publish_branch: gh-pages
+          force_orphan: true
