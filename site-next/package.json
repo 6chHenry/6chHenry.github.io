@@ -7,7 +7,7 @@
     "predev": "node scripts/migrate-content.mjs && node scripts/clean-astro-cache.mjs && node scripts/copy-public.mjs && node scripts/optimize-gallery-images.mjs",
     "dev": "astro dev",
     "prebuild": "node scripts/migrate-content.mjs && node scripts/clean-astro-cache.mjs && node scripts/copy-public.mjs && node scripts/optimize-gallery-images.mjs",
-    "build": "astro build && npx pagefind --site dist && node scripts/sync-pagefind.mjs && node scripts/report-build-size.mjs",
+    "build": "astro build && npx pagefind --site dist && node scripts/prune-dist-for-deploy.mjs && node scripts/sync-pagefind.mjs && node scripts/report-build-size.mjs",
     "preview": "astro preview",
     "migrate": "node scripts/migrate-content.mjs",
     "copy-public": "node scripts/copy-public.mjs",

@@ -14,7 +14,8 @@ const ORIGINAL_ROOT = path.join(PUBLIC_ROOT, 'assets/gallery-original');
 const MANIFEST_PATH = path.join(PUBLIC_ROOT, 'assets/gallery-manifest.json');
 const CACHE_PATH = path.join(SITE_ROOT, '.cache/gallery-images.json');
 
-const CONFIG_VERSION = 1;
+const CONFIG_VERSION = 2;
+const INCLUDE_ORIGINALS = process.env.GALLERY_INCLUDE_ORIGINALS === '1';
 const WEBP_WIDTHS = [640, 1280, 2048, 3200];
 const WEBP_QUALITY = 86;
 const JPEG_QUALITY = 88;
@@ -83,7 +84,7 @@ function urlToPublicFile(url) {
 function outputExists(asset) {
   const urls = [
     asset.src,
-    asset.original,
+    ...(INCLUDE_ORIGINALS ? [asset.original] : []),
     ...asset.webpSrcset.split(',').map((item) => item.trim().split(/\s+/)[0]),
   ];
   return urls.every((url) => fs.existsSync(urlToPublicFile(url)));
@@ -161,20 +162,23 @@ async function processImage(sourceFile, previousCache) {
   const fallbackMetadata = await writeFallback(sourceFile, fallbackFile);
   const webpVariants = await writeWebpVariants(sourceFile, relPath, sourceWidth);
 
-  const originalFile = path.join(ORIGINAL_ROOT, relPath);
-  ensureDir(path.dirname(originalFile));
-  fs.copyFileSync(sourceFile, originalFile);
+  const browseUrl = `/assets/gallery/${relPosix}`;
+  if (INCLUDE_ORIGINALS) {
+    const originalFile = path.join(ORIGINAL_ROOT, relPath);
+    ensureDir(path.dirname(originalFile));
+    fs.copyFileSync(sourceFile, originalFile);
+  }
 
   return {
     relPath: relPosix,
     key,
     reused: false,
     asset: {
-      src: `/assets/gallery/${relPosix}`,
+      src: browseUrl,
       webpSrcset: webpVariants.map((variant) => `${variant.url} ${variant.width}w`).join(', '),
       width: fallbackMetadata.width ?? sourceMetadata.width,
       height: fallbackMetadata.height ?? sourceMetadata.height,
-      original: `/assets/gallery-original/${relPosix}`,
+      original: INCLUDE_ORIGINALS ? `/assets/gallery-original/${relPosix}` : browseUrl,
     },
   };
 }
@@ -217,7 +221,9 @@ function expectedFilesFor(results) {
   const originals = new Set();
   for (const result of results) {
     browse.add(path.resolve(urlToPublicFile(result.asset.src)));
-    originals.add(path.resolve(urlToPublicFile(result.asset.original)));
+    if (INCLUDE_ORIGINALS) {
+      originals.add(path.resolve(urlToPublicFile(result.asset.original)));
+    }
     for (const item of result.asset.webpSrcset.split(',')) {
       browse.add(path.resolve(urlToPublicFile(item.trim().split(/\s+/)[0])));
     }
@@ -228,7 +234,7 @@ function expectedFilesFor(results) {
 async function main() {
   const started = performance.now();
   ensureDir(BROWSE_ROOT);
-  ensureDir(ORIGINAL_ROOT);
+  if (INCLUDE_ORIGINALS) ensureDir(ORIGINAL_ROOT);
   ensureDir(path.dirname(MANIFEST_PATH));
   ensureDir(path.dirname(CACHE_PATH));
 
@@ -249,7 +255,11 @@ async function main() {
 
   const expected = expectedFilesFor(results);
   cleanUnexpectedFiles(BROWSE_ROOT, expected.browse);
-  cleanUnexpectedFiles(ORIGINAL_ROOT, expected.originals);
+  if (INCLUDE_ORIGINALS) {
+    cleanUnexpectedFiles(ORIGINAL_ROOT, expected.originals);
+  } else if (fs.existsSync(ORIGINAL_ROOT)) {
+    fs.rmSync(ORIGINAL_ROOT, { recursive: true, force: true });
+  }
 
   fs.writeFileSync(
     MANIFEST_PATH,
@@ -264,14 +274,18 @@ async function main() {
 
   const sourceBytes = sourceFiles.reduce((sum, file) => sum + fileSize(file), 0);
   const browseBytes = directorySize(BROWSE_ROOT);
-  const originalBytes = directorySize(ORIGINAL_ROOT);
+  const originalBytes = INCLUDE_ORIGINALS ? directorySize(ORIGINAL_ROOT) : 0;
   const elapsedSeconds = (performance.now() - started) / 1000;
   const generated = results.filter((result) => !result.reused).length;
 
   console.log(`Gallery images: ${results.length} (${generated} generated, ${results.length - generated} reused)`);
   console.log(`Source originals: ${formatMb(sourceBytes)}`);
   console.log(`Browse assets: ${formatMb(browseBytes)} (${((browseBytes / sourceBytes) * 100).toFixed(1)}% of originals)`);
-  console.log(`Original downloads: ${formatMb(originalBytes)}`);
+  if (INCLUDE_ORIGINALS) {
+    console.log(`Original downloads: ${formatMb(originalBytes)}`);
+  } else {
+    console.log('Original downloads: skipped (set GALLERY_INCLUDE_ORIGINALS=1 to publish full-resolution files)');
+  }
   console.log(`Optimization time: ${elapsedSeconds.toFixed(2)}s with concurrency ${CONCURRENCY}`);
 }
 
