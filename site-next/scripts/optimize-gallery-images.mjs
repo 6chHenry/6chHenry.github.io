@@ -14,8 +14,9 @@ const ORIGINAL_ROOT = path.join(PUBLIC_ROOT, 'assets/gallery-original');
 const MANIFEST_PATH = path.join(PUBLIC_ROOT, 'assets/gallery-manifest.json');
 const CACHE_PATH = path.join(SITE_ROOT, '.cache/gallery-images.json');
 
-const CONFIG_VERSION = 2;
+const CONFIG_VERSION = 3;
 const INCLUDE_ORIGINALS = process.env.GALLERY_INCLUDE_ORIGINALS === '1';
+const ORIGINAL_BASE_URL = (process.env.GALLERY_ORIGINAL_BASE_URL ?? '').replace(/\/$/, '');
 const WEBP_WIDTHS = [640, 1280, 2048, 3200];
 const WEBP_QUALITY = 86;
 const JPEG_QUALITY = 88;
@@ -74,7 +75,8 @@ function formatMb(bytes) {
 }
 
 function cacheKey(stat) {
-  return `${CONFIG_VERSION}:${stat.size}:${Math.round(stat.mtimeMs)}`;
+  const originMode = INCLUDE_ORIGINALS ? 'local' : ORIGINAL_BASE_URL || 'optimized';
+  return `${CONFIG_VERSION}:${originMode}:${stat.size}:${Math.round(stat.mtimeMs)}`;
 }
 
 function urlToPublicFile(url) {
@@ -88,6 +90,12 @@ function outputExists(asset) {
     ...asset.webpSrcset.split(',').map((item) => item.trim().split(/\s+/)[0]),
   ];
   return urls.every((url) => fs.existsSync(urlToPublicFile(url)));
+}
+
+function originalUrl(relPosix, browseUrl) {
+  if (INCLUDE_ORIGINALS) return `/assets/gallery-original/${relPosix}`;
+  if (ORIGINAL_BASE_URL) return `${ORIGINAL_BASE_URL}/${relPosix}`;
+  return browseUrl;
 }
 
 async function writeFallback(sourceFile, destFile) {
@@ -150,7 +158,15 @@ async function processImage(sourceFile, previousCache) {
   const key = cacheKey(stat);
   const cached = previousCache.files?.[relPosix];
   if (cached?.key === key && cached.asset && outputExists(cached.asset)) {
-    return { relPath: relPosix, key, asset: cached.asset, reused: true };
+    return {
+      relPath: relPosix,
+      key,
+      asset: {
+        ...cached.asset,
+        original: originalUrl(relPosix, cached.asset.src),
+      },
+      reused: true,
+    };
   }
 
   const sourceMetadata = await sharp(sourceFile).metadata();
@@ -178,7 +194,7 @@ async function processImage(sourceFile, previousCache) {
       webpSrcset: webpVariants.map((variant) => `${variant.url} ${variant.width}w`).join(', '),
       width: fallbackMetadata.width ?? sourceMetadata.width,
       height: fallbackMetadata.height ?? sourceMetadata.height,
-      original: INCLUDE_ORIGINALS ? `/assets/gallery-original/${relPosix}` : browseUrl,
+      original: originalUrl(relPosix, browseUrl),
     },
   };
 }
@@ -283,8 +299,10 @@ async function main() {
   console.log(`Browse assets: ${formatMb(browseBytes)} (${((browseBytes / sourceBytes) * 100).toFixed(1)}% of originals)`);
   if (INCLUDE_ORIGINALS) {
     console.log(`Original downloads: ${formatMb(originalBytes)}`);
+  } else if (ORIGINAL_BASE_URL) {
+    console.log(`Original downloads: external base ${ORIGINAL_BASE_URL}`);
   } else {
-    console.log('Original downloads: skipped (set GALLERY_INCLUDE_ORIGINALS=1 to publish full-resolution files)');
+    console.log('Original downloads: skipped (set GALLERY_ORIGINAL_BASE_URL or GALLERY_INCLUDE_ORIGINALS=1)');
   }
   console.log(`Optimization time: ${elapsedSeconds.toFixed(2)}s with concurrency ${CONCURRENCY}`);
 }

@@ -148,7 +148,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
         <p class="fc-poem__line" style={`--line-accent: #1a6b8f`}><b>青</b>山尽处见浮<b>岛</b>，</p>
         <p class="fc-poem__line" style={`--line-accent: #c2571d`}><b>烟</b>霞烧海照楼<b>台</b>。</p>
       </div>
-      <figcaption class="fc-poem__cap">藏头藏尾 · 太原大同青岛烟台</figcaption>
     </figure>
 
     <figure class="fc-cover">
@@ -184,10 +183,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
     <nav class="fc-route" aria-label="行程导航">
       <span class="fc-route__label">行程</span>
-      <ol class="fc-route__list">
+      <div class="fc-route__list">
         {
           chapters.map((chapter, i) => (
-            <li class="fc-route__item">
+            <>
               {i > 0 && <span class="fc-route__link-line" aria-hidden="true" />}
               <a
                 class:list={['fc-route__stop', { 'is-active': i === 0 }]}
@@ -201,10 +200,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
                   <span class="fc-route__span">{chapter.span}</span>
                 </span>
               </a>
-            </li>
+            </>
           ))
         }
-      </ol>
+      </div>
     </nav>
 
     {
@@ -259,7 +258,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
     <footer class="fc-foot">
       <p class="fc-foot__line">
-        文字版的行记还在写，<a href={`${base}essay/Travel/2026暑假四城游/`}>《2026暑假四城游》</a>
+        文字版行记见 <a href={`${base}essay/Travel/2026暑假四城游/`}>《2026暑假四城游》</a>
         <span class="fc-foot__dot">·</span>
         <a href={`${base}gallery/`}>回到画廊</a>
       </p>
@@ -479,15 +478,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
     color: var(--line-accent);
   }
 
-  .fc-poem__cap {
-    margin-top: 1.15rem;
-    font-family: var(--ch-mono-font);
-    font-size: 0.56rem;
-    letter-spacing: 0.22em;
-    color: var(--ch-fg-muted);
-    opacity: 0.65;
-  }
-
   /* ---- 封面 ---- */
   .fc-cover {
     margin: 0 0 2.5rem;
@@ -584,6 +574,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     z-index: 6;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1.1rem;
     margin: 0 0 3rem;
     padding: 0.7rem 1.1rem;
@@ -595,6 +586,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
   }
 
   .fc-route__label {
+    position: absolute;
+    left: 1.1rem;
     flex: none;
     font-family: var(--ch-mono-font);
     font-size: 0.58rem;
@@ -606,12 +599,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
   .fc-route__list {
     display: flex;
-    flex: 1;
+    flex: none;
     align-items: center;
-    gap: 0.35rem;
+    justify-content: center;
+    gap: 0;
     margin: 0;
     padding: 0;
-    list-style: none;
     overflow-x: auto;
     scrollbar-width: none;
   }
@@ -620,16 +613,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
     display: none;
   }
 
-  .fc-route__item {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    min-width: 0;
-  }
-
   .fc-route__link-line {
-    flex: 1;
-    min-width: 0.75rem;
+    flex: none;
+    width: 1.15rem;
     height: 1px;
     margin: 0 0.35rem;
     background: linear-gradient(
