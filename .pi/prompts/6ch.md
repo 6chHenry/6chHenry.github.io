@@ -63,6 +63,22 @@ cd E:/WritingVault && npm run capture -- "${@:2}"
 3. 可以 Git commit 到私人库。
 4. 不得进入公开网站仓库。
 
+### bot
+
+当我输入 `/6ch bot`：
+
+1. 优先使用飞书 Bot，不默认使用微信个人号 Bot。
+2. 飞书 Bot 本地服务在 `E:\WritingVault\scripts\feishu-webhook.mjs`。
+3. 启动命令：
+
+```bash
+cd E:/WritingVault && npm run feishu:webhook
+```
+
+4. 接入说明看：`E:\WritingVault\FEISHU_BOT.md`。
+5. 如果要配置公网回调，先确认使用 Cloudflare Tunnel / ngrok / frp / 服务器反代中的哪一种。
+6. 不要把飞书 App Secret、Verification Token、Encrypt Key 写进公开网站仓库。
+
 ### backup
 
 当我输入 `/6ch backup`：
