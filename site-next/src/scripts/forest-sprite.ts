@@ -4,6 +4,8 @@
  * 纯原生实现，无依赖；尊重 prefers-reduced-motion。
  */
 
+import { daypartOf } from '../utils/daypart';
+
 const POS_KEY = 'forest-sprite:v1';
 const SPOKEN_KEY = 'forest-sprite:spoken:v1';
 const GREETED_KEY = 'forest-sprite:greeted:v1';
@@ -135,10 +137,9 @@ function sectionOf(pathname: string): string {
 
 function timePool(): string {
   const hour = new Date().getHours();
-  if (hour >= 5 && hour < 8) return 'dawn';
-  if (hour >= 8 && hour < 17) return 'day';
-  if (hour >= 17 && hour < 23) return 'dusk';
-  return hour >= 23 ? 'lateNight' : 'night';
+  const part = daypartOf(hour);
+  /* 过了 23 点算深夜，苔苔的话说得更轻一些 */
+  return part === 'night' && hour >= 23 ? 'lateNight' : part;
 }
 
 export function initForestSprite(): void {
