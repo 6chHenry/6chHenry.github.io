@@ -146,6 +146,7 @@ export function initForestSprite(): void {
   if (!root) return;
   const tilt = root.querySelector<HTMLElement>('.forest-sprite__tilt');
   const bubble = root.querySelector<HTMLElement>('.forest-sprite__bubble');
+  const bubbleText = root.querySelector<HTMLElement>('.forest-sprite__bubble-text');
   const button = root.querySelector<HTMLButtonElement>('.forest-sprite__body');
   if (!tilt || !bubble || !button) return;
 
@@ -195,6 +196,7 @@ export function initForestSprite(): void {
   let moved = false;
   let lastTapAt = 0;
   let hideTimer = 0;
+  let swapTimer = 0;
   let talkFxTimer = 0;
   let skitTimer = 0;
   let skitEndTimer = 0;
@@ -286,7 +288,16 @@ export function initForestSprite(): void {
   };
 
   const say = (line: string) => {
-    bubble.textContent = line;
+    /* 气泡正开着又换了一句：给新台词一次淡入，避免文字硬切 */
+    const target = bubbleText ?? bubble;
+    if (bubbleText && target.textContent !== line && bubble.classList.contains('is-visible')) {
+      bubble.classList.remove('is-swapping');
+      void bubble.offsetWidth;
+      bubble.classList.add('is-swapping');
+      window.clearTimeout(swapTimer);
+      swapTimer = window.setTimeout(() => bubble.classList.remove('is-swapping'), 380);
+    }
+    target.textContent = line;
     bubble.classList.add('is-visible');
     window.clearTimeout(hideTimer);
     hideTimer = window.setTimeout(() => bubble.classList.remove('is-visible'), TALK_MS);
