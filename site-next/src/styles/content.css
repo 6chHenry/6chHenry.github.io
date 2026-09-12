@@ -719,16 +719,38 @@
   cursor: pointer;
 }
 
+/*
+ * 展开/收起：display 切换做不了动画，改成 height 0 ↔ auto
+ * （靠 interpolate-size，Chrome/Edge 129+ 会动；不支持的浏览器直接跳到位，不报错）
+ */
 .notes-nav-panel.content-list {
-  display: none;
-  margin: 0.45rem 0 0.55rem;
+  interpolate-size: allow-keywords;
+  display: flex;
+  flex-direction: column;
+  height: 0;
+  margin: 0;
   padding: 0 0 0 0.85rem;
   border-left: 1px dashed var(--ch-border-soft);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    height 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    margin 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.24s ease,
+    visibility 0s linear 0.34s;
 }
 
 .notes-nav-panel.content-list.is-open {
-  display: flex;
-  flex-direction: column;
+  height: auto;
+  margin: 0.45rem 0 0.55rem;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    height 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    margin 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.24s ease,
+    visibility 0s;
 }
 
 .notes-nav-item--leaf .content-row {
@@ -749,6 +771,7 @@
   line-height: 1;
   transition:
     transform var(--ch-transition-fast),
+    translate var(--ch-transition-fast),
     background var(--ch-transition-fast),
     color var(--ch-transition-fast);
 }
@@ -770,6 +793,18 @@
   background: var(--ch-glass-bg-hover);
   border-color: color-mix(in srgb, var(--ch-accent-secondary) 32%, var(--ch-glass-border));
   transform: translateY(-1px);
+}
+
+/* 树里的按钮行也要有键盘焦点圈（鼠标悬停那套对它不生效） */
+.notes-nav-item__toggle:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--ch-accent-tertiary) 55%, transparent);
+  outline-offset: 2px;
+}
+
+/* 悬停时折角往前挪一点，暗示「这行能按」；用 translate 以免和展开时的 rotate 打架 */
+.notes-nav-item__toggle:hover .content-row__chevron,
+.notes-nav-item__toggle:focus-visible .content-row__chevron {
+  translate: 2px 0;
 }
 
 /* ── 笔记苗圃：按畦栽种的索引 ── */
@@ -1117,8 +1152,8 @@
   opacity: 1;
 }
 
-/* 展开后的畦内空间 */
-.notes-bed .notes-nav-panel.content-list {
+/* 展开后的畦内空间（只在展开时生效，收起时不能靠 margin 占位） */
+.notes-bed .notes-nav-panel.content-list.is-open {
   gap: 0.45rem;
   margin: 0 0.65rem 0.7rem;
   padding: 0.7rem 0.7rem 0.75rem;
