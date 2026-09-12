@@ -52,6 +52,9 @@ const next = idx < allEntries.length - 1 ? allEntries[idx + 1] : null;
 
 const base = import.meta.env.BASE_URL;
 
+const firstOriginal = allImageAssets[0].original;
+const firstOriginalIsExternal = /^https?:\/\//.test(firstOriginal);
+
 const categoryLabels: Record<string, string> = {
   illustration: '插画',
   photography: '摄影',
