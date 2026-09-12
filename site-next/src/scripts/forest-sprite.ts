@@ -5,6 +5,7 @@
  */
 
 const POS_KEY = 'forest-sprite:v1';
+const SPOKEN_KEY = 'forest-sprite:spoken:v1';
 const TALK_MS = 4200;
 const DOUBLE_TAP_MS = 350;
 const DRAG_THRESHOLD = 6;
@@ -19,54 +20,91 @@ type LinePool = Record<string, string[]>;
 const LINES: LinePool = {
   general: [
     '我是住在站里的苔藓精，叫我苔苔就好。',
-    '有什么想找的？Ctrl + K 可以唤出搜索。',
+    '有什么想找的？Ctrl + K 能唤出搜索。',
     '双击可以把我送回角落，我有点恋家。',
-    '这片林子里的每棵树都是一篇文章哦。',
+    '这片林子里的每棵树，都是一篇文章。',
     '拖着我到处走走也行，我抓得很稳的。',
+    '苔藓长得慢，但每天都在长一点点。',
+    '我负责看林子，你负责看风景。',
+    '风一吹，我就知道有人翻页了。',
+    '不知道往哪走的时候，随便点一棵树也行。',
+    '林子不催人，慢慢来。',
+    '有句话我憋很久了：这里的空气真好。',
+    '又见面了，林子里还是老样子。',
   ],
   home: [
     '欢迎回到林子里～',
     '今天想走哪条路？',
     '风把最新的痕迹吹到首页了。',
     '林口的金色小径又更新啦。',
+    '四条路都通着，没有死胡同。',
+    '脚边这点苔藓，是从第一颗种子长起来的。',
   ],
   notes: [
     '笔记林里全是知识的年轮。',
     '慢慢看，树不会跑的。',
     '这一片林的根系长得越来越深了。',
+    '年轮多一圈，说明有人认真走过一遍。',
+    '笔记是留给自己认路的路标。',
+    '看不懂的地方折个角，回头再来。',
   ],
   essay: [
     '杂谈林保存着季节感，适合慢慢逛。',
-    '去别处看看吧，就现在。',
     '这里的风里都是故事的味道。',
+    '写下来的日子，就不会白白过去。',
+    '有些话是写给自己听的，也顺便给你看。',
+    '读到有共鸣的地方，可以多停一会儿。',
   ],
   projects: [
     '这些都是长出来的枝条呀。',
     '点一棵树看看结了什么果子？',
     '做东西的手，是不会骗人的。',
+    '枝条歪一点没关系，能结果就行。',
+    '从种子到果子，中间全是试错。',
+    '有一棵还在长，别急着下结论。',
   ],
   gallery: [
     '照片是时间的标本。',
     '这一带的风景不错吧？',
     '快门按下去的那一刻就不一样了。',
+    '光只在那几秒里是那个样子。',
+    '有些地方，去过一次就长进身体里了。',
   ],
   about: [
     '这就是种林子的人啦。',
     '嘘，他正在找新的问题。',
+    '他种树的样子，比说得好听。',
+    '这里写的是他，也是他在意的东西。',
   ],
   search: [
     '找什么？我帮你闻闻味儿。',
     '林子虽大，一句话就能定位。',
+    '关键词给得越具体，我找得越快。',
+    '搜不到也别灰心，可能它还没长出来。',
   ],
-  tags: ['顺着标签走，也是一种路标。'],
-  dawn: ['早啊，林子刚醒。', '晨雾还没散呢。'],
-  day: ['阳光正好，适合翻翻笔记。', '今天的林子很安静。'],
-  dusk: ['黄昏的林子是金色的。', '天边烧起来了，看一眼？'],
-  night: ['夜深了，萤火虫都出来了。', '晚上的林子另一种味道。'],
-  lateNight: ['还没睡呀？别熬太久哦。', '星星都困了，你也早点休息。'],
-  themeDark: ['天黑了……我把小灯点亮。', '夜里也要记得回来呀。'],
-  themeLight: ['天亮啦！伸个懒腰——', '光进来了。'],
-  dragFar: ['哇，飞起来了！', '换个地方住也不错。', '轻点儿，苔藓会晕的……', '新视野！记下了记下了。'],
+  tags: ['顺着标签走，也是一种路标。', '标签是叶脉，连着一整片林子。', '点一个词，看它牵出多少事情。'],
+  dawn: ['早啊，林子刚醒。', '晨雾还没散呢。', '这个点来的人不多，安静得刚刚好。'],
+  day: ['阳光正好，适合翻翻笔记。', '今天的林子很安静。', '白天里的光和影子，都很直白。'],
+  dusk: ['黄昏的林子是金色的。', '天边烧起来了，看一眼？', '这会儿的影子拉得最长。'],
+  night: ['夜深了，萤火虫都出来了。', '晚上的林子是另一种味道。', '黑下来之后，字反而更亮一点。'],
+  lateNight: [
+    '还没睡呀？别熬太久哦。',
+    '星星都困了，你也早点休息。',
+    '这个点还亮着屏幕的，就剩你我。',
+    '再读一篇就去睡，好不好？',
+  ],
+  themeDark: ['天黑了……我把小灯点亮。', '夜里也要记得回来呀。', '灯关了，萤火虫值班。'],
+  themeLight: ['天亮啦！伸个懒腰——', '光进来了。', '有点晃眼……等我适应一下。'],
+  dragFar: ['哇，飞起来了！', '换个地方住也不错。', '轻点儿，苔藓会晕的……', '新视野！记下了记下了。', '这么远啊，那我坐着歇会儿。'],
+  firstVisit: [
+    '第一次见吧？我叫苔苔，住在这片林子里。',
+    '你是新来的吧，风没提过你的味道。',
+    '欢迎，随便走，这里不催人。',
+  ],
+  returnVisit: ['又见面啦。', '你上次停在哪一页？', '风说你会回来，果然。', '老地方，我一直在这儿。'],
+  hover: ['痒。', '要说话就点我一下。', '别一直盯着看，我会不好意思。', '拽我也行，我不咬人的。', '有事？没事我就继续站着。'],
+  pageEnd: ['到底啦，这一棵看完了。', '下面没有了，风也停了。', '走到林子这一头了。', '要不要回林口，重新挑条路？'],
+  lost: ['这条路不存在，跟我回林口吧。', '迷路了？不丢人，我也常走岔。', '这里没有树，只有雾。'],
 };
 
 const SECTION_PATTERNS: Array<[string, string]> = [
@@ -203,13 +241,44 @@ export function initForestSprite(): void {
 
   /* ── 对话 ── */
 
+  /* 说过的话记在会话里：翻页也不太会听到重复的一句，
+     一个池子讲完了就翻篇，从头再轮一轮。 */
+  const spoken = loadSpoken();
+
+  function loadSpoken(): Record<string, number[]> {
+    try {
+      const raw = sessionStorage.getItem(SPOKEN_KEY);
+      const parsed = raw ? (JSON.parse(raw) as unknown) : null;
+      return parsed && typeof parsed === 'object' ? (parsed as Record<string, number[]>) : {};
+    } catch {
+      return {};
+    }
+  }
+
+  const rememberSpoken = () => {
+    try {
+      sessionStorage.setItem(SPOKEN_KEY, JSON.stringify(spoken));
+    } catch {
+      /* 隐私模式下静默失败，去重退化为本页内存 */
+    }
+  };
+
   const pick = (poolName: string): string => {
-    const pool = LINES[poolName];
-    if (!pool || pool.length === 0) return LINES.general[0];
-    const candidates = pool.length > 1 ? pool.filter((line) => line !== lastLine) : pool;
-    const line = candidates[Math.floor(Math.random() * candidates.length)];
-    lastLine = line;
-    return line;
+    const key = LINES[poolName] ? poolName : 'general';
+    const pool = LINES[key];
+    let fresh = pool
+      .map((_, index) => index)
+      .filter((index) => !(spoken[key] ?? []).includes(index) && pool[index] !== lastLine);
+    if (fresh.length === 0) {
+      spoken[key] = [];
+      fresh = pool.map((_, index) => index).filter((index) => pool[index] !== lastLine);
+      if (fresh.length === 0) fresh = pool.map((_, index) => index);
+    }
+    const index = fresh[Math.floor(Math.random() * fresh.length)];
+    spoken[key] = [...(spoken[key] ?? []), index];
+    rememberSpoken();
+    lastLine = pool[index];
+    return lastLine;
   };
 
   const say = (line: string) => {
