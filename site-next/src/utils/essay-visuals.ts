@@ -135,23 +135,29 @@ export function getTravelGalleryLink(entryId: string, base = import.meta.env.BAS
   };
 }
 
+/* 海报一律走本站静态资源，外链图源（维基共享、门户 CDN）在境内常被墙或失效 */
 const MOVIE_POSTER_FALLBACK: Record<string, string> = {
-  'Movies/3 Idiots': '/images/posters/3_idiots.jpg',
-  'Movies/Hachi': '/images/posters/hachi.jpg',
-  'Movies/机器人之梦': 'https://upload.wikimedia.org/wikipedia/en/a/ac/Robot_Dreams_(film)_poster.jpg',
-  'Movies/河狸变身计划': 'https://upload.wikimedia.org/wikipedia/en/6/6c/Hoppers_film_poster.jpg',
-  'Movies/给阿嬷的情书': 'https://q7.itc.cn/images01/20260521/590898ac3d1847699593879e85b52ef2.jpeg',
-  'Movies/绿色大门': 'https://upload.wikimedia.org/wikipedia/en/1/1f/Blue_Gate_Crossing_film.jpg',
-  'Movies/欢迎来龙餐馆': '/images/watchlist/dragon-restaurant.webp',
-  'Movies/肖申克的救赎': '/images/watchlist/shawshank-redemption.webp',
+  'Movies/3 Idiots': 'images/posters/3_idiots.jpg',
+  'Movies/Hachi': 'images/posters/hachi.jpg',
+  'Movies/机器人之梦': 'images/posters/robot-dreams.webp',
+  'Movies/河狸变身计划': 'images/watchlist/hoppers.webp',
+  'Movies/给阿嬷的情书': 'images/watchlist/dear-grandma.webp',
+  'Movies/绿色大门': 'images/posters/blue-gate-crossing.webp',
+  'Movies/欢迎来龙餐馆': 'images/watchlist/dragon-restaurant.webp',
+  'Movies/肖申克的救赎': 'images/watchlist/shawshank-redemption.webp',
 };
 
-export function getMoviePosterFromBody(body = '', entryId = ''): string | undefined {
+export function getMoviePosterFromBody(
+  body = '',
+  entryId = '',
+  base = import.meta.env.BASE_URL,
+): string | undefined {
   const image = body.match(/!\[[^\]]*]\(([^)\s]+)(?:\s+"[^"]*")?\)/);
   if (image) return image[1];
   if (entryId) {
     const normalizedId = entryId.replace(/\.md$/, '');
-    if (normalizedId in MOVIE_POSTER_FALLBACK) return MOVIE_POSTER_FALLBACK[normalizedId];
+    const poster = MOVIE_POSTER_FALLBACK[normalizedId];
+    if (poster) return withBase(poster, base);
   }
   return undefined;
 }
