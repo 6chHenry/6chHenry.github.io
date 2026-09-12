@@ -63,6 +63,21 @@ cd E:/WritingVault && npm run capture -- "${@:2}"
 3. 可以 Git commit 到私人库。
 4. 不得进入公开网站仓库。
 
+### backup
+
+当我输入 `/6ch backup`：
+
+1. 检查 `E:\WritingVault` 是否已有 Git remote。
+2. 如果没有 remote，先询问我要用哪个 private repo，不要擅自创建公开仓库。
+3. 确认 repo 是 private 后，再执行首次 push。
+4. 以后用于私人写作库的异地备份，不进入公开网站仓库。
+
+推荐命令形态：
+
+```bash
+cd E:/WritingVault && git remote -v && git status --short
+```
+
 ### publish
 
 当我输入 `/6ch publish <文件>`：
