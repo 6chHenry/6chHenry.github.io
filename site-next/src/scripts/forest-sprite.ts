@@ -6,7 +6,11 @@
 
 const POS_KEY = 'forest-sprite:v1';
 const SPOKEN_KEY = 'forest-sprite:spoken:v1';
+const GREETED_KEY = 'forest-sprite:greeted:v1';
+const MET_KEY = 'forest-sprite:met:v1';
 const TALK_MS = 4200;
+const GREET_DELAY_MS = 1600;
+const HOVER_TALK_MS = 1400;
 const DOUBLE_TAP_MS = 350;
 const DRAG_THRESHOLD = 6;
 
@@ -288,20 +292,85 @@ export function initForestSprite(): void {
     hideTimer = window.setTimeout(() => bubble.classList.remove('is-visible'), TALK_MS);
   };
 
-  const talk = () => {
-    const roll = Math.random();
-    if (roll < 0.55) {
-      const section = sectionOf(window.location.pathname);
-      say(pick(LINES[section] ? section : 'general'));
-    } else if (roll < 0.85) {
-      say(pick(timePool()));
-    } else {
-      say(pick('general'));
-    }
+  /* 说一句话并抖一下身子，主动搭话与点击聊天共用 */
+  const speak = (line: string) => {
+    say(line);
     root.classList.add('is-talking');
     window.clearTimeout(talkFxTimer);
     talkFxTimer = window.setTimeout(() => root.classList.remove('is-talking'), 640);
   };
+
+  /* 迷失页没有自己的 section，靠场景认领 */
+  const currentSection = (): string => {
+    if (document.querySelector('.not-found')) return 'lost';
+    const section = sectionOf(window.location.pathname);
+    return LINES[section] ? section : 'general';
+  };
+
+  const talk = () => {
+    const roll = Math.random();
+    if (roll < 0.55) speak(pick(currentSection()));
+    else if (roll < 0.85) speak(pick(timePool()));
+    else speak(pick('general'));
+  };
+
+  /* ── 主动开口的时机 ── */
+
+  /* 本次会话的第一面：先让落定动画走完，再打个招呼 */
+  const greet = () => {
+    try {
+      if (sessionStorage.getItem(GREETED_KEY)) return;
+      sessionStorage.setItem(GREETED_KEY, '1');
+    } catch {
+      /* 隐私模式下每次都会打招呼，无伤大雅 */
+    }
+    let known = true;
+    try {
+      known = localStorage.getItem(MET_KEY) === '1';
+      localStorage.setItem(MET_KEY, '1');
+    } catch {
+      /* 同上 */
+    }
+    window.setTimeout(() => {
+      if (bubble.classList.contains('is-visible')) return;
+      speak(pick(document.querySelector('.not-found') ? 'lost' : known ? 'returnVisit' : 'firstVisit'));
+    }, GREET_DELAY_MS);
+  };
+
+  /* 鼠标在苔苔身上停一会儿，她会先开口；挪开就算了 */
+  let hoverTimer = 0;
+  const cancelHoverTalk = () => window.clearTimeout(hoverTimer);
+
+  button.addEventListener('pointerenter', () => {
+    if (dragging) return;
+    window.clearTimeout(hoverTimer);
+    hoverTimer = window.setTimeout(() => {
+      if (dragging || bubble.classList.contains('is-visible') || root.classList.contains('is-talking')) return;
+      speak(pick('hover'));
+    }, HOVER_TALK_MS);
+  });
+
+  button.addEventListener('pointerdown', cancelHoverTalk);
+  button.addEventListener('pointerleave', cancelHoverTalk);
+
+  /* 滑到页尾才感慨一句，一页只说一次；短页面不凑热闹 */
+  let saidPageEnd = false;
+  let endCheckFrame = 0;
+  window.addEventListener(
+    'scroll',
+    () => {
+      window.cancelAnimationFrame(endCheckFrame);
+      endCheckFrame = window.requestAnimationFrame(() => {
+        if (saidPageEnd || dragging) return;
+        const total = document.documentElement.scrollHeight;
+        if (total < window.innerHeight * 1.4) return;
+        if (window.scrollY + window.innerHeight < total - 4) return;
+        saidPageEnd = true;
+        speak(pick('pageEnd'));
+      });
+    },
+    { passive: true },
+  );
 
   /* ── 拖拽 ── */
 
@@ -344,7 +413,7 @@ export function initForestSprite(): void {
         /* 隐私模式下静默失败 */
       }
       const travelled = Math.hypot(pos.x - pointerStart.x, pos.y - pointerStart.y);
-      if (travelled > 140 && Math.random() < 0.45) say(pick('dragFar'));
+      if (travelled > 140 && Math.random() < 0.45) speak(pick('dragFar'));
       return;
     }
 
@@ -365,7 +434,7 @@ export function initForestSprite(): void {
       /* 同上 */
     }
     moveTo(homePos());
-    window.setTimeout(() => say(pick('home')), reducedMotion() ? 0 : 480);
+    window.setTimeout(() => speak(pick('home')), reducedMotion() ? 0 : 480);
   };
 
   button.addEventListener('pointerdown', onPointerDown);
@@ -389,7 +458,7 @@ export function initForestSprite(): void {
     const theme = document.documentElement.dataset.theme ?? '';
     if (theme === lastTheme) return;
     lastTheme = theme;
-    say(pick(theme === 'dark' ? 'themeDark' : 'themeLight'));
+    speak(pick(theme === 'dark' ? 'themeDark' : 'themeLight'));
     root.classList.add('is-happy');
     window.setTimeout(() => root.classList.remove('is-happy'), 900);
   }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -454,6 +523,7 @@ export function initForestSprite(): void {
   };
 
   scheduleSkit();
+  greet();
 
   apply();
 }
