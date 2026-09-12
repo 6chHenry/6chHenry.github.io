@@ -15,6 +15,12 @@ import ForestIcon from './ForestIcon.astro';
       </button>
     </div>
     <div id="pagefind-search"></div>
+    <p class="search-modal__hint" data-search-hint>
+      <span class="search-modal__hint-name">苔苔</span>
+      <span class="search-modal__hint-text">
+        想找什么？试试「苔藓」「CNN」「日本游记」；按 <kbd>Esc</kbd> 就把我收回去。
+      </span>
+    </p>
   </div>
 </div>
 
@@ -168,6 +174,60 @@ import ForestIcon from './ForestIcon.astro';
   .search-modal__close :global(.forest-icon) {
     width: 1.05rem;
     height: 1.05rem;
+  }
+
+  .search-modal__hint {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    margin: 0.95rem 0 0;
+    padding-top: 0.85rem;
+    border-top: 1px dashed color-mix(in srgb, var(--ch-border-soft) 85%, transparent);
+    color: var(--ch-fg-muted);
+    font-size: 0.84rem;
+    line-height: 1.7;
+    animation: hint-in 0.32s ease-out both;
+  }
+
+  .search-modal__hint[hidden] {
+    display: none;
+  }
+
+  .search-modal__hint-name {
+    flex-shrink: 0;
+    padding: 0.12rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 30%, var(--ch-glass-border));
+    background: var(--ch-accent-dim);
+    font-family: var(--ch-mono-font);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--ch-accent-secondary);
+  }
+
+  .search-modal__hint-text {
+    min-width: 0;
+  }
+
+  .search-modal__hint kbd {
+    padding: 0.05rem 0.32rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--ch-border-soft);
+    background: var(--ch-accent-dim);
+    font-family: var(--ch-mono-font);
+    font-size: 0.78em;
+    color: var(--ch-accent-secondary);
+  }
+
+  @keyframes hint-in {
+    from {
+      opacity: 0;
+      transform: translateY(-3px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
 
