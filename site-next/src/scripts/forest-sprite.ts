@@ -12,6 +12,7 @@ const GREETED_KEY = 'forest-sprite:greeted:v1';
 const MET_KEY = 'forest-sprite:met:v1';
 const TALK_MS = 4200;
 const GREET_DELAY_MS = 1600;
+const SECTION_DELAY_MS = 1200;
 const HOVER_TALK_MS = 1400;
 const DOUBLE_TAP_MS = 350;
 const DRAG_THRESHOLD = 6;
@@ -89,6 +90,7 @@ const LINES: LinePool = {
     '搜不到也别灰心，可能它还没长出来。',
   ],
   tags: ['顺着标签走，也是一种路标。', '标签是叶脉，连着一整片林子。', '点一个词，看它牵出多少事情。'],
+  academy: ['学院那页写得板正，跟林子不是一个脾气。', '这里记着他念书的事。', '简历和兴趣都摊在这儿了，随便看。'],
   dawn: ['早啊，林子刚醒。', '晨雾还没散呢。', '这个点来的人不多，安静得刚刚好。'],
   day: ['阳光正好，适合翻翻笔记。', '今天的林子很安静。', '白天里的光和影子，都很直白。'],
   dusk: ['黄昏的林子是金色的。', '天边烧起来了，看一眼？', '这会儿的影子拉得最长。'],
@@ -118,21 +120,35 @@ const SECTION_PATTERNS: Array<[string, string]> = [
   ['essay', 'essay'],
   ['projects', 'projects'],
   ['gallery', 'gallery'],
+  ['academy', 'academy'],
   ['about', 'about'],
   ['search', 'search'],
   ['tags', 'tags'],
 ];
 
-function sectionOf(pathname: string): string {
+/* 去掉部署 base 与前导斜杠，得到站内相对路径 */
+function normalizePath(pathname: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   let path = pathname;
   if (base && path.startsWith(base)) path = path.slice(base.length);
-  path = path.replace(/^\//, '');
+  return path.replace(/^\/+/, '');
+}
+
+function sectionOf(pathname: string): string {
+  const path = normalizePath(pathname);
   for (const [prefix, section] of SECTION_PATTERNS) {
     if (path.startsWith(prefix)) return section;
   }
-  if (path === '' || path === '/') return 'home';
+  if (path === '') return 'home';
   return 'general';
+}
+
+/* 功能区的落地页（/notes/、/essay/ 这类），文章内页不算 */
+function sectionIndex(pathname: string): string | null {
+  const section = sectionOf(pathname);
+  if (section === 'home' || !LINES[section]) return null;
+  const path = normalizePath(pathname);
+  return path === `${section}/` || path === section ? section : null;
 }
 
 function timePool(): string {
@@ -328,7 +344,8 @@ export function initForestSprite(): void {
 
   /* ── 主动开口的时机 ── */
 
-  /* 本次会话的第一面：先让落定动画走完，再打个招呼 */
+  /* 本次会话的第一面：先让落定动画走完，再打个招呼。
+     功能区落地页不在这儿开口，交给 enterSection 说本区的话。 */
   const greet = () => {
     try {
       if (sessionStorage.getItem(GREETED_KEY)) return;
@@ -336,6 +353,7 @@ export function initForestSprite(): void {
     } catch {
       /* 隐私模式下每次都会打招呼，无伤大雅 */
     }
+    if (sectionIndex(window.location.pathname)) return;
     let known = true;
     try {
       known = localStorage.getItem(MET_KEY) === '1';
@@ -347,6 +365,16 @@ export function initForestSprite(): void {
       if (bubble.classList.contains('is-visible')) return;
       speak(pick(document.querySelector('.not-found') ? 'lost' : known ? 'returnVisit' : 'firstVisit'));
     }, GREET_DELAY_MS);
+  };
+
+  /* 走进某个功能区（笔记/杂谈/项目/画廊/学术/标签/关于/搜索）时，先招呼一句这个区的事 */
+  const enterSection = () => {
+    const section = sectionIndex(window.location.pathname);
+    if (!section) return;
+    window.setTimeout(() => {
+      if (bubble.classList.contains('is-visible')) return;
+      speak(pick(section));
+    }, SECTION_DELAY_MS);
   };
 
   /* 鼠标在苔苔身上停一会儿，她会先开口；挪开就算了 */
@@ -536,6 +564,7 @@ export function initForestSprite(): void {
 
   scheduleSkit();
   greet();
+  enterSection();
 
   apply();
 }
