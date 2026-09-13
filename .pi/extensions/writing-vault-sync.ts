@@ -6,6 +6,8 @@ import { dirname, join } from "node:path";
 
 const VAULT_ROOT = 'E:/WritingVault';
 const LOG_FILE = 'E:/WritingVault/.tmp/pi-lark-sync.log';
+const MEMORY_SYNC_STATE_FILE = 'E:/WritingVault/.state/pi-memory-sync.json';
+const MEMORY_SYNC_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000;
 const MANAGED_START = '<!-- daily-from-inbox:start -->';
 const MANAGED_END = '<!-- daily-from-inbox:end -->';
 
@@ -57,6 +59,38 @@ function runNpmScript(script: string): Promise<{ code: number | null; stdout: st
       resolve({ code, stdout, stderr });
     });
   });
+}
+
+function shouldSyncMemory(now = Date.now()) {
+  try {
+    if (!existsSync(MEMORY_SYNC_STATE_FILE)) return true;
+    const state = JSON.parse(readFileSync(MEMORY_SYNC_STATE_FILE, 'utf8')) as { lastSyncedAt?: string };
+    const lastSynced = state.lastSyncedAt ? Date.parse(state.lastSyncedAt) : 0;
+    return !lastSynced || now - lastSynced >= MEMORY_SYNC_INTERVAL_MS;
+  } catch (error) {
+    appendLog(`memory sync state read failed: ${error instanceof Error ? error.message : String(error)}`);
+    return true;
+  }
+}
+
+function markMemorySynced(now = new Date()) {
+  mkdirSync(dirname(MEMORY_SYNC_STATE_FILE), { recursive: true });
+  writeFileSync(MEMORY_SYNC_STATE_FILE, JSON.stringify({ lastSyncedAt: now.toISOString() }, null, 2), 'utf8');
+}
+
+async function syncMemoryProfileIfDue() {
+  if (!shouldSyncMemory()) return { due: false, ok: true };
+
+  const memory = await runNpmScript('memory:sync');
+  const memoryOutput = `${memory.stdout}\n${memory.stderr}`;
+  appendLog(`memory:sync exit=${memory.code ?? 'unknown'}\n${memoryOutput.trim()}`);
+
+  if (memory.code === 0) {
+    markMemorySynced();
+    return { due: true, ok: true };
+  }
+
+  return { due: true, ok: false };
 }
 
 function parseSyncSummary(output: string) {
@@ -185,16 +219,22 @@ export default function (pi: ExtensionAPI) {
     appendLog(`lark:sync exit=${sync.code ?? 'unknown'}\n${syncOutput.trim()}`);
 
     const summary = parseSyncSummary(syncOutput);
+    const memorySync = await syncMemoryProfileIfDue();
+    if (memorySync.due && !memorySync.ok) {
+      ctx.ui.notify('WritingVault 长期记忆同步失败，已记录到日志；飞书同步会继续。', 'warning');
+    }
+
     if (sync.code === 0 && summary) {
       if (summary.captured <= 0) {
-        ctx.ui.notify('WritingVault 没有新的飞书灵感需要同步', 'info');
+        ctx.ui.notify(memorySync.due && memorySync.ok ? 'WritingVault 没有新的飞书灵感；长期记忆已按周同步' : 'WritingVault 没有新的飞书灵感需要同步', 'info');
         return;
       }
 
       try {
         const ai = await generateAiDailyAndCards(ctx);
         appendLog(`ai digest ok daily=${ai.dailyFile} cards=${ai.cards.length}`);
-        ctx.ui.notify(`WritingVault 已同步 ${summary.captured} 条新灵感，AI 已更新 daily 和 ${ai.cards.length} 张卡片`, 'success');
+        const memoryText = memorySync.due && memorySync.ok ? '，长期记忆也已按周同步' : '';
+        ctx.ui.notify(`WritingVault 已同步 ${summary.captured} 条新灵感，AI 已更新 daily 和 ${ai.cards.length} 张卡片${memoryText}`, 'success');
       } catch (error) {
         appendLog(`ai digest failed: ${error instanceof Error ? error.stack || error.message : String(error)}`);
         const daily = await runNpmScript('daily:from-inbox');
