@@ -67,36 +67,49 @@ cd E:/WritingVault && npm run capture -- "${@:2}"
 
 当我输入 `/6ch bot`：
 
-1. 优先使用飞书 Bot，不默认使用微信个人号 Bot。
-2. 飞书 Bot 本地服务在 `E:\WritingVault\scripts\feishu-webhook.mjs`。
-3. 已配置 Cloudflare Tunnel 单文件版：`E:\Tools\cloudflared\cloudflared.exe`。
-4. 配置飞书 token：
+1. 优先使用飞书 CLI 事件监听，不默认使用微信个人号 Bot。
+2. 本机 `lark-cli` bot 身份可用时，首选命令：
+
+```bash
+cd E:/WritingVault && npm run lark:capture
+```
+
+3. 短时测试，不写入 inbox：
+
+```bash
+cd E:/WritingVault && npm run lark:capture:test
+```
+
+4. 如果 CLI 事件监听不可用，再使用 webhook + Cloudflare Tunnel 备用方案。
+5. 飞书 Bot webhook 服务在 `E:\WritingVault\scripts\feishu-webhook.mjs`。
+6. 已配置 Cloudflare Tunnel 单文件版：`E:\Tools\cloudflared\cloudflared.exe`。
+7. 配置飞书 token：
 
 ```bash
 cd E:/WritingVault && npm run feishu:setup
 ```
 
-5. 一键启动 webhook + 临时公网 tunnel：
+8. 一键启动 webhook + 临时公网 tunnel：
 
 ```bash
 cd E:/WritingVault && npm run bot:dev
 ```
 
-6. 也可以分开启动：
+9. 也可以分开启动：
 
 ```bash
 cd E:/WritingVault && npm run feishu:webhook
 cd E:/WritingVault && npm run tunnel:quick
 ```
 
-7. 自测 URL 校验：
+10. 自测 URL 校验：
 
 ```bash
 cd E:/WritingVault && npm run feishu:test
 ```
 
-8. 接入说明看：`E:\WritingVault\FEISHU_BOT.md` 和 `E:\WritingVault\BOT_SETUP_CHECKLIST.md`。
-9. 不要把飞书 App Secret、Verification Token、Encrypt Key 写进公开网站仓库。
+11. 接入说明看：`E:\WritingVault\FEISHU_BOT.md` 和 `E:\WritingVault\BOT_SETUP_CHECKLIST.md`。
+12. 不要把飞书 App Secret、Verification Token、Encrypt Key 写进公开网站仓库。
 
 ### backup
 
