@@ -70,26 +70,33 @@ cd E:/WritingVault && npm run capture -- "${@:2}"
 1. 优先使用飞书 Bot，不默认使用微信个人号 Bot。
 2. 飞书 Bot 本地服务在 `E:\WritingVault\scripts\feishu-webhook.mjs`。
 3. 已配置 Cloudflare Tunnel 单文件版：`E:\Tools\cloudflared\cloudflared.exe`。
-4. 启动 webhook：
+4. 配置飞书 token：
+
+```bash
+cd E:/WritingVault && npm run feishu:setup
+```
+
+5. 一键启动 webhook + 临时公网 tunnel：
+
+```bash
+cd E:/WritingVault && npm run bot:dev
+```
+
+6. 也可以分开启动：
 
 ```bash
 cd E:/WritingVault && npm run feishu:webhook
-```
-
-5. 启动临时公网 tunnel：
-
-```bash
 cd E:/WritingVault && npm run tunnel:quick
 ```
 
-6. 自测 URL 校验：
+7. 自测 URL 校验：
 
 ```bash
 cd E:/WritingVault && npm run feishu:test
 ```
 
-7. 接入说明看：`E:\WritingVault\FEISHU_BOT.md` 和 `E:\WritingVault\BOT_SETUP_CHECKLIST.md`。
-8. 不要把飞书 App Secret、Verification Token、Encrypt Key 写进公开网站仓库。
+8. 接入说明看：`E:\WritingVault\FEISHU_BOT.md` 和 `E:\WritingVault\BOT_SETUP_CHECKLIST.md`。
+9. 不要把飞书 App Secret、Verification Token、Encrypt Key 写进公开网站仓库。
 
 ### backup
 
