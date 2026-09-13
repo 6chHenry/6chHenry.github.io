@@ -1,9 +1,20 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { spawn } from "node:child_process";
+import { appendFileSync, mkdirSync } from "node:fs";
+import { dirname } from "node:path";
+
+const LOG_FILE = 'E:/WritingVault/.tmp/pi-lark-sync.log';
+
+function appendLog(message: string) {
+  mkdirSync(dirname(LOG_FILE), { recursive: true });
+  appendFileSync(LOG_FILE, `[${new Date().toISOString()}] ${message}\n`, 'utf8');
+}
 
 export default function (pi: ExtensionAPI) {
   pi.on("session_start", async (event, ctx) => {
     if (!['startup', 'reload', 'new', 'resume'].includes(event.reason)) return;
+
+    appendLog(`session_start reason=${event.reason}`);
 
     const child = spawn('npm', ['run', 'lark:sync'], {
       cwd: 'E:/WritingVault',
@@ -29,6 +40,7 @@ export default function (pi: ExtensionAPI) {
 
     child.on('close', (code) => {
       const output = `${stdout}\n${stderr}`;
+      appendLog(`exit=${code ?? 'unknown'}\n${output.trim()}`);
       const match = output.match(/\[lark-sync\] done: captured=(\d+), skipped=(\d+), total=(\d+)/);
       if (code === 0 && match) {
         const captured = Number(match[1]);
