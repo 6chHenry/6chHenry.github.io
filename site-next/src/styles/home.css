@@ -374,7 +374,27 @@
   border-radius: 50%;
   background: conic-gradient(from 180deg, var(--ch-accent-secondary), var(--ch-accent-tertiary), var(--ch-accent-warm), var(--ch-accent-secondary));
   opacity: 0.55;
+  filter: blur(0.2px);
   animation: home-ring 8s linear infinite;
+}
+
+.home-avatar-wrap::after {
+  position: absolute;
+  inset: -1.05rem;
+  z-index: -1;
+  content: '';
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ch-accent-warm) 18%, transparent), transparent 62%);
+  opacity: 0;
+  transform: scale(0.84);
+  transition:
+    opacity var(--ch-transition),
+    transform var(--ch-transition);
+}
+
+.home-avatar-wrap:hover::after {
+  opacity: 1;
+  transform: scale(1);
 }
 
 @keyframes home-ring {
@@ -389,8 +409,18 @@
   height: 7.75rem;
   border-radius: 50%;
   border: 3px solid color-mix(in srgb, var(--ch-surface-solid) 90%, transparent);
-  box-shadow: var(--ch-glow);
+  box-shadow:
+    var(--ch-glow),
+    inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
   object-fit: cover;
+  transition:
+    filter var(--ch-transition),
+    transform var(--ch-transition);
+}
+
+.home-avatar-wrap:hover .home-avatar {
+  filter: saturate(1.05) contrast(1.03);
+  transform: translateY(-1px) scale(1.012);
 }
 
 .home-eyebrow {
@@ -560,6 +590,29 @@
   margin-top: calc(var(--trail-lift, 2.25rem) - 1.1rem);
   cursor: pointer;
   border-radius: 14px;
+}
+
+.home-trail__tree-link::after {
+  position: absolute;
+  left: 50%;
+  bottom: 0.15rem;
+  z-index: -1;
+  width: 3.8rem;
+  height: 1.15rem;
+  content: '';
+  border-radius: 999px;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--ch-accent-warm) 24%, transparent), transparent 72%);
+  opacity: 0;
+  transform: translateX(-50%) scale(0.72);
+  transition:
+    opacity var(--ch-transition-fast),
+    transform var(--ch-transition-fast);
+}
+
+.home-trail__tree-link:hover::after,
+.home-trail__tree-link:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
 }
 
 .home-trail__tree-link:focus-visible {

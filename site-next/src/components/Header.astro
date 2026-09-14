@@ -85,9 +85,22 @@ function isActive(href: string, exact?: boolean) {
     z-index: 50;
     height: var(--ch-header-height);
     border-bottom: 1px solid var(--ch-border-soft);
-    background: color-mix(in srgb, var(--ch-surface-solid) 78%, transparent);
-    backdrop-filter: blur(16px) saturate(1.2);
-    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--ch-surface-solid) 88%, transparent), color-mix(in srgb, var(--ch-surface-solid) 68%, transparent)),
+      color-mix(in srgb, var(--ch-surface-solid) 78%, transparent);
+    box-shadow: 0 1px 0 color-mix(in srgb, white 18%, transparent);
+    backdrop-filter: blur(18px) saturate(1.24);
+    -webkit-backdrop-filter: blur(18px) saturate(1.24);
+  }
+
+  .site-header::after {
+    position: absolute;
+    inset: auto 0 -1px;
+    height: 1px;
+    content: '';
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ch-accent-tertiary) 42%, transparent), transparent);
+    opacity: 0.65;
+    pointer-events: none;
   }
 
   .site-header__inner {
@@ -114,8 +127,26 @@ function isActive(href: string, exact?: boolean) {
     width: 2.35rem;
     height: 2.35rem;
     border-radius: 12px;
-    background: var(--ch-accent-dim);
+    background:
+      radial-gradient(circle at 35% 24%, color-mix(in srgb, white 28%, transparent), transparent 42%),
+      var(--ch-accent-dim);
     color: var(--ch-accent-secondary);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 28%, transparent),
+      0 8px 18px color-mix(in srgb, var(--ch-accent) 8%, transparent);
+    transition:
+      color var(--ch-transition-fast),
+      transform var(--ch-transition-fast),
+      box-shadow var(--ch-transition-fast);
+  }
+
+  .site-logo:hover .site-logo__icon,
+  .site-logo:focus-visible .site-logo__icon {
+    color: var(--ch-accent);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 34%, transparent),
+      0 12px 26px color-mix(in srgb, var(--ch-accent-secondary) 16%, transparent);
+    transform: translateY(-1px) rotate(-2deg);
   }
 
   .site-logo__icon :global(.forest-icon) {
@@ -151,6 +182,7 @@ function isActive(href: string, exact?: boolean) {
   }
 
   .site-nav__link {
+    position: relative;
     padding: 0.42rem 0.75rem;
     border-radius: 999px;
     color: var(--ch-fg-muted);
@@ -160,13 +192,36 @@ function isActive(href: string, exact?: boolean) {
     letter-spacing: 0.03em;
     transition:
       color var(--ch-transition-fast),
-      background var(--ch-transition-fast);
+      background var(--ch-transition-fast),
+      transform var(--ch-transition-fast);
+  }
+
+  .site-nav__link::after {
+    position: absolute;
+    left: 50%;
+    bottom: 0.22rem;
+    width: 0.28rem;
+    height: 0.28rem;
+    border-radius: 999px;
+    content: '';
+    background: var(--ch-accent-warm);
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5);
+    transition:
+      opacity var(--ch-transition-fast),
+      transform var(--ch-transition-fast);
   }
 
   .site-nav__link:hover,
   .site-nav__link.is-active {
     color: var(--ch-accent);
-    background: var(--ch-accent-dim);
+    background: color-mix(in srgb, var(--ch-accent-dim) 86%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .site-nav__link.is-active::after {
+    opacity: 0.8;
+    transform: translateX(-50%) scale(1);
   }
 
   .site-header__actions {
@@ -183,10 +238,13 @@ function isActive(href: string, exact?: boolean) {
     height: 2.5rem;
     border-radius: 12px;
     border: 1px solid var(--ch-border-soft);
-    background: color-mix(in srgb, var(--ch-surface) 80%, transparent);
+    background:
+      linear-gradient(145deg, color-mix(in srgb, white 10%, transparent), transparent 48%),
+      color-mix(in srgb, var(--ch-surface) 80%, transparent);
     color: var(--ch-fg-muted);
     cursor: pointer;
     text-decoration: none;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, white 18%, transparent);
     transition:
       color var(--ch-transition-fast),
       border-color var(--ch-transition-fast),
@@ -197,7 +255,10 @@ function isActive(href: string, exact?: boolean) {
   .icon-btn:hover {
     color: var(--ch-accent-secondary);
     border-color: color-mix(in srgb, var(--ch-accent-secondary) 45%, var(--ch-border));
-    background: var(--ch-accent-dim);
+    background:
+      radial-gradient(circle at 35% 20%, color-mix(in srgb, white 24%, transparent), transparent 42%),
+      var(--ch-accent-dim);
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--ch-accent-secondary) 12%, transparent);
     transform: translateY(-1px);
   }
 

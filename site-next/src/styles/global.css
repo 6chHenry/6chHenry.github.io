@@ -24,7 +24,10 @@ body {
   margin: 0;
   min-height: 100dvh;
   font-family: var(--ch-text-font);
-  background: var(--ch-bg-void);
+  background:
+    radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--ch-accent-light) 13%, transparent), transparent 24rem),
+    radial-gradient(circle at 82% 4%, color-mix(in srgb, var(--ch-accent-warm) 10%, transparent), transparent 22rem),
+    var(--ch-bg-void);
   color: var(--ch-fg);
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
@@ -54,13 +57,14 @@ pre {
 }
 
 ::selection {
-  background: var(--ch-accent-dim);
-  color: var(--ch-fg);
+  background: color-mix(in srgb, var(--ch-accent-light) 46%, var(--ch-accent-warm) 18%);
+  color: var(--ch-accent-ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--ch-accent-tertiary);
+  outline: 2px solid color-mix(in srgb, var(--ch-accent-tertiary) 72%, white);
   outline-offset: 3px;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--ch-accent-tertiary) 18%, transparent);
 }
 
 .sr-only {
@@ -133,7 +137,8 @@ pre {
     border-color var(--ch-transition),
     transform var(--ch-transition),
     box-shadow var(--ch-transition),
-    background var(--ch-transition);
+    background var(--ch-transition),
+    color var(--ch-transition-fast);
 }
 
 .pill:hover {

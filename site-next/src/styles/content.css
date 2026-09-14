@@ -47,13 +47,20 @@
   letter-spacing: 0.06em;
   text-decoration: none;
   color: var(--ch-accent-secondary);
-  transition: background var(--ch-transition-fast), border-color var(--ch-transition-fast);
+  transition:
+    background var(--ch-transition-fast),
+    border-color var(--ch-transition-fast),
+    box-shadow var(--ch-transition-fast),
+    transform var(--ch-transition-fast),
+    color var(--ch-transition-fast);
 }
 
 .tag-list a:hover {
   background: color-mix(in srgb, var(--ch-accent-dim) 80%, var(--ch-accent-secondary));
   border-color: var(--ch-accent-secondary);
   color: var(--ch-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ch-accent-secondary) 10%, transparent);
+  transform: translateY(-1px);
 }
 
 .prose {
@@ -75,12 +82,24 @@
 }
 
 .prose :where(h2) {
+  position: relative;
   font-size: 1.5rem;
   font-weight: 600;
   margin-top: 2.5rem;
   padding-bottom: 0.45rem;
   border-bottom: 1px solid var(--ch-border-soft);
   color: var(--ch-accent);
+}
+
+.prose :where(h2)::after {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 3.2rem;
+  height: 1px;
+  content: '';
+  background: linear-gradient(90deg, var(--ch-accent-secondary), var(--ch-accent-warm));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--ch-accent-secondary) 22%, transparent);
 }
 
 .prose :where(h3) {
@@ -95,23 +114,44 @@
 }
 
 .prose :where(blockquote) {
-  padding: 0.85rem 1.15rem;
+  position: relative;
+  padding: 0.95rem 1.15rem 0.95rem 1.35rem;
   border-left: 3px solid var(--ch-accent-secondary);
-  background: linear-gradient(90deg, var(--ch-accent-dim), transparent);
+  background:
+    linear-gradient(90deg, var(--ch-accent-dim), transparent 82%),
+    color-mix(in srgb, var(--ch-surface) 72%, transparent);
   border-radius: 0 var(--ch-radius-sm) var(--ch-radius-sm) 0;
   font-style: italic;
   color: var(--ch-fg-muted);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 18%, transparent);
+}
+
+.prose :where(blockquote)::before {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.55rem;
+  content: '“';
+  color: color-mix(in srgb, var(--ch-accent-secondary) 32%, transparent);
+  font-family: var(--ch-display-font);
+  font-size: 2.15rem;
+  line-height: 1;
+  pointer-events: none;
 }
 
 .prose :where(pre) {
-  padding: 1.1rem 1.2rem;
+  padding: 1.18rem 1.25rem;
   border-radius: var(--ch-radius-sm);
   border: 1px solid var(--ch-code-border);
-  background: var(--ch-code-surface);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, white 14%, transparent);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, white 10%, transparent), transparent 38%),
+    var(--ch-code-surface);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 18%, transparent),
+    0 12px 28px color-mix(in srgb, var(--ch-accent) 8%, transparent);
   overflow-x: auto;
   font-size: 0.86rem;
   line-height: 1.6;
+  scrollbar-color: color-mix(in srgb, var(--ch-accent-secondary) 42%, transparent) transparent;
 }
 
 .code-block {
@@ -233,11 +273,39 @@
 .prose :where(a) {
   word-break: break-word;
   color: var(--ch-accent-secondary);
-  text-underline-offset: 0.2em;
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.06em;
+  text-decoration-color: color-mix(in srgb, currentColor 34%, transparent);
+  text-underline-offset: 0.18em;
+  transition:
+    color 160ms ease,
+    text-decoration-color 160ms ease,
+    background-size 180ms ease;
+}
+
+.prose :where(a[href^='http://'], a[href^='https://']):not(:has(img))::after {
+  content: '↗';
+  display: inline-block;
+  margin-left: 0.14em;
+  font-size: 0.72em;
+  line-height: 1;
+  vertical-align: 0.12em;
+  color: color-mix(in srgb, currentColor 78%, var(--ch-fg-muted));
+  text-decoration: none;
+  transform: translateY(0.03em);
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
 }
 
 .prose :where(a:hover) {
   color: var(--ch-accent);
+  text-decoration-color: color-mix(in srgb, currentColor 72%, transparent);
+}
+
+.prose :where(a[href^='http://'], a[href^='https://']):not(:has(img)):hover::after {
+  color: currentColor;
+  transform: translate(0.08em, -0.08em);
 }
 
 .admonition {
@@ -262,13 +330,27 @@
 }
 
 .content-toc {
+  position: relative;
   padding: 1.15rem;
+  overflow: hidden;
   border-radius: var(--ch-radius-sm);
   border: 1px solid var(--ch-glass-border);
-  background: var(--ch-glass-bg);
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--ch-accent-warm) 9%, transparent), transparent 9rem),
+    var(--ch-glass-bg);
   font-size: 0.82rem;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 18%, transparent);
   backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.12);
   -webkit-backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.12);
+}
+
+.content-toc::after {
+  position: absolute;
+  inset: auto 1rem 0.65rem;
+  height: 1px;
+  content: '';
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ch-accent-tertiary) 24%, transparent), transparent);
+  pointer-events: none;
 }
 
 .content-aside {
@@ -283,7 +365,10 @@
   padding: 1rem 0.85rem 1.15rem;
   border-radius: var(--ch-radius-sm);
   border: 1px solid var(--ch-glass-border);
-  background: var(--ch-glass-bg);
+  background:
+    radial-gradient(circle at 88% 8%, color-mix(in srgb, var(--ch-accent-tertiary) 9%, transparent), transparent 8rem),
+    var(--ch-glass-bg);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 18%, transparent);
   backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.12);
   -webkit-backdrop-filter: blur(var(--ch-glass-blur)) saturate(1.12);
 }
@@ -377,11 +462,13 @@
 .content-toc a:hover,
 .content-toc a.is-active {
   color: var(--ch-accent-secondary);
+  text-shadow: 0 0 16px color-mix(in srgb, var(--ch-accent-tertiary) 12%, transparent);
   transform: translateX(2px);
 }
 
 .content-toc a.is-active::before {
   opacity: 1;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ch-accent-tertiary) 12%, transparent);
   transform: scale(1);
 }
 
@@ -503,6 +590,9 @@
 .article-nav__link:focus-visible {
   border-color: color-mix(in srgb, var(--ch-accent-secondary) 36%, var(--ch-glass-border));
   background: var(--ch-glass-bg-hover);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 24%, transparent),
+    0 16px 34px color-mix(in srgb, var(--ch-accent) 10%, transparent);
   color: inherit;
   transform: translateY(-2px);
 }
@@ -674,6 +764,9 @@
 .content-row:focus-visible {
   background: var(--ch-glass-bg-hover);
   border-color: color-mix(in srgb, var(--ch-accent-secondary) 32%, var(--ch-glass-border));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 24%, transparent),
+    0 10px 24px color-mix(in srgb, var(--ch-accent) 8%, transparent);
   transform: translateX(3px);
   color: inherit;
 }
