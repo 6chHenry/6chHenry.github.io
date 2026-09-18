@@ -4,24 +4,24 @@ const base = import.meta.env.BASE_URL;
 const bundlePath = `${base}pagefind/`;
 
 /**
- * Pagefind UI 自带的是英文文案，这里整体换成果园语气的中文。
+ * Pagefind UI 自带的是英文文案，这里整体换成中文。
  * 占位符（[SEARCH_TERM] / [COUNT] 等）由 Pagefind 自己替换，不要改动拼写。
  */
 const PAGEFIND_ZH: Record<string, string> = {
-  placeholder: '搜一搜这片林子',
+  placeholder: '搜一搜',
   clear_search: '清空',
   load_more: '再翻一页',
   search_label: '站内搜索',
   filters_label: '筛一筛',
-  zero_results: '林子里没找到「[SEARCH_TERM]」',
-  many_results: '「[SEARCH_TERM]」有 [COUNT] 处踪迹',
-  one_result: '「[SEARCH_TERM]」有 [COUNT] 处踪迹',
+  zero_results: '没找到「[SEARCH_TERM]」',
+  many_results: '「[SEARCH_TERM]」有 [COUNT] 条',
+  one_result: '「[SEARCH_TERM]」有 [COUNT] 条',
   total_zero_results: '什么也没找着',
-  total_one_result: '[COUNT] 处踪迹',
-  total_many_results: '[COUNT] 处踪迹',
+  total_one_result: '[COUNT] 条',
+  total_many_results: '[COUNT] 条',
   alt_search: '「[SEARCH_TERM]」没找着，先看看「[DIFFERENT_TERM]」',
   search_suggestion: '「[SEARCH_TERM]」没找着，要不试试这些：',
-  searching: '正在翻找「[SEARCH_TERM]」……',
+  searching: '在找「[SEARCH_TERM]」……',
   results_label: '搜索结果',
   keyboard_navigate: '切换',
   keyboard_select: '打开',
@@ -31,8 +31,8 @@ const PAGEFIND_ZH: Record<string, string> = {
   error_search: '搜索出了点问题，稍后再试试',
   filter_selected_one: '选中 [COUNT] 项',
   filter_selected_many: '选中 [COUNT] 项',
-  input_hint: '边打字边出结果',
-  loading: '正在翻找……',
+  input_hint: '打字就会出结果',
+  loading: '在找……',
 };
 
 declare global {

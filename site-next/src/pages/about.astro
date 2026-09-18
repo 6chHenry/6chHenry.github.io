@@ -26,20 +26,20 @@ const trailIcons: Record<string, string> = {
 const trails = [
   {
     href: `${base}essay/#essay-section-Music`,
-    title: '音乐小径',
+    title: '音乐',
     desc: 'Eason，和一段一段的听歌整理。',
     icon: 'music',
   },
   {
     href: `${base}essay/#essay-section-Reading`,
-    title: '阅读小径',
-    desc: '读完一本书之后，留给作品的回信。',
+    title: '阅读',
+    desc: '读完书之后写的回信。',
     icon: 'book',
   },
   {
     href: `${base}essay/#essay-section-Travel`,
-    title: '旅行小径',
-    desc: '路线、城市，以及照片留下的旁证。',
+    title: '旅行',
+    desc: '路线、城市，和路上的照片。',
     icon: 'route',
   },
 ];
@@ -55,7 +55,7 @@ const trails = [
     <div class="about-layout">
       <article class="about-panel card card--elevated">
         <div class="about-now" aria-label="近况告示牌">
-          <span class="about-now__title">林间告示牌</span>
+          <span class="about-now__title">近况</span>
           {
             nowBoard.map((item) => (
               <span class="about-now__item">
@@ -157,7 +157,7 @@ const trails = [
       <aside class="about-aside">
         <div class="about-card card">
           <ForestIcon name="tree" class="about-card__icon" />
-          <h3>林径</h3>
+          <h3>去别处</h3>
           <div class="about-links">
             <a class="pill" href={`${base}notes/`}><ForestIcon name="book" /> 笔记</a>
             <a class="pill" href={`${base}essay/`}><ForestIcon name="pen" /> 杂谈</a>

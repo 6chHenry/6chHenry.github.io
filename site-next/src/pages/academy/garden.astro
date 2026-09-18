@@ -27,9 +27,9 @@ const leaves = [
 ];
 
 const buds = [
-  { title: '论文 · Publications', body: '花期未至——有些花还在酝酿，等一场春天。' },
-  { title: '经历 · Experience', body: '根还在往深处走，先不急着开花。' },
-  { title: '风闻 · Media', body: '风还没有把消息吹到这片林子里。' },
+  { title: '论文 · Publications', body: '还没有论文。' },
+  { title: '经历 · Experience', body: '还没有经历可写。' },
+  { title: '风闻 · Media', body: '还没有媒体报道。' },
 ];
 
 const rings = [
@@ -117,23 +117,22 @@ const callouts: Callout[] = [
 ];
 
 const calloutTexts: Record<string, string> = {
-  'g-news': '抽芽 · 动态',
-  'g-trunk': '枝干 · 方向',
-  'g-leaf': '叶片 · 项目',
-  'g-flower': '花苞 · 论文',
-  'g-ring': '年轮 · 荣誉',
-  'g-root': '根系 · 教育',
+  'g-news': '动态',
+  'g-trunk': '方向',
+  'g-leaf': '项目',
+  'g-flower': '论文',
+  'g-ring': '荣誉',
+  'g-root': '教育',
 };
 ---
 
-<BaseLayout title="学术花园 | KeWei Liu" description="KeWei Liu 学术主页的林间读法——同一份履历，长成一棵树。">
+<BaseLayout title="学术花园 | KeWei Liu" description="学术主页的另一种读法。">
   <section class="container page-shell garden-page">
     <header class="page-header">
       <p class="section-kicker">Academy Garden</p>
       <h1>学术花园</h1>
       <p class="section-lead">
-        这里是学术主页的林间读法：同一份履历，长成一棵树——根是来处，干是方向，
-        叶是做过的事，花苞还没开，年轮一圈圈记着认真。想看正式版本，请去<a href={`${base}academy/`}>学术主页</a>。
+        和学术主页同一份内容，只是排成了一棵树。想看正式版去<a href={`${base}academy/`}>学术主页</a>。
       </p>
       <div class="garden-actions">
         <a class="pill" href={`${base}academy/`}>正式版</a>
@@ -261,8 +260,7 @@ const calloutTexts: Record<string, string> = {
       <section id="g-root" class="garden-card">
         <header>
           <p class="garden-kicker">Roots</p>
-          <h2>根系 · 来处</h2>
-          <p class="garden-desc">往下扎的每一层，都是往上长的底气。</p>
+          <h2>来处</h2>
         </header>
         <ul class="root-list">
           {
@@ -280,8 +278,7 @@ const calloutTexts: Record<string, string> = {
       <section id="g-trunk" class="garden-card">
         <header>
           <p class="garden-kicker">Trunk</p>
-          <h2>枝干 · 方向</h2>
-          <p class="garden-desc">主干往上，分成两枝。</p>
+          <h2>方向</h2>
         </header>
         <div class="branch-grid">
           {
@@ -294,15 +291,14 @@ const calloutTexts: Record<string, string> = {
           }
         </div>
         <p class="garden-note">
-          另外对 Causal Discovery in Robotics 心里长草，欢迎来信一起把杂草养成花。
+          另外对 Causal Discovery in Robotics 心里长草，欢迎来信。
         </p>
       </section>
 
       <section id="g-leaf" class="garden-card">
         <header>
           <p class="garden-kicker">Leaves</p>
-          <h2>叶片 · 做过的事</h2>
-          <p class="garden-desc">一叶一个夏天。</p>
+          <h2>做过的事</h2>
         </header>
         <ul class="leaf-list">
           {
@@ -320,8 +316,7 @@ const calloutTexts: Record<string, string> = {
       <section id="g-flower" class="garden-card">
         <header>
           <p class="garden-kicker">Buds</p>
-          <h2>花苞 · 还没开</h2>
-          <p class="garden-desc">不着急，慢慢来。</p>
+          <h2>还没有</h2>
         </header>
         <div class="bud-grid">
           {
@@ -343,8 +338,7 @@ const calloutTexts: Record<string, string> = {
       <section id="g-ring" class="garden-card">
         <header>
           <p class="garden-kicker">Rings</p>
-          <h2>年轮 · 认真过</h2>
-          <p class="garden-desc">一圈一圈，都是长过的痕迹。</p>
+          <h2>荣誉</h2>
         </header>
         <ul class="ring-list">
           {
@@ -361,8 +355,8 @@ const calloutTexts: Record<string, string> = {
       <section id="g-news" class="garden-card">
         <header>
           <p class="garden-kicker">Sprouts</p>
-          <h2>抽芽记录 · News</h2>
-          <p class="garden-desc">最新的是最顶上那颗新芽。</p>
+          <h2>动态</h2>
+          <p class="garden-desc">新的在上面。</p>
         </header>
         <ol class="sprout-list">
           {
@@ -378,7 +372,7 @@ const calloutTexts: Record<string, string> = {
     </div>
 
     <footer class="garden-footer">
-      <p>想聊学术，或者只是路过打个招呼 ——</p>
+      <p>想聊学术，或者只是路过打个招呼——</p>
       <div>
         <a class="pill" href="mailto:HenryLiu13550060700@sjtu.edu.cn">Work Email</a>
         <a class="pill pill--glass" href="https://github.com/6chHenry" target="_blank" rel="noopener">GitHub</a>

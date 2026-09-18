@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const base = import.meta.env.BASE_URL;
 ---
 
-<BaseLayout title="迷路的林间 | 6ch." description="请求的页面不存在">
+<BaseLayout title="找不到这页 | 6ch." description="请求的页面不存在">
   <section class="container not-found">
     <svg class="lost-scene" viewBox="0 0 480 300" fill="none" aria-hidden="true">
       <!-- 远山与雾 -->
@@ -43,7 +43,7 @@ const base = import.meta.env.BASE_URL;
     </svg>
 
     <h1>404</h1>
-    <p class="not-found__copy">这片林里没有你要找的路。萤火虫说，你可能走岔了。</p>
+    <p class="not-found__copy">这页没有。可能走岔了，或者链接失效了。</p>
     <div class="not-found__actions">
       <a class="pill" href={base}>返回主页</a>
       <a class="pill pill--ghost" href={`${base}search/`}>去搜一搜</a>

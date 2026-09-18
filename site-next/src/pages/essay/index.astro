@@ -11,14 +11,14 @@ const base = import.meta.env.BASE_URL;
 const watchlistHref = `${base}essay/2026-watchlist/`;
 
 const categoryMeta = {
-  Movies: { title: '影评', desc: '电影、剧集和观看后的余温。', order: 10 },
-  Music: { title: '歌评', desc: '专辑、单曲和阶段性的听歌整理。', order: 20 },
-  Travel: { title: '旅行', desc: '路线、城市、路上的流水账，以及照片留下的旁证。', order: 30 },
-  Reading: { title: '书评', desc: '读完一本书之后，留给作品的回信。', order: 40 },
-  Life: { title: '生活', desc: '生日、学期、关系和个人生活切片。', order: 50 },
-  Thoughts: { title: '思考', desc: '关于人、技术、效率和自我状态的短文。', order: 60 },
-  Plans: { title: '计划与总结', desc: '阶段计划、周结和年度复盘。', order: 70 },
-  Misc: { title: '杂项', desc: '暂时没有归入固定主题的文字。', order: 90 },
+  Movies: { title: '影评', desc: '看过的电影和剧，还有看完之后。', order: 10 },
+  Music: { title: '歌评', desc: '听过的歌，和某一阵子的整理。', order: 20 },
+  Travel: { title: '旅行', desc: '路线、城市，和路上的流水账。', order: 30 },
+  Reading: { title: '书评', desc: '读完一本书之后，写给它的回信。', order: 40 },
+  Life: { title: '生活', desc: '生日、学期、关系，和生活里的一些事。', order: 50 },
+  Thoughts: { title: '思考', desc: '关于人、技术，和自己的一些短文。', order: 60 },
+  Plans: { title: '计划与总结', desc: '计划、周结，和复盘。', order: 70 },
+  Misc: { title: '杂项', desc: '还没想好放哪的。', order: 90 },
 } as const;
 
 type CategoryKey = keyof typeof categoryMeta;
@@ -62,7 +62,7 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
     <header class="page-header essay-page__header">
       <p class="section-kicker">Essays</p>
       <h1>杂谈</h1>
-      <p class="section-lead">不完全是目录，更像几只抽屉：电影票根、旅行照片、读书回声和某些突然亮起的念头。</p>
+      <p class="section-lead">影评、旅行、读书，和一些突然想写下的东西。</p>
     </header>
 
     <div class="essay-drawers-sentinel" aria-hidden="true"></div>
@@ -190,7 +190,7 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
                             <p>{excerpt}</p>
                             <div class="essay-card__meta">
                               {date && <time>{date}</time>}
-                              {gallery && <a href={gallery.href}>对应图集 · {gallery.title}</a>}
+                              {gallery && <a href={gallery.href}>图集 · {gallery.title}</a>}
                             </div>
                           </div>
                         </article>
@@ -218,7 +218,7 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
                 <span class="year-watchlist__copy">
                   <span>2026 · Viewing log</span>
                   <strong>2026 观影清单</strong>
-                  <small>{watchlist2026.length} 部已看，沿着这一年的银幕继续往前。</small>
+                  <small>今年已经看了 {watchlist2026.length} 部。</small>
                 </span>
                 <span class="year-watchlist__action">查看清单 <i aria-hidden="true">↗</i></span>
               </a>

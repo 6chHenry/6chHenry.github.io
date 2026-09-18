@@ -128,7 +128,7 @@ const paths: Array<{
     index: '01',
     icon: 'leaf' as const,
     title: '认识我',
-    description: '我的坐标、兴趣与正在寻找的问题',
+    description: '我是谁，最近在想什么',
     href: `${base}about/`,
     lift: '10.625rem',
     tree: 'lantern',
@@ -138,7 +138,7 @@ const paths: Array<{
     index: '02',
     icon: 'book' as const,
     title: '翻阅笔记',
-    description: 'AI、数学与工程学习留下的知识年轮',
+    description: 'AI、数学和工程，学的时候留下的',
     href: `${base}notes/`,
     lift: '7.75rem',
     tree: 'oak',
@@ -153,7 +153,7 @@ const paths: Array<{
     index: '03',
     icon: 'pen' as const,
     title: '读些杂谈',
-    description: '旅行、电影与生活片段的私人标本',
+    description: '旅行、电影，和一些过日子的边角',
     href: `${base}essay/`,
     lift: '4.875rem',
     tree: 'blossom',
@@ -168,7 +168,7 @@ const paths: Array<{
     index: '04',
     icon: 'code' as const,
     title: '看看作品',
-    description: '从模型到界面，把想法做成可体验的作品',
+    description: '从模型到界面，做过的一些东西',
     href: `${base}projects/`,
     lift: '2.25rem',
     tree: 'sapling',
@@ -182,7 +182,7 @@ const paths: Array<{
 ];
 ---
 
-<BaseLayout title="6ch. · 林间笔记" description="在森林般的宽阔里，记录 AI、视觉与思考的片段" bodyClass="page-home">
+<BaseLayout title="6ch. · 林间笔记" description="学习、旅行，和一些随手记下的想法。" bodyClass="page-home">
   <section class="home-hero">
     <div class="home-sky" aria-hidden="true"></div>
     <div class="home-stars" aria-hidden="true"></div>
@@ -212,21 +212,19 @@ const paths: Array<{
       <div class="home-avatar-wrap">
         <img class="home-avatar" src={`${base}img/avatar1.jpg`} alt="6ch." width="124" height="124" />
       </div>
-      <p class="home-eyebrow">Forest Journal · Personal Archive</p>
       <h1 class="home-title"><span>6ch.</span></h1>
-      <p class="home-tagline">AI / Embodied Intelligence / Travel Notes / Self-directed Inquiry</p>
+      <p class="home-tagline">AI / 具身智能 / 旅行</p>
       <p class="home-subtitle">
         上海交通大学 · 人工智能学院<br />
-        把学习、工程和旅行记忆整理成一片可以反复进入的林地。
+        学习、工程和旅行，想看的时候再进来翻。
       </p>
     </div>
   </section>
 
   <section class="home-trail" aria-labelledby="home-trail-title">
     <header class="home-trail__header">
-      <p class="section-kicker">Trailhead · 林地入口</p>
+      <p class="section-kicker">从这儿走</p>
       <h2 id="home-trail-title">选一条路，往林子里走</h2>
-      <p class="home-trail__lead">这不是一张站点地图，而是四条进入我的路径。</p>
     </header>
 
     <nav class="home-trail__nav" aria-label="探索入口">
@@ -286,17 +284,16 @@ const paths: Array<{
     </nav>
 
     <footer class="home-trail__footer">
-      <p><span>Archive note</span> · 内容仍在生长，路径会随我一起改变。</p>
       <button type="button" class="home-trail__stats" id="home-stats-toggle" aria-expanded="false" aria-controls="statistics">
         <ForestIcon name="tree" />
-        <span>查看这片林的年轮</span>
+        <span>这站开了多久</span>
       </button>
     </footer>
 
     <div id="statistics" class="home-stats" role="region" aria-label="站点统计">
       <div class="home-stats__inner">
         <ul>
-          <li>从第一颗种子到现在 <span id="web-time"></span></li>
+          <li>开站到现在 <span id="web-time"></span></li>
         </ul>
       </div>
     </div>
@@ -307,12 +304,10 @@ const paths: Array<{
       <section class="trace-section" aria-labelledby="trace-section-title">
         <header class="trace-section__header">
           <div>
-            <p class="section-kicker">Recent traces</p>
-            <h2 class="section-title" id="trace-section-title">最近留下的痕迹</h2>
-            <p class="section-lead">按时间拾起最近的八次更新，看这片林正在往哪里生长。</p>
+            <h2 class="section-title" id="trace-section-title">最近留下的</h2>
           </div>
           <p class="trace-section__count">
-            <span>{String(recent.length).padStart(2, '0')}</span> 条新痕迹
+            <span>{String(recent.length).padStart(2, '0')}</span> 条新的
           </p>
         </header>
         <ol class="trace-list">

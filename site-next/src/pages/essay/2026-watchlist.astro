@@ -25,7 +25,7 @@ function withBase(path: string): string {
       <div class="watchlist-masthead__copy">
         <p class="section-kicker">Viewing notes · 2026</p>
         <h1><span>2026</span> 观影清单</h1>
-        <p>把今年看过的故事贴进手账。没有排名，只按遇见它们的次序留下一页。</p>
+        <p>今年看过的，按遇见的顺序排，没有排名。</p>
       </div>
 
       <div class="watchlist-count" aria-label={`今年已看 ${watchlist2026.length} 部`}>
@@ -56,7 +56,7 @@ function withBase(path: string): string {
                 <span class="watchlist-item__number">{String(index + 1).padStart(2, '0')}</span>
 
                 <div class="watchlist-item__copy">
-                  <span class="watchlist-item__meta">{reviewHref ? '已看 · 留有影评' : '已看 · 观影记录'}</span>
+                  <span class="watchlist-item__meta">{reviewHref ? '已看 · 有影评' : '已看'}</span>
                   <h2>《{film.title}》</h2>
                   {film.description && <p class="watchlist-item__description">{film.description}</p>}
 
@@ -67,12 +67,7 @@ function withBase(path: string): string {
                         <path d="M6 14 14 6m-6 0h6v6" />
                       </svg>
                     </a>
-                  ) : (
-                    <span class="watchlist-item__seen">
-                      <i aria-hidden="true"></i>
-                      已收录
-                    </span>
-                  )}
+                  ) : null}
                 </div>
 
                 <figure class="watchlist-poster">
@@ -95,7 +90,7 @@ function withBase(path: string): string {
 
     <footer class="watchlist-footer">
       <span>To be continued</span>
-      <p>片单仍在继续。</p>
+      <p>以后还会加。</p>
     </footer>
   </section>
 </BaseLayout>

@@ -49,9 +49,9 @@ const records: TagRecord[] = [...collected.entries()]
 const maxCount = Math.max(...records.map((r) => r.total), 1);
 let pool = [...records];
 const tiers = [
-  { key: 'canopy', en: 'Canopy', label: '乔木层', desc: '反复回到的主题', test: (n: number) => n >= Math.ceil(maxCount * 0.38) },
-  { key: 'shrub', en: 'Shrub', label: '灌木层', desc: '时常路过的岔径', test: (n: number) => n >= 2 },
-  { key: 'moss', en: 'Moss', label: '苔藓层', desc: '一次相遇留下的痕迹', test: () => true },
+  { key: 'canopy', en: 'Canopy', label: '乔木层', desc: '写得最多的', test: (n: number) => n >= Math.ceil(maxCount * 0.38) },
+  { key: 'shrub', en: 'Shrub', label: '灌木层', desc: '出现过几次的', test: (n: number) => n >= 2 },
+  { key: 'moss', en: 'Moss', label: '苔藓层', desc: '只出现过一次的', test: () => true },
 ].map(({ key, en, label, desc, test }) => {
   const items = pool.filter((r) => test(r.total));
   pool = pool.filter((r) => !test(r.total));
@@ -69,8 +69,7 @@ function leafSize(total: number, floor: number, ceil: number): string {
       <p class="section-kicker">Tags</p>
       <h1>标签</h1>
       <p class="section-lead">
-        同一株气味下的所有去处，像林子一样分了三层：乔木是常回来的主题，灌木是绕过的岔径，
-        苔藓是一次相遇留下的痕迹。每片叶子上的小点，标着它长在哪片林子里。
+        按出现次数分了三层。叶子上的小点，标着它出现在笔记、杂谈还是作品里。
       </p>
     </header>
 
@@ -87,7 +86,7 @@ function leafSize(total: number, floor: number, ceil: number): string {
                   <h2 id={`tag-tier-${tier.key}`}>{tier.label}</h2>
                   <p class="tag-tier__desc">{tier.desc}</p>
                 </div>
-                <span class="tag-tier__count">{tier.items.length} 枚</span>
+                <span class="tag-tier__count">{tier.items.length} 个</span>
               </header>
 
               <ul class="tag-tier__cloud">

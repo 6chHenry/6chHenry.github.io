@@ -154,8 +154,7 @@ const tierHref: Record<string, string> = {
 
 <div class="profile-wrap">
   <p class="profile-caption">
-    <span class="profile-caption__no">图一</span>
-    标签林相图 · Forest Profile —— 悬停任意叶片可直接跳到对应标签；分层标注可点，跳到下方清单。
+    点叶子去对应标签；点左侧分层名，跳到下面的清单。
   </p>
 
   <div class="profile-scroll">
@@ -252,16 +251,15 @@ const tierHref: Record<string, string> = {
         <path d="M648 606 q8 20 22 30 M648 606 q-6 26 -18 36" />
       </g>
       <circle cx="356" cy="666" r="4" fill="var(--fp-seed)" />
-      <text class="fp-soil-note" x="480" y="671">根须在土里把这一切悄悄连在一起</text>
 
       {/* ── 左侧分层标尺 ── */}
       {
         [
-          { tier: byKey.get('canopy'), y: 104, note: '离地最高处' },
-          { tier: byKey.get('shrub'), y: 270, note: '齐腰的高度' },
-          { tier: byKey.get('moss'), y: 416, note: '贴地的湿度' },
+          { tier: byKey.get('canopy'), y: 104 },
+          { tier: byKey.get('shrub'), y: 270 },
+          { tier: byKey.get('moss'), y: 416 },
         ].map(
-          ({ tier, y, note }) =>
+          ({ tier, y }) =>
             tier && (
               <a class="fp-layer-label" href={tierHref[tier.key]}>
                 <text class="fp-layer-en" x="26" y={y}>
@@ -270,11 +268,8 @@ const tierHref: Record<string, string> = {
                 <text class="fp-layer-name" x="24" y={y + 26}>
                   {tier.label}
                 </text>
-                <text class="fp-layer-note" x="24" y={y + 46}>
-                  {note}
-                </text>
-                <text class="fp-layer-count" x="24" y={y + 66}>
-                  {tier.items.length} 枚 ↓
+                <text class="fp-layer-count" x="24" y={y + 50}>
+                  {tier.items.length} 个 ↓
                 </text>
               </a>
             ),

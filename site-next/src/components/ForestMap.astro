@@ -8,7 +8,6 @@ interface Props {
 interface GroveView {
   collection: string;
   index: string;
-  label: string;
   title: string;
   desc: string;
   href: string;
@@ -25,9 +24,8 @@ const groveConfig = [
   {
     collection: 'notes',
     index: '01',
-    label: 'Notes Grove',
     title: '笔记林',
-    desc: '课程、研究和技术路线沉积成主干。',
+    desc: '课、研究，还有一些技术笔记。',
     href: `${base}notes/`,
     x: 22,
     y: 68,
@@ -35,9 +33,8 @@ const groveConfig = [
   {
     collection: 'essay',
     index: '02',
-    label: 'Essay Grove',
     title: '杂谈林',
-    desc: '旅行、生活和自我观察保留季节感。',
+    desc: '旅行、生活，和一些自己的话。',
     href: `${base}essay/`,
     x: 72,
     y: 28,
@@ -45,9 +42,8 @@ const groveConfig = [
   {
     collection: 'projects',
     index: '03',
-    label: 'Project Grove',
     title: '项目林',
-    desc: '原型、实验和工程实践长出新的枝条。',
+    desc: '原型、实验，和做过的项目。',
     href: `${base}projects/`,
     x: 52,
     y: 59,
@@ -70,11 +66,7 @@ const groves: GroveView[] = groveConfig.map((grove) => {
 
 <section class="forest-map" aria-labelledby="forest-map-title">
   <div class="container forest-map__intro">
-    <p class="section-kicker">Forest Atlas</p>
-    <h2 id="forest-map-title" class="section-title">汉字森林 · 林径地图</h2>
-    <p class="section-lead forest-map__lead">
-      把学习、旅行和作品收在同一片林里：有些念头长成树，有些经历留下路，回头看时便能沿着尾迹找回当时的风。
-    </p>
+    <h2 id="forest-map-title" class="section-title">汉字地图</h2>
   </div>
 
   <div class="container forest-map__panel" data-forest-map data-view="overview" data-active-grove="overview">
@@ -121,7 +113,7 @@ const groves: GroveView[] = groveConfig.map((grove) => {
 
           <div class="forest-map__trailhead" aria-hidden="true">
             <i></i>
-            <span>林口<br /><small>YOU ARE HERE</small></span>
+            <span>你在这儿</span>
           </div>
 
           <div class="forest-map__grove-landmarks" aria-label="内容林地">
@@ -133,12 +125,12 @@ const groves: GroveView[] = groveConfig.map((grove) => {
                   type="button"
                   data-grove-trigger={grove.collection}
                   style={`--landmark-x: ${grove.x}%; --landmark-y: ${grove.y}%;`}
-                  aria-label={`进入${grove.title}，${grove.count} 棵树`}
+                  aria-label={`进入${grove.title}，${grove.count} 篇`}
                 >
                   <span class="forest-map__landmark-index" aria-hidden="true">{grove.index}</span>
                   <span class="forest-map__landmark-copy">
                     <strong>{grove.title}</strong>
-                    <em>{grove.count} 棵树</em>
+                    <em>{grove.count} 篇</em>
                   </span>
                 </button>
               ))
@@ -147,7 +139,7 @@ const groves: GroveView[] = groveConfig.map((grove) => {
         </div>
 
         <button class="forest-map__back" type="button" data-forest-back>
-          <span aria-hidden="true">←</span> 回到林径
+          <span aria-hidden="true">←</span> 回到地图
         </button>
 
         {
@@ -162,7 +154,6 @@ const groves: GroveView[] = groveConfig.map((grove) => {
               inert
             >
               <div class="forest-map__grove-caption">
-                <span>{grove.label}</span>
                 <h3>{grove.title}</h3>
                 <p>{grove.desc}</p>
               </div>

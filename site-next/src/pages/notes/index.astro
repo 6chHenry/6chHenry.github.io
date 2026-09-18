@@ -51,11 +51,11 @@ function stageOf(latestTs: number, now: number): GrowthStage {
 
 function formatWatered(ts: number, now: number): string {
   const days = Math.max(0, Math.floor((now - ts) / DAY));
-  if (days <= 0) return '今天浇过水';
-  if (days < 30) return `${days} 天前浇水`;
-  if (days < 365) return `${Math.round(days / 30.44)} 个月前浇水`;
+  if (days <= 0) return '今天刚动过';
+  if (days < 30) return `${days} 天前`;
+  if (days < 365) return `${Math.round(days / 30.44)} 个月前`;
   const years = Math.floor(days / 365);
-  return years === 1 ? '1 年前浇水' : `${years} 年前浇水`;
+  return years === 1 ? '1 年前' : `${years} 年前`;
 }
 
 const now = Date.now();
@@ -138,7 +138,7 @@ if (looseLeaves.length > 0) {
 
   beds.push({
     slugPath: ['scattered'],
-    title: '散落的种子',
+    title: '还没归类的',
     kind: 'loose',
     count: looseLeaves.length,
     latestTs,
@@ -172,9 +172,9 @@ const freshPicks = sortByRecency(entries)
   <section class="container page-shell notes-garden">
     <header class="page-header">
       <p class="section-kicker">Notes</p>
-      <h1>苗圃</h1>
+      <h1>笔记</h1>
       <p class="section-lead">
-        笔记按畦栽种：门口是刚浇过水的新芽，往里每一畦都标着最近一次照料的时间。点开一畦，就能看到里面全部的枝条。
+        按主题放在一起。上面是最近动过的，点开一组能看到里面全部。
       </p>
     </header>
 
@@ -187,7 +187,7 @@ const freshPicks = sortByRecency(entries)
               <path d="M8 7.4C8 4.9 6.2 3.2 3.2 3.2c0 2.9 1.9 4.6 4.8 4.2Z" fill="currentColor" opacity=".85" />
               <path d="M8 7.4c0-2.1 1.5-3.4 4.4-3.4 0 2.5-1.8 3.7-4.4 3.4Z" fill="currentColor" opacity=".55" />
             </svg>
-            最近浇水
+            最近动过
           </p>
           <ul class="notes-fresh__grid">
             {freshPicks.map((pick) => (
