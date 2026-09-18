@@ -41,12 +41,14 @@ const meta = {
 };
 ---
 
-<a
-  href={href}
+<article
   class="gallery-card"
   data-category={category}
   data-gallery-slug={slug}
   data-gallery-meta={JSON.stringify(meta)}
+  tabindex="0"
+  role="button"
+  aria-label={`预览 ${title}`}
   style={`animation-delay: ${index * 0.08}s`}
 >
   <GalleryImage
@@ -62,4 +64,11 @@ const meta = {
     <h2 class="gallery-card__title">{title}</h2>
     {description && <p class="gallery-card__desc">{description}</p>}
   </div>
-</a>
+  <a class="gallery-card__enter" href={href} aria-label={`进入 ${title}`}>
+    <span>进入</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
+    </svg>
+  </a>
+</article>

@@ -6,6 +6,7 @@ import GalleryImage from '../../components/GalleryImage.astro';
 import GalleryLightbox from '../../components/GalleryLightbox.astro';
 import { buildContentUrl, formatDate, sortByRecency } from '../../utils/content';
 import { TRIP_CITIES, mergeChapters } from '../../data/gallery-trips';
+import { resolveGalleryImages } from '../../utils/gallery-images';
 
 const hiddenCities = new Set(['osaka', 'kyoto', 'nara', 'uji', 'kobe', 'himeji', 'guangzhou', 'hong-kong', 'macau', 'wuhan', 'lushan', 'nanchang']);
 const base = import.meta.env.BASE_URL;
@@ -62,6 +63,22 @@ const countImages = (slug: string) => {
     const entry = entryBySlug.get(member);
     return sum + (entry ? entry.data.images.length + 1 : 0);
   }, 0);
+};
+
+const tripLightboxMeta = (slug: string) => {
+  const entry = entryBySlug.get(slug);
+  if (!entry) return '';
+  const { images, imageDescs, chapters } = collectTripGallery(slug, entry);
+  return JSON.stringify({
+    images: resolveGalleryImages(images),
+    imageDescs,
+    chapters,
+    title: entry.data.title,
+    description: entry.data.description ?? '',
+    category: entry.data.category,
+    date: entry.data.date ? formatDate(entry.data.date) : '',
+    detailUrl: entryHref(entry.id),
+  });
 };
 
 const categories = ['illustration', 'photography', 'design', 'ui-ux', 'other'] as const;
@@ -212,14 +229,17 @@ const futureMonth = 10;
           <!-- Trip nodes -->
           {
             timeline.map((trip, i) => (
-              <a
-                href={trip.href}
+              <div
                 class:list={[
                   'trip-timeline__node',
                   `trip-timeline__node--${trip.side}`,
                 ]}
                 data-trip-target={trip.gallerySlug}
-                aria-label={`打开 ${trip.title}，${trip.cities} 城，${trip.images} 张照片`}
+                data-gallery-meta={tripLightboxMeta(trip.gallerySlug)}
+                data-gallery-index="0"
+                tabindex="0"
+                role="button"
+                aria-label={`预览 ${trip.title}，${trip.cities} 城，${trip.images} 张照片`}
                 style={`--trip-color: ${trip.color}; --trip-left: ${monthPosition(trip.month)}%`}
               >
                 <div class="trip-timeline__stem" aria-hidden="true"></div>
@@ -244,8 +264,14 @@ const futureMonth = 10;
                       <span>{trip.images} 张</span>
                     </span>
                   </div>
+                  <a class="trip-timeline__enter" href={trip.href} aria-label={`进入 ${trip.title}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </a>
                 </div>
-              </a>
+              </div>
             ))
           }
 
@@ -451,6 +477,7 @@ const futureMonth = 10;
     width: var(--trip-card);
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
     z-index: 1;
     transform: translateX(-50%);
     transition: transform 0.3s ease;
@@ -588,7 +615,7 @@ const futureMonth = 10;
   }
 
   .trip-timeline__card-body {
-    padding: 0.55rem 0.7rem 0.65rem;
+    padding: 0.55rem 1.85rem 0.65rem 0.7rem;
   }
 
   .trip-timeline__title {
@@ -629,6 +656,40 @@ const futureMonth = 10;
     border-radius: 999px;
     background: color-mix(in srgb, var(--trip-color) 9%, var(--ch-surface-solid));
     border: 1px solid color-mix(in srgb, var(--trip-color) 16%, var(--ch-glass-border));
+  }
+
+  .trip-timeline__enter {
+    position: absolute;
+    right: 0.45rem;
+    bottom: 0.45rem;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.45rem;
+    height: 1.45rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--trip-color) 28%, var(--ch-glass-border));
+    background: color-mix(in srgb, var(--ch-surface-solid) 82%, transparent);
+    color: var(--trip-color);
+    text-decoration: none;
+    opacity: 0;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .trip-timeline__enter svg {
+    width: 0.72rem;
+    height: 0.72rem;
+  }
+
+  .trip-timeline__node:hover .trip-timeline__enter,
+  .trip-timeline__node:focus-visible .trip-timeline__enter,
+  .trip-timeline__node.is-linked .trip-timeline__enter {
+    opacity: 1;
+    transform: translateY(-1px);
   }
 
   /* ---- 未完待续 ---- */
@@ -761,6 +822,10 @@ const futureMonth = 10;
       max-width: 100%;
       margin: 0;
       transform: none;
+    }
+
+    .trip-timeline__enter {
+      opacity: 1;
     }
 
     .trip-timeline__card-img {

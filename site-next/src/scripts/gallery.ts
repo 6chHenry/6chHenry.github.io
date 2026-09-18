@@ -295,26 +295,62 @@ export function initGalleryLightbox() {
     if (currentIndex < (currentMeta?.images.length ?? 1) - 1) showImage(currentIndex + 1);
   };
 
-  document.addEventListener('click', (event) => {
-    const btn = (event.target as HTMLElement).closest<HTMLElement>('[data-gallery-meta]');
-    if (!btn) return;
-    if ((event.target as HTMLElement).closest('.gallery-card')) {
-      event.preventDefault();
-    }
+  const DETAIL_ENTER = '.gallery-card__enter, .trip-timeline__enter';
+  const PREVIEW_HOST = '.gallery-card, .trip-timeline__node';
+  let previewTimer: number | null = null;
 
-    const rawMeta = btn.dataset.galleryMeta;
-    if (!rawMeta) return;
-
-    let meta: GalleryMeta;
+  const readMeta = (host: HTMLElement): GalleryMeta | null => {
+    const rawMeta = host.dataset.galleryMeta;
+    if (!rawMeta) return null;
     try {
-      meta = JSON.parse(rawMeta);
+      const meta = JSON.parse(rawMeta) as GalleryMeta;
+      if (!meta.images || meta.images.length === 0) return null;
+      return meta;
     } catch {
+      return null;
+    }
+  };
+
+  const openFromHost = (host: HTMLElement) => {
+    const meta = readMeta(host);
+    if (!meta) return;
+    const startIdx = parseInt(host.dataset.galleryIndex || '0', 10);
+    open(meta, startIdx);
+  };
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    if (target.closest(DETAIL_ENTER)) return;
+
+    const btn = target.closest<HTMLElement>('[data-gallery-meta]');
+    if (!btn || btn.closest('#gallery-lightbox')) return;
+
+    event.preventDefault();
+    if (btn.matches(PREVIEW_HOST)) {
+      if (previewTimer) window.clearTimeout(previewTimer);
+      previewTimer = window.setTimeout(() => {
+        previewTimer = null;
+        openFromHost(btn);
+      }, 180);
       return;
     }
 
-    if (!meta.images || meta.images.length === 0) return;
-    const startIdx = parseInt(btn.dataset.galleryIndex || '0', 10);
-    open(meta, startIdx);
+    openFromHost(btn);
+  });
+
+  document.addEventListener('dblclick', (event) => {
+    const target = event.target as HTMLElement;
+    if (target.closest(DETAIL_ENTER)) return;
+    const host = target.closest<HTMLElement>(PREVIEW_HOST);
+    if (!host) return;
+    if (previewTimer) {
+      window.clearTimeout(previewTimer);
+      previewTimer = null;
+    }
+    const meta = readMeta(host);
+    if (!meta?.detailUrl) return;
+    event.preventDefault();
+    window.location.href = meta.detailUrl;
   });
 
   lightbox.querySelector('.glbx__backdrop')?.addEventListener('click', close);
@@ -329,7 +365,14 @@ export function initGalleryLightbox() {
   });
 
   document.addEventListener('keydown', (event) => {
-    if (lightbox.hidden) return;
+    if (lightbox.hidden) {
+      const host = event.target as HTMLElement;
+      if ((event.key === 'Enter' || event.key === ' ') && host.matches?.(PREVIEW_HOST)) {
+        event.preventDefault();
+        openFromHost(host);
+      }
+      return;
+    }
     if (event.key === 'Escape') {
       event.preventDefault();
       close();
