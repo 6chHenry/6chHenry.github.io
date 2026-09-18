@@ -121,6 +121,9 @@ export function initGalleryLightbox() {
   const stopEl = lightbox.querySelector<HTMLElement>('.glbx__stop');
   const stopKanji = lightbox.querySelector<HTMLElement>('.glbx__stop-kanji');
   const stopEn = lightbox.querySelector<HTMLElement>('.glbx__stop-en');
+  const filmEl = lightbox.querySelector<HTMLElement>('.glbx__film');
+  const filmTrack = lightbox.querySelector<HTMLElement>('.glbx__film-track');
+  const imageArea = lightbox.querySelector<HTMLElement>('.glbx__image-area');
 
   let loaded = false;
 
@@ -156,6 +159,50 @@ export function initGalleryLightbox() {
     if (imageDescEl) imageDescEl.textContent = currentMeta.imageDescs?.[index] ?? '';
     if (prevBtn) prevBtn.style.visibility = index > 0 ? '' : 'hidden';
     if (nextBtn) nextBtn.style.visibility = index < currentMeta.images.length - 1 ? '' : 'hidden';
+    updateFilm(index);
+  };
+
+  const renderFilm = () => {
+    if (!filmEl || !filmTrack || !currentMeta) return;
+    const chapters = currentMeta.chapters ?? [];
+    const showGaps = chapters.length > 1;
+    const starts = new Set(chapters.map((chapter) => chapter.start));
+    filmTrack.replaceChildren();
+
+    currentMeta.images.forEach((asset, index) => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'glbx__film-item';
+      if (showGaps && starts.has(index) && index > 0) item.classList.add('is-chapter-start');
+      item.dataset.index = String(index);
+      item.setAttribute('aria-label', `第 ${index + 1} 张`);
+      const thumb = document.createElement('img');
+      thumb.alt = '';
+      thumb.loading = 'lazy';
+      if (asset.webpSrcset) {
+        thumb.srcset = asset.webpSrcset;
+        thumb.sizes = '48px';
+      }
+      thumb.src = asset.src;
+      item.appendChild(thumb);
+      filmTrack.appendChild(item);
+    });
+
+    const showFilm = currentMeta.images.length > 1;
+    filmEl.hidden = !showFilm;
+    imageArea?.classList.toggle('has-film', showFilm);
+  };
+
+  const updateFilm = (index: number) => {
+    if (!filmTrack) return;
+    const items = filmTrack.querySelectorAll<HTMLElement>('.glbx__film-item');
+    items.forEach((item, itemIndex) => {
+      const active = itemIndex === index;
+      item.classList.toggle('is-active', active);
+      if (active) {
+        item.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+      }
+    });
   };
 
   const preloadAdjacent = (index: number) => {
@@ -221,6 +268,7 @@ export function initGalleryLightbox() {
     if (dateEl) dateEl.textContent = meta.date || '';
     if (detailBtn) detailBtn.href = meta.detailUrl;
 
+    renderFilm();
     showImage(startIndex);
     lightbox.hidden = false;
     document.body.classList.add('glbx-open');
@@ -234,6 +282,9 @@ export function initGalleryLightbox() {
     currentMeta = null;
     currentIndex = 0;
     loaded = false;
+    filmTrack?.replaceChildren();
+    imageArea?.classList.remove('has-film');
+    if (filmEl) filmEl.hidden = true;
   };
 
   const prev = () => {
@@ -270,6 +321,12 @@ export function initGalleryLightbox() {
   lightbox.querySelector('.glbx__close')?.addEventListener('click', close);
   prevBtn?.addEventListener('click', prev);
   nextBtn?.addEventListener('click', next);
+  filmTrack?.addEventListener('click', (event) => {
+    const item = (event.target as HTMLElement).closest<HTMLElement>('.glbx__film-item');
+    if (!item) return;
+    const index = parseInt(item.dataset.index || '0', 10);
+    showImage(index);
+  });
 
   document.addEventListener('keydown', (event) => {
     if (lightbox.hidden) return;

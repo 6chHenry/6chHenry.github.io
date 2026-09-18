@@ -425,7 +425,7 @@ body.glbx-open .site-footer {
   bottom: 0.75rem;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2;
+  z-index: 3;
   padding: 0.28rem 0.65rem;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, #fff 12%, transparent);
@@ -436,6 +436,87 @@ body.glbx-open .site-footer {
   font-size: 0.7rem;
   letter-spacing: 0.1em;
   color: color-mix(in srgb, #fff 78%, transparent);
+}
+
+.glbx__image-area.has-film .glbx__counter {
+  bottom: 3.55rem;
+}
+
+/* ---- Film strip ---- */
+.glbx__film {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 1.4rem 0.65rem 0.55rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.2) 62%, transparent);
+}
+
+.glbx__film[hidden] {
+  display: none;
+}
+
+.glbx__film-track {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.28rem;
+  overflow-x: auto;
+  padding: 0.4rem 0.1rem 0.1rem;
+  scrollbar-width: none;
+}
+
+.glbx__film-track::-webkit-scrollbar {
+  display: none;
+}
+
+.glbx__film-item {
+  flex: 0 0 auto;
+  width: 2.45rem;
+  height: 2.45rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, #fff 16%, transparent);
+  border-radius: 0.32rem;
+  overflow: hidden;
+  background: #111;
+  cursor: pointer;
+  opacity: 0.5;
+  transform: translateY(3px);
+  transition:
+    opacity var(--ch-transition-fast),
+    transform var(--ch-transition-fast),
+    border-color var(--ch-transition-fast),
+    box-shadow var(--ch-transition-fast);
+}
+
+.glbx__film-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.glbx__film-item.is-active {
+  opacity: 1;
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, #fff 82%, transparent);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.38);
+}
+
+.glbx__film-item.is-chapter-start {
+  margin-left: 0.62rem;
+  position: relative;
+}
+
+.glbx__film-item.is-chapter-start::before {
+  content: '';
+  position: absolute;
+  left: -0.46rem;
+  top: 18%;
+  bottom: 18%;
+  width: 1px;
+  background: color-mix(in srgb, #fff 22%, transparent);
+  pointer-events: none;
 }
 
 /* ---- Info panel ---- */
@@ -666,6 +747,15 @@ body.glbx-open .site-footer {
   .glbx__nav {
     opacity: 0.55;
   }
+
+  .glbx__film-item {
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+
+  .glbx__image-area.has-film .glbx__counter {
+    bottom: 3.1rem;
+  }
 }
 
 /* ---- Detail page ---- */
@@ -833,6 +923,11 @@ body.glbx-open .site-footer {
   .glbx__stop {
     animation: none;
     opacity: 1;
+  }
+
+  .glbx__film-item,
+  .glbx__film-item.is-active {
+    transform: none;
   }
 
   .gallery-card,
