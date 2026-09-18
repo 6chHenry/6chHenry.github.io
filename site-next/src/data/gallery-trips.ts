@@ -1,29 +1,36 @@
+export interface CityStop {
+  kanji: string;
+  en: string;
+  color: string;
+}
+
 export interface GalleryChapter {
   slug: string;
   kanji: string;
   en: string;
+  color: string;
   start: number;
   count: number;
 }
 
-export const CITY_STOPS: Record<string, { kanji: string; en: string }> = {
-  osaka: { kanji: '大阪', en: 'Osaka' },
-  nara: { kanji: '奈良', en: 'Nara' },
-  uji: { kanji: '宇治', en: 'Uji' },
-  kyoto: { kanji: '京都', en: 'Kyoto' },
-  kobe: { kanji: '神戸', en: 'Kobe' },
-  himeji: { kanji: '姫路', en: 'Himeji' },
-  guangzhou: { kanji: '广州', en: 'Guangzhou' },
-  macau: { kanji: '澳门', en: 'Macau' },
-  'hong-kong': { kanji: '香港', en: 'Hong Kong' },
-  wuhan: { kanji: '武汉', en: 'Wuhan' },
-  lushan: { kanji: '庐山', en: 'Lushan' },
-  nanchang: { kanji: '南昌', en: 'Nanchang' },
-  taiyuan: { kanji: '太原', en: 'Taiyuan' },
-  datong: { kanji: '大同', en: 'Datong' },
-  qingdao: { kanji: '青岛', en: 'Qingdao' },
-  yantai: { kanji: '烟台', en: 'Yantai' },
-  geermu: { kanji: '格尔木', en: 'Golmud' },
+export const CITY_STOPS: Record<string, CityStop> = {
+  osaka: { kanji: '大阪', en: 'Osaka', color: '#e60012' },
+  nara: { kanji: '奈良', en: 'Nara', color: '#8b4513' },
+  uji: { kanji: '宇治', en: 'Uji', color: '#4a9e6e' },
+  kyoto: { kanji: '京都', en: 'Kyoto', color: '#5a9e4b' },
+  kobe: { kanji: '神戸', en: 'Kobe', color: '#0066b3' },
+  himeji: { kanji: '姫路', en: 'Himeji', color: '#9e9e9e' },
+  guangzhou: { kanji: '广州', en: 'Guangzhou', color: '#c41e3a' },
+  macau: { kanji: '澳门', en: 'Macau', color: '#2d7a5f' },
+  'hong-kong': { kanji: '香港', en: 'Hong Kong', color: '#1a5276' },
+  wuhan: { kanji: '武汉', en: 'Wuhan', color: '#4a90d9' },
+  lushan: { kanji: '庐山', en: 'Lushan', color: '#2d6a4f' },
+  nanchang: { kanji: '南昌', en: 'Nanchang', color: '#c0392b' },
+  taiyuan: { kanji: '太原', en: 'Taiyuan', color: '#8a6a34' },
+  datong: { kanji: '大同', en: 'Datong', color: '#96522c' },
+  qingdao: { kanji: '青岛', en: 'Qingdao', color: '#1a5276' },
+  yantai: { kanji: '烟台', en: 'Yantai', color: '#c2571d' },
+  geermu: { kanji: '格尔木', en: 'Golmud', color: '#2d7a5f' },
 };
 
 /* 多城旅程由多个城市条目组成，照片数要逐城累加；单城旅程就是它自己 */
@@ -35,8 +42,8 @@ export const TRIP_CITIES: Record<string, string[]> = {
   'summer-2026-four-cities': ['summer-2026-four-cities'],
 };
 
-export function cityStop(slug: string): { kanji: string; en: string } {
-  return CITY_STOPS[slug] ?? { kanji: slug, en: slug };
+export function cityStop(slug: string): CityStop {
+  return CITY_STOPS[slug] ?? { kanji: slug, en: slug, color: '' };
 }
 
 export function mergeChapters(keys: string[]): GalleryChapter[] {
@@ -53,6 +60,7 @@ export function mergeChapters(keys: string[]): GalleryChapter[] {
       slug: key,
       kanji: stop.kanji,
       en: stop.en,
+      color: stop.color,
       start: index,
       count: 1,
     });

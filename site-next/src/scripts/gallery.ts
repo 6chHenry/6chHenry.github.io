@@ -10,6 +10,7 @@ interface GalleryChapter {
   slug: string;
   kanji: string;
   en: string;
+  color?: string;
   start: number;
   count: number;
 }
@@ -124,8 +125,48 @@ export function initGalleryLightbox() {
   const filmEl = lightbox.querySelector<HTMLElement>('.glbx__film');
   const filmTrack = lightbox.querySelector<HTMLElement>('.glbx__film-track');
   const imageArea = lightbox.querySelector<HTMLElement>('.glbx__image-area');
+  const panel = lightbox.querySelector<HTMLElement>('.glbx__panel');
+  const inspectBtn = lightbox.querySelector<HTMLButtonElement>('.glbx__inspect');
 
   let loaded = false;
+  let inspecting = false;
+  let inspectScale = 1;
+  let inspectX = 0;
+  let inspectY = 0;
+  let dragging = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragOriginX = 0;
+  let dragOriginY = 0;
+
+  const applyInspectTransform = () => {
+    if (!img) return;
+    img.style.transform = inspecting
+      ? `translate(${inspectX}px, ${inspectY}px) scale(${inspectScale})`
+      : '';
+  };
+
+  const resetInspectTransform = () => {
+    inspectScale = inspecting ? 1.28 : 1;
+    inspectX = 0;
+    inspectY = 0;
+    applyInspectTransform();
+  };
+
+  const setInspecting = (next: boolean) => {
+    inspecting = next;
+    lightbox.classList.toggle('is-inspect', inspecting);
+    inspectBtn?.setAttribute('aria-pressed', inspecting ? 'true' : 'false');
+    inspectBtn?.setAttribute('aria-label', inspecting ? '退出放大' : '放大查看');
+    if (!inspecting) {
+      inspectScale = 1;
+      inspectX = 0;
+      inspectY = 0;
+    } else if (inspectScale < 1.15) {
+      inspectScale = 1.28;
+    }
+    applyInspectTransform();
+  };
 
   const chapterAt = (index: number) => {
     const chapters = currentMeta?.chapters;
@@ -155,6 +196,19 @@ export function initGalleryLightbox() {
         stopEl.hidden = true;
       }
     }
+
+    if (panel) {
+      const accent = chapter?.color;
+      if (accent) {
+        panel.style.setProperty('--gb-accent', accent);
+        panel.style.setProperty('--gb-accent-dim', `color-mix(in srgb, ${accent} 16%, transparent)`);
+      } else {
+        panel.style.removeProperty('--gb-accent');
+        panel.style.removeProperty('--gb-accent-dim');
+      }
+    }
+
+    resetInspectTransform();
 
     if (imageDescEl) imageDescEl.textContent = currentMeta.imageDescs?.[index] ?? '';
     if (prevBtn) prevBtn.style.visibility = index > 0 ? '' : 'hidden';
@@ -285,6 +339,9 @@ export function initGalleryLightbox() {
     filmTrack?.replaceChildren();
     imageArea?.classList.remove('has-film');
     if (filmEl) filmEl.hidden = true;
+    panel?.style.removeProperty('--gb-accent');
+    panel?.style.removeProperty('--gb-accent-dim');
+    setInspecting(false);
   };
 
   const prev = () => {
@@ -357,12 +414,52 @@ export function initGalleryLightbox() {
   lightbox.querySelector('.glbx__close')?.addEventListener('click', close);
   prevBtn?.addEventListener('click', prev);
   nextBtn?.addEventListener('click', next);
+  inspectBtn?.addEventListener('click', () => setInspecting(!inspecting));
+  img?.addEventListener('dblclick', () => setInspecting(!inspecting));
   filmTrack?.addEventListener('click', (event) => {
     const item = (event.target as HTMLElement).closest<HTMLElement>('.glbx__film-item');
     if (!item) return;
     const index = parseInt(item.dataset.index || '0', 10);
     showImage(index);
   });
+
+  imageArea?.addEventListener('wheel', (event) => {
+    if (lightbox.hidden || !inspecting) return;
+    event.preventDefault();
+    inspectScale = Math.min(3, Math.max(1, inspectScale + (event.deltaY < 0 ? 0.18 : -0.18)));
+    if (inspectScale === 1) {
+      inspectX = 0;
+      inspectY = 0;
+    }
+    applyInspectTransform();
+  }, { passive: false });
+
+  imageArea?.addEventListener('pointerdown', (event) => {
+    if (!inspecting || event.button !== 0) return;
+    if ((event.target as HTMLElement).closest('button')) return;
+    event.preventDefault();
+    dragging = true;
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    dragOriginX = inspectX;
+    dragOriginY = inspectY;
+    imageArea.classList.add('is-panning');
+    imageArea.setPointerCapture(event.pointerId);
+  });
+
+  imageArea?.addEventListener('pointermove', (event) => {
+    if (!dragging) return;
+    inspectX = dragOriginX + (event.clientX - dragStartX);
+    inspectY = dragOriginY + (event.clientY - dragStartY);
+    applyInspectTransform();
+  });
+
+  const endPan = () => {
+    dragging = false;
+    imageArea?.classList.remove('is-panning');
+  };
+  imageArea?.addEventListener('pointerup', endPan);
+  imageArea?.addEventListener('pointercancel', endPan);
 
   document.addEventListener('keydown', (event) => {
     if (lightbox.hidden) {
@@ -375,7 +472,8 @@ export function initGalleryLightbox() {
     }
     if (event.key === 'Escape') {
       event.preventDefault();
-      close();
+      if (inspecting) setInspecting(false);
+      else close();
     } else if (event.key === 'ArrowLeft') {
       event.preventDefault();
       prev();
@@ -390,6 +488,7 @@ export function initGalleryLightbox() {
   }, { passive: true });
 
   lightbox.addEventListener('touchend', (event) => {
+    if (inspecting) return;
     touchEndX = event.changedTouches[0].screenX;
     const diff = touchStartX - touchEndX;
     if (Math.abs(diff) > 60) {
