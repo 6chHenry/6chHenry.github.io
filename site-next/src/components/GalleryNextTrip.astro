@@ -1,0 +1,191 @@
+---
+import GalleryImage from './GalleryImage.astro';
+import { isGalleryTrip, nextGalleryTrip } from '../data/gallery-trips';
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const inSequence = isGalleryTrip(slug);
+const next = nextGalleryTrip(slug);
+---
+
+{
+  inSequence && (
+    <section class="gallery-next" aria-label="下一程">
+      {
+        next ? (
+          <a class="gallery-next__card" href={`${base}${next.href}`}>
+            <p class="gallery-next__kicker">下一程</p>
+            <div class="gallery-next__row">
+              <div class="gallery-next__img">
+                <GalleryImage
+                  src={next.cover}
+                  alt={next.title}
+                  sizes="7.5rem"
+                  loading="lazy"
+                />
+              </div>
+              <div class="gallery-next__copy">
+                <strong class="gallery-next__title">{next.title}</strong>
+                <span class="gallery-next__en">{next.en}</span>
+                <span class="gallery-next__sub">{next.subtitle}</span>
+              </div>
+              <span class="gallery-next__arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </span>
+            </div>
+          </a>
+        ) : (
+          <p class="gallery-next__end">
+            <span class="gallery-next__kicker">下一程</span>
+            未完待续 · 林还在长
+          </p>
+        )
+      }
+    </section>
+  )
+}
+
+<style>
+  .gallery-next {
+    margin: 4.5rem 0 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--ch-border-soft);
+  }
+
+  .gallery-next__kicker {
+    margin: 0 0 0.85rem;
+    font-family: var(--ch-mono-font);
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ch-fg-muted);
+  }
+
+  .gallery-next__card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    max-width: 28rem;
+  }
+
+  .gallery-next__row {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.7rem;
+    border: 1px solid var(--ch-glass-border);
+    border-radius: var(--ch-radius-sm);
+    background: var(--ch-glass-bg);
+    backdrop-filter: blur(var(--ch-glass-blur));
+    transition:
+      border-color var(--ch-transition-fast),
+      transform var(--ch-transition-fast),
+      box-shadow var(--ch-transition-fast);
+  }
+
+  .gallery-next__card:hover .gallery-next__row,
+  .gallery-next__card:focus-visible .gallery-next__row {
+    border-color: color-mix(in srgb, var(--ch-accent-secondary) 42%, var(--ch-glass-border));
+    transform: translateY(-2px);
+    box-shadow: var(--ch-glow);
+  }
+
+  .gallery-next__card:focus-visible {
+    outline: none;
+  }
+
+  .gallery-next__img {
+    overflow: hidden;
+    border-radius: calc(var(--ch-radius-sm) - 2px);
+    aspect-ratio: 3 / 2;
+  }
+
+  .gallery-next__img :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s ease;
+  }
+
+  .gallery-next__card:hover .gallery-next__img :global(img) {
+    transform: scale(1.05);
+  }
+
+  .gallery-next__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+    min-width: 0;
+  }
+
+  .gallery-next__title {
+    font-family: var(--ch-display-font);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .gallery-next__en {
+    font-family: var(--ch-mono-font);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ch-fg-muted);
+  }
+
+  .gallery-next__sub {
+    font-size: 0.78rem;
+    color: var(--ch-fg-muted);
+    line-height: 1.4;
+  }
+
+  .gallery-next__arrow {
+    display: flex;
+    width: 1.6rem;
+    height: 1.6rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--ch-accent-secondary);
+    opacity: 0.7;
+    transition:
+      opacity var(--ch-transition-fast),
+      transform var(--ch-transition-fast);
+  }
+
+  .gallery-next__arrow svg {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  .gallery-next__card:hover .gallery-next__arrow {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+
+  .gallery-next__end {
+    margin: 0;
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-display-font);
+    letter-spacing: 0.06em;
+  }
+
+  .gallery-next__end .gallery-next__kicker {
+    display: block;
+  }
+
+  @media (max-width: 640px) {
+    .gallery-next__row {
+      grid-template-columns: 5.5rem 1fr auto;
+      gap: 0.75rem;
+    }
+  }
+</style>

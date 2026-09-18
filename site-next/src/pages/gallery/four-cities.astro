@@ -5,6 +5,7 @@ import GalleryLightbox from '../../components/GalleryLightbox.astro';
 import GalleryImage from '../../components/GalleryImage.astro';
 import { resolveGalleryImages } from '../../utils/gallery-images';
 import { mergeChapters } from '../../data/gallery-trips';
+import GalleryNextTrip from '../../components/GalleryNextTrip.astro';
 
 const base = import.meta.env.BASE_URL;
 
@@ -265,6 +266,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
         <a href={`${base}gallery/`}>回到画廊</a>
       </p>
     </footer>
+
+    <GalleryNextTrip slug="summer-2026-four-cities" />
   </section>
 
   <GalleryLightbox />

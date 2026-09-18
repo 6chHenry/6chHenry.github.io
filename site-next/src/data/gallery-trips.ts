@@ -59,3 +59,65 @@ export function mergeChapters(keys: string[]): GalleryChapter[] {
   }
   return chapters;
 }
+
+export interface GalleryTripLink {
+  slug: string;
+  title: string;
+  en: string;
+  subtitle: string;
+  cover: string;
+  href: string;
+}
+
+export const GALLERY_TRIP_SEQUENCE: GalleryTripLink[] = [
+  {
+    slug: 'hubei-jiangxi',
+    title: '鄂赣行记',
+    en: 'Hubei · Jiangxi',
+    subtitle: '武汉 · 庐山 · 南昌',
+    cover: '/assets/gallery/photography/wuhan.assets/yellow_crane_tower.jpg',
+    href: 'gallery/hubei-jiangxi/',
+  },
+  {
+    slug: 'geermu',
+    title: '格尔木',
+    en: 'Golmud',
+    subtitle: '察尔汗盐湖 · 昆仑山',
+    cover: '/assets/gallery/photography/geermu.assets/qarhan_saltlake_1.jpg',
+    href: 'gallery/photography/geermu/',
+  },
+  {
+    slug: 'greater-bay-area',
+    title: '粤港澳三城游',
+    en: 'Greater Bay Area',
+    subtitle: '广州 · 澳门 · 香港',
+    cover: '/assets/gallery/photography/guangzhou.assets/Yat-sen_Mausoleum_front.JPG',
+    href: 'gallery/bay-area/',
+  },
+  {
+    slug: 'japan',
+    title: '関西旅路',
+    en: 'Kansai Journey',
+    subtitle: '大阪 · 奈良 · 宇治 · 京都 · 神户 · 姬路',
+    cover: '/assets/gallery/photography/osaka.assets/glico.jpg',
+    href: 'gallery/japan/',
+  },
+  {
+    slug: 'summer-2026-four-cities',
+    title: '山之东西',
+    en: 'Shanxi · Shandong',
+    subtitle: '太原 · 大同 · 青岛 · 烟台',
+    cover: '/assets/gallery/photography/summer-2026-four-cities.assets/qingdao_05.jpg',
+    href: 'gallery/four-cities/',
+  },
+];
+
+export function nextGalleryTrip(slug: string): GalleryTripLink | null {
+  const index = GALLERY_TRIP_SEQUENCE.findIndex((trip) => trip.slug === slug);
+  if (index < 0) return null;
+  return GALLERY_TRIP_SEQUENCE[index + 1] ?? null;
+}
+
+export function isGalleryTrip(slug: string): boolean {
+  return GALLERY_TRIP_SEQUENCE.some((trip) => trip.slug === slug);
+}

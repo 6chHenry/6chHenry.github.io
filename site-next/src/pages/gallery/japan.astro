@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import GalleryLightbox from '../../components/GalleryLightbox.astro';
 import GalleryImage from '../../components/GalleryImage.astro';
+import GalleryNextTrip from '../../components/GalleryNextTrip.astro';
 import { resolveGalleryImage, resolveGalleryImages } from '../../utils/gallery-images';
 
 const base = import.meta.env.BASE_URL;
@@ -194,6 +195,8 @@ const cities = cityOrder
         );
       })
     }
+
+    <GalleryNextTrip slug="japan" />
   </section>
 
   <GalleryLightbox />

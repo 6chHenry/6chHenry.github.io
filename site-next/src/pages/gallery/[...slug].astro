@@ -3,6 +3,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import GalleryLightbox from '../../components/GalleryLightbox.astro';
 import GalleryImage from '../../components/GalleryImage.astro';
+import GalleryNextTrip from '../../components/GalleryNextTrip.astro';
 import { formatDate, normalizeSlug } from '../../utils/content';
 import { GALLERY_CITY_ORDER } from '../../data/gallery-order';
 import { resolveGalleryImages } from '../../utils/gallery-images';
@@ -39,6 +40,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const { data } = entry;
+const tripSlug = entry.id.split('/').pop()?.replace(/\.md$/, '') || '';
 const allImages = [data.cover, ...data.images];
 const allImageAssets = resolveGalleryImages(allImages);
 const allImageDescs = [data.coverDesc ?? '', ...(data.imageDescs ?? [])];
@@ -187,6 +189,8 @@ const categoryLabels: Record<string, string> = {
         </nav>
       )
     }
+
+    <GalleryNextTrip slug={tripSlug} />
   </article>
 
   <GalleryLightbox />
