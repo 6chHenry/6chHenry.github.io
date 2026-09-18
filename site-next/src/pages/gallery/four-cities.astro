@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import GalleryLightbox from '../../components/GalleryLightbox.astro';
 import GalleryImage from '../../components/GalleryImage.astro';
 import { resolveGalleryImages } from '../../utils/gallery-images';
+import { mergeChapters } from '../../data/gallery-trips';
 
 const base = import.meta.env.BASE_URL;
 
@@ -90,6 +91,7 @@ const dateLabel = entry.data.date
 const lightboxMeta = JSON.stringify({
   images: assets,
   imageDescs: descs,
+  chapters: mergeChapters([entry.data.coverChapter ?? '', ...(entry.data.imageChapters ?? [])]),
   title: entry.data.title,
   description: entry.data.description ?? '',
   category: 'photography',

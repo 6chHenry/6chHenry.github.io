@@ -5,6 +5,7 @@ import GalleryCard from '../../components/GalleryCard.astro';
 import GalleryImage from '../../components/GalleryImage.astro';
 import GalleryLightbox from '../../components/GalleryLightbox.astro';
 import { buildContentUrl, formatDate, sortByRecency } from '../../utils/content';
+import { TRIP_CITIES, mergeChapters } from '../../data/gallery-trips';
 
 const hiddenCities = new Set(['osaka', 'kyoto', 'nara', 'uji', 'kobe', 'himeji', 'guangzhou', 'hong-kong', 'macau', 'wuhan', 'lushan', 'nanchang']);
 const base = import.meta.env.BASE_URL;
@@ -31,16 +32,30 @@ const immersivePages: Record<string, string> = {
 const entryHref = (id: string) =>
   immersivePages[id] ? `${base}${immersivePages[id]}` : buildContentUrl('gallery', id, base);
 
-/* 多城旅程由多个城市条目组成，照片数要逐城累加；单城旅程就是它自己 */
-const TRIP_CITIES: Record<string, string[]> = {
-  'hubei-jiangxi': ['wuhan', 'lushan', 'nanchang'],
-  geermu: ['geermu'],
-  'greater-bay-area': ['guangzhou', 'macau', 'hong-kong'],
-  japan: ['osaka', 'nara', 'uji', 'kyoto', 'kobe', 'himeji'],
-  'summer-2026-four-cities': ['summer-2026-four-cities'],
-};
-
 const entryBySlug = new Map(allEntries.map((entry) => [getEntrySlug(entry.id), entry]));
+const collectTripGallery = (slug: string, fallback: (typeof allEntries)[number]) => {
+  const members = TRIP_CITIES[slug] ?? [slug];
+  const images: string[] = [];
+  const imageDescs: string[] = [];
+  const chapterKeys: string[] = [];
+  for (const member of members) {
+    const entry = entryBySlug.get(member) ?? (member === slug ? fallback : undefined);
+    if (!entry) continue;
+    images.push(entry.data.cover, ...entry.data.images);
+    imageDescs.push(entry.data.coverDesc ?? '', ...(entry.data.imageDescs ?? []));
+    if (entry.data.imageChapters.length > 0) {
+      chapterKeys.push(entry.data.coverChapter || member, ...entry.data.imageChapters);
+    } else {
+      chapterKeys.push(...Array.from({ length: entry.data.images.length + 1 }, () => member));
+    }
+  }
+  if (images.length === 0) {
+    images.push(fallback.data.cover, ...fallback.data.images);
+    imageDescs.push(fallback.data.coverDesc ?? '', ...(fallback.data.imageDescs ?? []));
+    chapterKeys.push(...Array.from({ length: fallback.data.images.length + 1 }, () => slug));
+  }
+  return { images, imageDescs, chapters: mergeChapters(chapterKeys) };
+};
 const countImages = (slug: string) => {
   const members = TRIP_CITIES[slug] ?? [slug];
   return members.reduce((sum, member) => {
@@ -280,8 +295,8 @@ const futureMonth = 10;
           <div class="gallery-grid">
             {
               entries.map((entry, i) => {
-                const allImages = [entry.data.cover, ...entry.data.images];
                 const slug = getEntrySlug(entry.id);
+                const { images, imageDescs, chapters } = collectTripGallery(slug, entry);
                 return (
                   <GalleryCard
                     href={entryHref(entry.id)}
@@ -289,8 +304,9 @@ const futureMonth = 10;
                     title={entry.data.title}
                     description={entry.data.description}
                     category={entry.data.category}
-                    images={allImages}
-                    imageDescs={[entry.data.coverDesc ?? '', ...(entry.data.imageDescs ?? [])]}
+                    images={images}
+                    imageDescs={imageDescs}
+                    chapters={chapters}
                     date={entry.data.date ? formatDate(entry.data.date) : undefined}
                     index={i}
                     slug={slug}

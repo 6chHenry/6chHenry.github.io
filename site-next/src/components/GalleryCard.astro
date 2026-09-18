@@ -1,6 +1,7 @@
 ---
 import GalleryImage from './GalleryImage.astro';
 import { resolveGalleryImage, resolveGalleryImages } from '../utils/gallery-images';
+import type { GalleryChapter } from '../data/gallery-trips';
 
 interface Props {
   href: string;
@@ -10,12 +11,13 @@ interface Props {
   category: string;
   images: string[];
   imageDescs?: string[];
+  chapters?: GalleryChapter[];
   date?: string;
   index: number;
   slug?: string;
 }
 
-const { href, cover, title, description, category, images, imageDescs = [], date, index, slug } = Astro.props;
+const { href, cover, title, description, category, images, imageDescs = [], chapters = [], date, index, slug } = Astro.props;
 const coverAsset = resolveGalleryImage(cover);
 const imageAssets = resolveGalleryImages(images);
 
@@ -30,6 +32,7 @@ const categoryLabels: Record<string, string> = {
 const meta = {
   images: imageAssets,
   imageDescs,
+  chapters,
   title,
   description: description ?? '',
   category,

@@ -222,7 +222,7 @@
 .glbx {
   position: fixed;
   inset: 0;
-  z-index: 110;
+  z-index: 240;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -231,6 +231,11 @@
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
   animation: glbx-in 0.28s ease-out;
+}
+
+body.glbx-open .forest-sprite,
+body.glbx-open .site-footer {
+  pointer-events: none;
 }
 
 .glbx[hidden] {
@@ -465,6 +470,53 @@
   height: 1px;
   background: var(--gb-accent);
   opacity: 0.45;
+}
+
+.glbx__stop {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 1rem;
+  opacity: 0;
+  animation: glbx-info-in 0.25s ease-out 0.05s forwards;
+}
+
+.glbx__stop[hidden] {
+  display: none;
+}
+
+.glbx__stop-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--gb-surface);
+  border: 2px solid var(--gb-accent);
+  box-shadow: 0 0 0 2px var(--gb-accent-dim);
+  flex-shrink: 0;
+}
+
+.glbx__stop-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.08rem;
+  min-width: 0;
+}
+
+.glbx__stop-kanji {
+  font-family: var(--ch-display-font);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--gb-accent);
+  line-height: 1.2;
+}
+
+.glbx__stop-en {
+  font-family: var(--ch-mono-font);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gb-text-muted);
 }
 
 .glbx__title {
@@ -777,7 +829,8 @@
   .glbx__image-desc,
   .glbx__date,
   .glbx__actions,
-  .glbx__category {
+  .glbx__category,
+  .glbx__stop {
     animation: none;
     opacity: 1;
   }

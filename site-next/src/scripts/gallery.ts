@@ -6,9 +6,18 @@ interface GalleryImageAsset {
   original: string;
 }
 
+interface GalleryChapter {
+  slug: string;
+  kanji: string;
+  en: string;
+  start: number;
+  count: number;
+}
+
 interface GalleryMeta {
   images: GalleryImageAsset[];
   imageDescs: string[];
+  chapters?: GalleryChapter[];
   title: string;
   description: string;
   category: string;
@@ -18,6 +27,8 @@ interface GalleryMeta {
 
 let currentMeta: GalleryMeta | null = null;
 let currentIndex = 0;
+let touchStartX = 0;
+let touchEndX = 0;
 
 const categoryLabels: Record<string, string> = {
   illustration: '插画',
@@ -92,6 +103,9 @@ export function initGalleryTimelineHighlights() {
 export function initGalleryLightbox() {
   const lightbox = document.getElementById('gallery-lightbox');
   if (!lightbox) return;
+  if (lightbox.parentElement !== document.body) {
+    document.body.appendChild(lightbox);
+  }
 
   const img = lightbox.querySelector<HTMLImageElement>('.glbx__image');
   const source = lightbox.querySelector<HTMLSourceElement>('.glbx__source');
@@ -104,8 +118,45 @@ export function initGalleryLightbox() {
   const detailBtn = lightbox.querySelector<HTMLAnchorElement>('.glbx__detail-btn');
   const prevBtn = lightbox.querySelector<HTMLButtonElement>('.glbx__nav--prev');
   const nextBtn = lightbox.querySelector<HTMLButtonElement>('.glbx__nav--next');
+  const stopEl = lightbox.querySelector<HTMLElement>('.glbx__stop');
+  const stopKanji = lightbox.querySelector<HTMLElement>('.glbx__stop-kanji');
+  const stopEn = lightbox.querySelector<HTMLElement>('.glbx__stop-en');
 
   let loaded = false;
+
+  const chapterAt = (index: number) => {
+    const chapters = currentMeta?.chapters;
+    if (!chapters?.length) return null;
+    return chapters.find((chapter) => index >= chapter.start && index < chapter.start + chapter.count) ?? null;
+  };
+
+  const updateChrome = (index: number) => {
+    if (!currentMeta) return;
+    const chapter = chapterAt(index);
+    const multiCity = (currentMeta.chapters?.length ?? 0) > 1;
+
+    if (counter) {
+      if (multiCity && chapter) {
+        counter.textContent = `${chapter.kanji}  ${index - chapter.start + 1} / ${chapter.count}`;
+      } else {
+        counter.textContent = `${index + 1} / ${currentMeta.images.length}`;
+      }
+    }
+
+    if (stopEl && stopKanji && stopEn) {
+      if (multiCity && chapter) {
+        stopEl.hidden = false;
+        stopKanji.textContent = chapter.kanji;
+        stopEn.textContent = chapter.en;
+      } else {
+        stopEl.hidden = true;
+      }
+    }
+
+    if (imageDescEl) imageDescEl.textContent = currentMeta.imageDescs?.[index] ?? '';
+    if (prevBtn) prevBtn.style.visibility = index > 0 ? '' : 'hidden';
+    if (nextBtn) nextBtn.style.visibility = index < currentMeta.images.length - 1 ? '' : 'hidden';
+  };
 
   const preloadAdjacent = (index: number) => {
     if (!currentMeta) return;
@@ -147,10 +198,7 @@ export function initGalleryLightbox() {
         };
         img.onload = onDone;
         img.onerror = onDone;
-        counter.textContent = `${index + 1} / ${currentMeta.images.length}`;
-        if (imageDescEl) imageDescEl.textContent = currentMeta.imageDescs?.[index] ?? '';
-        if (prevBtn) prevBtn.style.visibility = index > 0 ? '' : 'hidden';
-        if (nextBtn) nextBtn.style.visibility = index < currentMeta.images.length - 1 ? '' : 'hidden';
+        updateChrome(index);
         preloadAdjacent(index);
       }, 150);
     } else {
@@ -158,10 +206,7 @@ export function initGalleryLightbox() {
       setImageAsset(currentMeta.images[currentIndex]);
       img.classList.remove('is-switching');
       loaded = true;
-      counter.textContent = `${index + 1} / ${currentMeta.images.length}`;
-      if (imageDescEl) imageDescEl.textContent = currentMeta.imageDescs?.[index] ?? '';
-      if (prevBtn) prevBtn.style.visibility = index > 0 ? '' : 'hidden';
-      if (nextBtn) nextBtn.style.visibility = index < currentMeta.images.length - 1 ? '' : 'hidden';
+      updateChrome(index);
       preloadAdjacent(index);
     }
   };
@@ -178,11 +223,13 @@ export function initGalleryLightbox() {
 
     showImage(startIndex);
     lightbox.hidden = false;
+    document.body.classList.add('glbx-open');
     document.body.style.overflow = 'hidden';
   };
 
   const close = () => {
     lightbox.hidden = true;
+    document.body.classList.remove('glbx-open');
     document.body.style.overflow = '';
     currentMeta = null;
     currentIndex = 0;
@@ -200,27 +247,7 @@ export function initGalleryLightbox() {
   document.addEventListener('click', (event) => {
     const btn = (event.target as HTMLElement).closest<HTMLElement>('[data-gallery-meta]');
     if (!btn) return;
-    const card = (event.target as HTMLElement).closest<HTMLElement>('.gallery-card');
-    if (card) {
-      const href = (card as HTMLAnchorElement).href || '';
-      const isJapanCard = href.includes('/gallery/photography/japan');
-      if (isJapanCard) {
-        window.location.href = href.replace('/gallery/photography/japan', '/gallery/japan');
-        event.preventDefault();
-        return;
-      }
-      const isBayAreaCard = href.includes('/gallery/photography/greater-bay-area');
-      if (isBayAreaCard) {
-        window.location.href = href.replace('/gallery/photography/greater-bay-area', '/gallery/bay-area');
-        event.preventDefault();
-        return;
-      }
-      const isHubeiJiangxiCard = href.includes('/gallery/photography/hubei-jiangxi');
-      if (isHubeiJiangxiCard) {
-        window.location.href = href.replace('/gallery/photography/hubei-jiangxi', '/gallery/hubei-jiangxi');
-        event.preventDefault();
-        return;
-      }
+    if ((event.target as HTMLElement).closest('.gallery-card')) {
       event.preventDefault();
     }
 
