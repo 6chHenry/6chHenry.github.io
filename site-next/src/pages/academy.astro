@@ -190,15 +190,15 @@ const projects = [
   }
 
   .academy-hero {
-    display: grid;
-    grid-template-columns: 16.5rem minmax(0, 1fr);
-    gap: 2.25rem;
-    align-items: start;
+    display: flex;
+    gap: 2.5rem;
+    align-items: flex-start;
     margin-bottom: 3.25rem;
   }
 
   .academy-portrait {
-    position: relative;
+    flex: 0 0 15.5rem;
+    width: 15.5rem;
   }
 
   .academy-portrait img {
@@ -316,10 +316,10 @@ const projects = [
   }
 
   .education-item {
-    display: grid;
-    grid-template-columns: 4.5rem minmax(0, 1fr);
+    display: flex;
     gap: 1.1rem;
     align-items: center;
+    max-width: 46rem;
     padding: 0.85rem 1rem;
     border-radius: var(--ch-radius-sm);
     border: 1px solid var(--ch-glass-border);
@@ -327,11 +327,16 @@ const projects = [
   }
 
   .education-item img {
+    flex: 0 0 4.5rem;
     width: 4.5rem;
     height: 3.4rem;
     object-fit: contain;
     border-radius: 0.45rem;
     background: color-mix(in srgb, var(--ch-surface-solid) 88%, transparent);
+  }
+
+  .education-item div {
+    min-width: 0;
   }
 
   .education-item h3 {
@@ -423,8 +428,13 @@ const projects = [
       grid-template-columns: 1fr;
     }
 
+    .academy-hero {
+      flex-direction: column;
+    }
+
     .academy-portrait {
-      max-width: 14rem;
+      width: 14rem;
+      flex-basis: auto;
     }
   }
 </style>
