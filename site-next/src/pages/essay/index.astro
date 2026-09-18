@@ -89,12 +89,12 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
             aria-labelledby={`essay-group-${group.key}`}
           >
             <header class="essay-group__header">
-              <div>
-                <p class="section-kicker">{group.key}</p>
-                <h2 id={`essay-group-${group.key}`}>{group.title}</h2>
-                <p>{group.desc}</p>
-              </div>
-              <span>{group.entries.length} 篇</span>
+              <h2 class="grove-heading" id={`essay-group-${group.key}`}>
+                <span class="grove-heading__rule" aria-hidden="true"></span>
+                {group.title}
+                <span class="grove-heading__rule" aria-hidden="true"></span>
+              </h2>
+              <p class="essay-group__desc">{group.desc}</p>
             </header>
 
             <ul class:list={['essay-card-grid', group.key === 'Movies' && 'essay-card-grid--posters', group.key === 'Travel' && 'essay-card-grid--travel']}>
@@ -344,47 +344,33 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
   .essay-groups {
     display: flex;
     flex-direction: column;
-    gap: 3.2rem;
+    gap: 3.4rem;
   }
 
   .essay-group {
-    display: grid;
-    grid-template-columns: minmax(11rem, 0.28fr) minmax(0, 1fr);
-    gap: 1.35rem;
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
     scroll-margin-top: calc(var(--ch-header-height) + 4.8rem);
   }
 
   .essay-group__header {
-    position: sticky;
-    top: 5.5rem;
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-top: 0.35rem;
-    border-top: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 35%, transparent);
+    display: grid;
+    gap: 0.35rem;
+    justify-items: stretch;
   }
 
-  .essay-group__header h2 {
-    margin: 0 0 0.4rem;
-    color: var(--ch-accent);
-    font-family: var(--ch-display-font);
-    font-size: 1.45rem;
-    line-height: 1.18;
+  .essay-group__header .grove-heading {
+    margin-bottom: 0.15rem;
   }
 
-  .essay-group__header p:last-child {
-    margin: 0;
+  .essay-group__desc {
+    margin: 0 auto;
+    max-width: 34rem;
     color: var(--ch-fg-muted);
     font-size: 0.9rem;
     line-height: 1.55;
-  }
-
-  .essay-group__header > span {
-    flex: 0 0 auto;
-    color: var(--ch-accent-warm);
-    font-family: var(--ch-mono-font);
-    font-size: 0.75rem;
+    text-align: center;
   }
 
   .essay-card-grid {
@@ -406,7 +392,6 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
 
   .year-watchlist {
     position: relative;
-    grid-column: 2;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 1.1rem;
@@ -603,6 +588,52 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
     display: grid;
     grid-template-rows: auto 1fr;
     min-height: 100%;
+  }
+
+  .essay-card--movie.has-image .essay-card__body {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 1;
+    padding: 1.15rem 0.95rem 0.95rem;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      color-mix(in srgb, #08140d 62%, transparent) 42%,
+      color-mix(in srgb, #08140d 88%, transparent)
+    );
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .essay-card--movie.has-image:hover .essay-card__body,
+  .essay-card--movie.has-image:focus-visible .essay-card__body,
+  .essay-card--movie.has-image:focus-within .essay-card__body {
+    opacity: 1;
+    transform: none;
+  }
+
+  .essay-card--movie.has-image .essay-card__kicker,
+  .essay-card--movie.has-image time {
+    color: color-mix(in srgb, #fff 72%, transparent);
+  }
+
+  .essay-card--movie.has-image strong,
+  .essay-card--movie.has-image .essay-card__body > span:not(.essay-card__kicker) {
+    color: #f6f3ea;
+  }
+
+  .essay-card--movie.has-image .essay-card__body > span:not(.essay-card__kicker) {
+    -webkit-line-clamp: 2;
+  }
+
+  @media (hover: none) {
+    .essay-card--movie.has-image .essay-card__body {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   .essay-card__poster {
@@ -1108,12 +1139,7 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
 
   @media (max-width: 760px) {
     .essay-group {
-      grid-template-columns: 1fr;
       gap: 0.9rem;
-    }
-
-    .essay-group__header {
-      position: static;
     }
 
     .year-watchlist {
