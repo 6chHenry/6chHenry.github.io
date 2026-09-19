@@ -210,13 +210,36 @@ export async function loadCharacterCorpus(base = '/'): Promise<CharacterCorpus> 
 }
 
 export function forestCharUrl(char: string, base = '/'): string {
-  return `${base}forest/${encodeURIComponent(char)}/`.replace(/\/{2,}/g, '/');
+  const prefix = base.endsWith('/') ? base : `${base}/`;
+  return `${prefix}forest/${encodeURIComponent(char)}/`;
 }
 
-export function yearPortraits(corpus: CharacterCorpus, year: number, limit = 14): CharPortrait[] {
-  const pooled = new Map<string, CharStat>();
+export function forestDir(base = '/'): string {
+  const prefix = base.endsWith('/') ? base : `${base}/`;
+  return `${prefix}forest/`;
+}
+
+export type Season = 'spring' | 'summer' | 'autumn' | 'winter';
+
+export function seasonOf(date: Date): Season {
+  const month = date.getMonth();
+  if (month >= 2 && month <= 4) return 'spring';
+  if (month >= 5 && month <= 7) return 'summer';
+  if (month >= 8 && month <= 10) return 'autumn';
+  return 'winter';
+}
+
+export function corpusYears(corpus: CharacterCorpus): number[] {
+  const years = new Set<number>();
   for (const doc of corpus.docs) {
-    if (!doc.date || doc.date.getFullYear() !== year) continue;
+    if (doc.date) years.add(doc.date.getFullYear());
+  }
+  return [...years].sort((a, b) => b - a);
+}
+
+function poolWeights(docs: CorpusDoc[]): Map<string, CharStat> {
+  const pooled = new Map<string, CharStat>();
+  for (const doc of docs) {
     for (const [char, stat] of doc.weights) {
       const prev = pooled.get(char) ?? { count: 0, inTitle: false, inHeading: false };
       prev.count += stat.count;
@@ -226,14 +249,25 @@ export function yearPortraits(corpus: CharacterCorpus, year: number, limit = 14)
       pooled.set(char, prev);
     }
   }
-  if (pooled.size === 0) {
-    for (const doc of corpus.docs) {
-      for (const [char, stat] of doc.weights) {
-        const prev = pooled.get(char) ?? { count: 0, inTitle: false, inHeading: false };
-        prev.count += stat.count;
-        pooled.set(char, prev);
-      }
-    }
-  }
-  return pickPortraits(pooled, corpus.df, corpus.docCount, limit);
+  return pooled;
+}
+
+export function windowPortraits(
+  corpus: CharacterCorpus,
+  opts: { year?: number; season?: Season } = {},
+  limit = 14,
+): CharPortrait[] {
+  const docs = corpus.docs.filter((doc) => {
+    if (!doc.date) return !opts.year && !opts.season;
+    if (opts.year != null && doc.date.getFullYear() !== opts.year) return false;
+    if (opts.season && seasonOf(doc.date) !== opts.season) return false;
+    return true;
+  });
+  return pickPortraits(poolWeights(docs), corpus.df, corpus.docCount, limit);
+}
+
+export function yearPortraits(corpus: CharacterCorpus, year: number, limit = 14): CharPortrait[] {
+  const portraits = windowPortraits(corpus, { year }, limit);
+  if (portraits.length > 0) return portraits;
+  return windowPortraits(corpus, {}, limit);
 }

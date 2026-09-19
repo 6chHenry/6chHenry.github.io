@@ -1,6 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { loadCharacterCorpus, forestCharUrl } from '../../utils/character-lexicon';
+import CharacterTree from '../../components/CharacterTree.astro';
+import { buildCharacterTreeSvg, treeClipId } from '../../utils/character-tree';
+import {
+  loadCharacterCorpus,
+  forestCharUrl,
+  forestDir,
+  corpusYears,
+  windowPortraits,
+  type Season,
+} from '../../utils/character-lexicon';
 
 const base = import.meta.env.BASE_URL;
 const corpus = await loadCharacterCorpus(base);
@@ -12,6 +21,50 @@ const chars = [...corpus.inverted.entries()]
   }))
   .sort((a, b) => b.count - a.count || a.char.localeCompare(b.char, 'zh-CN'));
 const maxCount = Math.max(...chars.map((item) => item.count), 1);
+const cloud = chars.map((item) => ({
+  ...item,
+  weight: (0.72 + (item.count / maxCount) * 0.9).toFixed(2),
+}));
+
+const seasons: Array<{ id: 'all' | Season; label: string }> = [
+  { id: 'all', label: '全年' },
+  { id: 'spring', label: '春' },
+  { id: 'summer', label: '夏' },
+  { id: 'autumn', label: '秋' },
+  { id: 'winter', label: '冬' },
+];
+
+const years = corpusYears(corpus);
+const yearOptions: Array<number | 'all'> = years.length > 1 ? ['all', ...years] : years.length === 1 ? years : ['all'];
+const latestYear: number | 'all' = years[0] ?? 'all';
+
+const yearTrees = yearOptions.flatMap((year) =>
+  seasons.map((season) => {
+    const portraits = windowPortraits(
+      corpus,
+      {
+        year: year === 'all' ? undefined : year,
+        season: season.id === 'all' ? undefined : season.id,
+      },
+      14,
+    );
+    const label = year === 'all' ? '全部年轮' : `${year} 年轮`;
+    return {
+      key: `${year}-${season.id}`,
+      year,
+      season: season.id,
+      portraits,
+      label,
+      svg: buildCharacterTreeSvg({
+        seed: `year-${year}-${season.id}`,
+        portraits,
+        clipId: treeClipId(`${year}-${season.id}`, 'year'),
+        variant: 'year',
+        hrefForChar: (char) => forestCharUrl(char, base),
+      }),
+    };
+  }),
+);
 ---
 
 <BaseLayout title="汉字森林 | 6ch. · 林间笔记" description="点一个字，走进共用这个字的笔记、杂谈和作品">
@@ -23,18 +76,84 @@ const maxCount = Math.max(...chars.map((item) => item.count), 1);
     </header>
 
     {
-      chars.length === 0 ? (
+      yearTrees.length > 0 && (
+        <section class="hanzi-year" data-year-tree data-year={String(latestYear)} data-season="all">
+          <header class="hanzi-year__intro">
+            <p class="section-kicker">Year Ring</p>
+            <h2>年轮上的字</h2>
+            <p>把写下的篇收成一棵树。换一年，或换一个季节，看哪几个字还站在枝上。</p>
+          </header>
+
+          {
+            yearOptions.length > 1 && (
+              <div class="hanzi-year__nav" role="tablist" aria-label="年份">
+                {yearOptions.map((year) => (
+                  <button
+                    type="button"
+                    role="tab"
+                    data-year-pick={year}
+                    aria-selected={year === latestYear ? 'true' : 'false'}
+                  >
+                    {year === 'all' ? '全部' : year}
+                  </button>
+                ))}
+              </div>
+            )
+          }
+
+          <div class="hanzi-year__nav hanzi-year__nav--season" role="tablist" aria-label="季节">
+            {
+              seasons.map((season) => (
+                <button
+                  type="button"
+                  role="tab"
+                  data-season-pick={season.id}
+                  aria-selected={season.id === 'all' ? 'true' : 'false'}
+                >
+                  {season.label}
+                </button>
+              ))
+            }
+          </div>
+
+          <div class="hanzi-year__stage">
+            {
+              yearTrees.map((tree) => (
+                <div
+                  class="hanzi-year__tree"
+                  data-year-panel={tree.year}
+                  data-season-panel={tree.season}
+                  hidden={!(tree.year === latestYear && tree.season === 'all')}
+                  inert={!(tree.year === latestYear && tree.season === 'all')}
+                >
+                  <CharacterTree
+                    svg={tree.svg}
+                    bones={tree.portraits.map((item) => item.char)}
+                    label={tree.label}
+                    charBase={forestDir(base)}
+                    living={false}
+                    class="character-tree--year"
+                  />
+                  {tree.portraits.length === 0 && (
+                    <p class="hanzi-year__empty">这个季节还没有长出足够的字。</p>
+                  )}
+                </div>
+              ))
+            }
+          </div>
+        </section>
+      )
+    }
+
+    {
+      cloud.length === 0 ? (
         <p class="hanzi-forest__empty">这片林子里还没有足够的汉字。</p>
       ) : (
         <ul class="hanzi-forest__cloud">
           {
-            chars.map((item) => (
+            cloud.map((item) => (
               <li>
-                <a
-                  href={item.href}
-                  class="hanzi-forest__char"
-                  style={`--char-weight: ${(0.72 + (item.count / maxCount) * 0.9).toFixed(2)}`}
-                >
+                <a href={item.href} class="hanzi-forest__char" style={`--char-weight: ${item.weight}`}>
                   <span>{item.char}</span>
                   <small>{item.count}</small>
                 </a>
@@ -47,7 +166,125 @@ const maxCount = Math.max(...chars.map((item) => item.count), 1);
   </section>
 </BaseLayout>
 
+<script>
+  document.querySelectorAll('[data-year-tree]').forEach((root) => {
+    const show = (year, season) => {
+      root.setAttribute('data-year', year);
+      root.setAttribute('data-season', season);
+      root.querySelectorAll('[data-year-pick]').forEach((button) => {
+        button.setAttribute('aria-selected', button.getAttribute('data-year-pick') === year ? 'true' : 'false');
+      });
+      root.querySelectorAll('[data-season-pick]').forEach((button) => {
+        button.setAttribute('aria-selected', button.getAttribute('data-season-pick') === season ? 'true' : 'false');
+      });
+      root.querySelectorAll('[data-year-panel]').forEach((panel) => {
+        const match =
+          panel.getAttribute('data-year-panel') === year && panel.getAttribute('data-season-panel') === season;
+        panel.hidden = !match;
+        if (panel instanceof HTMLElement) panel.inert = !match;
+      });
+    };
+
+    root.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const yearBtn = target.closest('[data-year-pick]');
+      const seasonBtn = target.closest('[data-season-pick]');
+      if (yearBtn) show(yearBtn.getAttribute('data-year-pick') || 'all', root.getAttribute('data-season') || 'all');
+      if (seasonBtn) show(root.getAttribute('data-year') || 'all', seasonBtn.getAttribute('data-season-pick') || 'all');
+    });
+  });
+</script>
+
 <style>
+  .hanzi-year {
+    margin: 0 0 2.6rem;
+    padding: 1.25rem 1.2rem 1.4rem;
+    border: 1px solid var(--ch-glass-border);
+    border-radius: var(--ch-radius-md);
+    background:
+      radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--ch-accent-tertiary) 12%, transparent), transparent 16rem),
+      color-mix(in srgb, var(--ch-glass-bg) 82%, transparent);
+  }
+
+  .hanzi-year__intro {
+    margin-bottom: 0.95rem;
+  }
+
+  .hanzi-year__intro h2 {
+    margin: 0.2rem 0 0.35rem;
+    font-family: var(--ch-display-font);
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    color: var(--ch-fg);
+  }
+
+  .hanzi-year__intro p:last-child {
+    margin: 0;
+    color: var(--ch-fg-muted);
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+
+  .hanzi-year__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .hanzi-year__nav button {
+    padding: 0.22rem 0.7rem;
+    border: 1px solid var(--ch-glass-border);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ch-surface-solid) 70%, transparent);
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-mono-font);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+  }
+
+  .hanzi-year__nav button[aria-selected='true'],
+  .hanzi-year__nav button:hover {
+    color: var(--ch-accent);
+    border-color: color-mix(in srgb, var(--ch-accent) 45%, var(--ch-border));
+    background: var(--ch-accent-dim);
+  }
+
+  .hanzi-year__stage {
+    display: grid;
+  }
+
+  .hanzi-year__tree {
+    min-height: 18rem;
+  }
+
+  .hanzi-year__empty {
+    margin: 0.4rem 0 0;
+    text-align: center;
+    color: var(--ch-fg-muted);
+    font-size: 0.85rem;
+  }
+
+  .hanzi-year :global(.character-tree--year) {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0.2rem 0 0;
+  }
+
+  .hanzi-year :global(.character-tree--year .character-tree__canvas svg) {
+    max-width: 18rem;
+    min-height: 16rem;
+    margin-inline: auto;
+    display: block;
+    overflow: visible;
+  }
+
+  .hanzi-year__tree[hidden] {
+    display: none;
+  }
+
   .hanzi-forest__cloud {
     display: flex;
     flex-wrap: wrap;

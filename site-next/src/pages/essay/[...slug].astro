@@ -5,7 +5,7 @@ import NordicTravelPlanning from '../../components/travel/NordicTravelPlanning.a
 import TravelGalleryLink from '../../components/TravelGalleryLink.astro';
 import { buildContentUrl, normalizeSlug, sortByRecency } from '../../utils/content';
 import { buildCharacterTreeSvg, treeClipId } from '../../utils/character-tree';
-import { loadCharacterCorpus, portraitsForRendered, forestCharUrl } from '../../utils/character-lexicon';
+import { loadCharacterCorpus, portraitsForRendered, forestCharUrl, forestDir } from '../../utils/character-lexicon';
 import { getTravelGalleryLink } from '../../utils/essay-visuals';
 import type { GetStaticPaths } from 'astro';
 
@@ -98,7 +98,7 @@ const travelGallery = entry ? getTravelGalleryLink(entry.id) : undefined;
       headings={filteredHeadings.map((h) => ({ depth: h.depth, slug: h.slug, text: h.text }))}
       characterTreeSvg={characterTreeSvg}
       characterBones={characterBones.map((item) => item.char)}
-      characterCharBase={`${import.meta.env.BASE_URL}forest/`.replace(/\/{2,}/g, '/')}
+      characterCharBase={forestDir(import.meta.env.BASE_URL)}
       previous={previousEntry && {
         title: previousEntry.data.title,
         description: previousEntry.data.description,

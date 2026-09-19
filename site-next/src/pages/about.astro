@@ -1,8 +1,24 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import CharacterTree from '../components/CharacterTree.astro';
 import ForestIcon from '../components/ForestIcon.astro';
+import { buildCharacterTreeSvg } from '../utils/character-tree';
+import { corpusYears, forestCharUrl, forestDir, loadCharacterCorpus, yearPortraits } from '../utils/character-lexicon';
 
 const base = import.meta.env.BASE_URL;
+const corpus = await loadCharacterCorpus(base);
+const year = corpusYears(corpus)[0];
+const yearChars = year ? yearPortraits(corpus, year, 12) : [];
+const yearTreeSvg =
+  yearChars.length > 0
+    ? buildCharacterTreeSvg({
+        seed: `about-year-${year}`,
+        portraits: yearChars,
+        clipId: 'about-year-tree',
+        variant: 'year',
+        hrefForChar: (char) => forestCharUrl(char, base),
+      })
+    : '';
 
 /* 林间告示牌：此刻的状态（手写，随时更新） */
 const nowBoard = [
@@ -164,6 +180,23 @@ const trails = [
             <a class="pill" href="https://github.com/6chHenry" target="_blank" rel="noopener">GitHub</a>
           </div>
         </div>
+        {
+          year && yearTreeSvg && (
+            <div class="about-year card">
+              <h3>{year} 年轮</h3>
+              <p>这一年写下的篇，收成一棵字。</p>
+              <CharacterTree
+                svg={yearTreeSvg}
+                bones={yearChars.map((item) => item.char)}
+                label="这一年的字"
+                charBase={forestDir(base)}
+                living={false}
+                class="character-tree--about"
+              />
+              <a class="pill" href={`${base}forest/`}>走进汉字林</a>
+            </div>
+          )
+        }
       </aside>
     </div>
   </section>
@@ -461,6 +494,45 @@ const trails = [
   .about-links :global(.forest-icon) {
     width: 0.9rem;
     height: 0.9rem;
+  }
+
+  .about-year {
+    margin-top: 0.9rem;
+    padding: 1.15rem 1.1rem 1.2rem;
+    text-align: center;
+  }
+
+  .about-year h3 {
+    margin: 0 0 0.35rem;
+    font-family: var(--ch-display-font);
+    font-size: 1.15rem;
+    letter-spacing: 0.06em;
+    color: var(--ch-accent);
+  }
+
+  .about-year > p {
+    margin: 0 0 0.7rem;
+    color: var(--ch-fg-muted);
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .about-year :global(.character-tree--about) {
+    margin-bottom: 0.85rem;
+    padding: 0.55rem 0.4rem 0.7rem;
+  }
+
+  .about-year :global(.character-tree--about .character-tree__canvas svg) {
+    max-width: 11.5rem;
+    min-height: 9.5rem;
+    margin-inline: auto;
+    display: block;
+    overflow: visible;
+  }
+
+  .about-year .pill {
+    justify-content: center;
+    width: 100%;
   }
 
   @media (max-width: 900px) {

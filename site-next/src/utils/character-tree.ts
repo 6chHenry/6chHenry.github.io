@@ -81,9 +81,13 @@ export function buildCharacterTreeSvg({
   if (portraits.length === 0 && !compact && !year) return '';
   const rng = createRng(hashString(seed));
   const canopy: Array<{ x: number; y: number }> = [];
+  const startY = year ? 28 : 12;
+  const endY = compact ? 100 : year ? 120 : 112;
+  const stepY = compact ? 14 : year ? 13 : 11;
+  const stepX = compact ? 14 : 12;
 
-  for (let y = 12; y <= (compact ? 100 : 112); y += compact ? 14 : 11) {
-    for (let x = 22; x <= 98; x += compact ? 14 : 12) {
+  for (let y = startY; y <= endY; y += stepY) {
+    for (let x = 22; x <= 98; x += stepX) {
       const px = x + (rng() - 0.5) * 5;
       const py = y + (rng() - 0.5) * 5;
       if (pointInPolygon(px, py, TREE_POLYGON)) canopy.push({ x: px, y: py });

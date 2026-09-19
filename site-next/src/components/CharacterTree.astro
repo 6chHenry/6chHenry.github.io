@@ -4,12 +4,14 @@ interface Props {
   bones?: string[];
   label?: string;
   charBase?: string;
+  living?: boolean;
+  class?: string;
 }
 
-const { svg, bones = [], label = '本篇的字', charBase } = Astro.props;
+const { svg, bones = [], label = '本篇的字', charBase, living = true, class: className } = Astro.props;
 ---
 
-<figure class="character-tree" data-character-tree>
+<figure class:list={['character-tree', className]} data-character-tree data-living={living ? 'true' : 'false'}>
   <p class="character-tree__title">{label}</p>
   <div class="character-tree__canvas">
     <Fragment set:html={svg} />
@@ -66,7 +68,7 @@ const { svg, bones = [], label = '本篇的字', charBase } = Astro.props;
 
     const glyphs = Array.from(canvas.querySelectorAll<SVGTextElement>('text[data-char]'));
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion || glyphs.length === 0) return;
+    if (tree.dataset.living === 'false' || reduceMotion || glyphs.length === 0) return;
 
     tree.classList.add('is-living');
     const grow = (glyph: SVGTextElement) => glyph.classList.add('is-grown');
