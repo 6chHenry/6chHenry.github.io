@@ -217,10 +217,6 @@
   color: var(--ch-accent-warm);
 }
 
-[data-daypart='night'] .home-subtitle {
-  color: rgb(214 228 236 / 78%);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .home-stars::after {
     animation: none;
@@ -457,14 +453,6 @@
   text-transform: uppercase;
 }
 
-.home-subtitle {
-  color: var(--ch-fg-muted);
-  margin: 0;
-  font-size: 0.98rem;
-  max-width: 30rem;
-  line-height: 1.65;
-}
-
 /* ── Trailhead：金色林间小径 ── */
 
 .home-trail {
@@ -491,13 +479,6 @@
   font-size: clamp(1.65rem, 2.6vw, 2.35rem);
   font-weight: 600;
   line-height: 1.08;
-}
-
-.home-trail__lead {
-  max-width: 30rem;
-  margin: 0.55rem auto 0;
-  color: var(--ch-fg-muted);
-  font-size: 0.88rem;
 }
 
 .home-trail__nav {
