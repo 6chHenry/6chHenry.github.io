@@ -411,7 +411,22 @@
 .character-tree__canvas :global(.character-tree__glyph) {
   cursor: default;
   opacity: var(--char-opacity, 0.86);
-  transition: opacity var(--ch-transition-fast), fill var(--ch-transition-fast);
+  transition: opacity 0.55s ease, fill var(--ch-transition-fast);
+}
+
+.character-tree.is-living :global(.character-tree__glyph) {
+  opacity: 0.12;
+}
+
+.character-tree.is-living :global(.character-tree__glyph.is-grown) {
+  opacity: var(--char-opacity, 0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .character-tree.is-living :global(.character-tree__glyph) {
+    opacity: var(--char-opacity, 0.86);
+    transition: none;
+  }
 }
 
 .character-tree__canvas :global(.character-tree__glyph:hover),

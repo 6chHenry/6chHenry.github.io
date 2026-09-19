@@ -63,5 +63,55 @@ const { svg, bones = [], label = '本篇的字', charBase } = Astro.props;
     });
 
     canvas.addEventListener('pointerleave', hide);
+
+    const glyphs = Array.from(canvas.querySelectorAll<SVGTextElement>('text[data-char]'));
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || glyphs.length === 0) return;
+
+    tree.classList.add('is-living');
+    const grow = (glyph: SVGTextElement) => glyph.classList.add('is-grown');
+    glyphs.filter((glyph) => glyph.dataset.source === 'title').forEach(grow);
+
+    const byHeading = new Map<string, SVGTextElement[]>();
+    for (const glyph of glyphs) {
+      const heading = glyph.dataset.heading?.trim();
+      if (!heading) continue;
+      const list = byHeading.get(heading) ?? [];
+      list.push(glyph);
+      byHeading.set(heading, list);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const text = entry.target.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+          byHeading.get(text)?.forEach(grow);
+        }
+      },
+      { rootMargin: '-18% 0px -42% 0px', threshold: 0.05 },
+    );
+    document.querySelectorAll('.prose h2, .prose h3').forEach((heading) => observer.observe(heading));
+
+    const bodyGlyphs = glyphs
+      .filter((glyph) => glyph.dataset.source === 'body')
+      .sort((a, b) => Number(b.dataset.rank ?? 0) - Number(a.dataset.rank ?? 0));
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 1;
+        const visible = Math.ceil(progress * bodyGlyphs.length);
+        bodyGlyphs.forEach((glyph, index) => {
+          if (index < visible) grow(glyph);
+        });
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
   });
 </script>
