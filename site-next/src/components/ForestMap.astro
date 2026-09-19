@@ -16,10 +16,41 @@ interface GroveView {
   x: number;
   y: number;
   trees: ForestTreeNode[];
+  kinship: ReturnType<typeof groveKinship>;
 }
 
 const { stops } = Astro.props;
 const base = import.meta.env.BASE_URL;
+
+function groveKinship(trees: ForestTreeNode[]) {
+  const placed = trees.filter((tree) => tree.x != null && tree.y != null);
+  const tally = new Map<string, number>();
+  for (const tree of placed) {
+    for (const char of tree.chars ?? []) tally.set(char, (tally.get(char) ?? 0) + 1);
+  }
+  const chips = [...tally.entries()]
+    .filter(([, count]) => count >= 2)
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'zh-CN'))
+    .slice(0, 10)
+    .map(([char, count]) => ({ char, count }));
+
+  const links: Array<{ ax: number; ay: number; bx: number; by: number; shared: string }> = [];
+  for (let i = 0; i < placed.length; i += 1) {
+    for (let j = i + 1; j < placed.length; j += 1) {
+      const shared = (placed[i].chars ?? []).filter((char) => placed[j].chars?.includes(char));
+      if (!shared.length) continue;
+      links.push({
+        ax: placed[i].x ?? 0,
+        ay: placed[i].y ?? 0,
+        bx: placed[j].x ?? 0,
+        by: placed[j].y ?? 0,
+        shared: `|${shared.join('|')}|`,
+      });
+    }
+  }
+  links.sort((a, b) => b.shared.length - a.shared.length);
+  return { chips, links: links.slice(0, 14) };
+}
 
 const groveConfig = [
   {
@@ -60,15 +91,17 @@ const groves: GroveView[] = groveConfig.map((grove) => {
     (a, b) => (b.timestamp ?? 0) - (a.timestamp ?? 0) || a.title.localeCompare(b.title, 'zh-CN'),
   );
 
+  const trees = recentTrees.filter((tree) => tree.treeSvg && tree.x !== undefined && tree.y !== undefined).slice(0, 11);
   return {
     ...grove,
     count: collectionTrees.length,
-    trees: recentTrees.filter((tree) => tree.treeSvg && tree.x !== undefined && tree.y !== undefined).slice(0, 11),
+    trees,
+    kinship: groveKinship(trees),
   };
 });
 ---
 
-<section class="forest-map" aria-labelledby="forest-map-title">
+<section class="forest-map" aria-labelledby="forest-map-title" data-forest-base={base}>
   <div class="container forest-map__intro">
     <p class="section-kicker">Forest Atlas</p>
     <h2 id="forest-map-title" class="section-title">
@@ -169,12 +202,44 @@ const groves: GroveView[] = groveConfig.map((grove) => {
                 <p>{grove.desc}</p>
               </div>
 
+              {
+                grove.kinship.chips.length > 0 && (
+                  <div class="forest-map__kinship-bar" data-kinship-bar>
+                    <span>连理字</span>
+                    {grove.kinship.chips.map((chip) => (
+                      <button type="button" data-kinship-char={chip.char} aria-pressed="false">
+                        {chip.char}
+                        <small>{chip.count}</small>
+                      </button>
+                    ))}
+                    <a class="forest-map__kinship-more" data-kinship-more hidden href={`${base}forest/`}>
+                      走进汉字林
+                    </a>
+                  </div>
+                )
+              }
+
               <div class="forest-map__treefield" aria-label={`${grove.title}文字树`}>
+                {
+                  grove.kinship.links.length > 0 && (
+                    <svg class="forest-map__kinship" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                      {grove.kinship.links.map((link) => (
+                        <path
+                          class="forest-map__kinship-line"
+                          data-shared={link.shared}
+                          d={`M${link.ax} ${link.ay} Q ${(link.ax + link.bx) / 2} ${Math.min(link.ay, link.by) - 10} ${link.bx} ${link.by}`}
+                          fill="none"
+                        />
+                      ))}
+                    </svg>
+                  )
+                }
                 {
                   grove.trees.map((tree, index) => (
                     <a
                       class="forest-map__tree-node"
                       href={tree.href}
+                      data-chars={`|${(tree.chars ?? []).join('|')}|`}
                       aria-label={`${tree.title}${tree.dateLabel ? `，${tree.dateLabel}` : ''}`}
                       tabindex="-1"
                       style={`left: ${tree.x}%; top: ${tree.y}%; --tree-scale: ${tree.scale ?? 1}; --tree-delay: ${index * 34}ms;`}
@@ -217,6 +282,7 @@ const groves: GroveView[] = groveConfig.map((grove) => {
     const activateOverview = () => {
       root.setAttribute('data-view', 'overview');
       root.setAttribute('data-active-grove', 'overview');
+      panels.forEach((panel) => applyKinship(panel, ''));
 
       backButtons.forEach((button) => {
         button.setAttribute('tabindex', '-1');
@@ -277,6 +343,43 @@ const groves: GroveView[] = groveConfig.map((grove) => {
 
     backButtons.forEach((button) => {
       button.addEventListener('click', activateOverview);
+    });
+
+    const forestBase = root.getAttribute('data-forest-base') || '/';
+    const applyKinship = (panel, char) => {
+      if (char) panel.setAttribute('data-kinship', char);
+      else panel.removeAttribute('data-kinship');
+      panel.querySelectorAll('[data-kinship-char]').forEach((chip) => {
+        const on = chip.getAttribute('data-kinship-char') === char && Boolean(char);
+        chip.classList.toggle('is-active', on);
+        chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      panel.querySelectorAll('[data-chars]').forEach((node) => {
+        const match = Boolean(char) && (node.getAttribute('data-chars') || '').includes(`|${char}|`);
+        node.classList.toggle('is-kin', match);
+        node.classList.toggle('is-dim', Boolean(char) && !match);
+      });
+      panel.querySelectorAll('[data-shared]').forEach((line) => {
+        line.classList.toggle('is-kin', Boolean(char) && (line.getAttribute('data-shared') || '').includes(`|${char}|`));
+      });
+      const more = panel.querySelector('[data-kinship-more]');
+      if (more instanceof HTMLAnchorElement) {
+        more.hidden = !char;
+        if (char) {
+          more.href = `${forestBase}forest/${encodeURIComponent(char)}/`.replace(/\/{2,}/g, '/');
+          more.textContent = `查看「${char}」`;
+        }
+      }
+    };
+
+    root.addEventListener('click', (event) => {
+      const chip = event.target.closest('[data-kinship-char]');
+      if (!chip || !root.contains(chip)) return;
+      const panel = chip.closest('[data-grove-panel]');
+      if (!panel) return;
+      const char = chip.getAttribute('data-kinship-char') || '';
+      const current = panel.getAttribute('data-kinship') || '';
+      applyKinship(panel, current === char ? '' : char);
     });
 
     activateOverview();
