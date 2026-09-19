@@ -1,5 +1,5 @@
 import { buildCharacterTreeSvg } from './character-tree';
-import { buildCorpusFromEntries, type CharacterCorpus } from './character-lexicon';
+import { buildCorpusFromEntries, extractMarkdownHeadings, type CharacterCorpus } from './character-lexicon';
 import { buildContentUrl, formatRecencyDate, sortByRecency } from './content';
 
 export interface ForestMapEntry {
@@ -180,6 +180,9 @@ export function buildForestMapStops(
               treeSvg: buildCharacterTreeSvg({
                 seed: key,
                 portraits,
+                title: entry.data.title,
+                headings: extractMarkdownHeadings(entry.body ?? ''),
+                body: entry.body ?? '',
                 clipId: `grove-tree-${showcase.index}-${sanitizeClipId(key)}`,
                 variant: 'compact',
               }),

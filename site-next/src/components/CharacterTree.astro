@@ -8,17 +8,17 @@ interface Props {
   class?: string;
 }
 
-const { svg, bones = [], label = '本篇的字', charBase, living = true, class: className } = Astro.props;
+const { svg, bones = [], label = '文字树', charBase, living = true, class: className } = Astro.props;
 ---
 
-<figure class:list={['character-tree', className]} data-character-tree data-living={living ? 'true' : 'false'}>
+<figure class:list={['character-tree', className, living && 'is-living']} data-character-tree data-living={living ? 'true' : 'false'}>
   <p class="character-tree__title">{label}</p>
   <div class="character-tree__canvas">
     <Fragment set:html={svg} />
   </div>
   {
     bones.length > 0 && (
-      <p class="character-tree__bones" aria-label="本篇特别的字">
+      <p class="character-tree__bones" aria-label="这棵树上特别的字">
         {bones.map((char, index) => (
           <>
             {index > 0 && ' · '}
@@ -67,15 +67,42 @@ const { svg, bones = [], label = '本篇的字', charBase, living = true, class:
     canvas.addEventListener('pointerleave', hide);
 
     const glyphs = Array.from(canvas.querySelectorAll<SVGTextElement>('text[data-char]'));
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (tree.dataset.living === 'false' || reduceMotion || glyphs.length === 0) return;
+    if (tree.dataset.living === 'false' || glyphs.length === 0) return;
 
     tree.classList.add('is-living');
-    const grow = (glyph: SVGTextElement) => glyph.classList.add('is-grown');
+    const grownOpacity = (glyph: SVGTextElement) =>
+      glyph.style.getPropertyValue('--char-opacity').trim() || '0.86';
+    const grow = (glyph: SVGTextElement) => {
+      if (glyph.classList.contains('is-grown')) return;
+      glyph.classList.add('is-grown');
+      glyph.setAttribute('opacity', grownOpacity(glyph));
+    };
+    glyphs.forEach((glyph) => {
+      if (glyph.dataset.source === 'title') return;
+      glyph.setAttribute('opacity', '0.05');
+    });
     glyphs.filter((glyph) => glyph.dataset.source === 'title').forEach(grow);
 
+    const pending = glyphs
+      .filter((glyph) => glyph.dataset.source !== 'title')
+      .sort((a, b) => Number(b.getAttribute('y')) - Number(a.getAttribute('y')));
+
+    const article = document.querySelector<HTMLElement>('.content-article');
+    const readingProgress = () => {
+      const page = document.documentElement.scrollHeight - window.innerHeight;
+      const pageP = page > 0 ? window.scrollY / page : 0;
+      if (!article) return Math.min(1, Math.max(0, pageP));
+      const header = document.querySelector('header');
+      const headerOffset = header?.getBoundingClientRect().height || 68;
+      const rect = article.getBoundingClientRect();
+      const scrollable = article.offsetHeight - (window.innerHeight - headerOffset) * 0.35;
+      const articleP =
+        scrollable > 0 ? (headerOffset - rect.top) / scrollable : 0;
+      return Math.min(1, Math.max(0, pageP, articleP));
+    };
+
     const byHeading = new Map<string, SVGTextElement[]>();
-    for (const glyph of glyphs) {
+    for (const glyph of pending) {
       const heading = glyph.dataset.heading?.trim();
       if (!heading) continue;
       const list = byHeading.get(heading) ?? [];
@@ -91,29 +118,18 @@ const { svg, bones = [], label = '本篇的字', charBase, living = true, class:
           byHeading.get(text)?.forEach(grow);
         }
       },
-      { rootMargin: '-18% 0px -42% 0px', threshold: 0.05 },
+      { rootMargin: '-12% 0px -48% 0px', threshold: 0.05 },
     );
     document.querySelectorAll('.prose h2, .prose h3').forEach((heading) => observer.observe(heading));
 
-    const bodyGlyphs = glyphs
-      .filter((glyph) => glyph.dataset.source === 'body')
-      .sort((a, b) => Number(b.dataset.rank ?? 0) - Number(a.dataset.rank ?? 0));
-
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        ticking = false;
-        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 1;
-        const visible = Math.ceil(progress * bodyGlyphs.length);
-        bodyGlyphs.forEach((glyph, index) => {
-          if (index < visible) grow(glyph);
-        });
+    const sprout = () => {
+      const visible = Math.ceil(readingProgress() * pending.length);
+      pending.forEach((glyph, index) => {
+        if (index < visible) grow(glyph);
       });
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+    window.addEventListener('scroll', sprout, { passive: true });
+    document.addEventListener('scroll', sprout, { passive: true });
+    sprout();
   });
 </script>

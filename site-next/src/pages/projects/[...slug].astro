@@ -28,6 +28,9 @@ const characterBones = portraitsForRendered(
 const characterTreeSvg = buildCharacterTreeSvg({
   seed: entry.id,
   portraits: characterBones,
+  title: entry.data.title,
+  headings: headingTexts,
+  body: entry.body ?? '',
   clipId: treeClipId(entry.id),
   hrefForChar: (char) => forestCharUrl(char, import.meta.env.BASE_URL),
 });

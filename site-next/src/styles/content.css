@@ -393,49 +393,54 @@
   background: var(--ch-accent-tertiary);
 }
 
-.character-tree__canvas :global(svg) {
-  width: 100%;
+.character-tree__canvas svg.character-tree__svg {
+  width: min(100%, 13.5rem);
   height: auto;
-  min-height: 12.5rem;
-  max-height: 18rem;
+  max-height: none;
+  min-height: 0;
+  aspect-ratio: 120 / 160;
   display: block;
   margin: 0 auto;
+  overflow: visible;
 }
 
-.character-tree__canvas :global(.character-tree__silhouette) {
-  stroke: color-mix(in srgb, var(--ch-accent-tertiary) 38%, transparent);
+.character-tree__canvas .character-tree__silhouette {
+  fill: color-mix(in srgb, var(--ch-accent-tertiary) 7%, transparent);
+  stroke: color-mix(in srgb, var(--ch-accent-tertiary) 52%, transparent);
   stroke-width: 1.4;
   stroke-linejoin: round;
 }
 
-.character-tree__canvas :global(.character-tree__glyph) {
+.character-tree__canvas .character-tree__glyph {
   cursor: default;
   opacity: var(--char-opacity, 0.86);
-  transition: opacity 0.55s ease, fill var(--ch-transition-fast);
+  transition: fill var(--ch-transition-fast);
 }
 
-.character-tree.is-living :global(.character-tree__glyph) {
-  opacity: 0.12;
+.character-tree.is-living .character-tree__glyph {
+  opacity: 0.05;
+  transition: none;
 }
 
-.character-tree.is-living :global(.character-tree__glyph.is-grown) {
+.character-tree.is-living .character-tree__glyph.is-grown {
   opacity: var(--char-opacity, 0.9);
+  transition: opacity 0.55s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .character-tree.is-living :global(.character-tree__glyph) {
+  .character-tree.is-living .character-tree__glyph {
     opacity: var(--char-opacity, 0.86);
     transition: none;
   }
 }
 
-.character-tree__canvas :global(.character-tree__glyph:hover),
-.character-tree__canvas :global(.character-tree__link:hover .character-tree__glyph) {
+.character-tree__canvas .character-tree__glyph:hover,
+.character-tree__canvas .character-tree__link:hover .character-tree__glyph {
   opacity: 1;
   fill: var(--ch-accent-warm);
 }
 
-.character-tree__canvas :global(.character-tree__link) {
+.character-tree__canvas .character-tree__link {
   text-decoration: none;
 }
 
@@ -1732,9 +1737,36 @@
     order: -1;
   }
 
-  .character-tree__canvas :global(svg) {
-    min-height: 10rem;
-    max-height: 14rem;
+  .character-tree__canvas svg.character-tree__svg {
+    width: min(100%, 12rem);
+  }
+
+  /* Keep the living tree in view while reading; the in-flow copy would
+     otherwise sit above the article and scroll away. */
+  .character-tree.is-living {
+    position: fixed;
+    right: max(0.4rem, env(safe-area-inset-right, 0px));
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 28;
+    width: 6.4rem;
+    padding: 0.4rem 0.35rem 0.45rem;
+    margin: 0;
+  }
+
+  .character-tree.is-living .character-tree__title {
+    margin: 0 0 0.25rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+  }
+
+  .character-tree.is-living .character-tree__bones,
+  .character-tree.is-living .character-tree__tip {
+    display: none;
+  }
+
+  .character-tree.is-living .character-tree__canvas svg.character-tree__svg {
+    width: 5.6rem;
   }
 }
 

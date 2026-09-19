@@ -65,6 +65,9 @@ const characterTreeSvg = entry
   ? buildCharacterTreeSvg({
       seed: entry.id,
       portraits: characterBones,
+      title: entry.data.title,
+      headings: filteredHeadings.map((h) => h.text),
+      body: entry.body ?? '',
       clipId: treeClipId(entry.id),
       hrefForChar: (char) => forestCharUrl(char, import.meta.env.BASE_URL),
     })
