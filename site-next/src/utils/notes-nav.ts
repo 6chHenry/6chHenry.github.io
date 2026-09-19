@@ -83,6 +83,7 @@ export interface NoteLink {
   href: string;
   title: string;
   description?: string;
+  gist?: string;
   date?: string;
 }
 
