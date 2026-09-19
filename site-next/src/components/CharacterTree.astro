@@ -1,15 +1,57 @@
 ---
 interface Props {
   svg: string;
+  bones?: string[];
   label?: string;
 }
 
-const { svg, label = '本篇的汉字树' } = Astro.props;
+const { svg, bones = [], label = '本篇的字' } = Astro.props;
 ---
 
-<div class="character-tree" aria-hidden="true" title={label}>
-  <p class="character-tree__title">汉字树</p>
+<figure class="character-tree" data-character-tree>
+  <p class="character-tree__title">{label}</p>
   <div class="character-tree__canvas">
     <Fragment set:html={svg} />
   </div>
-</div>
+  {
+    bones.length > 0 && (
+      <p class="character-tree__bones" aria-label="本篇特别的字">
+        {bones.join(' · ')}
+      </p>
+    )
+  }
+  <p class="character-tree__tip" data-tree-tip hidden></p>
+</figure>
+
+<script>
+  const trees = document.querySelectorAll<HTMLElement>('[data-character-tree]');
+  trees.forEach((tree) => {
+    const tip = tree.querySelector<HTMLElement>('[data-tree-tip]');
+    const canvas = tree.querySelector('.character-tree__canvas');
+    if (!tip || !canvas) return;
+
+    const sourceLabel = (source: string, heading: string) => {
+      if (source === 'title') return '标题';
+      if (source === 'heading' && heading) return heading;
+      if (source === 'heading') return '小节';
+      return '正文';
+    };
+
+    const hide = () => {
+      tip.hidden = true;
+      tip.textContent = '';
+    };
+
+    canvas.addEventListener('pointerover', (event) => {
+      const glyph = (event.target as Element | null)?.closest?.('text[data-char]') as SVGTextElement | null;
+      if (!glyph) return;
+      const char = glyph.dataset.char ?? '';
+      const count = glyph.dataset.count ?? '0';
+      const where = sourceLabel(glyph.dataset.source ?? '', glyph.dataset.heading ?? '');
+      tip.hidden = false;
+      tip.textContent = `${char} · ${where} · ${count} 次`;
+    });
+
+    canvas.addEventListener('pointerleave', hide);
+  });
+</script>

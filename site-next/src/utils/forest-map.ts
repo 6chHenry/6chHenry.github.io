@@ -1,4 +1,5 @@
 import { buildCharacterTreeSvg } from './character-tree';
+import { buildCorpusFromEntries, type CharacterCorpus } from './character-lexicon';
 import { buildContentUrl, formatRecencyDate, sortByRecency } from './content';
 
 export interface ForestMapEntry {
@@ -25,6 +26,7 @@ export interface ForestTreeNode {
   dateLabel?: string;
   summary: string;
   treeSvg?: string;
+  chars?: string[];
   recentRank?: number;
 }
 
@@ -148,14 +150,20 @@ function buildSummary(entry: ForestMapEntry): string {
   return `${summary.slice(0, 84).replace(/[，,、：:；;。.!！?？\s]+$/g, '')}...`;
 }
 
-export function buildForestMapStops(entries: ForestMapEntry[], base = import.meta.env.BASE_URL): ForestMapData {
+export function buildForestMapStops(
+  entries: ForestMapEntry[],
+  base = import.meta.env.BASE_URL,
+  corpus?: CharacterCorpus,
+): ForestMapData {
   const showcaseLookup = buildShowcaseLookup(entries);
+  const resolved = corpus ?? buildCorpusFromEntries(entries, base);
 
   const trees = entries
     .map((entry) => {
       const key = `${entry.collection}:${entry.id}`;
       const showcase = showcaseLookup.get(key);
       const timestamp = getTimestamp(entry);
+      const portraits = resolved.byKey.get(key)?.portraits ?? [];
 
       return {
         id: key,
@@ -163,6 +171,7 @@ export function buildForestMapStops(entries: ForestMapEntry[], base = import.met
         href: buildContentUrl(entry.collection, entry.id, base),
         collection: entry.collection,
         timestamp,
+        chars: portraits.map((item) => item.char),
         ...(showcase
           ? {
               x: showcase.position.x,
@@ -170,8 +179,7 @@ export function buildForestMapStops(entries: ForestMapEntry[], base = import.met
               scale: showcase.position.scale,
               treeSvg: buildCharacterTreeSvg({
                 seed: key,
-                title: entry.data.title,
-                body: entry.body ?? '',
+                portraits,
                 clipId: `grove-tree-${showcase.index}-${sanitizeClipId(key)}`,
                 variant: 'compact',
               }),

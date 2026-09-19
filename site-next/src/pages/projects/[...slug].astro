@@ -3,7 +3,8 @@ import { getCollection, render } from 'astro:content';
 import ContentLayout from '../../layouts/ContentLayout.astro';
 import PaimonCaseStudy from '../../components/PaimonCaseStudy.astro';
 import { buildContentUrl, normalizeSlug, sortByRecency } from '../../utils/content';
-import { buildEntryCharacterTree } from '../../utils/character-tree';
+import { buildCharacterTreeSvg, treeClipId } from '../../utils/character-tree';
+import { loadCharacterCorpus, portraitsForRendered } from '../../utils/character-lexicon';
 import type { GetStaticPaths } from 'astro';
 
 export const getStaticPaths = (async () => {
@@ -18,10 +19,17 @@ const { entry } = Astro.props;
 const isPaimonCaseStudy = entry.id === 'PaimonAsksEverything/paimon-asks-everything.md';
 const { Content, headings } = await render(entry);
 const filteredHeadings = headings.filter((h) => h.depth <= 3);
-const characterTreeSvg = buildEntryCharacterTree(
+const headingTexts = filteredHeadings.map((h) => h.text);
+const characterBones = portraitsForRendered(
+  await loadCharacterCorpus(import.meta.env.BASE_URL),
   entry,
-  filteredHeadings.map((h) => h.text),
+  headingTexts,
 );
+const characterTreeSvg = buildCharacterTreeSvg({
+  seed: entry.id,
+  portraits: characterBones,
+  clipId: treeClipId(entry.id),
+});
 const entries = sortByRecency(await getCollection('projects', ({ data }) => !data.draft));
 const currentIndex = entries.findIndex((item) => item.id === entry.id);
 const previousEntry = currentIndex >= 0 ? entries[currentIndex + 1] : undefined;
@@ -55,6 +63,7 @@ const nextEntry = currentIndex > 0 ? entries[currentIndex - 1] : undefined;
       tags={entry.data.tags}
       headings={filteredHeadings.map((h) => ({ depth: h.depth, slug: h.slug, text: h.text }))}
       characterTreeSvg={characterTreeSvg}
+      characterBones={characterBones.map((item) => item.char)}
       previous={
         previousEntry && {
           title: previousEntry.data.title,

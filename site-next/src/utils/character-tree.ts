@@ -1,4 +1,5 @@
-/** Seeded PRNG (mulberry32). */
+import type { CharPortrait } from './character-lexicon';
+
 function createRng(seed: number) {
   let state = seed >>> 0;
   return () => {
@@ -18,65 +19,7 @@ function hashString(input: string): number {
   return hash >>> 0;
 }
 
-function isCjk(char: string): boolean {
-  const code = char.charCodeAt(0);
-  return (
-    (code >= 0x4e00 && code <= 0x9fff) ||
-    (code >= 0x3400 && code <= 0x4dbf) ||
-    (code >= 0xf900 && code <= 0xfaff)
-  );
-}
-
-/** Collect weighted Chinese characters from note content. */
-export function collectCharacterPool(
-  title: string,
-  headings: string[],
-  body: string,
-  limit = 180,
-): string[] {
-  const weights = new Map<string, number>();
-
-  const addText = (text: string, weight: number) => {
-    for (const char of text.replace(/\s+/g, '')) {
-      if (!isCjk(char)) continue;
-      weights.set(char, (weights.get(char) ?? 0) + weight);
-    }
-  };
-
-  addText(title, 6);
-  for (const heading of headings) addText(heading, 4);
-
-  const cjkWords = body.match(/[\u4e00-\u9fff]{2,4}/g) ?? [];
-  for (const word of cjkWords) addText(word, 2);
-
-  const cjkChars = body.match(/[\u4e00-\u9fff]/g) ?? [];
-  for (const char of cjkChars) addText(char, 1);
-
-  if (weights.size === 0) {
-    for (const char of '林间笔记森树') addText(char, 1);
-  }
-
-  const expanded: string[] = [];
-  for (const [char, weight] of weights) {
-    const copies = Math.min(8, Math.max(1, Math.round(Math.sqrt(weight))));
-    for (let i = 0; i < copies; i += 1) expanded.push(char);
-  }
-
-  const rng = createRng(hashString(`${title}:${body.length}`));
-  for (let i = expanded.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(rng() * (i + 1));
-    [expanded[i], expanded[j]] = [expanded[j], expanded[i]];
-  }
-
-  const pool: string[] = [];
-  while (pool.length < limit && expanded.length > 0) {
-    pool.push(...expanded);
-  }
-
-  return pool.slice(0, limit);
-}
-
-/** Simple pine-tree polygon for hit testing (viewBox 0 0 120 160). */
+/** Simple pine-tree polygon (viewBox 0 0 120 160). */
 const TREE_POLYGON: Array<[number, number]> = [
   [60, 6],
   [72, 34],
@@ -110,15 +53,6 @@ function pointInPolygon(x: number, y: number, polygon: Array<[number, number]>):
   return inside;
 }
 
-export interface CharacterTreeOptions {
-  seed: string;
-  title: string;
-  headings?: string[];
-  body?: string;
-  clipId?: string;
-  variant?: 'default' | 'compact';
-}
-
 function escapeSvgText(value: string): string {
   return value
     .replace(/&/g, '&amp;')
@@ -127,66 +61,64 @@ function escapeSvgText(value: string): string {
     .replace(/"/g, '&quot;');
 }
 
-export function buildEntryCharacterTree(
-  entry: { id: string; body?: string; data: { title: string } },
-  headingTexts: string[] = [],
-): string {
-  const clipId = `tree-${entry.id.replace(/[^\w\u4e00-\u9fff-]+/g, '-').slice(0, 56)}`;
-  return buildCharacterTreeSvg({
-    seed: entry.id,
-    title: entry.data.title,
-    headings: headingTexts,
-    body: entry.body ?? '',
-    clipId,
-  });
+export interface CharacterTreeOptions {
+  seed: string;
+  portraits: CharPortrait[];
+  clipId?: string;
+  variant?: 'default' | 'compact' | 'year';
+  hrefForChar?: (char: string) => string;
 }
 
 export function buildCharacterTreeSvg({
   seed,
-  title,
-  headings = [],
-  body,
+  portraits,
   clipId = 'tree-clip',
   variant = 'default',
+  hrefForChar,
 }: CharacterTreeOptions): string {
-  const content = body ?? '';
   const compact = variant === 'compact';
+  const year = variant === 'year';
+  if (portraits.length === 0 && !compact && !year) return '';
   const rng = createRng(hashString(seed));
-  const pool = collectCharacterPool(title, headings, content, compact ? 48 : 180);
-  const slots: Array<{ x: number; y: number }> = [];
+  const canopy: Array<{ x: number; y: number }> = [];
 
-  for (let y = 10; y <= 150; y += 9) {
-    for (let x = 18; x <= 102; x += 9) {
-      const jitterX = (rng() - 0.5) * 4;
-      const jitterY = (rng() - 0.5) * 4;
-      const px = x + jitterX;
-      const py = y + jitterY;
-      if (pointInPolygon(px, py, TREE_POLYGON)) {
-        slots.push({ x: px, y: py });
-      }
+  for (let y = 12; y <= (compact ? 100 : 112); y += compact ? 14 : 11) {
+    for (let x = 22; x <= 98; x += compact ? 14 : 12) {
+      const px = x + (rng() - 0.5) * 5;
+      const py = y + (rng() - 0.5) * 5;
+      if (pointInPolygon(px, py, TREE_POLYGON)) canopy.push({ x: px, y: py });
     }
   }
 
-  for (let i = slots.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(rng() * (i + 1));
-    [slots[i], slots[j]] = [slots[j], slots[i]];
-  }
+  canopy.sort((a, b) => a.y - b.y || a.x - b.x);
+  const maxScore = Math.max(...portraits.map((item) => item.score), 0.001);
+  const take = Math.min(portraits.length, compact ? 6 : year ? 14 : 12);
+  const step = Math.max(1, Math.floor(canopy.length / Math.max(take, 1)));
 
-  const count = Math.min(slots.length, pool.length, compact ? 28 : 110);
   const treePath = TREE_POLYGON.map(([x, y], index) => `${index === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
-
-  const labels = Array.from({ length: count }, (_, index) => {
-    const slot = slots[index];
-    const char = pool[index];
-    const size = compact ? 7.5 + rng() * 4 : 10.5 + rng() * 5.5;
-    const rotation = (rng() - 0.5) * (compact ? 8 : 10);
-    const opacity = compact ? 0.58 + rng() * 0.34 : 0.52 + rng() * 0.4;
+  const labels = portraits.slice(0, take).map((portrait, index) => {
+    const slot = canopy[Math.min(index * step, canopy.length - 1)] ?? { x: 60, y: 48 };
+    const rank = portrait.score / maxScore;
+    const size = compact
+      ? 8.5 + rank * 6
+      : year
+        ? 13 + rank * 11
+        : 13.5 + rank * 12;
+    const rotation = (rng() - 0.5) * 7;
     const tone = rng();
     const fill =
       tone > 0.66 ? 'var(--ch-accent-secondary)' : tone > 0.33 ? 'var(--ch-accent-tertiary)' : 'var(--ch-accent)';
-
-    return `<text x="${slot.x.toFixed(1)}" y="${slot.y.toFixed(1)}" fill="${fill}" font-size="${size.toFixed(1)}" opacity="${opacity.toFixed(2)}" transform="rotate(${rotation.toFixed(1)} ${slot.x.toFixed(1)} ${slot.y.toFixed(1)})" font-family="var(--ch-text-font)">${escapeSvgText(char)}</text>`;
+    const source = portrait.inTitle ? 'title' : portrait.inHeading ? 'heading' : 'body';
+    const href = hrefForChar?.(portrait.char);
+    const text = `<text class="character-tree__glyph" data-char="${escapeSvgText(portrait.char)}" data-count="${portrait.count}" data-source="${source}" data-heading="${escapeSvgText(portrait.heading ?? '')}" data-rank="${rank.toFixed(3)}" x="${slot.x.toFixed(1)}" y="${slot.y.toFixed(1)}" fill="${fill}" font-size="${size.toFixed(1)}" transform="rotate(${rotation.toFixed(1)} ${slot.x.toFixed(1)} ${slot.y.toFixed(1)})" font-family="var(--ch-text-font)" style="--char-opacity:${(0.72 + rank * 0.28).toFixed(2)}">${escapeSvgText(portrait.char)}</text>`;
+    return href
+      ? `<a class="character-tree__link" href="${escapeSvgText(href)}" aria-label="查看汉字「${escapeSvgText(portrait.char)}」">${text}</a>`
+      : text;
   }).join('');
 
-  return `<svg class="character-tree__svg" viewBox="0 0 120 160" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="${clipId}"><path d="${treePath} Z" /></clipPath></defs><g clip-path="url(#${clipId})">${labels}</g></svg>`;
+  return `<svg class="character-tree__svg" id="${escapeSvgText(clipId)}" viewBox="0 0 120 160" focusable="false" xmlns="http://www.w3.org/2000/svg"><path class="character-tree__silhouette" d="${treePath} Z" fill="none" /><g>${labels}</g></svg>`;
+}
+
+export function treeClipId(entryId: string, prefix = 'tree'): string {
+  return `${prefix}-${entryId.replace(/[^\w\u4e00-\u9fff-]+/g, '-').slice(0, 56)}`;
 }

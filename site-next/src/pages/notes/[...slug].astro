@@ -3,7 +3,8 @@ import { getCollection, render } from 'astro:content';
 import ContentLayout from '../../layouts/ContentLayout.astro';
 import { buildContentUrl, normalizeSlug, sortByRecency } from '../../utils/content';
 import { buildCategoryUrl, docsPathToNoteId, notesNav, normalizeNoteId, walkNavNodes } from '../../utils/notes-nav';
-import { buildEntryCharacterTree } from '../../utils/character-tree';
+import { buildCharacterTreeSvg, treeClipId } from '../../utils/character-tree';
+import { loadCharacterCorpus, portraitsForRendered } from '../../utils/character-lexicon';
 import type { GetStaticPaths } from 'astro';
 
 export const getStaticPaths = (async () => {
@@ -17,10 +18,14 @@ export const getStaticPaths = (async () => {
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
 const filteredHeadings = headings.filter((h) => h.depth <= 3);
-const characterTreeSvg = buildEntryCharacterTree(
-  entry,
-  filteredHeadings.map((h) => h.text),
-);
+const headingTexts = filteredHeadings.map((h) => h.text);
+const corpus = await loadCharacterCorpus(import.meta.env.BASE_URL);
+const characterBones = portraitsForRendered(corpus, entry, headingTexts);
+const characterTreeSvg = buildCharacterTreeSvg({
+  seed: entry.id,
+  portraits: characterBones,
+  clipId: treeClipId(entry.id),
+});
 const entries = sortByRecency(await getCollection('notes', ({ data }) => !data.draft));
 const currentIndex = entries.findIndex((item) => item.id === entry.id);
 const previousEntry = currentIndex >= 0 ? entries[currentIndex + 1] : undefined;
@@ -46,6 +51,7 @@ walkNavNodes(notesNav, (node, trail) => {
   breadcrumbs={breadcrumbs}
   headings={filteredHeadings.map((h) => ({ depth: h.depth, slug: h.slug, text: h.text }))}
   characterTreeSvg={characterTreeSvg}
+  characterBones={characterBones.map((item) => item.char)}
   previous={previousEntry && {
     title: previousEntry.data.title,
     description: previousEntry.data.description,
