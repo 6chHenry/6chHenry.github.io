@@ -23,6 +23,7 @@ interface Props {
   headings?: Array<{ depth: number; slug: string; text: string }>;
   characterTreeSvg?: string;
   characterBones?: string[];
+  characterCharBase?: string;
   previous?: ArticleNavLink;
   next?: ArticleNavLink;
   immersive?: boolean;
@@ -37,6 +38,7 @@ const {
   headings = [],
   characterTreeSvg,
   characterBones = [],
+  characterCharBase,
   previous,
   next,
   immersive = false,
@@ -160,6 +162,7 @@ const showAside = !immersive && (headings.length > 0 || characterTreeSvg);
             <CharacterTree
               svg={characterTreeSvg}
               bones={characterBones}
+              charBase={characterCharBase}
               label="本篇的字"
             />
           )}

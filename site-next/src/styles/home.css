@@ -1321,6 +1321,16 @@
   max-width: 44rem;
 }
 
+.forest-map__title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.forest-map__title-link:hover,
+.forest-map__title-link:focus-visible {
+  color: var(--ch-accent);
+}
+
 .forest-map__panel {
   --forest-grove: var(--ch-accent-secondary);
   --forest-grove-soft: color-mix(in srgb, var(--forest-grove) 17%, transparent);

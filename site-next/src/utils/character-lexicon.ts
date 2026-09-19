@@ -209,6 +209,10 @@ export async function loadCharacterCorpus(base = '/'): Promise<CharacterCorpus> 
   return cached;
 }
 
+export function forestCharUrl(char: string, base = '/'): string {
+  return `${base}forest/${encodeURIComponent(char)}/`.replace(/\/{2,}/g, '/');
+}
+
 export function yearPortraits(corpus: CharacterCorpus, year: number, limit = 14): CharPortrait[] {
   const pooled = new Map<string, CharStat>();
   for (const doc of corpus.docs) {

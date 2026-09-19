@@ -3,9 +3,10 @@ interface Props {
   svg: string;
   bones?: string[];
   label?: string;
+  charBase?: string;
 }
 
-const { svg, bones = [], label = '本篇的字' } = Astro.props;
+const { svg, bones = [], label = '本篇的字', charBase } = Astro.props;
 ---
 
 <figure class="character-tree" data-character-tree>
@@ -16,7 +17,16 @@ const { svg, bones = [], label = '本篇的字' } = Astro.props;
   {
     bones.length > 0 && (
       <p class="character-tree__bones" aria-label="本篇特别的字">
-        {bones.join(' · ')}
+        {bones.map((char, index) => (
+          <>
+            {index > 0 && ' · '}
+            {charBase ? (
+              <a href={`${charBase}${encodeURIComponent(char)}/`}>{char}</a>
+            ) : (
+              <span>{char}</span>
+            )}
+          </>
+        ))}
       </p>
     )
   }

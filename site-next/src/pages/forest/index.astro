@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadCharacterCorpus, forestCharUrl } from '../../utils/character-lexicon';
+
+const base = import.meta.env.BASE_URL;
+const corpus = await loadCharacterCorpus(base);
+const chars = [...corpus.inverted.entries()]
+  .map(([char, docs]) => ({
+    char,
+    href: forestCharUrl(char, base),
+    count: docs.length,
+  }))
+  .sort((a, b) => b.count - a.count || a.char.localeCompare(b.char, 'zh-CN'));
+const maxCount = Math.max(...chars.map((item) => item.count), 1);
+---
+
+<BaseLayout title="汉字森林 | 6ch. · 林间笔记" description="点一个字，走进共用这个字的笔记、杂谈和作品">
+  <section class="container page-shell hanzi-forest">
+    <header class="page-header">
+      <p class="section-kicker">Character Grove</p>
+      <h1>汉字森林</h1>
+      <p class="section-lead">这些字是文章自己长出来的索引。点一个，看它还住在哪些篇里。</p>
+    </header>
+
+    {
+      chars.length === 0 ? (
+        <p class="hanzi-forest__empty">这片林子里还没有足够的汉字。</p>
+      ) : (
+        <ul class="hanzi-forest__cloud">
+          {
+            chars.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="hanzi-forest__char"
+                  style={`--char-weight: ${(0.72 + (item.count / maxCount) * 0.9).toFixed(2)}`}
+                >
+                  <span>{item.char}</span>
+                  <small>{item.count}</small>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .hanzi-forest__cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 0.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hanzi-forest__char {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    padding: 0.28rem 0.55rem 0.32rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--ch-border) 80%, transparent);
+    background: color-mix(in srgb, var(--ch-glass-bg) 88%, transparent);
+    color: var(--ch-fg);
+    text-decoration: none;
+    font-family: var(--ch-display-font);
+    font-size: calc(0.95rem * var(--char-weight, 1));
+    letter-spacing: 0.08em;
+    transition:
+      color var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      transform var(--ch-transition-fast),
+      background var(--ch-transition-fast);
+  }
+
+  .hanzi-forest__char small {
+    font-family: var(--ch-mono-font);
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    color: var(--ch-fg-muted);
+  }
+
+  .hanzi-forest__char:hover,
+  .hanzi-forest__char:focus-visible {
+    color: var(--ch-accent);
+    border-color: color-mix(in srgb, var(--ch-accent) 45%, var(--ch-border));
+    background: var(--ch-accent-dim);
+    transform: translateY(-1px);
+  }
+
+  .hanzi-forest__empty {
+    color: var(--ch-fg-muted);
+  }
+</style>
