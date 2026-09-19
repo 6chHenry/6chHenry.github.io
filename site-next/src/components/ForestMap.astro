@@ -52,6 +52,12 @@ function groveKinship(trees: ForestTreeNode[]) {
   return { chips, links: links.slice(0, 14) };
 }
 
+function kinshipPath(link: { ax: number; ay: number; bx: number; by: number }) {
+  const midX = (link.ax + link.bx) * 0.5;
+  const crest = Math.min(link.ay, link.by) - 10;
+  return `M${link.ax} ${link.ay} Q ${midX} ${crest} ${link.bx} ${link.by}`;
+}
+
 const groveConfig = [
   {
     collection: 'notes',
@@ -227,7 +233,7 @@ const groves: GroveView[] = groveConfig.map((grove) => {
                         <path
                           class="forest-map__kinship-line"
                           data-shared={link.shared}
-                          d={`M${link.ax} ${link.ay} Q ${(link.ax + link.bx) / 2} ${Math.min(link.ay, link.by) - 10} ${link.bx} ${link.by}`}
+                          d={kinshipPath(link)}
                           fill="none"
                         />
                       ))}
@@ -366,7 +372,8 @@ const groves: GroveView[] = groveConfig.map((grove) => {
       if (more instanceof HTMLAnchorElement) {
         more.hidden = !char;
         if (char) {
-          more.href = `${forestBase}forest/${encodeURIComponent(char)}/`.replace(/\/{2,}/g, '/');
+          const prefix = forestBase.endsWith('/') ? forestBase : `${forestBase}/`;
+          more.href = `${prefix}forest/${encodeURIComponent(char)}/`;
           more.textContent = `查看「${char}」`;
         }
       }

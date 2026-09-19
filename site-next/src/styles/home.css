@@ -1655,15 +1655,16 @@
 
 .forest-map__kinship-bar {
   position: absolute;
-  top: 0.8rem;
+  top: 5.05rem;
+  left: 0.85rem;
   right: 0.85rem;
   z-index: 3;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 0.35rem;
-  max-width: min(26rem, calc(100% - 16rem));
+  max-width: none;
 }
 
 .forest-map__kinship-bar > span {
@@ -1747,7 +1748,7 @@
 
 .forest-map__treefield {
   position: absolute;
-  inset: 5.4rem 0.2rem 0.5rem;
+  inset: 7.35rem 0.2rem 0.5rem;
 }
 
 .forest-map__tree-node {
