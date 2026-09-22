@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import GalleryAtlas from '../../components/GalleryAtlas.astro';
+import GalleryLightbox from '../../components/GalleryLightbox.astro';
+import { buildGalleryAtlas } from '../../data/gallery-atlas';
+import '../../styles/global.css';
+
+const base = import.meta.env.BASE_URL;
+const entries = await getCollection('gallery', ({ data }) => !data.draft);
+const atlas = buildGalleryAtlas(entries, base);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <BaseHead
+      title="光影地志 · Photo Atlas | 6ch."
+      description="把相册摊成地图，循着一张照片，回到一座城。"
+    />
+  </head>
+  <body class="atlas-page">
+    <a class="atlas-page__skip" href="#gallery-atlas">跳到照片地图</a>
+    <GalleryAtlas {...atlas} backHref={`${base}gallery/`} />
+    <GalleryLightbox />
+  </body>
+</html>
+
+<script>
+  import { initGalleryLightbox } from '../../scripts/gallery';
+  import '../../scripts/gallery-atlas';
+  import { initThemeToggle } from '../../scripts/theme';
+
+  initGalleryLightbox();
+  initThemeToggle();
+</script>
+
+<style is:global>
+  html:has(.atlas-page) {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+  body.atlas-page {
+    width: 100%;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    background: var(--ch-bg-void);
+  }
+  .atlas-page__skip {
+    position: fixed;
+    z-index: 10000;
+    top: .75rem;
+    left: 50%;
+    padding: .65rem 1rem;
+    background: var(--ch-surface-solid);
+    color: var(--ch-fg);
+    transform: translate(-50%, -150%);
+  }
+  .atlas-page__skip:focus { transform: translate(-50%, 0); }
+</style>

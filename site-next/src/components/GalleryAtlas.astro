@@ -6,79 +6,93 @@ interface Props {
   places: AtlasPlace[];
   trips: { slug: string; title: string }[];
   unmappedCount: number;
+  backHref: string;
 }
-const { places, trips, unmappedCount } = Astro.props;
+
+const { places, trips, unmappedCount, backHref } = Astro.props;
 const total = places.reduce((sum, place) => sum + place.images.length, 0);
 const samples = [places[0], places[Math.floor(places.length / 2)]].filter(Boolean);
 const payload = JSON.stringify({ places, trips, unmappedCount }).replace(/</g, '\\u003c');
 ---
 
 {places.length > 0 && (
-  <section id="gallery-atlas" class="atlas" data-atlas aria-labelledby="atlas-title">
-    <header class="atlas__header">
-      <div class="atlas__title-group">
-        <p class="atlas-eyebrow"><span class="atlas__folio">01</span> 地理索引 / PHOTO ATLAS</p>
-        <h2 id="atlas-title">光影地志<span lang="en">An atlas of moments.</span></h2>
-        <p class="atlas__intro">把相册摊成地图，循着一张照片，回到一座城。</p>
+  <main id="gallery-atlas" class="atlas atlas--immersive" data-atlas aria-labelledby="atlas-title">
+    <div class="atlas__map-frame">
+      <div class="atlas__map" data-atlas-canvas tabindex="0" role="region" aria-label="全屏照片地图，可用方向键平移、加减键缩放，也可从地点索引选择城市" />
+      <div class="atlas__shade" aria-hidden="true" />
+      <div class="atlas__grain" aria-hidden="true" />
+    </div>
+
+    <header class="atlas__masthead">
+      <div class="atlas__bar">
+        <a class="atlas__back" href={backHref}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg>
+          <span>返回画廊</span>
+        </a>
+        <p class="atlas-eyebrow"><span class="atlas__folio">01</span> PHOTO ATLAS · 2026</p>
       </div>
+      <h1 id="atlas-title">光影地志</h1>
+      <p class="atlas__subtitle"><em>An atlas of moments.</em> 把相册摊成地图，循着一张照片，回到一座城。</p>
       <div class="atlas__edition" aria-label={`${places.length} 处足迹，${total} 张照片`}>
         <span><strong>{String(places.length).padStart(2, '0')}</strong> 处足迹</span>
         <span><strong>{String(total).padStart(2, '0')}</strong> 张照片</span>
-        <small>光影有迹 · 山海有址</small>
       </div>
     </header>
 
     <div class="atlas__filters" role="group" aria-label="按旅程浏览地图">
       <span class="atlas__filter-label">沿途</span>
-      <button type="button" data-atlas-filter="" aria-pressed="true">全部足迹</button>
+      <button type="button" data-atlas-filter="" aria-pressed="true">全部</button>
       {trips.map((trip) => (
         <button type="button" data-atlas-filter={trip.slug} aria-pressed="false">{trip.title}</button>
       ))}
     </div>
 
-    <div class="atlas__folio-body">
-      <div class="atlas__map-frame">
-        <div class="atlas__map" data-atlas-canvas tabindex="0" role="region" aria-label="照片地图，可用方向键平移、加减键缩放，也可用下方地点索引选择城市" />
-        <div class="atlas__compass" aria-hidden="true">
-          <span>N</span>
-          <svg viewBox="0 0 36 48" fill="none"><path d="M18 3 27 37 18 30 9 37Z" stroke="currentColor" /><path d="M18 3V30L9 37Z" fill="currentColor" /></svg>
-        </div>
-        <div class="atlas__map-note" aria-hidden="true"><span>FIELD NOTES</span>照片落在旅途里</div>
-        <div class="atlas__zoom" role="group" aria-label="地图缩放">
-          <button type="button" data-atlas-zoom-in aria-label="放大地图"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
-          <button type="button" data-atlas-zoom-out aria-label="缩小地图"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14" /></svg></button>
-        </div>
-        <button class="atlas__reset" type="button" data-atlas-reset><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" /><circle cx="12" cy="12" r="3" /></svg>全部足迹</button>
+    <div class="atlas__tools">
+      <button id="theme-toggle" class="atlas__theme" type="button" role="switch" aria-checked="false" aria-label="切换昼夜模式">
+        <svg class="atlas__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="3.5" /><path d="M12 2v2m0 16v2M2 12h2m16 0h2m-2.9-7.1-1.4 1.4M6.3 17.7l-1.4 1.4m0-14.2 1.4 1.4m11.4 11.4 1.4 1.4" /></svg>
+        <svg class="atlas__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M19.5 15.2A8.4 8.4 0 0 1 8.8 4.5 8.5 8.5 0 1 0 19.5 15.2Z" /></svg>
+      </button>
+      <div class="atlas__zoom" role="group" aria-label="地图缩放">
+        <button type="button" data-atlas-zoom-in aria-label="放大地图"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
+        <button type="button" data-atlas-zoom-out aria-label="缩小地图"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14" /></svg></button>
       </div>
+    </div>
 
-      <aside class="atlas-sheet" data-atlas-sheet aria-label="所选地点的照片">
+    <div class="atlas__compass" aria-hidden="true">
+      <span>N</span>
+      <svg viewBox="0 0 36 48" fill="none"><path d="M18 3 27 37 18 30 9 37Z" stroke="currentColor" /><path d="M18 3V30L9 37Z" fill="currentColor" /></svg>
+    </div>
+
+    <button class="atlas__reset" type="button" data-atlas-reset>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" /><circle cx="12" cy="12" r="3" /></svg>
+      全部足迹
+    </button>
+
+    <aside class="atlas-sheet-shell" aria-label="所选地点的照片暗房">
+      <div class="atlas-sheet" data-atlas-sheet>
         <div class="atlas-sheet__empty">
-          <p class="atlas-eyebrow">从一处足迹开始</p>
+          <p class="atlas-eyebrow">DARKROOM · 等待显影</p>
           <div class="atlas-sheet__specimens" aria-hidden="true">
             {samples.map((place, index) => (
-              <figure style={`--specimen-angle: ${index ? '7deg' : '-7deg'}`}>
+              <figure style={`--specimen-angle: ${index ? '6deg' : '-6deg'}`}>
                 <picture>
                   {place.images[0].webpSrcset && <source type="image/webp" srcset={place.images[0].webpSrcset} sizes="180px" />}
-                  <img src={place.images[0].src} alt="" width="180" height="210" loading="lazy" decoding="async" />
+                  <img src={place.images[0].src} alt="" width="180" height="210" loading="eager" decoding="async" />
                 </picture>
                 <figcaption>{place.name}<span>{String(index + 1).padStart(2, '0')}</span></figcaption>
               </figure>
             ))}
           </div>
-          <h3>远方，不只是一个地名。</h3>
-          <p>点开地图上的相纸，看看那里的光。<br />照片靠得近时，会收成一叠；放大地图，就能慢慢展开。</p>
+          <h2>让一座城，慢慢显影。</h2>
+          <p>点开地图上的相纸，暗房会展开当地的全部照片。<br />相纸靠得近时会收成一叠，放大地图便会散开。</p>
           <span class="atlas-sheet__empty-rule" aria-hidden="true" />
-          <p class="atlas-sheet__note">位置按相册的城市／区域归档，<br />不是逐张照片的拍摄 GPS。</p>
+          <p class="atlas-sheet__note">位置按相册的城市／区域归档，不是逐张照片的拍摄 GPS。</p>
         </div>
-      </aside>
-    </div>
+      </div>
+    </aside>
 
-    <div class="atlas__map-footer">
-      <span data-atlas-count>{places.length} 处足迹 · {total} 张照片</span>
-      <div><span data-atlas-status role="status">地图即将展开</span><button type="button" data-atlas-retry hidden>重新加载底图</button></div>
-    </div>
     <nav class="atlas__index" aria-label="照片地点索引">
-      <span class="atlas__index-title">地点索引<span lang="en">PLACE INDEX</span></span>
+      <span class="atlas__index-title">地点索引 <i>PLACE INDEX</i></span>
       <div class="atlas__cities">
         {places.map((place) => (
           <button type="button" data-atlas-place={place.id} aria-pressed="false" aria-label={`${place.name}，${place.images.length} 张照片`}>
@@ -87,9 +101,17 @@ const payload = JSON.stringify({ places, trips, unmappedCount }).replace(/</g, '
         ))}
       </div>
     </nav>
-    {unmappedCount > 0 && <p class="atlas__unmapped">另有 {unmappedCount} 张照片尚未标记地点，仍可在下方相册中查看。</p>}
+
+    <footer class="atlas__status">
+      <span data-atlas-count>{places.length} 处足迹 · {total} 张照片</span>
+      <span class="atlas__status-rule" aria-hidden="true" />
+      <span data-atlas-status role="status">地图即将展开</span>
+      <button type="button" data-atlas-retry hidden>重新加载底图</button>
+    </footer>
+
+    {unmappedCount > 0 && <p class="atlas__unmapped">另有 {unmappedCount} 张照片尚未标记地点。</p>}
     <span class="atlas__sr-only" data-atlas-announcement aria-live="polite" aria-atomic="true" />
     <noscript><p class="atlas__noscript">地图需要启用 JavaScript。也可以直接打开相册：{places.map((place) => <a href={place.detailUrl}>{place.name} </a>)}</p></noscript>
     <script type="application/json" data-atlas-data set:html={payload} />
-  </section>
+  </main>
 )}

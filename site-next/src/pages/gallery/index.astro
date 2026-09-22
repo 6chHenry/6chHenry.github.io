@@ -4,7 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import GalleryCard from '../../components/GalleryCard.astro';
 import GalleryImage from '../../components/GalleryImage.astro';
 import GalleryLightbox from '../../components/GalleryLightbox.astro';
-import GalleryAtlas from '../../components/GalleryAtlas.astro';
+import GalleryAtlasPortal from '../../components/GalleryAtlasPortal.astro';
 import { buildGalleryAtlas } from '../../data/gallery-atlas';
 import { buildContentUrl, formatDate, sortByRecency } from '../../utils/content';
 import { TRIP_CITIES, mergeChapters } from '../../data/gallery-trips';
@@ -170,6 +170,7 @@ const timeline = [
 const monthPosition = (month: number) => ((month - 0.5) / MONTHS_IN_YEAR) * 100;
 const tripMonths = new Set(timeline.map((trip) => trip.month));
 const futureMonth = 10;
+const atlas = buildGalleryAtlas(allEntries, base);
 ---
 
 <BaseLayout
@@ -185,7 +186,7 @@ const futureMonth = 10;
       </p>
     </header>
 
-    <GalleryAtlas {...buildGalleryAtlas(allEntries, base)} />
+    <GalleryAtlasPortal places={atlas.places} href={`${base}gallery/atlas/`} />
 
     <!-- 2026 Journey Timeline -->
     <div class="trip-timeline">
@@ -362,7 +363,7 @@ const futureMonth = 10;
 
 <script>
   import { initGalleryFilters, initGalleryLightbox, initGalleryTimelineHighlights } from '../../scripts/gallery';
-  import '../../scripts/gallery-atlas';
+
   initGalleryFilters();
   initGalleryLightbox();
   initGalleryTimelineHighlights();

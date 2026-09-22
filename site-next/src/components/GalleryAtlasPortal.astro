@@ -1,0 +1,108 @@
+---
+import type { AtlasPlace } from '../data/gallery-atlas';
+
+interface Props {
+  places: AtlasPlace[];
+  href: string;
+}
+
+const { places, href } = Astro.props;
+const total = places.reduce((sum, place) => sum + place.images.length, 0);
+const samples = [places[0], places[Math.floor(places.length / 2)], places.at(-1)].filter(Boolean);
+---
+
+<a class="atlas-portal" href={href} aria-label={`进入光影地志，探索 ${places.length} 处足迹与 ${total} 张照片`}>
+  <div class="atlas-portal__copy">
+    <p><span>01</span> PHOTO ATLAS · 独立展厅</p>
+    <h2>光影地志 <em>An atlas of moments.</em></h2>
+    <div class="atlas-portal__meta">
+      <span><strong>{String(places.length).padStart(2, '0')}</strong> 处足迹</span>
+      <span><strong>{String(total).padStart(2, '0')}</strong> 张照片</span>
+    </div>
+    <span class="atlas-portal__enter">展开整幅地图 <i aria-hidden="true">↗</i></span>
+  </div>
+  <div class="atlas-portal__chart" aria-hidden="true">
+    <svg class="atlas-portal__grid" viewBox="0 0 760 250" preserveAspectRatio="none">
+      <path d="M0 42H760M0 104H760M0 166H760M0 228H760M92 0V250M218 0V250M344 0V250M470 0V250M596 0V250M722 0V250" />
+      <path class="atlas-portal__route" d="M52 190C148 134 203 203 288 136S449 52 512 108s91 69 196-38" />
+    </svg>
+    {samples.map((place, index) => (
+      <figure class={`atlas-portal__photo atlas-portal__photo--${index + 1}`}>
+        <picture>
+          {place.images[0].webpSrcset && <source type="image/webp" srcset={place.images[0].webpSrcset} sizes="180px" />}
+          <img src={place.images[0].src} alt="" width="180" height="160" loading="lazy" decoding="async" />
+        </picture>
+        <figcaption>{place.name}<small>{String(place.images.length).padStart(2, '0')}</small></figcaption>
+      </figure>
+    ))}
+    <span class="atlas-portal__coordinate">22°N — 41°N<br />94°E — 136°E</span>
+  </div>
+</a>
+
+<style>
+  .atlas-portal {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(18rem, 0.8fr) minmax(26rem, 1.4fr);
+    min-height: 18rem;
+    margin: 2.5rem 0 4rem;
+    overflow: hidden;
+    border: 1px solid var(--ch-border);
+    border-radius: 4px;
+    background:
+      linear-gradient(112deg, color-mix(in srgb, var(--ch-surface-solid) 94%, transparent) 0 42%, color-mix(in srgb, var(--ch-bg-sky) 72%, var(--ch-surface-solid)) 42% 100%);
+    box-shadow: var(--ch-shadow);
+    color: var(--ch-fg);
+    text-decoration: none;
+    isolation: isolate;
+    transition: border-color var(--ch-transition), box-shadow var(--ch-transition), transform var(--ch-transition);
+  }
+  .atlas-portal::after {
+    content: '';
+    position: absolute;
+    inset: .55rem;
+    border: 1px solid color-mix(in srgb, var(--ch-border-soft) 70%, transparent);
+    pointer-events: none;
+  }
+  .atlas-portal:hover { transform: translateY(-3px); border-color: var(--ch-accent-secondary); box-shadow: var(--ch-glow); }
+  .atlas-portal:focus-visible { outline: 3px solid var(--ch-accent-secondary); outline-offset: 4px; }
+  .atlas-portal__copy { position: relative; z-index: 3; padding: 2.2rem 1.8rem 1.8rem 2.2rem; }
+  .atlas-portal__copy > p { margin: 0 0 1.3rem; color: var(--ch-fg-muted); font: .65rem var(--ch-mono-font); letter-spacing: .14em; }
+  .atlas-portal__copy > p span { display: inline-grid; place-items: center; width: 1.7rem; height: 1.7rem; margin-right: .7rem; border: 1px solid var(--ch-border); }
+  .atlas-portal h2 { margin: 0; font-family: var(--ch-display-font); font-size: clamp(2rem, 3.2vw, 3.2rem); font-weight: 500; letter-spacing: .08em; line-height: 1.1; }
+  .atlas-portal h2 em { display: block; margin-top: .55rem; color: var(--ch-fg-muted); font-size: 1.1rem; font-weight: 400; letter-spacing: .01em; }
+  .atlas-portal__meta { display: flex; gap: 1.5rem; margin-top: 1.6rem; color: var(--ch-fg-muted); font-size: .7rem; }
+  .atlas-portal__meta strong { margin-right: .28rem; color: var(--ch-fg); font: 1.5rem var(--ch-display-font); font-variant-numeric: tabular-nums; }
+  .atlas-portal__enter { position: absolute; left: 2.2rem; bottom: 1.55rem; display: inline-flex; align-items: center; gap: .8rem; color: var(--ch-accent); font-size: .82rem; }
+  .atlas-portal__enter i { font: 1.05rem var(--ch-mono-font); transition: transform var(--ch-transition); }
+  .atlas-portal:hover .atlas-portal__enter i { transform: translate(3px, -3px); }
+  .atlas-portal__chart { position: relative; min-height: 18rem; overflow: hidden; }
+  .atlas-portal__grid { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--ch-border-soft); }
+  .atlas-portal__grid path { fill: none; stroke: currentColor; stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .atlas-portal__grid .atlas-portal__route { stroke: var(--ch-accent-secondary); stroke-width: 1.5; stroke-dasharray: 5 7; }
+  .atlas-portal__photo { --angle: 0deg; position: absolute; z-index: 2; width: 8.2rem; margin: 0; padding: .35rem .35rem 0; border: 1px solid var(--ch-border); background: var(--ch-surface-solid); box-shadow: var(--ch-shadow); transform: rotate(var(--angle)); transition: transform var(--ch-transition); }
+  .atlas-portal__photo picture, .atlas-portal__photo img { display: block; width: 100%; height: 6.4rem; object-fit: cover; }
+  .atlas-portal__photo figcaption { display: flex; justify-content: space-between; align-items: center; min-height: 1.8rem; color: var(--ch-fg-muted); font-size: .68rem; }
+  .atlas-portal__photo small { font: .58rem var(--ch-mono-font); }
+  .atlas-portal__photo--1 { --angle: -6deg; left: 9%; top: 17%; }
+  .atlas-portal__photo--2 { --angle: 4deg; left: 41%; top: 38%; }
+  .atlas-portal__photo--3 { --angle: -3deg; right: 5%; top: 10%; }
+  .atlas-portal:hover .atlas-portal__photo--1 { transform: rotate(-8deg) translateY(-4px); }
+  .atlas-portal:hover .atlas-portal__photo--2 { transform: rotate(2deg) translateY(-7px); }
+  .atlas-portal:hover .atlas-portal__photo--3 { transform: rotate(-1deg) translateY(-4px); }
+  .atlas-portal__coordinate { position: absolute; right: 1.3rem; bottom: 1rem; color: var(--ch-fg-muted); font: .56rem/1.7 var(--ch-mono-font); letter-spacing: .1em; text-align: right; }
+  @media (max-width: 760px) {
+    .atlas-portal { grid-template-columns: 1fr; min-height: 26rem; }
+    .atlas-portal__copy { padding: 1.7rem 1.5rem; }
+    .atlas-portal__enter { left: 1.5rem; bottom: 1.35rem; }
+    .atlas-portal__chart { min-height: 14rem; }
+    .atlas-portal__photo { width: 6.6rem; }
+    .atlas-portal__photo picture, .atlas-portal__photo img { height: 5rem; }
+    .atlas-portal__photo--1 { left: 5%; top: 16%; }
+    .atlas-portal__photo--2 { left: 36%; top: 35%; }
+    .atlas-portal__photo--3 { right: 4%; top: 10%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .atlas-portal, .atlas-portal * { transition: none !important; }
+  }
+</style>

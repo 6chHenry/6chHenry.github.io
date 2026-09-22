@@ -65,6 +65,7 @@ if (root) {
     };
     const showPlace = (place: AtlasPlace, move = true) => {
       selectedId = place.id;
+      root.classList.add('has-selection');
       const heading = document.createElement('div');
       heading.className = 'atlas-sheet__heading';
       heading.append(
@@ -106,6 +107,12 @@ if (root) {
       updateSelection();
       if (move && map) {
         map.setView([place.lat, place.lng], Math.max(map.getZoom(), 9), { animate: !reducedMotion.matches });
+        window.setTimeout(() => {
+          map?.panBy(
+            canvas.clientWidth <= 760 ? [0, Math.min(130, canvas.clientHeight * 0.16)] : [170, 0],
+            { animate: !reducedMotion.matches },
+          );
+        }, reducedMotion.matches ? 0 : 260);
       }
       const announcement = root.querySelector<HTMLElement>('[data-atlas-announcement]');
       if (announcement) announcement.textContent = `已展开${place.name}的 ${place.images.length} 张照片`;
@@ -115,8 +122,12 @@ if (root) {
       if (!map) return;
       const visible = visiblePlaces();
       if (!visible.length) return;
+      const mobile = canvas.clientWidth <= 760;
       map.fitBounds(L.latLngBounds(visible.map((place) => [place.lat, place.lng])), {
-        padding: [canvas.clientWidth < 500 ? 40 : 70, 70], maxZoom: 10, animate: !reducedMotion.matches,
+        paddingTopLeft: mobile ? [28, 175] : [55, 210],
+        paddingBottomRight: mobile ? [28, 205] : [390, 100],
+        maxZoom: 10,
+        animate: !reducedMotion.matches,
       });
     };
 
@@ -230,6 +241,7 @@ if (root) {
       activeTrip = trip;
       selectedId = '';
       sheet.innerHTML = initialSheet;
+      root.classList.remove('has-selection');
       root.querySelectorAll<HTMLButtonElement>('[data-atlas-filter]').forEach((button) => {
         button.setAttribute('aria-pressed', String(button.dataset.atlasFilter === trip));
       });
