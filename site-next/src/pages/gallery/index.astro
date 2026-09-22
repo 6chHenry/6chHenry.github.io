@@ -4,6 +4,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import GalleryCard from '../../components/GalleryCard.astro';
 import GalleryImage from '../../components/GalleryImage.astro';
 import GalleryLightbox from '../../components/GalleryLightbox.astro';
+import GalleryAtlas from '../../components/GalleryAtlas.astro';
+import { buildGalleryAtlas } from '../../data/gallery-atlas';
 import { buildContentUrl, formatDate, sortByRecency } from '../../utils/content';
 import { TRIP_CITIES, mergeChapters } from '../../data/gallery-trips';
 import { resolveGalleryImages } from '../../utils/gallery-images';
@@ -183,6 +185,8 @@ const futureMonth = 10;
       </p>
     </header>
 
+    <GalleryAtlas {...buildGalleryAtlas(allEntries, base)} />
+
     <!-- 2026 Journey Timeline -->
     <div class="trip-timeline">
       <h2 class="trip-timeline__heading">
@@ -358,6 +362,7 @@ const futureMonth = 10;
 
 <script>
   import { initGalleryFilters, initGalleryLightbox, initGalleryTimelineHighlights } from '../../scripts/gallery';
+  import '../../scripts/gallery-atlas';
   initGalleryFilters();
   initGalleryLightbox();
   initGalleryTimelineHighlights();
