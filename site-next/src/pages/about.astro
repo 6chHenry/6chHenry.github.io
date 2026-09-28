@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CharacterTree from '../components/CharacterTree.astro';
 import ForestIcon from '../components/ForestIcon.astro';
 import { buildCharacterTreeSvg } from '../utils/character-tree';
-import { corpusYears, forestCharUrl, forestDir, loadCharacterCorpus, yearPortraits } from '../utils/character-lexicon';
+import { corpusYears, forestCharUrl, loadCharacterCorpus, yearPortraits } from '../utils/character-lexicon';
 
 const base = import.meta.env.BASE_URL;
 const corpus = await loadCharacterCorpus(base);
@@ -187,9 +187,7 @@ const trails = [
               <p>这一年写下的篇，收成一棵字。</p>
               <CharacterTree
                 svg={yearTreeSvg}
-                bones={yearChars.map((item) => item.char)}
                 label="这一年的字"
-                charBase={forestDir(base)}
                 living={false}
                 class="character-tree--about"
               />

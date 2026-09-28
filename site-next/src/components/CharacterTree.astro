@@ -1,14 +1,12 @@
 ---
 interface Props {
   svg: string;
-  bones?: string[];
   label?: string;
-  charBase?: string;
   living?: boolean;
   class?: string;
 }
 
-const { svg, bones = [], label = '文字树', charBase, living = true, class: className } = Astro.props;
+const { svg, label = '文字树', living = true, class: className } = Astro.props;
 ---
 
 <figure class:list={['character-tree', className, living && 'is-living']} data-character-tree data-living={living ? 'true' : 'false'}>
@@ -16,22 +14,6 @@ const { svg, bones = [], label = '文字树', charBase, living = true, class: cl
   <div class="character-tree__canvas">
     <Fragment set:html={svg} />
   </div>
-  {
-    bones.length > 0 && (
-      <p class="character-tree__bones" aria-label="这棵树上特别的字">
-        {bones.map((char, index) => (
-          <>
-            {index > 0 && ' · '}
-            {charBase ? (
-              <a href={`${charBase}${encodeURIComponent(char)}/`}>{char}</a>
-            ) : (
-              <span>{char}</span>
-            )}
-          </>
-        ))}
-      </p>
-    )
-  }
   <p class="character-tree__tip" data-tree-tip hidden></p>
 </figure>
 
