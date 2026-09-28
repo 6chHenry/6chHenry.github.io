@@ -123,6 +123,7 @@ export function initGalleryLightbox() {
   const stopKanji = lightbox.querySelector<HTMLElement>('.glbx__stop-kanji');
   const stopEn = lightbox.querySelector<HTMLElement>('.glbx__stop-en');
   const filmEl = lightbox.querySelector<HTMLElement>('.glbx__film');
+  const filmRuler = lightbox.querySelector<HTMLElement>('.glbx__film-ruler');
   const filmTrack = lightbox.querySelector<HTMLElement>('.glbx__film-track');
   const imageArea = lightbox.querySelector<HTMLElement>('.glbx__image-area');
   const panel = lightbox.querySelector<HTMLElement>('.glbx__panel');
@@ -222,6 +223,7 @@ export function initGalleryLightbox() {
     const showGaps = chapters.length > 1;
     const starts = new Set(chapters.map((chapter) => chapter.start));
     filmTrack.replaceChildren();
+    filmRuler?.replaceChildren();
 
     currentMeta.images.forEach((asset, index) => {
       const item = document.createElement('button');
@@ -242,9 +244,35 @@ export function initGalleryLightbox() {
       filmTrack.appendChild(item);
     });
 
+    if (filmRuler) {
+      filmRuler.hidden = !showGaps;
+      if (showGaps) {
+        chapters.forEach((chapter) => {
+          const span = document.createElement('button');
+          span.type = 'button';
+          span.className = 'glbx__film-span';
+          span.style.setProperty('--span-color', chapter.color || 'transparent');
+          span.style.setProperty('--span-count', String(chapter.count));
+          span.dataset.start = String(chapter.start);
+          span.setAttribute('aria-label', `${chapter.kanji}，${chapter.count} 张`);
+          span.title = chapter.en ? `${chapter.kanji} · ${chapter.en}` : chapter.kanji;
+
+          const name = document.createElement('span');
+          name.className = 'glbx__film-span-name';
+          name.textContent = chapter.kanji;
+          const bar = document.createElement('i');
+          bar.className = 'glbx__film-span-bar';
+          bar.setAttribute('aria-hidden', 'true');
+          span.append(name, bar);
+          filmRuler.appendChild(span);
+        });
+      }
+    }
+
     const showFilm = currentMeta.images.length > 1;
     filmEl.hidden = !showFilm;
     imageArea?.classList.toggle('has-film', showFilm);
+    imageArea?.classList.toggle('has-ruler', showFilm && showGaps);
   };
 
   const updateFilm = (index: number) => {
@@ -256,6 +284,11 @@ export function initGalleryLightbox() {
       if (active) {
         item.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
       }
+    });
+
+    const chapter = chapterAt(index);
+    filmRuler?.querySelectorAll<HTMLElement>('.glbx__film-span').forEach((span) => {
+      span.classList.toggle('is-active', Number(span.dataset.start) === chapter?.start);
     });
   };
 
@@ -337,7 +370,9 @@ export function initGalleryLightbox() {
     currentIndex = 0;
     loaded = false;
     filmTrack?.replaceChildren();
-    imageArea?.classList.remove('has-film');
+    filmRuler?.replaceChildren();
+    if (filmRuler) filmRuler.hidden = true;
+    imageArea?.classList.remove('has-film', 'has-ruler');
     if (filmEl) filmEl.hidden = true;
     panel?.style.removeProperty('--gb-accent');
     panel?.style.removeProperty('--gb-accent-dim');
@@ -416,6 +451,11 @@ export function initGalleryLightbox() {
   nextBtn?.addEventListener('click', next);
   inspectBtn?.addEventListener('click', () => setInspecting(!inspecting));
   img?.addEventListener('dblclick', () => setInspecting(!inspecting));
+  filmRuler?.addEventListener('click', (event) => {
+    const span = (event.target as HTMLElement).closest<HTMLElement>('.glbx__film-span');
+    if (!span) return;
+    showImage(Number(span.dataset.start || '0'));
+  });
   filmTrack?.addEventListener('click', (event) => {
     const item = (event.target as HTMLElement).closest<HTMLElement>('.glbx__film-item');
     if (!item) return;
