@@ -1,5 +1,4 @@
 ---
-import ContentCard from './ContentCard.astro';
 import type { NavTreeItem } from '../utils/notes-nav';
 import { buildNavPanelId } from '../utils/notes-nav';
 import NotesNavItem from './NotesNavItem.astro';
@@ -18,19 +17,27 @@ const panelId = buildNavPanelId(item.slugPath);
     <li class="notes-nav-item" data-depth={depth}>
       <button
         type="button"
-        class="content-row content-row--category notes-nav-item__toggle"
+        class="notes-leaf notes-leaf--folder notes-nav-item__toggle"
         aria-expanded="false"
         aria-controls={panelId}
         data-panel-id={panelId}
       >
-        <span class="content-row__marker" aria-hidden="true"></span>
-        <div class="content-row__body">
-          <h2 class="content-row__title">{item.title}</h2>
-        </div>
-        <div class="content-row__aside">
-          {item.count !== undefined && <span class="content-row__badge">{item.count} 篇</span>}
-          <span class="content-row__chevron" aria-hidden="true">›</span>
-        </div>
+        <i class="notes-leaf__node" aria-hidden="true" />
+        <span class="notes-leaf__main">
+          <strong class="notes-leaf__title">{item.title}</strong>
+        </span>
+        <em class="notes-leaf__gist">{item.count !== undefined ? `${item.count} 篇` : '展开'}</em>
+        <span class="notes-leaf__toggle" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="M5 7.75 10 12.5l5-4.75"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
       </button>
       <ul id={panelId} class="notes-nav-panel content-list">
         {item.children?.map((child) => <NotesNavItem item={child} depth={depth + 1} />)}
@@ -38,13 +45,18 @@ const panelId = buildNavPanelId(item.slugPath);
     </li>
   ) : item.note ? (
     <li class="notes-nav-item notes-nav-item--leaf" data-depth={depth}>
-      <ContentCard
-        href={item.note.href}
-        title={item.note.title}
-        description={item.note.description ?? ''}
-        date={item.note.date}
-        collection="notes"
-      />
+      <a class="notes-leaf" href={item.note.href}>
+        <i class="notes-leaf__node" aria-hidden="true" />
+        <span class="notes-leaf__main">
+          <strong class="notes-leaf__title">{item.note.title}</strong>
+          {item.note.date && <time class="notes-leaf__date">{item.note.date}</time>}
+        </span>
+        {item.note.gist ? (
+          <em class="notes-leaf__gist">{item.note.gist}</em>
+        ) : (
+          <span class="notes-leaf__gist notes-leaf__gist--empty" aria-hidden="true" />
+        )}
+      </a>
     </li>
   ) : null
 }
