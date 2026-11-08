@@ -8,4 +8,4 @@ legacyPath: "/notes/GPT/makemoreMLP/"
 ---
 多层神经网络版本makemore
 
-[makemoreMLP.ipynb by 6ch.](./makemoreMLP.ipynb)
+[makemoreMLP.ipynb by 6ch.](/notes/GPT/makemoreMLP.ipynb)

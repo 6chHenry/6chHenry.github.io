@@ -1,6 +1,6 @@
 ---
 title: "Pandas库"
-updatedAt: "2025-07-27T11:27:21.372Z"
+updatedAt: "2026-08-21T13:04:36.263Z"
 tags:
   - "Python-Tutorial"
 draft: false
@@ -242,3 +242,231 @@ grouped_agg = grouped.agg({
 })
 print(grouped_agg)
 ```
+
+## unique() & nunique()
+
+`df["stock_id"].unique()`可以去重，`df["stock_id"].nunique()`计算独特值的个数
+
+## `parse_dates` 
+
+在 `pd.read_csv(DATA_PATH, parse_dates=["date"])` 中，`parse_dates` 的作用是**告诉 Pandas 在读取 CSV 时，自动将指定的列从字符串解析为 `datetime64` 类型**。
+
+### 为什么需要它？
+
+CSV 文件是纯文本格式，所有数据本质上都是字符串。如果不指定 `parse_dates`，日期列会被读入为普通字符串（`object` 类型）：
+
+```python
+# 不使用 parse_dates
+df = pd.read_csv("data.csv")
+print(df["date"].dtype)  # object (即字符串)
+print(df["date"][0])     # '2023-01-15' (字符串)
+
+# 使用 parse_dates
+df = pd.read_csv("data.csv", parse_dates=["date"])
+print(df["date"].dtype)  # datetime64[ns]
+print(df["date"][0])     # Timestamp('2023-01-15 00:00:00')
+```
+
+### 解析为 datetime 后能做什么？
+
+字符串做不到、但 datetime 能做的事情非常多：
+
+```python
+# 时间筛选
+df[df["date"] > "2023-06-01"]
+
+# 提取年/月/日/星期
+df["date"].dt.year
+df["date"].dt.month
+df["date"].dt.dayofweek
+
+# 时间差计算
+df["date"].diff()  # 相邻行的时间间隔
+
+# 按时间重采样
+df.set_index("date").resample("M").mean()  # 月度平均
+
+# 时间排序
+df.sort_values("date")
+```
+
+### `parse_dates` 的几种用法
+
+| 用法 | 含义 |
+|------|------|
+| `parse_dates=True` | 尝试解析索引列为日期 |
+| `parse_dates=["date"]` | 将 `"date"` 列解析为日期（最常用） |
+| `parse_dates=["date", "time"]` | 将多列分别解析为日期 |
+| `parse_dates=[["date", "time"]]` | 将多列**合并**后解析为一个日期列 |
+
+### 如果自动解析失败怎么办？
+
+当日期格式比较特殊时（如 `15/01/2023` 或中文日期），可以配合 `date_format` 参数（Pandas 2.0+）或读取后手动转换：
+
+```python
+# 方法1: 指定格式 (Pandas 2.0+)
+df = pd.read_csv("data.csv", parse_dates=["date"], date_format="%d/%m/%Y")
+
+# 方法2: 读入后手动转换
+df = pd.read_csv("data.csv")
+df["date"] = pd.to_datetime(df["date"], format="%d/%m/%Y")
+```
+
+### 小结
+
+`parse_dates=["date"]` 本质上等价于读入后执行 `df["date"] = pd.to_datetime(df["date"])`，只是更简洁，且在读取阶段就完成了类型转换。
+
+## `cumcount()` 
+
+`g.groupby("stock_id").cumcount()` 的作用是：**在每个分组内，给每一行一个从 0 开始的递增编号**。
+
+### 直观例子
+
+假设数据如下：
+
+```python
+import pandas as pd
+
+df = pd.DataFrame({
+    "stock_id": ["AAPL", "AAPL", "AAPL", "GOOG", "GOOG"],
+    "date": ["2023-01-01", "2023-01-02", "2023-01-03", "2023-01-01", "2023-01-02"],
+    "price": [150, 152, 151, 100, 102]
+})
+
+df["i"] = df.groupby("stock_id").cumcount()
+```
+
+结果：
+
+| stock_id | date | price | **i** |
+|----------|------|-------|-------|
+| AAPL | 2023-01-01 | 150 | **0** |
+| AAPL | 2023-01-02 | 152 | **1** |
+| AAPL | 2023-01-03 | 151 | **2** |
+| GOOG | 2023-01-01 | 100 | **0** |
+| GOOG | 2023-01-02 | 102 | **1** |
+
+每只股票的行都从 0 开始重新计数。
+
+### 关键特点
+
+- **分组内计数**：每个 group 独立从 0 开始
+- **按出现顺序**：编号按行在 DataFrame 中的顺序分配（所以通常先 `sort_values` 再 `cumcount`）
+- **返回的是 Series**：索引与原 DataFrame 对齐，可以直接赋值为新列
+
+### 典型用途
+
+在场景（股票收益预测）中，`cumcount()` 通常用来表示**时间步索引**——即这是该股票的第几个观测点：
+
+```python
+# 先按日期排序，确保 cumcount 反映时间顺序
+g = g.sort_values(["stock_id", "date"])
+g["i"] = g.groupby("stock_id").cumcount()
+# i=0 是该股票最早的记录，i=1 是第二早...
+```
+
+这样做的好处：
+- 方便做 train/test 按时间切分（如 `i < 200` 训练，`i >= 200` 测试）
+- 方便对齐不同股票的时间窗口
+- 方便做滚动窗口特征工程
+
+### 与 `rank()` 的区别
+
+```python
+# cumcount(): 严格从 0 开始递增，不考虑值
+# rank(): 根据某列的值大小排名
+
+df.groupby("stock_id").cumcount()          # 0, 1, 2... (按行顺序)
+df.groupby("stock_id")["price"].rank()     # 按 price 大小排名
+```
+
+## `transform()` 
+
+`g.groupby("stock_id")["i"].transform("max")` 的作用是：**计算每个分组内 `"i"` 列的最大值，然后把结果"广播"回原 DataFrame 的每一行**。
+
+### 核心概念：`transform` vs `agg`
+
+这是理解 `transform` 的关键对比：
+
+```python
+# agg: 每组返回一个值，结果变短
+g.groupby("stock_id")["i"].max()
+# stock_id
+# AAPL    249
+# GOOG    199
+
+# transform: 每组返回一个值，但广播回每一行，长度不变
+g.groupby("stock_id")["i"].transform("max")
+# 0    249
+# 1    249
+# 2    249   ← AAPL 的每一行都填 249
+# 3    199
+# 4    199   ← GOOG 的每一行都填 199
+```
+
+### 直观例子
+
+```python
+df = pd.DataFrame({
+    "stock_id": ["AAPL", "AAPL", "AAPL", "GOOG", "GOOG"],
+    "i":        [0,      1,      2,      0,      1]
+})
+
+df["n_per"] = df.groupby("stock_id")["i"].transform("max")
+```
+
+| stock_id | i | **n_per** |
+|----------|---|-----------|
+| AAPL | 0 | **2** |
+| AAPL | 1 | **2** |
+| AAPL | 2 | **2** |
+| GOOG | 0 | **1** |
+| GOOG | 1 | **1** |
+
+每行都能看到"自己这只股票一共有多少个时间步（最大索引）"。
+
+### 你代码中的用途
+
+```python
+n_per = g.groupby("stock_id")["i"].transform("max")
+```
+
+这里 `n_per` 表示每只股票的**最大时间索引**（即总观测数 - 1）。后续可能用来做：
+
+```python
+# 按比例划分 train/test
+g["is_train"] = g["i"] <= n_per * 0.8  # 前 80% 训练，后 20% 测试
+```
+
+### `transform` 能传什么？
+
+```python
+# 字符串：内置聚合函数
+.transform("max")
+.transform("min")
+.transform("mean")
+.transform("std")
+.transform("sum")
+.transform("count")
+
+# 自定义函数：接收一个 Series，返回同长度 Series
+.transform(lambda x: (x - x.mean()) / x.std())   # 组内标准化
+.transform(lambda x: x.fillna(x.median()))        # 组内中位数填充
+```
+
+### 为什么不用 `merge`？
+
+`transform` 本质上是 `groupby` + `agg` + `merge` 的快捷方式：
+
+```python
+# 等价写法（但更麻烦）
+max_i = g.groupby("stock_id")["i"].max().rename("n_per")
+g = g.merge(max_i, on="stock_id")
+
+# 用 transform 一行搞定
+g["n_per"] = g.groupby("stock_id")["i"].transform("max")
+```
+
+### 一句话总结
+
+> `transform` = 分组计算 + 结果广播回原表每一行，保持 DataFrame 形状不变。

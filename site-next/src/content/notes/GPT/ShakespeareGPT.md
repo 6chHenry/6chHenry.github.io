@@ -10,7 +10,7 @@ legacyPath: "/notes/GPT/ShakespeareGPT/"
 
 含有Decoder的Transformer，利用自注意力机制。详见论文《Attention is All You Need》
 
-Jupyter Notebook文件: [ShakespeareGPT.ipynb by 6ch.](./gpt-dev.ipynb)
+Jupyter Notebook文件: [ShakespeareGPT.ipynb by 6ch.](/notes/GPT/gpt-dev.ipynb)
 
 附上用于训练的python代码
 

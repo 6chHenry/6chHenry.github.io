@@ -6,7 +6,7 @@ tags:
 draft: false
 legacyPath: "/notes/GPT/Attention is All You Need/"
 ---
-useful  reference: [PPT](./Diagrams_V2.pdf)
+useful  reference: [PPT](/notes/GPT/Diagrams_V2.pdf)
 
 #  Problems with RNN(among others)
 

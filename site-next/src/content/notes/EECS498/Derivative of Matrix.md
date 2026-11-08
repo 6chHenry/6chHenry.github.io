@@ -12,4 +12,4 @@ legacyPath: "/notes/EECS498/Derivative of Matrix/"
 
 第一个等号是全微分公式，第二个等号建议在纸上推导一遍，因为$\trace(A^TB)=\sum_{i,j}A_{ij}B_{ij}=\sum_{i=1}^m\sum_{j=1}^nA_{ij}B_{ij}$ 所以说照葫芦画瓢能够得到。（这里可以侧面说明线性代数中定义$tr(A^TB)$为矩阵**内积**的合理性）
 
- 创建矩阵微分的运算法则[矩阵求导.pdf by 6ch.](./矩阵求导.pdf)
+ 创建矩阵微分的运算法则[矩阵求导.pdf by 6ch.](/notes/EECS498/矩阵求导.pdf)

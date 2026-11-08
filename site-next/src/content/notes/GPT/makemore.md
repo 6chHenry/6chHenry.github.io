@@ -12,4 +12,4 @@ torch.multinomial : 根据概率张量随机抽取整数（整数范围为range(
 
 记得要设置replacement = True 这样就是有放回的抽取
 
-详见[makemore.ipynb by 6ch.](./makemore.ipynb)
+详见[makemore.ipynb by 6ch.](/notes/GPT/makemore.ipynb)

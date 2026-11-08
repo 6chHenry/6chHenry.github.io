@@ -2,7 +2,7 @@
 title: "南昌"
 description: "赣江穿城而过，滕王阁临江而立——英雄城的红色记忆与千年文脉。"
 date: "2026-01-23"
-updatedAt: "2026-05-25T13:24:13.753Z"
+updatedAt: "2026-09-04T13:00:03.663Z"
 tags:
   - "photography"
   - "hubei-jiangxi"
@@ -13,7 +13,7 @@ cover: "/assets/gallery/photography/nanchang.assets/tengwang_pavilion.jpg"
 coverDesc: "滕王阁临江而立，飞檐翘角直指苍穹——落霞与孤鹜齐飞，秋水共长天一色。"
 images:
   - "/assets/gallery/photography/nanchang.assets/nanchang_bridge.jpg"
-  - "/assets/gallery/photography/nanchang.assets/nanchang_icom.jpg"
+  - "/assets/gallery/photography/nanchang.assets/nanchang_icon.jpg"
 imageDescs:
   - "赣江上的大桥横跨两岸，南昌的现代与历史在江面交汇。"
   - "南昌的城市地标在夜色中亮起，这座英雄城的红色基因为它刻下了独特印记。"
