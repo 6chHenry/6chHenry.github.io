@@ -38,6 +38,10 @@ const anchors: Record<string, { lat: number; lng: number; region: string }> = {
   datong: { lat: 40.09, lng: 113.30, region: '山西 · 大同及周边' },
   qingdao: { lat: 36.07, lng: 120.38, region: '山东 · 青岛' },
   yantai: { lat: 37.46, lng: 121.45, region: '山东 · 烟台' },
+  /* 金陵三日：同城的三个章节，按天分点（区域锚点，非逐张 GPS） */
+  day1: { lat: 32.06, lng: 118.79, region: '江苏 · 南京 · 城内' },
+  day2: { lat: 32.05, lng: 118.85, region: '江苏 · 南京 · 钟山' },
+  day3: { lat: 31.92, lng: 118.75, region: '江苏 · 南京 · 牛首山' },
 };
 
 export function buildGalleryAtlas(entries: CollectionEntry<'gallery'>[], base: string) {

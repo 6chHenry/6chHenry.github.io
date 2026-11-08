@@ -31,6 +31,10 @@ export const CITY_STOPS: Record<string, CityStop> = {
   qingdao: { kanji: '青岛', en: 'Qingdao', color: '#1a5276' },
   yantai: { kanji: '烟台', en: 'Yantai', color: '#c2571d' },
   geermu: { kanji: '格尔木', en: 'Golmud', color: '#2d7a5f' },
+  /* 金陵三日：章节按天划分，时间线即章节（城内 → 钟山 → 牛首山） */
+  day1: { kanji: '城内', en: 'Day 1', color: '#955639' },
+  day2: { kanji: '钟山', en: 'Day 2', color: '#3f7057' },
+  day3: { kanji: '牛首山', en: 'Day 3', color: '#a8842c' },
 };
 
 /* 多城旅程由多个城市条目组成，照片数要逐城累加；单城旅程就是它自己 */
@@ -40,6 +44,7 @@ export const TRIP_CITIES: Record<string, string[]> = {
   'greater-bay-area': ['guangzhou', 'macau', 'hong-kong'],
   japan: ['osaka', 'nara', 'uji', 'kyoto', 'kobe', 'himeji'],
   'summer-2026-four-cities': ['summer-2026-four-cities'],
+  nanjing: ['nanjing'],
 };
 
 export function cityStop(slug: string): CityStop {
@@ -117,6 +122,14 @@ export const GALLERY_TRIP_SEQUENCE: GalleryTripLink[] = [
     subtitle: '太原 · 大同 · 青岛 · 烟台',
     cover: '/assets/gallery/photography/summer-2026-four-cities.assets/qingdao_05.jpg',
     href: 'gallery/four-cities/',
+  },
+  {
+    slug: 'nanjing',
+    title: '金陵三日',
+    en: 'Nanjing · Three Days',
+    subtitle: '城内 · 钟山 · 牛首山',
+    cover: '/assets/gallery/photography/nanjing.assets/niushoushan8.jpg',
+    href: 'gallery/nanjing/',
   },
 ];
 

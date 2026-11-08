@@ -31,6 +31,7 @@ const immersivePages: Record<string, string> = {
   'photography/greater-bay-area.md': 'gallery/bay-area/',
   'photography/hubei-jiangxi.md': 'gallery/hubei-jiangxi/',
   'photography/summer-2026-four-cities.md': 'gallery/four-cities/',
+  'photography/nanjing.md': 'gallery/nanjing/',
 };
 const entryHref = (id: string) =>
   immersivePages[id] ? `${base}${immersivePages[id]}` : buildContentUrl('gallery', id, base);
@@ -100,7 +101,20 @@ for (const entry of entries) {
    同一侧相邻卡片至少隔开 3 个月，避免拥挤错位。 */
 const MONTHS_IN_YEAR = 12;
 
-const timeline = [
+const timeline: Array<{
+  date: string;
+  title: string;
+  subtitle: string;
+  cover: string;
+  href: string;
+  gallerySlug: string;
+  color: string;
+  month: number;
+  cities: number;
+  /* 单城多日旅程用 metaLeft 覆盖默认的「N 城」标签，例如「3 天」 */
+  metaLeft?: string;
+  side: 'above' | 'below';
+}> = [
   {
     date: '1.20 — 1.23',
     title: '鄂赣行记',
@@ -161,6 +175,19 @@ const timeline = [
     cities: 4,
     side: 'above' as const,
   },
+  {
+    date: '10.3 — 10.5',
+    title: '金陵三日',
+    subtitle: '城内 · 钟山 · 牛首山',
+    cover: '/assets/gallery/photography/nanjing.assets/niushoushan8.jpg',
+    href: `${base}gallery/nanjing/`,
+    gallerySlug: 'nanjing',
+    color: '#a8842c',
+    month: 10,
+    cities: 1,
+    metaLeft: '3 天',
+    side: 'below' as const,
+  },
 ].map((trip) => ({
   ...trip,
   images: countImages(trip.gallerySlug),
@@ -169,7 +196,8 @@ const timeline = [
 /* 月份刻度的位置：落在每个月的中央 */
 const monthPosition = (month: number) => ((month - 0.5) / MONTHS_IN_YEAR) * 100;
 const tripMonths = new Set(timeline.map((trip) => trip.month));
-const futureMonth = 10;
+/* 未完待续 marker 固定收在年末 12 月的位置 */
+const futureMonth = 12;
 const atlas = buildGalleryAtlas(allEntries, base);
 ---
 
@@ -244,7 +272,7 @@ const atlas = buildGalleryAtlas(allEntries, base);
                 data-gallery-index="0"
                 tabindex="0"
                 role="button"
-                aria-label={`预览 ${trip.title}，${trip.cities} 城，${trip.images} 张照片`}
+                aria-label={`预览 ${trip.title}，${trip.metaLeft ?? `${trip.cities} 城`}，${trip.images} 张照片`}
                 style={`--trip-color: ${trip.color}; --trip-left: ${monthPosition(trip.month)}%`}
               >
                 <div class="trip-timeline__stem" aria-hidden="true"></div>
@@ -265,7 +293,7 @@ const atlas = buildGalleryAtlas(allEntries, base);
                     <strong class="trip-timeline__title">{trip.title}</strong>
                     <span class="trip-timeline__sub">{trip.subtitle}</span>
                     <span class="trip-timeline__meta">
-                      <span>{trip.cities} 城</span>
+                      <span>{trip.metaLeft ?? `${trip.cities} 城`}</span>
                       <span>{trip.images} 张</span>
                     </span>
                   </div>
