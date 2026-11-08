@@ -1,0 +1,858 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { buildContentUrl, formatRecencyDate, getEntryTimestamp, sortByRecency } from '../../utils/content';
+import { buildEssayExcerpt } from '../../utils/essay-visuals';
+import { BEIPING_SERIES, getChapterNumeral, getSeriesEntries, withSeriesBase } from '../../utils/essay-series';
+
+const base = import.meta.env.BASE_URL;
+const essayHref = `${base}essay/`;
+const lifeAnchor = `${base}essay/#essay-section-Life`;
+
+const entries = await getCollection('essay', ({ data }) => !data.draft);
+/* 阅读顺序：从序卷往后，旧在前 */
+const seriesEntries = sortByRecency(getSeriesEntries(BEIPING_SERIES, entries)).reverse();
+
+let numberedCount = 0;
+const chapters = seriesEntries.map((entry) => {
+  const numeral = getChapterNumeral(entry.data.title, numberedCount);
+  if (numeral !== '序') numberedCount += 1;
+  return {
+    title: entry.data.title,
+    numeral,
+    href: buildContentUrl('essay', entry.id, base),
+    date: formatRecencyDate(entry),
+    excerpt: entry.data.description ?? buildEssayExcerpt(entry.body ?? '', entry.data.title),
+  };
+});
+
+const latestEntry = [...seriesEntries].sort((a, b) => getEntryTimestamp(b) - getEntryTimestamp(a))[0];
+const latestLabel = latestEntry ? formatRecencyDate(latestEntry) : undefined;
+---
+
+<BaseLayout
+  title="北平 · 合集 | 6ch. · 林间笔记"
+  description="北平合集：去北京之前与之后的手记，关于一座城的期待、相见，和它储存的那些遗憾。"
+>
+  <section class="container page-shell beiping-page">
+    <a class="beiping-back" href={essayHref}>
+      <svg viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M15.5 10H4.5m4-4-4 4 4 4"></path>
+      </svg>
+      返回杂谈
+    </a>
+
+    <header class="beiping-masthead">
+      <div class="beiping-masthead__copy">
+        <p class="section-kicker">{BEIPING_SERIES.kicker} · 城与人</p>
+        <h1 class="beiping-title">
+          {BEIPING_SERIES.title}
+          <span class="beiping-title__seal" aria-hidden="true">
+            <svg viewBox="0 0 100 100">
+              <defs>
+                <path id="beiping-seal-arc" d="M50 50 m-33 0 a33 33 0 1 1 66 0 a33 33 0 1 1 -66 0" />
+              </defs>
+              <circle cx="50" cy="50" r="46" fill="currentColor" opacity="0.05" />
+              <circle cx="50" cy="50" r="47.5" fill="none" stroke="currentColor" stroke-width="2.6" />
+              <circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="1.5 3.5" opacity="0.5" />
+              <circle cx="50" cy="50" r="26.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.7" />
+              <text font-size="9.2" letter-spacing="2.1" fill="currentColor" opacity="0.92">
+                <textPath href="#beiping-seal-arc">PEIPING PAPERS · 北京手记 ·</textPath>
+              </text>
+              <text
+                x="50"
+                y="52"
+                text-anchor="middle"
+                dominant-baseline="central"
+                font-size="25"
+                font-weight="600"
+                letter-spacing="2"
+                fill="currentColor"
+              >
+                {BEIPING_SERIES.title}
+              </text>
+              <path d="M50 78.5 l2.6 3 -2.6 3 -2.6 -3 Z" fill="currentColor" opacity="0.85" />
+            </svg>
+          </span>
+        </h1>
+        <p class="beiping-lead">
+          一部尚未完成的合集：先写下出发之前的心绪，再把抵达之后的注脚一篇一篇补进来。关于一座城的期待、相见，和它储存的那些遗憾。
+        </p>
+        <p class="beiping-status">
+          <i aria-hidden="true"></i>
+          连载中 · {chapters.length} 卷{latestLabel ? ` · 最近更新 ${latestLabel}` : ''}
+        </p>
+      </div>
+
+      <aside class="beiping-epigraph" aria-label="题记">
+        <span class="beiping-epigraph__crenellation" aria-hidden="true"></span>
+        <span class="beiping-epigraph__text">{BEIPING_SERIES.epigraph.text}</span>
+        <span class="beiping-epigraph__src">—— {BEIPING_SERIES.epigraph.source}</span>
+      </aside>
+    </header>
+
+    <figure class="beiping-banner">
+      <img
+        src={withSeriesBase(BEIPING_SERIES.bannerImage, base)}
+        alt={BEIPING_SERIES.bannerAlt}
+        width="1600"
+        height="533"
+        loading="lazy"
+        decoding="async"
+      />
+      <span class="beiping-banner__snow" aria-hidden="true">
+        {Array.from({ length: 14 }).map(() => (
+          <i />
+        ))}
+      </span>
+      <figcaption class="beiping-banner__caption">
+        <span class="beiping-banner__place">故宫 · 西北角楼 · 筒子河</span>
+        <span class="beiping-banner__credit">Photo {BEIPING_SERIES.photoCredit}</span>
+      </figcaption>
+      <span class="beiping-banner__crenellation" aria-hidden="true"></span>
+    </figure>
+
+    <div class="beiping-axis-label" aria-hidden="true">
+      <span>卷目</span>
+      <i></i>
+      <span>中轴 · Axis</span>
+    </div>
+
+    <div class="beiping-axis">
+      {
+        chapters.map((chapter) => (
+          <article class="beiping-chapter">
+            <span class="beiping-chapter__node" aria-hidden="true">
+              <span>{chapter.numeral}</span>
+            </span>
+            <a class="beiping-chapter__card" href={chapter.href} aria-label={`展卷：${chapter.title}`}>
+              <span class="beiping-chapter__kicker">卷 · {chapter.numeral}</span>
+              <h2>{chapter.title}</h2>
+              <p>{chapter.excerpt}</p>
+              <span class="beiping-chapter__meta">
+                {chapter.date && <time>{chapter.date}</time>}
+                <span class="beiping-chapter__action">
+                  展卷 <i aria-hidden="true">→</i>
+                </span>
+              </span>
+            </a>
+          </article>
+        ))
+      }
+
+      <article class="beiping-chapter beiping-chapter--sealed" aria-label="待启之卷">
+        <span class="beiping-chapter__node beiping-chapter__node--sealed" aria-hidden="true">
+          <span>未</span>
+        </span>
+        <div class="beiping-chapter__card beiping-chapter__card--sealed">
+          <span class="beiping-chapter__kicker">卷 · 待启</span>
+          <h2>北平（一）</h2>
+          <p>留给从北京回来之后的第一笔：城墙、黄叶、初雪，和真正站在那座城里的时刻。</p>
+        </div>
+      </article>
+    </div>
+
+    <footer class="beiping-footer">
+      <span class="beiping-footer__seal" aria-hidden="true">未完</span>
+      <p>合集仍在生长——下一次更新，等一场真的北行。</p>
+      <nav class="beiping-footer__links" aria-label="合集导航">
+        <a href={essayHref}>返回杂谈</a>
+        <span aria-hidden="true">·</span>
+        <a href={lifeAnchor}>回到「生活」</a>
+      </nav>
+    </footer>
+  </section>
+</BaseLayout>
+
+<style>
+  .beiping-page {
+    /* 北平配色：提纯的朱砂，配一枚鎏金——红墙与琉璃金 */
+    --bp-seal: #a8392b;
+    --bp-gold: #a9853a;
+    --bp-brick: color-mix(in srgb, var(--bp-seal) 45%, var(--ch-fg-muted));
+    width: min(calc(100% - 2.5rem), 60rem);
+    padding-top: 2rem;
+    padding-bottom: 4.5rem;
+  }
+
+  [data-theme='dark'] .beiping-page {
+    --bp-seal: #d97f64;
+    --bp-gold: #c3a35f;
+  }
+
+  .beiping-masthead__copy .section-kicker {
+    color: color-mix(in srgb, var(--bp-seal) 85%, var(--ch-fg-muted));
+  }
+
+  .beiping-back {
+    display: inline-flex;
+    min-height: 44px;
+    gap: 0.45rem;
+    align-items: center;
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-academic-font);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: color var(--ch-transition-fast);
+  }
+
+  .beiping-back:hover,
+  .beiping-back:focus-visible {
+    color: var(--ch-fg);
+  }
+
+  .beiping-back svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ── 卷首：左侧标题与说明，右侧一帧竖排题记 ── */
+
+  .beiping-masthead {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2rem 2.8rem;
+    align-items: center;
+    margin: 1.4rem 0 2.1rem;
+  }
+
+  .beiping-masthead__copy {
+    display: grid;
+    gap: 0.2rem;
+    justify-items: start;
+  }
+
+  .beiping-title {
+    display: flex;
+    gap: 1.05rem;
+    align-items: flex-start;
+    margin: 0.4rem 0 0.8rem;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: clamp(3rem, 7vw, 4.3rem);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    line-height: 1;
+  }
+
+  .beiping-title__seal {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-top: 0.35rem;
+    flex: 0 0 auto;
+    color: var(--bp-seal);
+    opacity: 0.95;
+    transform: rotate(5deg);
+    transition: transform var(--ch-transition-fast);
+  }
+
+  .beiping-title__seal svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .beiping-title:hover .beiping-title__seal {
+    transform: rotate(2deg) scale(1.04);
+  }
+
+  .beiping-lead {
+    max-width: 30rem;
+    margin: 0;
+    color: var(--ch-fg-muted);
+    font-size: 0.95rem;
+    line-height: 1.78;
+  }
+
+  .beiping-status {
+    display: inline-flex;
+    gap: 0.55rem;
+    align-items: center;
+    margin: 1.05rem 0 0;
+    color: color-mix(in srgb, var(--ch-fg) 74%, var(--ch-fg-muted));
+    font-family: var(--ch-mono-font);
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+  }
+
+  .beiping-status i {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--bp-seal);
+    animation: beiping-pulse 2.6s ease-in-out infinite;
+  }
+
+  @keyframes beiping-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--bp-seal) 20%, transparent);
+    }
+    50% {
+      box-shadow: 0 0 0 6px color-mix(in srgb, var(--bp-seal) 8%, transparent);
+    }
+  }
+
+  /* ── 题记：垛口压顶，竖排词句，鎏金角花，像一页从词集里裁下的笺 ── */
+
+  .beiping-epigraph {
+    position: relative;
+    display: grid;
+    gap: 0.95rem;
+    justify-items: center;
+    padding: 1.6rem 1.15rem 1.25rem;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--bp-gold) 32%, var(--ch-glass-border));
+    border-radius: 12px;
+    background:
+      repeating-linear-gradient(94deg, transparent 0 2px, color-mix(in srgb, var(--bp-gold) 5%, transparent) 2px 3px),
+      linear-gradient(
+        150deg,
+        color-mix(in srgb, var(--bp-gold) 9%, var(--ch-surface-solid)),
+        color-mix(in srgb, var(--ch-surface-solid) 62%, transparent) 68%,
+        color-mix(in srgb, var(--bp-seal) 5%, var(--ch-surface-solid))
+      );
+    box-shadow: inset 0 1px 0 color-mix(in srgb, white 26%, transparent);
+  }
+
+  /* 笺纸的鎏金角花 */
+  .beiping-epigraph::before,
+  .beiping-epigraph::after {
+    position: absolute;
+    width: 1.05rem;
+    height: 1.05rem;
+    border: 0 solid color-mix(in srgb, var(--bp-gold) 60%, transparent);
+    content: "";
+  }
+
+  .beiping-epigraph::before {
+    top: 0.85rem;
+    left: 0.85rem;
+    border-top-width: 1.5px;
+    border-left-width: 1.5px;
+  }
+
+  .beiping-epigraph::after {
+    right: 0.85rem;
+    bottom: 0.85rem;
+    border-right-width: 1.5px;
+    border-bottom-width: 1.5px;
+  }
+
+  .beiping-epigraph__crenellation {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 7px;
+    background: repeating-linear-gradient(90deg, var(--bp-brick) 0 7px, transparent 7px 15px);
+    opacity: 0.55;
+  }
+
+  .beiping-epigraph__text {
+    max-height: 15rem;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: 1.04rem;
+    letter-spacing: 0.32em;
+    line-height: 2.15;
+    writing-mode: vertical-rl;
+  }
+
+  .beiping-epigraph__src {
+    color: color-mix(in srgb, var(--bp-gold) 72%, var(--ch-fg-muted));
+    font-family: var(--ch-academic-font);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+  }
+
+  /* ── 卷首横幅：一张实拍的角楼，垛口压顶，落一层安静的雪 ── */
+
+  .beiping-banner {
+    position: relative;
+    margin: 0 0 2.6rem;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-warm) 28%, var(--ch-glass-border));
+    border-radius: 12px;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
+  }
+
+  .beiping-banner img {
+    display: block;
+    width: 100%;
+    height: clamp(10rem, 26vw, 15.5rem);
+    object-fit: cover;
+    filter: saturate(0.84) contrast(0.99);
+    transition:
+      filter 640ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .beiping-banner::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      transparent 46%,
+      color-mix(in srgb, #08140d 34%, transparent)
+    );
+    content: "";
+    pointer-events: none;
+    transition: opacity 640ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .beiping-banner:hover img,
+  .beiping-banner:focus-within img {
+    filter: saturate(1);
+    transform: scale(1.02);
+  }
+
+  .beiping-banner:hover::after {
+    opacity: 0.55;
+  }
+
+  .beiping-banner__crenellation {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 3;
+    height: 7px;
+    background: repeating-linear-gradient(90deg, var(--bp-brick) 0 7px, transparent 7px 15px);
+    opacity: 0.6;
+  }
+
+  .beiping-banner__caption {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    gap: 0.6rem 1.1rem;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0.55rem 0.9rem 0.55rem;
+    border-top: 1px solid color-mix(in srgb, #f3eee1 20%, transparent);
+  }
+
+  .beiping-banner__place {
+    color: #f3eee1;
+    font-family: var(--ch-display-font);
+    font-size: 0.86rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+  }
+
+  .beiping-banner__credit {
+    color: color-mix(in srgb, #f3eee1 72%, transparent);
+    font-family: var(--ch-mono-font);
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+  }
+
+  .beiping-banner__snow {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .beiping-banner__snow i {
+    position: absolute;
+    top: -8%;
+    width: 3px;
+    height: 3px;
+    border-radius: 999px;
+    background: color-mix(in srgb, #fff 82%, transparent);
+    box-shadow: 0 0 3px color-mix(in srgb, #fff 60%, transparent);
+    opacity: 0;
+    animation: beiping-snow 9s linear infinite;
+  }
+
+  .beiping-banner__snow i:nth-child(1) { left: 6%;  animation-duration: 8.5s; animation-delay: 0s;    transform: scale(0.9); }
+  .beiping-banner__snow i:nth-child(2) { left: 14%; animation-duration: 11s;  animation-delay: 2.4s;  transform: scale(1.15); }
+  .beiping-banner__snow i:nth-child(3) { left: 22%; animation-duration: 9.5s; animation-delay: 4.8s;  transform: scale(0.75); }
+  .beiping-banner__snow i:nth-child(4) { left: 29%; animation-duration: 12.5s; animation-delay: 1.2s; transform: scale(1); }
+  .beiping-banner__snow i:nth-child(5) { left: 37%; animation-duration: 8s;   animation-delay: 6.2s;  transform: scale(0.85); }
+  .beiping-banner__snow i:nth-child(6) { left: 45%; animation-duration: 10.5s; animation-delay: 3.1s; transform: scale(1.05); }
+  .beiping-banner__snow i:nth-child(7) { left: 53%; animation-duration: 9s;   animation-delay: 5.5s;  transform: scale(0.7); }
+  .beiping-banner__snow i:nth-child(8) { left: 61%; animation-duration: 11.5s; animation-delay: 0.8s; transform: scale(1.2); }
+  .beiping-banner__snow i:nth-child(9) { left: 68%; animation-duration: 8.8s;  animation-delay: 4.1s;  transform: scale(0.9); }
+  .beiping-banner__snow i:nth-child(10) { left: 76%; animation-duration: 12s;  animation-delay: 2.9s;  transform: scale(1); }
+  .beiping-banner__snow i:nth-child(11) { left: 83%; animation-duration: 9.8s; animation-delay: 6.8s; transform: scale(0.8); }
+  .beiping-banner__snow i:nth-child(12) { left: 90%; animation-duration: 10.8s; animation-delay: 1.7s; transform: scale(1.1); }
+  .beiping-banner__snow i:nth-child(13) { left: 96%; animation-duration: 11.8s; animation-delay: 5.1s; transform: scale(0.85); }
+  .beiping-banner__snow i:nth-child(14) { left: 10%; animation-duration: 13s;  animation-delay: 7.4s; transform: scale(1.05); }
+
+  @keyframes beiping-snow {
+    0% {
+      opacity: 0;
+      translate: 0 0;
+    }
+    12% {
+      opacity: 0.85;
+    }
+    88% {
+      opacity: 0.6;
+    }
+    100% {
+      opacity: 0;
+      translate: 14px 118%;
+    }
+  }
+
+  /* ── 卷目：一条像中轴线的轨，卷宗卡片依次挂在轨上 ── */
+
+  .beiping-axis-label {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+    margin: 0 0 1.4rem;
+    color: color-mix(in srgb, var(--ch-fg) 62%, var(--ch-fg-muted));
+    font-family: var(--ch-mono-font);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .beiping-axis-label i {
+    flex: 1;
+    height: 1px;
+    background: repeating-linear-gradient(90deg, var(--bp-brick) 0 6px, transparent 6px 12px);
+    opacity: 0.5;
+  }
+
+  .beiping-axis {
+    position: relative;
+    display: grid;
+    gap: 1.15rem;
+    padding-left: 3.2rem;
+  }
+
+  .beiping-axis::before {
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: 0.95rem;
+    width: 1px;
+    background: repeating-linear-gradient(to bottom, var(--bp-brick) 0 6px, transparent 6px 11px);
+    content: "";
+    opacity: 0.55;
+  }
+
+  .beiping-chapter {
+    position: relative;
+  }
+
+  .beiping-chapter__node {
+    position: absolute;
+    top: 1.05rem;
+    left: -3.2rem;
+    display: grid;
+    width: 1.9rem;
+    height: 1.9rem;
+    place-items: center;
+    border: 1px solid var(--bp-seal);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--ch-surface-solid) 90%, var(--bp-seal) 10%);
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--ch-bg-mist) 60%, transparent),
+      inset 0 0 0 1.5px color-mix(in srgb, var(--ch-surface-solid) 85%, transparent);
+    transform: rotate(45deg);
+    transition:
+      background var(--ch-transition-fast),
+      box-shadow var(--ch-transition-fast);
+  }
+
+  .beiping-chapter__node > span {
+    color: var(--bp-seal);
+    font-family: var(--ch-display-font);
+    font-size: 0.8rem;
+    font-weight: 600;
+    transform: rotate(-45deg);
+  }
+
+  .beiping-chapter__node--sealed {
+    border-style: dashed;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .beiping-chapter__node--sealed > span {
+    color: var(--ch-fg-muted);
+  }
+
+  .beiping-chapter__card {
+    position: relative;
+    display: grid;
+    gap: 0.5rem;
+    padding: 1.2rem 1.35rem;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-secondary) 20%, var(--ch-glass-border));
+    border-left: 2px solid color-mix(in srgb, var(--bp-seal) 55%, transparent);
+    border-radius: 10px;
+    background:
+      linear-gradient(
+        120deg,
+        color-mix(in srgb, var(--ch-surface-solid) 72%, transparent),
+        color-mix(in srgb, var(--ch-accent-dim) 46%, transparent)
+      ),
+      radial-gradient(circle at 96% 10%, color-mix(in srgb, var(--bp-seal) 6%, transparent), transparent 40%);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, white 24%, transparent);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      transform var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      box-shadow var(--ch-transition-fast);
+  }
+
+  /* 右上角一记纸卷折角 */
+  .beiping-chapter__card::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1.7rem;
+    height: 1.7rem;
+    background: linear-gradient(
+      225deg,
+      color-mix(in srgb, var(--ch-bg-mist) 92%, transparent) 48%,
+      color-mix(in srgb, var(--ch-accent-warm) 18%, var(--ch-surface-solid)) 52%
+    );
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+    box-shadow: -3px 3px 7px -3px color-mix(in srgb, var(--ch-fg) 28%, transparent);
+    content: "";
+    pointer-events: none;
+  }
+
+  a.beiping-chapter__card:hover,
+  a.beiping-chapter__card:focus-visible {
+    border-color: color-mix(in srgb, var(--bp-seal) 38%, var(--ch-glass-border));
+    border-left-color: var(--bp-seal);
+    box-shadow: var(--ch-glow-warm), inset 0 1px 0 color-mix(in srgb, white 28%, transparent);
+    color: inherit;
+    transform: translateY(-2px);
+  }
+
+  a.beiping-chapter__card:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--bp-seal) 70%, transparent);
+    outline-offset: 3px;
+  }
+
+  .beiping-chapter:hover .beiping-chapter__node {
+    background: color-mix(in srgb, var(--bp-seal) 12%, var(--ch-surface-solid));
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--bp-seal) 10%, transparent),
+      inset 0 0 0 1.5px color-mix(in srgb, var(--ch-surface-solid) 85%, transparent);
+  }
+
+  .beiping-chapter__kicker {
+    color: var(--bp-seal);
+    font-family: var(--ch-academic-font);
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+  }
+
+  .beiping-chapter__card h2 {
+    margin: 0;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: clamp(1.3rem, 3vw, 1.66rem);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .beiping-chapter__card p {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 0;
+    color: var(--ch-fg-muted);
+    font-size: 0.9rem;
+    line-height: 1.62;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .beiping-chapter__meta {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.25rem;
+  }
+
+  .beiping-chapter__meta time {
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-mono-font);
+    font-size: 0.7rem;
+  }
+
+  .beiping-chapter__action {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    color: var(--bp-seal);
+    font-family: var(--ch-academic-font);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .beiping-chapter__action i {
+    font-style: normal;
+    transition: transform var(--ch-transition-fast);
+  }
+
+  a.beiping-chapter__card:hover .beiping-chapter__action i,
+  a.beiping-chapter__card:focus-visible .beiping-chapter__action i {
+    transform: translateX(3px);
+  }
+
+  /* 待启之卷：虚线封条，留给还没发生的行程 */
+
+  .beiping-chapter__card--sealed {
+    border-style: dashed;
+    border-left-style: solid;
+    border-left-color: color-mix(in srgb, var(--ch-fg-muted) 45%, transparent);
+    background: color-mix(in srgb, var(--ch-surface-solid) 40%, transparent);
+    box-shadow: none;
+  }
+
+  .beiping-chapter__card--sealed .beiping-chapter__kicker {
+    color: var(--ch-fg-muted);
+  }
+
+  .beiping-chapter__card--sealed h2 {
+    color: var(--ch-fg-muted);
+  }
+
+  /* ── 卷尾：一枚白文印收束 ── */
+
+  .beiping-footer {
+    display: grid;
+    gap: 0.85rem;
+    justify-items: center;
+    margin-top: 3.2rem;
+    text-align: center;
+  }
+
+  /* 白文印收束：印泥由中心向外沁开，边缘微有不齐，像真按下去的一枚 */
+  .beiping-footer__seal {
+    display: grid;
+    width: 3.05rem;
+    height: 3.05rem;
+    place-items: center;
+    border-radius: 46% 54% 52% 48% / 52% 47% 53% 48%;
+    background: radial-gradient(circle at 38% 32%, color-mix(in srgb, var(--bp-seal) 82%, white 12%), var(--bp-seal) 74%);
+    box-shadow:
+      inset 0 0 0 2.5px color-mix(in srgb, #fdf6ea 32%, transparent),
+      0 6px 18px -8px color-mix(in srgb, var(--bp-seal) 70%, transparent);
+    color: #fbf3e6;
+    font-family: var(--ch-display-font);
+    font-size: 0.84rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    writing-mode: vertical-rl;
+    transform: rotate(-3deg);
+  }
+
+  .beiping-footer p {
+    margin: 0;
+    color: var(--ch-fg-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .beiping-footer__links {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-academic-font);
+    font-size: 0.76rem;
+  }
+
+  .beiping-footer__links a {
+    color: var(--ch-accent);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .beiping-footer__links a:hover,
+  .beiping-footer__links a:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 760px) {
+    .beiping-masthead {
+      grid-template-columns: 1fr;
+      gap: 1.6rem;
+    }
+
+    .beiping-epigraph {
+      justify-self: center;
+      width: min(100%, 17rem);
+    }
+
+    .beiping-epigraph__text {
+      max-height: 13rem;
+      font-size: 0.95rem;
+    }
+
+    .beiping-axis {
+      padding-left: 2.7rem;
+    }
+
+    .beiping-chapter__node {
+      left: -2.7rem;
+      width: 1.65rem;
+      height: 1.65rem;
+      border-radius: 5px;
+    }
+
+    .beiping-chapter__node > span {
+      font-size: 0.72rem;
+    }
+
+    .beiping-axis::before {
+      left: 0.8rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .beiping-status i {
+      animation: none;
+    }
+
+    .beiping-banner__snow {
+      display: none;
+    }
+
+    .beiping-banner img {
+      filter: saturate(1);
+      transition: none;
+    }
+
+    .beiping-banner::after {
+      transition: none;
+    }
+
+    .beiping-chapter__card,
+    .beiping-chapter__node,
+    .beiping-chapter__action i,
+    .beiping-back {
+      transition: none;
+    }
+  }
+</style>

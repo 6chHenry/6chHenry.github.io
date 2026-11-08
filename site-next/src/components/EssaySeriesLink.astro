@@ -1,0 +1,143 @@
+---
+import type { EssaySeriesMeta } from '../utils/essay-series';
+
+interface Props {
+  series: EssaySeriesMeta;
+  href: string;
+}
+
+const { series, href } = Astro.props;
+---
+
+<nav class="essay-series-link" aria-label={`所属合集：${series.title}`}>
+  <span class="essay-series-link__seal" aria-hidden="true">
+    <svg viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="46.5" fill="none" stroke="currentColor" stroke-width="3.2" />
+      <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.7" />
+      <text
+        x="50"
+        y="54"
+        text-anchor="middle"
+        dominant-baseline="central"
+        font-size="34"
+        font-weight="600"
+        fill="currentColor"
+      >
+        {series.title}
+      </text>
+    </svg>
+  </span>
+  <span class="essay-series-link__body">
+    <span class="essay-series-link__kicker">合集 · {series.subtitle}</span>
+    <a href={href}>收录于《{series.title}》</a>
+  </span>
+  <span class="essay-series-link__action" aria-hidden="true">
+    返回合集
+    <i>→</i>
+  </span>
+</nav>
+
+<style>
+  .essay-series-link {
+    --bp-seal: #a8392b;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.9rem;
+    align-items: center;
+    margin: 0 0 1.6rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--ch-accent-warm) 30%, var(--ch-glass-border));
+    border-radius: 10px;
+    background:
+      linear-gradient(
+        112deg,
+        color-mix(in srgb, var(--ch-accent-warm) 9%, var(--ch-surface-solid)),
+        color-mix(in srgb, var(--ch-surface-solid) 62%, transparent) 62%,
+        color-mix(in srgb, var(--bp-seal) 5%, var(--ch-surface-solid))
+      );
+    box-shadow: inset 0 1px 0 color-mix(in srgb, white 24%, transparent);
+    transition:
+      border-color var(--ch-transition-fast),
+      box-shadow var(--ch-transition-fast);
+  }
+
+  [data-theme='dark'] .essay-series-link {
+    --bp-seal: #d97f64;
+  }
+
+  .essay-series-link:hover,
+  .essay-series-link:focus-within {
+    border-color: color-mix(in srgb, var(--bp-seal) 34%, var(--ch-glass-border));
+    box-shadow: var(--ch-glow-warm);
+  }
+
+  .essay-series-link__seal {
+    width: 2.05rem;
+    height: 2.05rem;
+    flex: 0 0 auto;
+    color: var(--bp-seal);
+    opacity: 0.95;
+    transform: rotate(-6deg);
+  }
+
+  .essay-series-link__seal svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .essay-series-link__body {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .essay-series-link__kicker {
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-academic-font);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+  }
+
+  .essay-series-link__body a {
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .essay-series-link__body a:hover,
+  .essay-series-link__body a:focus-visible {
+    color: var(--bp-seal);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .essay-series-link__action {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    color: var(--bp-seal);
+    font-family: var(--ch-academic-font);
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .essay-series-link__action i {
+    font-style: normal;
+    transition: transform var(--ch-transition-fast);
+  }
+
+  .essay-series-link:hover .essay-series-link__action i,
+  .essay-series-link:focus-within .essay-series-link__action i {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 560px) {
+    .essay-series-link__action {
+      display: none;
+    }
+  }
+</style>

@@ -5,6 +5,7 @@ import GalleryImage from '../../components/GalleryImage.astro';
 import { watchlist2026 } from '../../data/watchlist';
 import { buildContentUrl, formatRecencyDate, sortByRecency } from '../../utils/content';
 import { buildEssayExcerpt, getEntryCoverImage, getMoviePosterFromBody, getTravelGalleryLink, getTravelPoster } from '../../utils/essay-visuals';
+import { getSeriesForEntryId, withSeriesBase, type EssaySeriesMeta } from '../../utils/essay-series';
 
 const entries = sortByRecency(await getCollection('essay', ({ data }) => !data.draft));
 const base = import.meta.env.BASE_URL;
@@ -34,6 +35,7 @@ function inferCategory(id: string): CategoryKey {
   return 'Misc';
 }
 
+/* 合集条目（如 `Life/北平/…`）单独收进「文件夹」，其余照常平铺成卡片。 */
 const groupedEntries = [
   ...entries
     .reduce((groups, entry) => {
@@ -46,7 +48,26 @@ const groupedEntries = [
     .entries(),
 ]
   .sort(([a], [b]) => categoryMeta[a].order - categoryMeta[b].order)
-  .map(([key, items]) => ({ key, ...categoryMeta[key], entries: items }));
+  .map(([key, items]) => {
+    const seriesFolders = new Map<string, { meta: EssaySeriesMeta; entries: typeof entries }>();
+    const standalone: typeof entries = [];
+    for (const entry of items) {
+      const meta = getSeriesForEntryId(entry.id);
+      if (meta) {
+        const bucket = seriesFolders.get(meta.key) ?? { meta, entries: [] as typeof entries };
+        bucket.entries.push(entry);
+        seriesFolders.set(meta.key, bucket);
+      } else {
+        standalone.push(entry);
+      }
+    }
+    return {
+      key,
+      ...categoryMeta[key],
+      entries: standalone,
+      seriesFolders: [...seriesFolders.values()],
+    };
+  });
 
 function getEntryHref(entry: (typeof entries)[number]) {
   return buildContentUrl('essay', entry.id, base);
@@ -96,6 +117,74 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
               </h2>
               <p class="essay-group__desc">{group.desc}</p>
             </header>
+
+            {
+              group.seriesFolders.map((folder) => (
+                <a
+                  class="essay-folder"
+                  href={withSeriesBase(folder.meta.href, base)}
+                  aria-label={`打开合集：${folder.meta.title}`}
+                >
+                  <span class="essay-folder__tab" aria-hidden="true">合集</span>
+                  <span class="essay-folder__spine" aria-hidden="true">
+                    <span class="essay-folder__spine-title">{folder.meta.title}</span>
+                  </span>
+                  <span class="essay-folder__body">
+                    <span class="essay-folder__kicker">
+                      {folder.meta.kicker} · {folder.meta.subtitle}
+                    </span>
+                    <strong>{folder.meta.title}</strong>
+                    <span class="essay-folder__desc">{folder.meta.description}</span>
+                    <span class="essay-folder__meta">
+                      <span class="essay-folder__count">{folder.entries.length} 卷 · 连载中</span>
+                      <span class="essay-folder__action">
+                        开卷 <i aria-hidden="true">↗</i>
+                      </span>
+                    </span>
+                  </span>
+                  <span class="essay-folder__photo">
+                    <img
+                      src={withSeriesBase(folder.meta.coverImage, base)}
+                      alt={folder.meta.coverAlt}
+                      width="450"
+                      height="338"
+                      decoding="async"
+                    />
+                    <span class="essay-folder__photo-caption">故宫 · 西北角楼</span>
+                    <span class="essay-folder__seal" aria-hidden="true">
+                      <svg viewBox="0 0 100 100">
+                        <defs>
+                          <path
+                            id={`folder-seal-arc-${folder.meta.key}`}
+                            d="M50 50 m-33 0 a33 33 0 1 1 66 0 a33 33 0 1 1 -66 0"
+                          />
+                        </defs>
+                        <circle cx="50" cy="50" r="46" fill="currentColor" opacity="0.05" />
+                        <circle cx="50" cy="50" r="47.5" fill="none" stroke="currentColor" stroke-width="2.6" />
+                        <circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="1.5 3.5" opacity="0.5" />
+                        <circle cx="50" cy="50" r="26.5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.7" />
+                        <text font-size="9.2" letter-spacing="2.1" fill="currentColor" opacity="0.92">
+                          <textPath href={`#folder-seal-arc-${folder.meta.key}`}>PEIPING PAPERS · 北京手记 ·</textPath>
+                        </text>
+                        <text
+                          x="50"
+                          y="52"
+                          text-anchor="middle"
+                          dominant-baseline="central"
+                          font-size="25"
+                          font-weight="600"
+                          letter-spacing="2"
+                          fill="currentColor"
+                        >
+                          {folder.meta.title}
+                        </text>
+                        <path d="M50 78.5 l2.6 3 -2.6 3 -2.6 -3 Z" fill="currentColor" opacity="0.85" />
+                      </svg>
+                    </span>
+                  </span>
+                </a>
+              ))
+            }
 
             <ul class:list={['essay-card-grid', group.key === 'Movies' && 'essay-card-grid--posters', group.key === 'Travel' && 'essay-card-grid--travel']}>
               {
@@ -388,6 +477,348 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
 
   .essay-card-grid--travel {
     grid-template-columns: 1fr;
+  }
+
+  /* ── 合集卷宗袋：像一只贴了标签的档案夹，收着同一个名字下的几篇文章 ── */
+
+  .essay-folder {
+    /* 北平配色：朱砂提纯，配一枚鎏金——红墙与琉璃金的配对 */
+    --bp-seal: #a8392b;
+    --bp-gold: #a9853a;
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 1.15rem;
+    align-items: center;
+    min-height: 8.6rem;
+    padding: 1.15rem 1.3rem;
+    border: 1px solid color-mix(in srgb, var(--bp-gold) 34%, var(--ch-glass-border));
+    border-radius: 12px;
+    background:
+      linear-gradient(
+        112deg,
+        color-mix(in srgb, var(--bp-gold) 9%, var(--ch-surface-solid)),
+        color-mix(in srgb, var(--ch-surface-solid) 62%, transparent) 52%,
+        color-mix(in srgb, var(--bp-seal) 5%, var(--ch-surface-solid))
+      ),
+      repeating-linear-gradient(0deg, transparent 0 13px, color-mix(in srgb, var(--bp-gold) 4%, transparent) 13px 14px),
+      repeating-linear-gradient(90deg, transparent 0 21px, color-mix(in srgb, var(--ch-accent-warm) 3%, transparent) 21px 22px);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, white 26%, transparent);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      transform var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      box-shadow var(--ch-transition-fast);
+  }
+
+  [data-theme='dark'] .essay-folder {
+    --bp-seal: #d97f64;
+    --bp-gold: #c3a35f;
+  }
+
+  /* 标签页：一枚黄铜签牌的味道 */
+  .essay-folder__tab {
+    position: absolute;
+    top: -0.92rem;
+    left: 1.55rem;
+    padding: 0.14rem 0.7rem 0.08rem;
+    border: 1px solid color-mix(in srgb, var(--bp-gold) 40%, var(--ch-glass-border));
+    border-bottom: none;
+    border-radius: 7px 7px 0 0;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bp-gold) 17%, var(--ch-surface-solid)),
+      color-mix(in srgb, var(--bp-gold) 7%, var(--ch-surface-solid))
+    );
+    color: color-mix(in srgb, var(--bp-gold) 78%, var(--ch-fg-muted));
+    font-family: var(--ch-academic-font);
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    transition: color var(--ch-transition-fast);
+  }
+
+  /* 线装书脊：宣纸色 + 纸丝纹理 + 双列针脚 + 垂落的朱砂书签带 */
+  .essay-folder__spine {
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    width: 3.2rem;
+    align-self: stretch;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 0.1rem;
+    border-radius: 7px;
+    background:
+      repeating-linear-gradient(94deg, transparent 0 2px, color-mix(in srgb, #7a5a2e 7%, transparent) 2px 3px),
+      linear-gradient(
+        105deg,
+        color-mix(in srgb, #f7f1de 88%, var(--bp-gold)),
+        color-mix(in srgb, #eadfc0 82%, var(--bp-gold))
+      );
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--bp-gold) 30%, transparent),
+      inset 0 1px 0 color-mix(in srgb, white 40%, transparent),
+      inset -1px 0 0 color-mix(in srgb, #7a5a2e 14%, transparent);
+  }
+
+  [data-theme='dark'] .essay-folder__spine {
+    background:
+      repeating-linear-gradient(94deg, transparent 0 2px, color-mix(in srgb, #c3a35f 6%, transparent) 2px 3px),
+      linear-gradient(
+        105deg,
+        color-mix(in srgb, var(--ch-surface-elevated) 88%, var(--bp-gold)),
+        color-mix(in srgb, #241a0e 58%, var(--ch-surface-elevated))
+      );
+  }
+
+  /* 线装针脚：两列缝线 */
+  .essay-folder__spine::before {
+    position: absolute;
+    top: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.24rem;
+    width: 0.36rem;
+    background-image:
+      repeating-linear-gradient(to bottom, color-mix(in srgb, #6b4d2a 62%, transparent) 0 4px, transparent 4px 10px),
+      repeating-linear-gradient(to bottom, color-mix(in srgb, #6b4d2a 62%, transparent) 0 4px, transparent 4px 10px);
+    background-position: 0 0, 100% 0;
+    background-repeat: no-repeat;
+    background-size: 1px 100%;
+    content: "";
+    opacity: 0.6;
+  }
+
+  /* 从卷宗顶边垂进书脊的朱砂书签带：带圆柱光，末端燕尾 */
+  .essay-folder__spine::after {
+    position: absolute;
+    top: -1.15rem;
+    right: 0.26rem;
+    width: 0.34rem;
+    height: 86%;
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--bp-seal) 62%, black) 0%,
+        color-mix(in srgb, var(--bp-seal) 82%, white) 34%,
+        var(--bp-seal) 62%,
+        color-mix(in srgb, var(--bp-seal) 66%, black)
+      ),
+      linear-gradient(180deg, color-mix(in srgb, var(--bp-seal) 72%, #2e0c07), var(--bp-seal));
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 0.34rem), 0 100%);
+    box-shadow: 0 2px 6px -2px color-mix(in srgb, var(--bp-seal) 55%, transparent);
+    content: "";
+    z-index: 1;
+  }
+
+  .essay-folder__spine-title {
+    color: color-mix(in srgb, var(--ch-fg) 88%, #4a2e18);
+    font-family: var(--ch-display-font);
+    font-size: 1.42rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    writing-mode: vertical-rl;
+    text-shadow: 0 1px 0 color-mix(in srgb, white 34%, transparent);
+  }
+
+  .essay-folder__body {
+    display: grid;
+    min-width: 0;
+    gap: 0.3rem;
+  }
+
+  .essay-folder__kicker {
+    color: color-mix(in srgb, var(--bp-seal) 88%, var(--ch-fg-muted));
+    font-family: var(--ch-academic-font);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .essay-folder__body strong {
+    margin: 0;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: 1.55rem;
+    line-height: 1.1;
+  }
+
+  .essay-folder__desc {
+    display: -webkit-box;
+    overflow: hidden;
+    max-width: 34rem;
+    color: var(--ch-fg-muted);
+    font-size: 0.86rem;
+    line-height: 1.55;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .essay-folder__meta {
+    display: flex;
+    gap: 1.1rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.55rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed color-mix(in srgb, var(--ch-accent-warm) 26%, transparent);
+  }
+
+  /* 卷宗袋里贴着的实拍照片：鎏金细边的白相框，一截和纸胶带压角，印章骑缝 */
+  .essay-folder__photo {
+    position: relative;
+    display: block;
+    flex: 0 0 auto;
+    width: 11.5rem;
+    padding: 0.28rem;
+    border: 1px solid color-mix(in srgb, var(--bp-gold) 40%, var(--ch-glass-border));
+    border-radius: 6px;
+    background: color-mix(in srgb, #fffdf6 92%, var(--bp-gold));
+    box-shadow:
+      0 6px 18px -10px color-mix(in srgb, var(--ch-fg) 40%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, white 55%, transparent),
+      inset 0 0 0 2px color-mix(in srgb, var(--bp-gold) 16%, transparent);
+    transform: rotate(1.8deg);
+    transition:
+      transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* 压住相纸的和纸胶带 */
+  .essay-folder__photo::before {
+    position: absolute;
+    top: -0.55rem;
+    left: 24%;
+    z-index: 2;
+    width: 3.2rem;
+    height: 1.02rem;
+    border-radius: 1px;
+    background:
+      repeating-linear-gradient(45deg, transparent 0 5px, color-mix(in srgb, var(--bp-gold) 9%, transparent) 5px 6px),
+      linear-gradient(180deg, color-mix(in srgb, var(--bp-gold) 26%, #f3ead2), color-mix(in srgb, var(--bp-gold) 18%, #e7dcbc));
+    box-shadow: 0 1px 3px -1px color-mix(in srgb, var(--ch-fg) 28%, transparent);
+    opacity: 0.85;
+    transform: rotate(-4deg);
+    content: "";
+  }
+
+  [data-theme='dark'] .essay-folder__photo {
+    background: color-mix(in srgb, var(--ch-surface-elevated) 88%, var(--bp-gold));
+  }
+
+  .essay-folder__photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    border-radius: 3px;
+    object-fit: cover;
+    filter: saturate(0.86);
+    transition: filter 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .essay-folder__photo-caption {
+    position: absolute;
+    bottom: 0.45rem;
+    left: 0.55rem;
+    padding: 0.12rem 0.4rem;
+    border-radius: 3px;
+    background: color-mix(in srgb, #08140d 58%, transparent);
+    color: #f2ede0;
+    font-family: var(--ch-mono-font);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+  }
+
+  /* 骑缝章：圆章骑在相纸边缝上，一半压照片、一半压卷宗，印泥用正片叠底 */
+  .essay-folder__seal {
+    position: absolute;
+    right: -1rem;
+    bottom: -0.95rem;
+    width: 4.35rem;
+    height: 4.35rem;
+    color: var(--bp-seal);
+    opacity: 0.96;
+    transform: rotate(-9deg);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    transition: transform var(--ch-transition-fast);
+  }
+
+  [data-theme='dark'] .essay-folder__seal {
+    mix-blend-mode: normal;
+    opacity: 0.92;
+  }
+
+  .essay-folder__seal svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .essay-folder__count {
+    color: color-mix(in srgb, var(--ch-fg) 68%, var(--ch-fg-muted));
+    font-family: var(--ch-mono-font);
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+  }
+
+  .essay-folder__action {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    color: var(--bp-seal);
+    font-family: var(--ch-academic-font);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .essay-folder__action i {
+    font-style: normal;
+    transition: transform var(--ch-transition-fast);
+  }
+
+  .essay-folder:hover,
+  .essay-folder:focus-visible {
+    border-color: color-mix(in srgb, var(--bp-seal) 34%, var(--ch-glass-border));
+    box-shadow: var(--ch-glow-warm), inset 0 1px 0 color-mix(in srgb, white 30%, transparent);
+    color: inherit;
+    transform: translateY(-2px);
+  }
+
+  .essay-folder:hover .essay-folder__tab,
+  .essay-folder:focus-visible .essay-folder__tab {
+    color: var(--ch-fg);
+  }
+
+  .essay-folder:hover .essay-folder__photo,
+  .essay-folder:focus-visible .essay-folder__photo {
+    box-shadow:
+      0 12px 26px -12px color-mix(in srgb, var(--ch-fg) 46%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, white 55%, transparent);
+    transform: rotate(0.6deg) scale(1.025);
+  }
+
+  .essay-folder:hover .essay-folder__photo img,
+  .essay-folder:focus-visible .essay-folder__photo img {
+    filter: saturate(1);
+  }
+
+  .essay-folder:hover .essay-folder__seal,
+  .essay-folder:focus-visible .essay-folder__seal {
+    transform: rotate(-2deg) scale(1.06);
+  }
+
+  .essay-folder:hover .essay-folder__action i,
+  .essay-folder:focus-visible .essay-folder__action i {
+    transform: translate(2px, -2px);
+  }
+
+  .essay-folder:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--bp-seal) 70%, transparent);
+    outline-offset: 3px;
   }
 
   .year-watchlist {
@@ -1142,6 +1573,24 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
       gap: 0.9rem;
     }
 
+    .essay-folder {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 0.9rem;
+      padding: 1.05rem 1rem;
+    }
+
+    .essay-folder__spine {
+      width: 2.7rem;
+    }
+
+    .essay-folder__spine-title {
+      font-size: 1.2rem;
+    }
+
+    .essay-folder__photo {
+      width: 9.2rem;
+    }
+
     .year-watchlist {
       grid-column: 1;
     }
@@ -1170,6 +1619,17 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
   }
 
   @media (max-width: 520px) {
+    .essay-folder {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .essay-folder__photo {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: min(100%, 15rem);
+      margin-top: 0.4rem;
+    }
+
     .essay-card__poster {
       min-height: 18rem;
     }
@@ -1194,7 +1654,12 @@ function getEntryExcerpt(entry: (typeof entries)[number]) {
     .essay-card__photo img,
     .travel-eye__photo,
     .essay-drawers,
-    .essay-drawers__tab {
+    .essay-drawers__tab,
+    .essay-folder,
+    .essay-folder__photo,
+    .essay-folder__photo img,
+    .essay-folder__seal,
+    .essay-folder__action i {
       transition: none;
       animation-duration: 1ms;
     }
