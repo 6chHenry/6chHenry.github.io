@@ -2,120 +2,186 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { buildContentUrl, formatRecencyDate, sortByRecency } from '../../utils/content';
+import { extractNoteGist } from '../../utils/note-gist';
 
 const entries = sortByRecency(await getCollection('projects', ({ data }) => !data.draft));
 const base = import.meta.env.BASE_URL;
 const resolveHref = (href: string) => (href.startsWith('/') ? `${base}${href.slice(1)}` : href);
-const featuredEntries = entries.filter((entry) => entry.data.featured).slice(0, 3);
-const allEntries = entries.map((entry) => ({
-  href: entry.data.links.find((link) => link.type === 'site')?.href ?? buildContentUrl('projects', entry.id, base),
-  title: entry.data.title,
-  description: entry.data.summary ?? entry.data.description ?? '',
-  date: formatRecencyDate(entry),
-  status: entry.data.status,
-  techStack: entry.data.techStack ?? [],
-}));
+
+const gistByTitle: Record<string, string> = {
+  'Paimon Asks Everything': '从提问走到发行验证',
+  'Temporal Costmap Aggregation': '几帧障碍合成一张地图',
+  'Build GPT': '从张量手搭语言模型',
+  'DreamCatch AI': '醒来那几分钟的记忆',
+  'Car Lane Detection': '车道线怎么被认出来',
+};
+
+const statusZh: Record<string, string> = {
+  'Live Demo': '已上线',
+  'Project Site': '项目站',
+  'Learning Project': '学习项目',
+  Proposal: '提案',
+  Implemented: '已实现',
+};
+
+const displayTitle: Record<string, string> = {
+  'Paimon Asks Everything': '派蒙三千问',
+};
+
+function voiceFor(entry: (typeof entries)[number]) {
+  const title = entry.data.title;
+  const gist =
+    gistByTitle[title] ||
+    extractNoteGist(title, entry.data.description ?? entry.data.summary ?? '', entry.body ?? '');
+  return {
+    title: displayTitle[title] ?? title,
+    english: displayTitle[title] ? title : '',
+    gist,
+    status: statusZh[entry.data.status ?? ''] ?? entry.data.status ?? '',
+  };
+}
+
+function isPaimon(entry: (typeof entries)[number]) {
+  return entry.data.title === 'Paimon Asks Everything' || entry.id.toLowerCase().includes('paimon-asks-everything');
+}
+
+const featuredEntries = entries.filter((entry) => entry.data.featured);
+const ripe = featuredEntries.find(isPaimon) ?? featuredEntries[0];
+const grove = featuredEntries.filter((entry) => entry !== ripe);
+
+const allEntries = entries.map((entry) => {
+  const voice = voiceFor(entry);
+  const caseStudyLink = buildContentUrl('projects', entry.id, base);
+  const href = isPaimon(entry)
+    ? caseStudyLink
+    : (entry.data.links.find((link) => link.type === 'site' || link.type === 'article')?.href ??
+      entry.data.links[0]?.href ??
+      caseStudyLink);
+  return {
+    href: resolveHref(href),
+    external: href.startsWith('http'),
+    title: voice.title,
+    gist: voice.gist,
+    status: voice.status,
+    date: formatRecencyDate(entry),
+  };
+});
 ---
 
-<BaseLayout title="作品集 | 6ch. · 林间笔记" description="6ch. 的精选项目、工程实践与项目笔记">
-  <section class="container page-shell projects-page">
-    <header class="projects-hero">
-      <p class="section-kicker">Portfolio</p>
-      <div class="projects-hero__grid">
-        <h1>精选项目</h1>
-        <p>
-          这里收拢更像作品集的项目：有明确问题、技术路线和个人角色。下面仍保留项目笔记列表，用来记录实现过程中的推导、实验和阶段性想法。
-        </p>
-      </div>
+<BaseLayout title="作品 | 6ch. · 林间笔记" description="6ch. 的作品与工程实践：从种子到果子。">
+  <section class="container page-shell orchard-page">
+    <header class="page-header">
+      <p class="section-kicker">Projects · 新枝</p>
+      <h1>作品</h1>
+      <p class="section-lead">从模型到界面，把想法做成可以走进去的东西。有的已经能摘，有的还在长。</p>
     </header>
 
     {
-      featuredEntries.length > 0 && (
-        <section class="featured-projects" aria-labelledby="featured-projects-title">
-          <div class="projects-section-heading">
-            <h2 id="featured-projects-title">Featured Work</h2>
-            <span>{featuredEntries.length} selected</span>
+      ripe && (
+        <article class={`ripe-fruit ripe-fruit--${ripe.data.accent ?? 'forest'}`}>
+          <div class="ripe-fruit__body">
+            <p class="section-kicker">林中异果{voiceFor(ripe).status ? ` · ${voiceFor(ripe).status}` : ''}</p>
+            <h2>{voiceFor(ripe).title}</h2>
+            {voiceFor(ripe).english && <p class="ripe-fruit__en">{voiceFor(ripe).english}</p>}
+            <p class="ripe-fruit__gist">{voiceFor(ripe).gist}</p>
+            {ripe.data.role && <p class="ripe-fruit__role">{ripe.data.role}</p>}
+            <div class="ripe-fruit__links">
+              {isPaimon(ripe) && (
+                <a class="pill" href={buildContentUrl('projects', ripe.id, base)}>
+                  走进去看
+                </a>
+              )}
+              {ripe.data.links.map((link) => (
+                <a
+                  class="pill pill--glass"
+                  href={resolveHref(link.href)}
+                  target={link.href.startsWith('http') ? '_blank' : undefined}
+                  rel={link.href.startsWith('http') ? 'noopener' : undefined}
+                >
+                  {link.label === 'Live Demo' ? '在线体验' : link.label === 'GitHub' ? 'GitHub' : link.label}
+                </a>
+              ))}
+            </div>
           </div>
-          <div class="featured-projects__grid">
-            {
-              featuredEntries.map((entry, index) => {
-                const isPaimonProject =
-                  entry.data.title === 'Paimon Asks Everything' || entry.id.toLowerCase().includes('paimon-asks-everything');
-                const caseStudyLink = buildContentUrl('projects', entry.id, base);
-                const primaryLink = isPaimonProject ? caseStudyLink : (entry.data.links?.[0]?.href ?? caseStudyLink);
-                return (
-                  <article class={`project-card project-card--${entry.data.accent ?? 'forest'}`}>
-                    <a class="project-card__main-link" href={resolveHref(primaryLink)} aria-label={`Open ${entry.data.title}`}></a>
-                    <div class={`project-card__visual${isPaimonProject ? ' project-card__visual--image' : ''}`} aria-hidden="true">
-                      {isPaimonProject && (
-                        <>
-                          <img
-                            src={`${base}assets/projects/paimon-asks-everything/banner.png`}
-                            alt=""
-                            loading="lazy"
-                            decoding="async"
-                          />
-                          <dl class="project-card__signals">
-                            <div><dt>08</dt><dd>regions</dd></div>
-                            <div><dt>03</dt><dd>profiles</dd></div>
-                            <div><dt>02</dt><dd>search routes</dd></div>
-                          </dl>
-                        </>
-                      )}
-                      <span>{String(index + 1).padStart(2, '0')}</span>
-                    </div>
-                    <div class="project-card__body">
-                      <div class="project-card__meta">
-                        {entry.data.status && <span>{entry.data.status}</span>}
-                        {entry.data.period && <span>{entry.data.period}</span>}
-                      </div>
-                      <h2>{entry.data.title}</h2>
-                      <p>{entry.data.summary ?? entry.data.description}</p>
-                      {entry.data.role && <p class="project-card__role">{entry.data.role}</p>}
-                      {entry.data.techStack.length > 0 && (
-                        <ul class="project-card__stack" aria-label={`${entry.data.title} tech stack`}>
-                          {entry.data.techStack.slice(0, 5).map((tech) => <li>{tech}</li>)}
-                        </ul>
-                      )}
-                      {entry.data.links.length > 0 && (
-                        <div class="project-card__links">
-                          {isPaimonProject && <a href={caseStudyLink}>Case Study</a>}
-                          {entry.data.links.map((link) => (
-                            <a href={resolveHref(link.href)} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener' : undefined}>
-                              {link.label}
-                            </a>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </article>
-                );
-              })
-            }
+          <div class="ripe-fruit__window" aria-hidden="true">
+            {isPaimon(ripe) ? (
+              <img
+                src={`${base}assets/projects/paimon-asks-everything/banner.png`}
+                alt=""
+                width="2048"
+                height="680"
+                loading="eager"
+                decoding="async"
+              />
+            ) : (
+              <span class="ripe-fruit__orb"></span>
+            )}
           </div>
+        </article>
+      )
+    }
+
+    {
+      grove.length > 0 && (
+        <section class="orchard-grove" aria-labelledby="orchard-grove-title">
+          <header class="orchard-heading">
+            <p class="section-kicker">Grove · 林下</p>
+            <h2 id="orchard-grove-title">还在长的枝</h2>
+          </header>
+          <ul class="orchard-grove__grid">
+            {grove.map((entry) => {
+              const voice = voiceFor(entry);
+              const href = resolveHref(entry.data.links[0]?.href ?? buildContentUrl('projects', entry.id, base));
+              return (
+                <li>
+                  <a
+                    class={`fruit-card fruit-card--${entry.data.accent ?? 'forest'}`}
+                    href={href}
+                    target={href.startsWith('http') ? '_blank' : undefined}
+                    rel={href.startsWith('http') ? 'noopener' : undefined}
+                  >
+                    <i class="fruit-card__node" aria-hidden="true" />
+                    <span class="fruit-card__meta">
+                      {voice.status && <em>{voice.status}</em>}
+                      {entry.data.period && <span>{entry.data.period}</span>}
+                    </span>
+                    <strong class="fruit-card__title">{voice.title}</strong>
+                    {voice.gist && <small class="fruit-card__gist">{voice.gist}</small>}
+                    {entry.data.techStack.length > 0 && (
+                      <span class="fruit-card__stack">{entry.data.techStack.slice(0, 3).join(' · ')}</span>
+                    )}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
         </section>
       )
     }
 
-    <section class="project-notes" aria-labelledby="project-notes-title">
-      <div class="projects-section-heading">
-        <h2 id="project-notes-title">全部项目 / 项目笔记</h2>
-        <span>{allEntries.length} entries</span>
-      </div>
-      <ul class="project-note-list">
+    <section class="orchard-catalog" aria-labelledby="orchard-catalog-title">
+      <header class="orchard-heading">
+        <p class="section-kicker">Catalog · 叶脉</p>
+        <h2 id="orchard-catalog-title">全部枝条</h2>
+        <span>{allEntries.length} 枝</span>
+      </header>
+      <ul class="orchard-catalog__list">
         {
           allEntries.map((entry) => (
             <li>
-              <a class="project-note-row" href={entry.href} target={entry.href.startsWith('http') ? '_blank' : undefined} rel={entry.href.startsWith('http') ? 'noopener' : undefined}>
-                <div>
-                  <h3>{entry.title}</h3>
-                  {entry.description && <p>{entry.description}</p>}
-                  {entry.techStack.length > 0 && <span>{entry.techStack.slice(0, 3).join(' / ')}</span>}
-                </div>
-                <aside>
-                  {entry.status && <strong>{entry.status}</strong>}
+              <a
+                class="orchard-leaf"
+                href={entry.href}
+                target={entry.external ? '_blank' : undefined}
+                rel={entry.external ? 'noopener' : undefined}
+              >
+                <i class="orchard-leaf__node" aria-hidden="true" />
+                <span class="orchard-leaf__main">
+                  <strong>{entry.title}</strong>
                   {entry.date && <time>{entry.date}</time>}
-                </aside>
+                </span>
+                {entry.gist ? <em class="orchard-leaf__gist">{entry.gist}</em> : <span class="orchard-leaf__gist" />}
+                {entry.status && <span class="orchard-leaf__status">{entry.status}</span>}
               </a>
             </li>
           ))
@@ -126,407 +192,393 @@ const allEntries = entries.map((entry) => ({
 </BaseLayout>
 
 <style>
-  .projects-page {
-    max-width: 76rem;
+  .orchard-page {
+    max-width: 72rem;
   }
 
-  .projects-hero {
-    padding: 4.2rem 0 2.2rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--ch-accent-warm) 24%, var(--ch-border-soft));
-  }
-
-  .projects-hero__grid {
+  .ripe-fruit {
+    --fruit-accent: var(--ch-accent-warm);
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(18rem, 0.8fr);
-    gap: 2rem;
-    align-items: end;
-  }
-
-  .projects-hero h1 {
-    margin: 0;
-    font-family: var(--ch-display-font);
-    font-size: clamp(3rem, 9vw, 6rem);
-    line-height: 0.95;
-    color: var(--ch-fg);
-  }
-
-  .projects-hero p {
-    margin: 0;
-    color: var(--ch-fg-muted);
-    line-height: 1.8;
-  }
-
-  .featured-projects,
-  .project-notes {
-    padding: 2.6rem 0 0;
-  }
-
-  .projects-section-heading {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .projects-section-heading h2 {
-    margin: 0;
-    font-family: var(--ch-academic-font);
-    font-size: 0.88rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ch-accent);
-  }
-
-  .projects-section-heading span {
-    font-family: var(--ch-mono-font);
-    font-size: 0.72rem;
-    color: var(--ch-accent-warm);
-  }
-
-  .featured-projects__grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
-  }
-
-  .project-card {
-    position: relative;
-    display: grid;
-    min-height: 31rem;
+    grid-template-columns: minmax(16rem, 0.92fr) minmax(0, 1.15fr);
+    gap: 0;
     overflow: hidden;
-    border: 1px solid color-mix(in srgb, var(--project-accent) 28%, var(--ch-border-soft));
-    border-radius: 10px;
+    margin-bottom: 2.75rem;
+    border: 1px solid color-mix(in srgb, var(--fruit-accent) 28%, var(--ch-glass-border));
+    border-radius: var(--ch-radius);
     background:
-      linear-gradient(180deg, color-mix(in srgb, var(--ch-surface-solid) 78%, transparent), var(--ch-glass-bg)),
-      radial-gradient(circle at 18% 8%, color-mix(in srgb, var(--project-accent) 26%, transparent), transparent 34%);
-    box-shadow: 0 18px 54px color-mix(in srgb, black 10%, transparent);
-    transition:
-      transform var(--ch-transition),
-      border-color var(--ch-transition),
-      box-shadow var(--ch-transition);
+      radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--fruit-accent) 16%, transparent), transparent 36%),
+      linear-gradient(180deg, color-mix(in srgb, var(--fruit-accent) 8%, transparent), transparent 42%),
+      var(--ch-glass-bg);
+    box-shadow: 0 18px 48px color-mix(in srgb, var(--fruit-accent) 10%, transparent);
   }
 
-  .project-card--gold {
-    --project-accent: var(--ch-accent-warm);
+  .ripe-fruit--forest {
+    --fruit-accent: var(--ch-accent-secondary);
   }
 
-  .project-card--forest {
-    --project-accent: var(--ch-accent-secondary);
+  .ripe-fruit--ink {
+    --fruit-accent: var(--ch-accent);
   }
 
-  .project-card--ink {
-    --project-accent: var(--ch-accent);
+  .ripe-fruit--gold {
+    --fruit-accent: var(--ch-accent-warm);
   }
 
-  .project-card:hover {
-    transform: translateY(-4px);
-    border-color: color-mix(in srgb, var(--project-accent) 52%, var(--ch-border-soft));
-    box-shadow: 0 24px 70px color-mix(in srgb, var(--project-accent) 16%, transparent);
-  }
-
-  .project-card__main-link {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    border-radius: inherit;
-  }
-
-  .project-card__visual {
+  .ripe-fruit__window {
     position: relative;
-    min-height: 10rem;
+    min-height: 16rem;
     overflow: hidden;
-    border-bottom: 1px solid color-mix(in srgb, var(--project-accent) 22%, var(--ch-border-soft));
-    background:
-      linear-gradient(135deg, color-mix(in srgb, var(--project-accent) 26%, transparent) 0 1px, transparent 1px 24px),
-      radial-gradient(circle at 72% 32%, color-mix(in srgb, var(--project-accent) 48%, transparent), transparent 34%),
-      linear-gradient(135deg, color-mix(in srgb, var(--ch-fg) 10%, transparent), transparent);
-    background-size: 24px 24px, auto, auto;
+    background: color-mix(in srgb, var(--ch-fg) 8%, var(--ch-surface-solid));
   }
 
-  .project-card__visual--image {
-    background: var(--ch-surface-solid);
-  }
-
-  .project-card__visual--image img {
+  .ripe-fruit__window::before {
     position: absolute;
-    inset: 0;
-    z-index: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  .project-card__visual::before,
-  .project-card__visual::after {
-    position: absolute;
-    content: "";
-    border: 1px solid color-mix(in srgb, var(--project-accent) 42%, transparent);
-  }
-
-  .project-card__visual::before {
-    inset: 2rem auto auto 1.4rem;
-    width: 5.2rem;
-    height: 5.2rem;
-    border-radius: 999px;
-  }
-
-  .project-card__visual::after {
-    right: 1.4rem;
-    bottom: 1.2rem;
-    width: 7rem;
-    height: 3.4rem;
-    border-radius: 999px 999px 10px 10px;
-  }
-
-  .project-card__visual--image::before {
-    inset: 0;
-    width: auto;
-    height: auto;
-    border: 0;
-    border-radius: 0;
-    background:
-      linear-gradient(180deg, transparent 58%, color-mix(in srgb, var(--ch-surface-solid) 34%, transparent)),
-      linear-gradient(90deg, color-mix(in srgb, var(--ch-surface-solid) 16%, transparent), transparent 38%, color-mix(in srgb, var(--ch-surface-solid) 12%, transparent));
     z-index: 1;
+    inset: 0.7rem;
+    border: 1px dashed color-mix(in srgb, var(--fruit-accent) 40%, transparent);
+    border-radius: calc(var(--ch-radius) - 10px);
+    content: '';
     pointer-events: none;
   }
 
-  .project-card__visual--image::after {
-    display: none;
+  .ripe-fruit__window img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 42%;
   }
 
-  .project-card__visual span {
+  .ripe-fruit__window::after {
     position: absolute;
-    right: 1rem;
-    top: 0.8rem;
-    z-index: 1;
-    font-family: var(--ch-mono-font);
-    font-size: 0.78rem;
-    color: var(--project-accent);
+    inset: 0;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--ch-surface-solid) 22%, transparent), transparent 42%);
+    content: '';
+    pointer-events: none;
   }
 
-  .project-card__visual--image span {
-    z-index: 2;
-    color: #f7ead0;
-    text-shadow: 0 1px 12px color-mix(in srgb, black 58%, transparent);
-  }
-
-  .project-card__signals {
+  .ripe-fruit__orb {
     position: absolute;
-    left: 0.7rem;
-    bottom: 0.7rem;
-    z-index: 2;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin: 0;
-    overflow: hidden;
-    border: 1px solid color-mix(in srgb, #f7ead0 42%, transparent);
-    border-radius: 6px;
-    background: color-mix(in srgb, #07142f 78%, transparent);
-    color: #f7ead0;
-    backdrop-filter: blur(12px);
+    inset: 18% 22%;
+    border-radius: 70% 40% 60% 50%;
+    background:
+      radial-gradient(circle at 32% 28%, color-mix(in srgb, white 35%, transparent), transparent 42%),
+      radial-gradient(circle at 60% 60%, color-mix(in srgb, var(--fruit-accent) 70%, transparent), transparent 62%);
+    border: 1px dashed color-mix(in srgb, var(--fruit-accent) 40%, transparent);
   }
 
-  .project-card__signals div {
-    min-width: 4.6rem;
-    padding: 0.42rem 0.52rem;
-    border-right: 1px solid color-mix(in srgb, #f7ead0 20%, transparent);
-  }
-
-  .project-card__signals div:last-child {
-    border-right: 0;
-  }
-
-  .project-card__signals dt {
-    font-family: var(--ch-display-font);
-    font-size: 1.15rem;
-    line-height: 1;
-  }
-
-  .project-card__signals dd {
-    margin: 0.2rem 0 0;
-    color: color-mix(in srgb, #f7ead0 70%, var(--ch-accent-warm));
-    font-family: var(--ch-mono-font);
-    font-size: 0.52rem;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-  }
-
-  .project-card__body {
-    position: relative;
-    z-index: 2;
+  .ripe-fruit__body {
     display: flex;
     flex-direction: column;
-    padding: 1.15rem;
+    justify-content: center;
+    padding: 1.6rem 1.7rem 1.7rem;
   }
 
-  .project-card__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    margin-bottom: 0.8rem;
+  .ripe-fruit__body h2 {
+    margin: 0.15rem 0 0;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: clamp(2rem, 4.2vw, 3.1rem);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.05;
   }
 
-  .project-card__meta span,
-  .project-card__stack li {
-    border: 1px solid color-mix(in srgb, var(--project-accent) 28%, var(--ch-border-soft));
-    border-radius: 999px;
-    color: color-mix(in srgb, var(--project-accent) 82%, var(--ch-fg));
-    font-family: var(--ch-academic-font);
-    font-size: 0.68rem;
-    letter-spacing: 0.06em;
-    line-height: 1.2;
-  }
-
-  .project-card__meta span {
-    padding: 0.24rem 0.48rem;
+  .ripe-fruit__en {
+    margin: 0.45rem 0 0;
+    color: var(--fruit-accent);
+    font-family: var(--ch-mono-font);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
   }
 
-  .project-card h2 {
-    margin: 0 0 0.75rem;
-    font-family: var(--ch-display-font);
-    font-size: 1.65rem;
-    line-height: 1.08;
+  .ripe-fruit__gist {
+    margin: 1rem 0 0;
     color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: 1.22rem;
+    line-height: 1.45;
   }
 
-  .project-card p {
-    margin: 0;
+  .ripe-fruit__role {
+    margin: 0.7rem 0 0;
     color: var(--ch-fg-muted);
-    font-size: 0.92rem;
-    line-height: 1.68;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
-  .project-card__role {
-    margin-top: 0.8rem !important;
-    color: var(--ch-fg) !important;
-    font-family: var(--ch-academic-font);
-    font-size: 0.82rem !important;
-  }
-
-  .project-card__stack {
+  .ripe-fruit__links {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.42rem;
-    margin: 1rem 0 0;
+    gap: 0.55rem;
+    margin-top: 1.35rem;
+  }
+
+  .orchard-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.65rem 1rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .orchard-heading h2 {
+    margin: 0;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: 1.55rem;
+    font-weight: 600;
+  }
+
+  .orchard-heading .section-kicker {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .orchard-heading span {
+    margin-left: auto;
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-mono-font);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+  }
+
+  .orchard-grove {
+    margin-bottom: 2.8rem;
+  }
+
+  .orchard-grove__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+    margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .project-card__stack li {
-    padding: 0.28rem 0.5rem;
-  }
-
-  .project-card__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-    margin-top: auto;
-    padding-top: 1.1rem;
-  }
-
-  .project-card__links a {
-    position: relative;
-    z-index: 3;
-    color: var(--project-accent);
-    font-family: var(--ch-academic-font);
-    font-size: 0.84rem;
-    font-weight: 650;
-    text-decoration: none;
-  }
-
-  .project-card__links a::after {
-    content: " ->";
-  }
-
-  .project-note-list {
+  .fruit-card {
+    --fruit-accent: var(--ch-accent-secondary);
     display: grid;
-    gap: 0;
-    margin: 0;
-    padding: 0 0 4rem;
-    list-style: none;
-    border-top: 1px solid var(--ch-border-soft);
-  }
-
-  .project-note-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 10rem;
-    gap: 1rem;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--ch-border-soft);
+    gap: 0.45rem;
+    min-height: 11.5rem;
+    padding: 1.15rem 1.2rem 1.2rem;
+    border: 1px solid color-mix(in srgb, var(--fruit-accent) 22%, var(--ch-glass-border));
+    border-radius: var(--ch-radius-sm);
+    background:
+      radial-gradient(circle at 92% 8%, color-mix(in srgb, var(--fruit-accent) 12%, transparent), transparent 34%),
+      var(--ch-glass-bg);
     color: inherit;
     text-decoration: none;
+    transition:
+      transform var(--ch-transition-fast),
+      border-color var(--ch-transition-fast),
+      background var(--ch-transition-fast);
   }
 
-  .project-note-row h3 {
-    margin: 0;
+  .fruit-card--gold {
+    --fruit-accent: var(--ch-accent-warm);
+  }
+
+  .fruit-card--ink {
+    --fruit-accent: var(--ch-accent);
+  }
+
+  .fruit-card--forest {
+    --fruit-accent: var(--ch-accent-secondary);
+  }
+
+  .fruit-card:hover,
+  .fruit-card:focus-visible {
+    background: var(--ch-glass-bg-hover);
+    border-color: color-mix(in srgb, var(--fruit-accent) 42%, var(--ch-glass-border));
+    color: inherit;
+    transform: translateY(-3px);
+  }
+
+  .fruit-card__node {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 70% 0 70% 70%;
+    background: var(--fruit-accent);
+    transform: rotate(-28deg);
+    opacity: 0.8;
+  }
+
+  .fruit-card__meta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-mono-font);
+    font-size: 0.64rem;
+    letter-spacing: 0.06em;
+  }
+
+  .fruit-card__meta em {
+    color: var(--fruit-accent);
+    font-style: normal;
+  }
+
+  .fruit-card__title {
     color: var(--ch-fg);
     font-family: var(--ch-display-font);
-    font-size: 1.12rem;
-  }
-
-  .project-note-row p {
-    margin: 0.22rem 0 0;
-    color: var(--ch-fg-muted);
-    font-size: 0.9rem;
-    line-height: 1.6;
-  }
-
-  .project-note-row span,
-  .project-note-row time,
-  .project-note-row strong {
-    font-family: var(--ch-academic-font);
-    font-size: 0.76rem;
-  }
-
-  .project-note-row span {
-    display: inline-block;
-    margin-top: 0.45rem;
-    color: var(--ch-accent-warm);
-  }
-
-  .project-note-row aside {
-    display: grid;
-    align-content: start;
-    justify-items: end;
-    gap: 0.25rem;
-    color: var(--ch-fg-muted);
-  }
-
-  .project-note-row strong {
-    color: var(--ch-accent);
+    font-size: 1.28rem;
     font-weight: 600;
+    line-height: 1.2;
+    transition: color var(--ch-transition-fast);
   }
 
-  @media (max-width: 980px) {
-    .projects-hero__grid,
-    .featured-projects__grid {
+  .fruit-card:hover .fruit-card__title,
+  .fruit-card:focus-visible .fruit-card__title {
+    color: var(--ch-accent);
+  }
+
+  .fruit-card__gist {
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-text-font);
+    font-size: 0.92rem;
+    letter-spacing: 0.04em;
+  }
+
+  .fruit-card__stack {
+    margin-top: auto;
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-mono-font);
+    font-size: 0.64rem;
+    letter-spacing: 0.04em;
+  }
+
+  .orchard-catalog {
+    padding-bottom: 3.5rem;
+  }
+
+  .orchard-catalog__list {
+    position: relative;
+    margin: 0;
+    padding: 0.2rem 0 0;
+    list-style: none;
+  }
+
+  .orchard-leaf {
+    position: relative;
+    display: grid;
+    grid-template-columns: 0.85rem auto minmax(8rem, 1fr) auto;
+    gap: 0.45rem 0.7rem;
+    align-items: center;
+    min-height: 3.3rem;
+    padding: 0.65rem 0.35rem 0.65rem 0.1rem;
+    border-radius: 10px;
+    color: inherit;
+    text-decoration: none;
+    transition:
+      background var(--ch-transition-fast),
+      transform var(--ch-transition-fast);
+  }
+
+  .orchard-leaf__node {
+    width: 0.48rem;
+    height: 0.48rem;
+    justify-self: center;
+    border-radius: 70% 0 70% 70%;
+    background: var(--ch-accent-secondary);
+    transform: rotate(-28deg);
+    opacity: 0.7;
+  }
+
+  .orchard-catalog__list li:not(:last-child) .orchard-leaf::before {
+    position: absolute;
+    left: 0.48rem;
+    top: calc(50% + 0.28rem);
+    width: 1px;
+    height: calc(100% - 0.2rem);
+    background: color-mix(in srgb, var(--ch-accent-secondary) 28%, transparent);
+    content: '';
+  }
+
+  .orchard-leaf__main {
+    min-width: 0;
+    display: grid;
+    gap: 0.12rem;
+  }
+
+  .orchard-leaf__main strong {
+    overflow: hidden;
+    color: var(--ch-fg);
+    font-family: var(--ch-display-font);
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color var(--ch-transition-fast);
+  }
+
+  .orchard-leaf__main time,
+  .orchard-leaf__status {
+    color: var(--ch-fg-muted);
+    font-family: var(--ch-mono-font);
+    font-size: 0.66rem;
+    letter-spacing: 0.04em;
+  }
+
+  .orchard-leaf__gist {
+    min-width: 0;
+    margin: 0;
+    padding-left: 0.7rem;
+    border-left: 1px solid color-mix(in srgb, var(--ch-accent-warm) 28%, transparent);
+    color: var(--ch-accent-warm);
+    font-family: var(--ch-text-font);
+    font-size: 0.86rem;
+    font-style: normal;
+    letter-spacing: 0.05em;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .orchard-leaf:hover,
+  .orchard-leaf:focus-visible {
+    background: color-mix(in srgb, var(--ch-accent-secondary) 8%, transparent);
+    color: inherit;
+    transform: translateX(2px);
+  }
+
+  .orchard-leaf:hover .orchard-leaf__main strong,
+  .orchard-leaf:focus-visible .orchard-leaf__main strong {
+    color: var(--ch-accent);
+  }
+
+  @media (max-width: 860px) {
+    .ripe-fruit,
+    .orchard-grove__grid {
       grid-template-columns: 1fr;
     }
 
-    .project-card {
-      min-height: auto;
+    .ripe-fruit__window {
+      min-height: 11rem;
+    }
+
+    .ripe-fruit__window::after {
+      background: linear-gradient(180deg, transparent 40%, color-mix(in srgb, var(--ch-surface-solid) 22%, transparent));
     }
   }
 
   @media (max-width: 640px) {
-    .projects-hero {
-      padding-top: 3rem;
+    .orchard-leaf {
+      grid-template-columns: 0.85rem minmax(0, 1fr);
     }
 
-    .project-note-row {
-      grid-template-columns: 1fr;
-    }
-
-    .project-note-row aside {
-      justify-items: start;
-    }
-
-    .project-card__signals div {
-      min-width: 0;
+    .orchard-leaf__gist,
+    .orchard-leaf__status {
+      grid-column: 2;
+      text-align: left;
+      padding-left: 0;
+      border-left: 0;
     }
   }
 </style>
