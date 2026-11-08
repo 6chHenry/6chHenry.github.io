@@ -73,6 +73,62 @@ function treePath(): string {
   return TREE_POLYGON.map(([x, y], index) => `${index === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
 }
 
+/* 字形以 (x, baselineY) 锚定且 text-anchor: middle。CJK 视觉盒约在
+   基线上方 86% / 下方 14%，再留 12% 余量给小幅旋转；
+   四个角都落在树冠内，这个字才算放得下。 */
+function glyphFits(x: number, baselineY: number, size: number): boolean {
+  const half = size * 0.56;
+  const cy = baselineY - size * 0.36;
+  return (
+    pointInPolygon(x - half, cy - half, TREE_POLYGON) &&
+    pointInPolygon(x + half, cy - half, TREE_POLYGON) &&
+    pointInPolygon(x - half, cy + half, TREE_POLYGON) &&
+    pointInPolygon(x + half, cy + half, TREE_POLYGON)
+  );
+}
+
+const SIZE_LADDER = [26, 22, 18.5, 16, 14, 12.4, 11, 9.6, 8.4, 7.4];
+
+interface TreeSlot {
+  x: number;
+  y: number;
+  /** 这个槽位塞得下的最大字号 */
+  size: number;
+}
+
+/** 网格撒点 + 抖动，逐个测出可容纳的最大字号；只保留读得清的槽位。 */
+function buildSlots(
+  rng: () => number,
+  stepX: number,
+  stepY: number,
+  xStart: number,
+  xEnd: number,
+  yStart: number,
+  yEnd: number,
+): TreeSlot[] {
+  const slots: TreeSlot[] = [];
+  for (let y = yStart; y <= yEnd; y += stepY) {
+    for (let x = xStart; x <= xEnd; x += stepX) {
+      const px = x + (rng() - 0.5) * stepX * 0.5;
+      const py = y + (rng() - 0.5) * stepY * 0.5;
+      const size = SIZE_LADDER.find((candidate) => glyphFits(px, py, candidate));
+      if (size !== undefined) slots.push({ x: px, y: py, size });
+    }
+  }
+  return slots;
+}
+
+/** 均匀取 count 个（items 需已按空间顺序排好），保证疏密一致。 */
+function pickEvenly<T>(items: T[], count: number): T[] {
+  if (items.length <= count) return items;
+  if (count <= 1) return [items[Math.floor(items.length / 2)]];
+  const out: T[] = [];
+  for (let i = 0; i < count; i += 1) {
+    out.push(items[Math.round((i * (items.length - 1)) / (count - 1))]);
+  }
+  return out;
+}
+
 interface GlyphSeed {
   char: string;
   count: number;
@@ -150,7 +206,31 @@ export interface CharacterTreeOptions {
   body?: string;
   clipId?: string;
   variant?: 'default' | 'compact' | 'year';
-  hrefForChar?: (char: string) => string;
+  /** 返回 undefined 时该字不生成链接（例如语料库里还没有它的 forest 页）。 */
+  hrefForChar?: (char: string) => string | undefined;
+}
+
+interface GlyphVisual {
+  char: string;
+  count: number;
+  source: 'title' | 'heading' | 'body';
+  heading?: string;
+  rank: number;
+  href?: string;
+}
+
+function renderGlyph(slot: TreeSlot, glyph: GlyphVisual, size: number, rotation: number, opacity: number, fill: string): string {
+  const x = slot.x.toFixed(1);
+  const y = slot.y.toFixed(1);
+  const text = `<text class="character-tree__glyph" data-char="${escapeSvgText(glyph.char)}" data-count="${glyph.count}" data-source="${glyph.source}" data-heading="${escapeSvgText(glyph.heading ?? '')}" data-rank="${glyph.rank.toFixed(3)}" x="${x}" y="${y}" text-anchor="middle" fill="${fill}" font-size="${Math.min(size, slot.size).toFixed(1)}" transform="rotate(${rotation.toFixed(1)} ${x} ${y})" font-family="var(--ch-text-font)" style="--char-opacity:${opacity.toFixed(2)}">${escapeSvgText(glyph.char)}</text>`;
+  return glyph.href
+    ? `<a class="character-tree__link" href="${escapeSvgText(glyph.href)}" aria-label="查看汉字「${escapeSvgText(glyph.char)}」">${text}</a>`
+    : text;
+}
+
+function pickFill(rng: () => number): string {
+  const tone = rng();
+  return tone > 0.66 ? 'var(--ch-accent-secondary)' : tone > 0.33 ? 'var(--ch-accent-tertiary)' : 'var(--ch-accent)';
 }
 
 function buildYearTreeSvg({
@@ -161,33 +241,31 @@ function buildYearTreeSvg({
 }: Required<Pick<CharacterTreeOptions, 'seed' | 'clipId'>> & Pick<CharacterTreeOptions, 'portraits' | 'hrefForChar'>): string {
   const list = portraits ?? [];
   const rng = createRng(hashString(seed));
-  const canopy: Array<{ x: number; y: number }> = [];
-  for (let y = 28; y <= 120; y += 13) {
-    for (let x = 22; x <= 98; x += 12) {
-      const px = x + (rng() - 0.5) * 5;
-      const py = y + (rng() - 0.5) * 5;
-      if (pointInPolygon(px, py, TREE_POLYGON)) canopy.push({ x: px, y: py });
-    }
-  }
-  canopy.sort((a, b) => a.y - b.y || a.x - b.x);
+  /* 密网格撒点后再均匀取用：从树顶往下占满整个树冠；
+     字量不够时轮转复用，让年轮长满一棵树 */
+  const dense = buildSlots(rng, 4.5, 4.8, 18, 102, 24, 124).sort((a, b) => a.y - b.y || a.x - b.x);
+  const slots = pickEvenly(dense, Math.min(dense.length, 36));
   const maxScore = Math.max(...list.map((item) => item.score), 0.001);
-  const take = Math.min(list.length, 14);
-  const step = Math.max(1, Math.floor(canopy.length / Math.max(take, 1)));
-  const labels = list.slice(0, take).map((portrait, index) => {
-    const slot = canopy[Math.min(index * step, canopy.length - 1)] ?? { x: 60, y: 48 };
-    const rank = portrait.score / maxScore;
-    const size = 13 + rank * 11;
-    const rotation = (rng() - 0.5) * 7;
-    const tone = rng();
-    const fill =
-      tone > 0.66 ? 'var(--ch-accent-secondary)' : tone > 0.33 ? 'var(--ch-accent-tertiary)' : 'var(--ch-accent)';
-    const source = portrait.inTitle ? 'title' : portrait.inHeading ? 'heading' : 'body';
-    const href = hrefForChar?.(portrait.char);
-    const text = `<text class="character-tree__glyph" data-char="${escapeSvgText(portrait.char)}" data-count="${portrait.count}" data-source="${source}" data-heading="${escapeSvgText(portrait.heading ?? '')}" data-rank="${rank.toFixed(3)}" x="${slot.x.toFixed(1)}" y="${slot.y.toFixed(1)}" fill="${fill}" font-size="${size.toFixed(1)}" transform="rotate(${rotation.toFixed(1)} ${slot.x.toFixed(1)} ${slot.y.toFixed(1)})" font-family="var(--ch-text-font)" style="--char-opacity:${(0.72 + rank * 0.28).toFixed(2)}">${escapeSvgText(portrait.char)}</text>`;
-    return href
-      ? `<a class="character-tree__link" href="${escapeSvgText(href)}" aria-label="查看汉字「${escapeSvgText(portrait.char)}」">${text}</a>`
-      : text;
-  }).join('');
+  const fallback = ['林', '间', '年', '轮'];
+
+  const labels = slots
+    .map((slot, index) => {
+      const portrait = list.length > 0 ? list[index % list.length] : undefined;
+      const char = portrait?.char ?? fallback[index % fallback.length];
+      const rank = portrait ? portrait.score / maxScore : 0.3;
+      const size = Math.min(slot.size, 11.5 + rank * 10.5);
+      const rotation = (rng() - 0.5) * 6;
+      const glyph: GlyphVisual = {
+        char,
+        count: portrait?.count ?? 1,
+        source: portrait ? (portrait.inTitle ? 'title' : portrait.inHeading ? 'heading' : 'body') : 'body',
+        heading: portrait?.heading,
+        rank,
+        href: hrefForChar?.(char),
+      };
+      return renderGlyph(slot, glyph, size, rotation, 0.72 + rank * 0.28, pickFill(rng));
+    })
+    .join('');
 
   return `<svg class="character-tree__svg" id="${escapeSvgText(clipId)}" viewBox="0 0 120 160" focusable="false" xmlns="http://www.w3.org/2000/svg"><path class="character-tree__silhouette" d="${treePath()} Z" fill="none" /><g>${labels}</g></svg>`;
 }
@@ -209,33 +287,29 @@ export function buildCharacterTreeSvg({
   const compact = variant === 'compact';
   const rng = createRng(hashString(seed));
   const pool = collectGlyphPool(title, headings, body, portraits, compact ? 48 : 180, seed);
-  const slots: Array<{ x: number; y: number }> = [];
+  /* 密网格覆盖整棵树（含树干），再均匀取样，避免某一层扎堆、某一层空着 */
+  const dense = buildSlots(rng, 4, 4.5, 14, 106, 10, 154).sort((a, b) => a.y - b.y || a.x - b.x);
+  const count = Math.min(dense.length, pool.length, compact ? 28 : 110);
+  const chosen = pickEvenly(dense, count);
+  const glyphs = pickEvenly(pool, count);
 
-  for (let y = 10; y <= 150; y += 9) {
-    for (let x = 18; x <= 102; x += 9) {
-      const px = x + (rng() - 0.5) * 4;
-      const py = y + (rng() - 0.5) * 4;
-      if (pointInPolygon(px, py, TREE_POLYGON)) slots.push({ x: px, y: py });
-    }
-  }
-  shuffle(slots, rng);
-
-  const count = Math.min(slots.length, pool.length, compact ? 28 : 110);
-  const labels = Array.from({ length: count }, (_, index) => {
-    const slot = slots[index];
-    const glyph = pool[index];
-    const size = compact ? 7.5 + rng() * 4 : 10.5 + rng() * 5.5;
-    const rotation = (rng() - 0.5) * (compact ? 8 : 10);
-    const opacity = compact ? 0.58 + rng() * 0.34 : 0.52 + rng() * 0.4;
-    const tone = rng();
-    const fill =
-      tone > 0.66 ? 'var(--ch-accent-secondary)' : tone > 0.33 ? 'var(--ch-accent-tertiary)' : 'var(--ch-accent)';
-    const href = glyph.distinctive ? hrefForChar?.(glyph.char) : undefined;
-    const text = `<text class="character-tree__glyph" data-char="${escapeSvgText(glyph.char)}" data-count="${glyph.count}" data-source="${glyph.source}" data-heading="${escapeSvgText(glyph.heading ?? '')}" data-rank="${glyph.rank.toFixed(3)}" x="${slot.x.toFixed(1)}" y="${slot.y.toFixed(1)}" fill="${fill}" font-size="${size.toFixed(1)}" transform="rotate(${rotation.toFixed(1)} ${slot.x.toFixed(1)} ${slot.y.toFixed(1)})" font-family="var(--ch-text-font)" style="--char-opacity:${opacity.toFixed(2)}">${escapeSvgText(glyph.char)}</text>`;
-    return href
-      ? `<a class="character-tree__link" href="${escapeSvgText(href)}" aria-label="查看汉字「${escapeSvgText(glyph.char)}」">${text}</a>`
-      : text;
-  }).join('');
+  const labels = chosen
+    .map((slot, index) => {
+      const glyph = glyphs[index];
+      const size = compact ? 7.5 + rng() * 4 : 10.5 + rng() * 5.5;
+      const rotation = (rng() - 0.5) * (compact ? 8 : 10);
+      const opacity = compact ? 0.58 + rng() * 0.34 : 0.52 + rng() * 0.4;
+      const visual: GlyphVisual = {
+        char: glyph.char,
+        count: glyph.count,
+        source: glyph.source,
+        heading: glyph.heading,
+        rank: glyph.rank,
+        href: glyph.distinctive ? hrefForChar?.(glyph.char) : undefined,
+      };
+      return renderGlyph(slot, visual, size, rotation, opacity, pickFill(rng));
+    })
+    .join('');
 
   return `<svg class="character-tree__svg" viewBox="0 0 120 160" focusable="false" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="${escapeSvgText(clipId)}"><path d="${treePath()} Z" /></clipPath></defs><path class="character-tree__silhouette" d="${treePath()} Z" fill="none" /><g clip-path="url(#${escapeSvgText(clipId)})">${labels}</g></svg>`;
 }

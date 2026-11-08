@@ -40,7 +40,7 @@ const yearTrees = yearOptions.flatMap((year) =>
         portraits,
         clipId: treeClipId(`${year}-${season.id}`, 'year'),
         variant: 'year',
-        hrefForChar: (char) => forestCharUrl(char, base),
+        hrefForChar: (char) => (corpus.inverted.has(char) ? forestCharUrl(char, base) : undefined),
       }),
     };
   }),

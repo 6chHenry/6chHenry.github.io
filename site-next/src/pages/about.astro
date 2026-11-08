@@ -16,7 +16,7 @@ const yearTreeSvg =
         portraits: yearChars,
         clipId: 'about-year-tree',
         variant: 'year',
-        hrefForChar: (char) => forestCharUrl(char, base),
+        hrefForChar: (char) => (corpus.inverted.has(char) ? forestCharUrl(char, base) : undefined),
       })
     : '';
 
